@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint and unit tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest
+
+  integration:
+    name: Integration tests against TopK
+    needs: test
+    runs-on: ubuntu-latest
+    # Secrets are not available to pull requests from forks.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      TOPK_API_KEY: ${{ secrets.TOPK_API_KEY }}
+      TOPK_REGION: ${{ vars.TOPK_REGION }}
+      MTGSEARCH_COLLECTION: ${{ vars.MTGSEARCH_COLLECTION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - name: Run integration tests
+        if: env.TOPK_API_KEY != ''
+        run: pytest -m integration
+      - name: Skipped
+        if: env.TOPK_API_KEY == ''
+        run: echo "TOPK_API_KEY secret is not configured; integration tests skipped."

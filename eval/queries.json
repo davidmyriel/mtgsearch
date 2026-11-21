@@ -1,0 +1,316 @@
+{
+ "_note": "Frozen evaluation queries. 'descriptive', 'jargon' and 'art' were written before the spike collection was indexed; 'numeric' was written before the first full-corpus run. Accepted answers come from one person's card knowledge and need a second reviewer. Never edit a query or its answers after seeing results; add new queries instead.",
+ "descriptive": [
+  {
+   "q": "sphinx that draws two cards",
+   "accept": [
+    "Consecrated Sphinx"
+   ]
+  },
+  {
+   "q": "one mana artifact that taps for two colorless mana",
+   "accept": [
+    "Sol Ring"
+   ]
+  },
+  {
+   "q": "exile a creature and its controller gains life equal to its power",
+   "accept": [
+    "Swords to Plowshares"
+   ]
+  },
+  {
+   "q": "enchantment where opponents pay one or I draw a card whenever they cast a spell",
+   "accept": [
+    "Rhystic Study"
+   ]
+  },
+  {
+   "q": "whenever an opponent draws a card they pay two or I get a treasure",
+   "accept": [
+    "Smothering Tithe"
+   ]
+  },
+  {
+   "q": "bounce all my opponents' nonland permanents at instant speed",
+   "accept": [
+    "Cyclonic Rift"
+   ]
+  },
+  {
+   "q": "creature that drains each opponent whenever another creature dies",
+   "accept": [
+    "Blood Artist",
+    "Zulaport Cutthroat",
+    "Cruel Celebrant",
+    "Falkenrath Noble",
+    "Vindictive Vampire",
+    "Elas il-Kor, Sadistic Pilgrim"
+   ]
+  },
+  {
+   "q": "one mana elf that taps for one green mana",
+   "accept": [
+    "Llanowar Elves",
+    "Elvish Mystic",
+    "Fyndhorn Elves"
+   ]
+  },
+  {
+   "q": "two mana sorcery that searches my library for any card and puts it into my hand",
+   "accept": [
+    "Demonic Tutor"
+   ]
+  },
+  {
+   "q": "enchantment that doubles the tokens I create",
+   "accept": [
+    "Doubling Season",
+    "Parallel Lives",
+    "Anointed Procession",
+    "Primal Vigor"
+   ]
+  },
+  {
+   "q": "win the game when my library has no cards",
+   "accept": [
+    "Thassa's Oracle",
+    "Laboratory Maniac",
+    "Jace, Wielder of Mysteries"
+   ]
+  },
+  {
+   "q": "equipment with free equip that gives haste and shroud",
+   "accept": [
+    "Lightning Greaves"
+   ]
+  },
+  {
+   "q": "lets me play lands from my graveyard",
+   "accept": [
+    "Crucible of Worlds",
+    "Ramunap Excavator",
+    "Ancient Greenwarden",
+    "Conduit of Worlds",
+    "Perennial Behemoth",
+    "Icetill Explorer"
+   ]
+  },
+  {
+   "q": "stops opponents from casting spells during my turn",
+   "accept": [
+    "Grand Abolisher",
+    "Dragonlord Dromoka",
+    "Myrel, Shield of Argive",
+    "Voice of Victory",
+    "Conqueror's Flail",
+    "City of Solitude"
+   ]
+  },
+  {
+   "q": "big green creature that gives all my creatures trample and plus X plus X when it enters",
+   "accept": [
+    "Craterhoof Behemoth"
+   ]
+  }
+ ],
+ "numeric": [
+  {
+   "q": "two mana blue instant that counters any spell",
+   "accept": [
+    "Counterspell",
+    "Mana Drain",
+    "Arcane Denial",
+    "Memory Lapse",
+    "Delay",
+    "Remand",
+    "Deprive",
+    "Familiar's Ruse"
+   ]
+  },
+  {
+   "q": "one mana red instant that deals three damage to any target",
+   "accept": [
+    "Lightning Bolt"
+   ]
+  },
+  {
+   "q": "zero mana artifact that taps for mana",
+   "accept": [
+    "Mana Crypt",
+    "Lotus Petal",
+    "Jeweled Lotus",
+    "Chrome Mox",
+    "Mox Diamond",
+    "Mox Opal",
+    "Mox Amber",
+    "Black Lotus",
+    "Mox Jet",
+    "Mox Sapphire",
+    "Mox Ruby",
+    "Mox Pearl",
+    "Mox Emerald",
+    "Lion's Eye Diamond",
+    "Mox Tantalite",
+    "Everflowing Chalice",
+    "Lotus Bloom"
+   ]
+  },
+  {
+   "q": "four mana white sorcery that destroys all creatures",
+   "accept": [
+    "Wrath of God",
+    "Day of Judgment",
+    "Shatter the Sky",
+    "Depopulate"
+   ]
+  },
+  {
+   "q": "four mana green sorcery that searches for two basic lands and puts them onto the battlefield",
+   "accept": [
+    "Explosive Vegetation",
+    "Circuitous Route",
+    "Migration Path",
+    "Vastwood Surge",
+    "Skyshroud Claim",
+    "Ranger's Path",
+    "Hunting Wilds"
+   ]
+  },
+  {
+   "q": "two mana green creature that taps for one mana of any color",
+   "accept": [
+    "Paradise Druid",
+    "Sylvan Caryatid",
+    "Ilysian Caryatid",
+    "Utopia Tree",
+    "Bloom Tender",
+    "Incubation Druid"
+   ]
+  },
+  {
+   "q": "one mana white instant that gives a creature protection from a color of my choice",
+   "accept": [
+    "Gods Willing",
+    "Emerge Unscathed",
+    "Stave Off",
+    "Faith's Shield",
+    "Brave the Elements"
+   ]
+  },
+  {
+   "q": "one mana black instant that puts any card from my library on top of it",
+   "accept": [
+    "Vampiric Tutor"
+   ]
+  }
+ ],
+ "jargon": [
+  {
+   "q": "board wipe",
+   "tag": "sweeper"
+  },
+  {
+   "q": "mana rock",
+   "tag": "mana rock"
+  },
+  {
+   "q": "mana dork",
+   "tag": "mana dork"
+  },
+  {
+   "q": "wheel effect",
+   "tag": "wheel"
+  },
+  {
+   "q": "tutor",
+   "tag": "tutor"
+  },
+  {
+   "q": "fog effect",
+   "tag": "fog"
+  },
+  {
+   "q": "sacrifice outlet",
+   "tag": "sacrifice outlet"
+  },
+  {
+   "q": "reanimation spell",
+   "tag": "reanimate"
+  }
+ ],
+ "art": [
+  {
+   "q": "skeletal winged creature made of bone and metal flying over orange canyons",
+   "accept": [
+    "Consecrated Sphinx"
+   ]
+  },
+  {
+   "q": "close-up of armored boots stomping on rocky ground",
+   "accept": [
+    "Lightning Greaves"
+   ]
+  },
+  {
+   "q": "a spinning top engraved with symbols",
+   "accept": [
+    "Sensei's Divining Top"
+   ]
+  },
+  {
+   "q": "man coughing up gold coins into his hand",
+   "accept": [
+    "Smothering Tithe"
+   ]
+  },
+  {
+   "q": "bald man with a mechanical device clamped over his eye",
+   "accept": [
+    "Skullclamp"
+   ]
+  },
+  {
+   "q": "ornate golden lantern with an owl and stained glass",
+   "accept": [
+    "Chromatic Lantern"
+   ]
+  },
+  {
+   "q": "crowned crane flying over a river",
+   "accept": [
+    "Birds of Paradise"
+   ]
+  },
+  {
+   "q": "tall thin white spire on a floating island under a pink sky",
+   "accept": [
+    "Exotic Orchard"
+   ]
+  },
+  {
+   "q": "two young wizards studying with glowing crystals and fire",
+   "accept": [
+    "Rhystic Study"
+   ]
+  },
+  {
+   "q": "giant green moss-covered mammoth with huge tusks",
+   "accept": [
+    "Craterhoof Behemoth"
+   ]
+  },
+  {
+   "q": "red muscular masked figure standing in a jungle covered in vines",
+   "accept": [
+    "Solemn Simulacrum"
+   ]
+  },
+  {
+   "q": "snake person holding a staff in a swampy forest",
+   "accept": [
+    "Sakura-Tribe Elder"
+   ]
+  }
+ ]
+}

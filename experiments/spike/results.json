@@ -1,0 +1,1964 @@
+{
+ "text": [
+  {
+   "q": "sphinx that draws two cards",
+   "accept": [
+    "Consecrated Sphinx"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 1,
+    "top": [
+     [
+      "Consecrated Sphinx",
+      12.765
+     ],
+     [
+      "Sphinx's Tutelage",
+      11.203
+     ],
+     [
+      "Sphinx's Revelation",
+      9.771
+     ],
+     [
+      "Sphinx of the Second Sun",
+      9.233
+     ],
+     [
+      "Sandstone Oracle",
+      8.594
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Consecrated Sphinx",
+      4.283
+     ],
+     [
+      "Sphinx's Tutelage",
+      4.018
+     ],
+     [
+      "Sphinx of the Second Sun",
+      4.008
+     ],
+     [
+      "Sandstone Oracle",
+      3.891
+     ],
+     [
+      "Sphinx's Revelation",
+      3.858
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Consecrated Sphinx",
+      4.252
+     ],
+     [
+      "Sandstone Oracle",
+      4.06
+     ],
+     [
+      "Sphinx of the Second Sun",
+      4.056
+     ],
+     [
+      "Sphinx's Tutelage",
+      3.993
+     ],
+     [
+      "Sphinx's Revelation",
+      3.921
+     ]
+    ]
+   }
+  },
+  {
+   "q": "one mana artifact that taps for two colorless mana",
+   "accept": [
+    "Sol Ring"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": null,
+    "top": [
+     [
+      "Skyclave Relic",
+      10.735
+     ],
+     [
+      "Clock of Omens",
+      10.015
+     ],
+     [
+      "Firemind Vessel",
+      9.548
+     ],
+     [
+      "Navigation Orb",
+      9.336
+     ],
+     [
+      "And\u00faril, Flame of the West",
+      9.308
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": null,
+    "top": [
+     [
+      "Forsaken Monument",
+      5.892
+     ],
+     [
+      "Solar Transformer",
+      5.83
+     ],
+     [
+      "Pentad Prism",
+      5.796
+     ],
+     [
+      "Chromatic Lantern",
+      5.735
+     ],
+     [
+      "Liberator, Urza's Battlethopter",
+      5.733
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": null,
+    "top": [
+     [
+      "Pentad Prism",
+      5.907
+     ],
+     [
+      "Coldsteel Heart",
+      5.816
+     ],
+     [
+      "Everflowing Chalice",
+      5.816
+     ],
+     [
+      "Prismatic Lens",
+      5.803
+     ],
+     [
+      "Stonespeaker Crystal",
+      5.756
+     ]
+    ]
+   }
+  },
+  {
+   "q": "exile a creature and its controller gains life equal to its power",
+   "accept": [
+    "Swords to Plowshares"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 1,
+    "top": [
+     [
+      "Swords to Plowshares",
+      22.603
+     ],
+     [
+      "Solitude",
+      14.688
+     ],
+     [
+      "Shadowgrange Archfiend",
+      13.5
+     ],
+     [
+      "Momentous Fall",
+      13.286
+     ],
+     [
+      "Condemn",
+      12.75
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Swords to Plowshares",
+      7.604
+     ],
+     [
+      "Solitude",
+      7.452
+     ],
+     [
+      "Astarion's Thirst",
+      6.523
+     ],
+     [
+      "Syr Vondam, Sunstar Exemplar",
+      6.517
+     ],
+     [
+      "Bronzebeak Foragers",
+      6.468
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Swords to Plowshares",
+      7.75
+     ],
+     [
+      "Solitude",
+      7.48
+     ],
+     [
+      "Syr Vondam, Sunstar Exemplar",
+      6.45
+     ],
+     [
+      "Astarion's Thirst",
+      6.445
+     ],
+     [
+      "Shadowgrange Archfiend",
+      6.397
+     ]
+    ]
+   }
+  },
+  {
+   "q": "enchantment where opponents pay one or I draw a card whenever they cast a spell",
+   "accept": [
+    "Rhystic Study"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 1,
+    "top": [
+     [
+      "Rhystic Study",
+      17.566
+     ],
+     [
+      "Esper Sentinel",
+      15.734
+     ],
+     [
+      "Mystic Remora",
+      13.18
+     ],
+     [
+      "Communal Brewing",
+      12.896
+     ],
+     [
+      "Combat Research",
+      12.382
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Rhystic Study",
+      10.352
+     ],
+     [
+      "Mystic Remora",
+      9.788
+     ],
+     [
+      "Powerbalance",
+      8.879
+     ],
+     [
+      "Wavebreak Hippocamp",
+      8.821
+     ],
+     [
+      "Trouble in Pairs",
+      8.704
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Rhystic Study",
+      10.23
+     ],
+     [
+      "Mystic Remora",
+      9.331
+     ],
+     [
+      "Forced Fruition",
+      9.263
+     ],
+     [
+      "Trouble in Pairs",
+      8.937
+     ],
+     [
+      "Powerbalance",
+      8.779
+     ]
+    ]
+   }
+  },
+  {
+   "q": "whenever an opponent draws a card they pay two or I get a treasure",
+   "accept": [
+    "Smothering Tithe"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 6,
+    "top": [
+     [
+      "Gleaming Splendor",
+      12.773
+     ],
+     [
+      "Skullclamp",
+      11.904
+     ],
+     [
+      "Smuggler's Share",
+      11.22
+     ],
+     [
+      "The Unagi of Kyoshi Island",
+      11.027
+     ],
+     [
+      "Bloodroot Apothecary",
+      10.993
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Smothering Tithe",
+      9.105
+     ],
+     [
+      "Gleaming Splendor",
+      8.665
+     ],
+     [
+      "Tataru Taru",
+      8.193
+     ],
+     [
+      "Mind's Eye",
+      7.699
+     ],
+     [
+      "Summon: Yojimbo",
+      7.422
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Smothering Tithe",
+      8.571
+     ],
+     [
+      "Gleaming Splendor",
+      8.137
+     ],
+     [
+      "Tataru Taru",
+      8.057
+     ],
+     [
+      "Smuggler's Share",
+      7.319
+     ],
+     [
+      "Summon: Yojimbo",
+      7.249
+     ]
+    ]
+   }
+  },
+  {
+   "q": "bounce all my opponents' nonland permanents at instant speed",
+   "accept": [
+    "Cyclonic Rift"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": null,
+    "top": [
+     [
+      "Consuming Tide",
+      12.184
+     ],
+     [
+      "Dramatic Reversal",
+      11.752
+     ],
+     [
+      "Windgrace's Judgment",
+      11.727
+     ],
+     [
+      "Hour of Revelation",
+      11.318
+     ],
+     [
+      "Maelstrom Pulse",
+      10.867
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 3,
+    "top": [
+     [
+      "Windgrace's Judgment",
+      6.927
+     ],
+     [
+      "Atomize",
+      6.807
+     ],
+     [
+      "Cyclonic Rift",
+      6.773
+     ],
+     [
+      "Consuming Tide",
+      6.767
+     ],
+     [
+      "Grasp of Fate",
+      6.645
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 4,
+    "top": [
+     [
+      "Consuming Tide",
+      7.075
+     ],
+     [
+      "Hammerhead Tyrant",
+      7.062
+     ],
+     [
+      "Into the Flood Maw",
+      7.017
+     ],
+     [
+      "Cyclonic Rift",
+      6.993
+     ],
+     [
+      "River's Rebuke",
+      6.917
+     ]
+    ]
+   }
+  },
+  {
+   "q": "creature that drains each opponent whenever another creature dies",
+   "accept": [
+    "Blood Artist",
+    "Zulaport Cutthroat",
+    "Cruel Celebrant",
+    "Falkenrath Noble",
+    "Vindictive Vampire",
+    "Elas il-Kor, Sadistic Pilgrim"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 1,
+    "top": [
+     [
+      "Elas il-Kor, Sadistic Pilgrim",
+      12.776
+     ],
+     [
+      "Vengeful Dead",
+      11.973
+     ],
+     [
+      "Zulaport Cutthroat",
+      11.567
+     ],
+     [
+      "Feral Ghoul",
+      11.293
+     ],
+     [
+      "Blood Artist",
+      11.185
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Zulaport Cutthroat",
+      6.019
+     ],
+     [
+      "Vraan, Executioner Thane",
+      5.937
+     ],
+     [
+      "Blood Artist",
+      5.922
+     ],
+     [
+      "Cruel Celebrant",
+      5.849
+     ],
+     [
+      "Syr Konrad, the Grim",
+      5.824
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 2,
+    "top": [
+     [
+      "Kokusho, the Evening Star",
+      6.035
+     ],
+     [
+      "Zulaport Cutthroat",
+      6.021
+     ],
+     [
+      "Butcher of Malakir",
+      5.875
+     ],
+     [
+      "Falkenrath Noble",
+      5.814
+     ],
+     [
+      "Blood Artist",
+      5.8
+     ]
+    ]
+   }
+  },
+  {
+   "q": "one mana elf that taps for one green mana",
+   "accept": [
+    "Llanowar Elves",
+    "Elvish Mystic",
+    "Fyndhorn Elves"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": null,
+    "top": [
+     [
+      "Farhaven Elf",
+      9.001
+     ],
+     [
+      "Elvish Promenade",
+      8.994
+     ],
+     [
+      "Elvish Harbinger",
+      8.757
+     ],
+     [
+      "Elven Ambush",
+      8.549
+     ],
+     [
+      "Tyvar Kell",
+      8.379
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": null,
+    "top": [
+     [
+      "Paradise Druid",
+      5.635
+     ],
+     [
+      "Marwyn, the Nurturer",
+      5.44
+     ],
+     [
+      "Priest of Titania",
+      5.377
+     ],
+     [
+      "Rishkar, Peema Renegade",
+      5.366
+     ],
+     [
+      "Bloom Tender",
+      5.32
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 2,
+    "top": [
+     [
+      "Joraga Treespeaker",
+      5.7
+     ],
+     [
+      "Llanowar Elves",
+      5.608
+     ],
+     [
+      "Bloom Tender",
+      5.448
+     ],
+     [
+      "Elvish Mystic",
+      5.437
+     ],
+     [
+      "Boreal Druid",
+      5.391
+     ]
+    ]
+   }
+  },
+  {
+   "q": "two mana sorcery that searches my library for any card and puts it into my hand",
+   "accept": [
+    "Demonic Tutor"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": null,
+    "top": [
+     [
+      "Nissa's Pilgrimage",
+      16.337
+     ],
+     [
+      "Stock Up",
+      15.749
+     ],
+     [
+      "Dark Petition",
+      15.69
+     ],
+     [
+      "Demonic Counsel",
+      15.575
+     ],
+     [
+      "Flow State",
+      15.536
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 4,
+    "top": [
+     [
+      "Dark Petition",
+      9.882
+     ],
+     [
+      "Demonic Counsel",
+      9.69
+     ],
+     [
+      "Diabolic Tutor",
+      9.687
+     ],
+     [
+      "Demonic Tutor",
+      9.644
+     ],
+     [
+      "Gamble",
+      9.589
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 2,
+    "top": [
+     [
+      "Gamble",
+      9.756
+     ],
+     [
+      "Demonic Tutor",
+      9.521
+     ],
+     [
+      "Sylvan Scrying",
+      9.493
+     ],
+     [
+      "Dark Petition",
+      9.328
+     ],
+     [
+      "Diabolic Tutor",
+      9.245
+     ]
+    ]
+   }
+  },
+  {
+   "q": "enchantment that doubles the tokens I create",
+   "accept": [
+    "Doubling Season",
+    "Parallel Lives",
+    "Anointed Procession",
+    "Primal Vigor"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 2,
+    "top": [
+     [
+      "Fable of the Mirror-Breaker // Reflection of Kiki-Jiki",
+      9.888
+     ],
+     [
+      "Anointed Procession",
+      9.785
+     ],
+     [
+      "City of Death",
+      9.677
+     ],
+     [
+      "Parallel Lives",
+      9.615
+     ],
+     [
+      "Doubling Season",
+      9.545
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Anointed Procession",
+      6.355
+     ],
+     [
+      "Parallel Lives",
+      6.214
+     ],
+     [
+      "Primal Vigor",
+      6.209
+     ],
+     [
+      "Doubling Season",
+      6.143
+     ],
+     [
+      "Mondrak, Glory Dominus",
+      5.648
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Anointed Procession",
+      6.423
+     ],
+     [
+      "Doubling Season",
+      6.264
+     ],
+     [
+      "Primal Vigor",
+      6.244
+     ],
+     [
+      "Parallel Lives",
+      6.148
+     ],
+     [
+      "Renewed Solidarity",
+      5.717
+     ]
+    ]
+   }
+  },
+  {
+   "q": "win the game when my library has no cards",
+   "accept": [
+    "Thassa's Oracle",
+    "Laboratory Maniac",
+    "Jace, Wielder of Mysteries"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 1,
+    "top": [
+     [
+      "Jace, Wielder of Mysteries",
+      16.481
+     ],
+     [
+      "Laboratory Maniac",
+      13.467
+     ],
+     [
+      "Zenos yae Galvus // Shinryu, Transcendent Rival",
+      13.248
+     ],
+     [
+      "Darksteel Reactor",
+      11.968
+     ],
+     [
+      "Platinum Angel",
+      11.744
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Jace, Wielder of Mysteries",
+      5.736
+     ],
+     [
+      "Laboratory Maniac",
+      5.637
+     ],
+     [
+      "Thassa's Oracle",
+      5.179
+     ],
+     [
+      "Triskaidekaphile",
+      4.895
+     ],
+     [
+      "Out of the Tombs",
+      4.77
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Laboratory Maniac",
+      5.867
+     ],
+     [
+      "Jace, Wielder of Mysteries",
+      5.672
+     ],
+     [
+      "Thassa's Oracle",
+      5.0
+     ],
+     [
+      "Out of the Tombs",
+      4.991
+     ],
+     [
+      "Triskaidekaphile",
+      4.875
+     ]
+    ]
+   }
+  },
+  {
+   "q": "equipment with free equip that gives haste and shroud",
+   "accept": [
+    "Lightning Greaves"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 2,
+    "top": [
+     [
+      "Silver Shroud Costume",
+      12.962
+     ],
+     [
+      "Lightning Greaves",
+      12.76
+     ],
+     [
+      "Haunted Cloak",
+      9.947
+     ],
+     [
+      "Whispersilk Cloak",
+      9.815
+     ],
+     [
+      "Hero's Heirloom",
+      9.366
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Lightning Greaves",
+      6.909
+     ],
+     [
+      "Swiftfoot Boots",
+      5.751
+     ],
+     [
+      "Silver Shroud Costume",
+      5.636
+     ],
+     [
+      "Lavaspur Boots",
+      5.584
+     ],
+     [
+      "Haunted Cloak",
+      5.368
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Lightning Greaves",
+      6.924
+     ],
+     [
+      "Silver Shroud Costume",
+      5.869
+     ],
+     [
+      "Lavaspur Boots",
+      5.666
+     ],
+     [
+      "Haunted Cloak",
+      5.659
+     ],
+     [
+      "Swiftfoot Boots",
+      5.615
+     ]
+    ]
+   }
+  },
+  {
+   "q": "lets me play lands from my graveyard",
+   "accept": [
+    "Crucible of Worlds",
+    "Ramunap Excavator",
+    "Ancient Greenwarden",
+    "Conduit of Worlds",
+    "Perennial Behemoth",
+    "Icetill Explorer"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 3,
+    "top": [
+     [
+      "Yawgmoth's Will",
+      11.12
+     ],
+     [
+      "Oscorp Industries",
+      11.102
+     ],
+     [
+      "Perennial Behemoth",
+      10.3
+     ],
+     [
+      "Crucible of Worlds",
+      10.069
+     ],
+     [
+      "Serra Paragon",
+      9.911
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Conduit of Worlds",
+      4.961
+     ],
+     [
+      "Szarel, Genesis Shepherd",
+      4.75
+     ],
+     [
+      "Mole Man, Moloid Master",
+      4.745
+     ],
+     [
+      "Wrenn and Realmbreaker",
+      4.605
+     ],
+     [
+      "Walk-In Closet // Forgotten Cellar",
+      4.556
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Crucible of Worlds",
+      4.804
+     ],
+     [
+      "Walk-In Closet // Forgotten Cellar",
+      4.686
+     ],
+     [
+      "Conduit of Worlds",
+      4.653
+     ],
+     [
+      "Szarel, Genesis Shepherd",
+      4.612
+     ],
+     [
+      "Yawgmoth's Will",
+      4.577
+     ]
+    ]
+   }
+  },
+  {
+   "q": "stops opponents from casting spells during my turn",
+   "accept": [
+    "Grand Abolisher",
+    "Dragonlord Dromoka",
+    "Myrel, Shield of Argive",
+    "Voice of Victory",
+    "Conqueror's Flail",
+    "City of Solitude"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 5,
+    "top": [
+     [
+      "Tidal Barracuda",
+      11.885
+     ],
+     [
+      "Emrakul, the Promised End",
+      11.743
+     ],
+     [
+      "Delayed Blast Fireball",
+      11.741
+     ],
+     [
+      "Wavebreak Hippocamp",
+      11.067
+     ],
+     [
+      "Grand Abolisher",
+      10.871
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Conqueror's Flail",
+      5.306
+     ],
+     [
+      "Grand Abolisher",
+      5.275
+     ],
+     [
+      "Voice of Victory",
+      5.165
+     ],
+     [
+      "Myrel, Shield of Argive",
+      5.116
+     ],
+     [
+      "Tidal Barracuda",
+      4.832
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Grand Abolisher",
+      5.03
+     ],
+     [
+      "Silence",
+      5.017
+     ],
+     [
+      "Conqueror's Flail",
+      4.932
+     ],
+     [
+      "Dragonlord Dromoka",
+      4.908
+     ],
+     [
+      "Myrel, Shield of Argive",
+      4.817
+     ]
+    ]
+   }
+  },
+  {
+   "q": "big green creature that gives all my creatures trample and plus X plus X when it enters",
+   "accept": [
+    "Craterhoof Behemoth"
+   ],
+   "scryfall": {
+    "total": 0,
+    "hit": false
+   },
+   "bm25": {
+    "rank": 1,
+    "top": [
+     [
+      "Craterhoof Behemoth",
+      13.114
+     ],
+     [
+      "Towering Titan",
+      13.016
+     ],
+     [
+      "Sin, Unending Cataclysm",
+      12.664
+     ],
+     [
+      "Lifeblood Hydra",
+      12.419
+     ],
+     [
+      "Rampaging Yao Guai",
+      12.204
+     ]
+    ]
+   },
+   "semantic": {
+    "rank": 1,
+    "top": [
+     [
+      "Craterhoof Behemoth",
+      10.183
+     ],
+     [
+      "Towering Titan",
+      9.705
+     ],
+     [
+      "Nissa, Ascended Animist",
+      9.277
+     ],
+     [
+      "Summon: Titan",
+      9.265
+     ],
+     [
+      "Nylea, God of the Hunt",
+      9.023
+     ]
+    ]
+   },
+   "semantic+tags": {
+    "rank": 1,
+    "top": [
+     [
+      "Craterhoof Behemoth",
+      10.087
+     ],
+     [
+      "Towering Titan",
+      9.157
+     ],
+     [
+      "Summon: Titan",
+      9.12
+     ],
+     [
+      "End-Raze Forerunners",
+      9.066
+     ],
+     [
+      "Nissa, Ascended Animist",
+      8.933
+     ]
+    ]
+   }
+  }
+ ],
+ "art": [
+  {
+   "q": "skeletal winged creature made of bone and metal flying over orange canyons",
+   "accept": [
+    "Consecrated Sphinx"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Consecrated Sphinx",
+      9.951
+     ],
+     [
+      "Jet Medallion",
+      8.177
+     ],
+     [
+      "Field of the Dead",
+      7.867
+     ],
+     [
+      "Fumigate",
+      7.775
+     ],
+     [
+      "Bloodletter of Aclazotz",
+      7.729
+     ]
+    ]
+   }
+  },
+  {
+   "q": "close-up of armored boots stomping on rocky ground",
+   "accept": [
+    "Lightning Greaves"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Lightning Greaves",
+      6.946
+     ],
+     [
+      "Trailblazer's Boots",
+      6.132
+     ],
+     [
+      "Embercleave",
+      5.828
+     ],
+     [
+      "Expedite",
+      5.475
+     ],
+     [
+      "Ram Through",
+      5.213
+     ]
+    ]
+   }
+  },
+  {
+   "q": "a spinning top engraved with symbols",
+   "accept": [
+    "Sensei's Divining Top"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Sensei's Divining Top",
+      4.157
+     ],
+     [
+      "Necropotence",
+      3.589
+     ],
+     [
+      "Blightsteel Colossus",
+      3.488
+     ],
+     [
+      "Azorius Signet",
+      3.472
+     ],
+     [
+      "Toski, Bearer of Secrets",
+      3.467
+     ]
+    ]
+   }
+  },
+  {
+   "q": "man coughing up gold coins into his hand",
+   "accept": [
+    "Smothering Tithe"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Smothering Tithe",
+      5.464
+     ],
+     [
+      "Curse of Opulence",
+      5.36
+     ],
+     [
+      "Revel in Riches",
+      4.909
+     ],
+     [
+      "Gray Merchant of Asphodel",
+      4.888
+     ],
+     [
+      "Pitiless Plunderer",
+      4.656
+     ]
+    ]
+   }
+  },
+  {
+   "q": "bald man with a mechanical device clamped over his eye",
+   "accept": [
+    "Skullclamp"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Skullclamp",
+      6.914
+     ],
+     [
+      "Unwinding Clock",
+      6.673
+     ],
+     [
+      "Thought Vessel",
+      5.951
+     ],
+     [
+      "Forensic Gadgeteer",
+      5.867
+     ],
+     [
+      "Metallic Mimic",
+      5.856
+     ]
+    ]
+   }
+  },
+  {
+   "q": "ornate golden lantern with an owl and stained glass",
+   "accept": [
+    "Chromatic Lantern"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Chromatic Lantern",
+      7.222
+     ],
+     [
+      "Sigil of the Empty Throne",
+      5.349
+     ],
+     [
+      "Jhoira's Familiar",
+      5.265
+     ],
+     [
+      "Cleric Class",
+      5.223
+     ],
+     [
+      "Overgrown Farmland",
+      5.15
+     ]
+    ]
+   }
+  },
+  {
+   "q": "crowned crane flying over a river",
+   "accept": [
+    "Birds of Paradise"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Birds of Paradise",
+      4.543
+     ],
+     [
+      "Peregrine Drake",
+      3.471
+     ],
+     [
+      "Strix Serenade",
+      3.417
+     ],
+     [
+      "Adarkar Wastes",
+      3.404
+     ],
+     [
+      "Scourge of Valkas",
+      3.307
+     ]
+    ]
+   }
+  },
+  {
+   "q": "tall thin white spire on a floating island under a pink sky",
+   "accept": [
+    "Exotic Orchard"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Exotic Orchard",
+      8.294
+     ],
+     [
+      "Spire Garden",
+      7.55
+     ],
+     [
+      "Monument to Endurance",
+      7.496
+     ],
+     [
+      "Sea of Clouds",
+      7.437
+     ],
+     [
+      "Prismatic Vista",
+      7.431
+     ]
+    ]
+   }
+  },
+  {
+   "q": "two young wizards studying with glowing crystals and fire",
+   "accept": [
+    "Rhystic Study"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Rhystic Study",
+      5.666
+     ],
+     [
+      "Solve the Equation",
+      4.964
+     ],
+     [
+      "Beseech the Mirror",
+      4.836
+     ],
+     [
+      "Genesis Wave",
+      4.803
+     ],
+     [
+      "Birgi, God of Storytelling // Harnfel, Horn of Bounty",
+      4.803
+     ]
+    ]
+   }
+  },
+  {
+   "q": "giant green moss-covered mammoth with huge tusks",
+   "accept": [
+    "Craterhoof Behemoth"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Craterhoof Behemoth",
+      7.154
+     ],
+     [
+      "Vigor",
+      6.406
+     ],
+     [
+      "Terastodon",
+      6.355
+     ],
+     [
+      "Ripples of Undeath",
+      5.919
+     ],
+     [
+      "Topiary Stomper",
+      5.67
+     ]
+    ]
+   }
+  },
+  {
+   "q": "red muscular masked figure standing in a jungle covered in vines",
+   "accept": [
+    "Solemn Simulacrum"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Solemn Simulacrum",
+      8.049
+     ],
+     [
+      "Herald of Secret Streams",
+      6.628
+     ],
+     [
+      "Simian Spirit Guide",
+      6.331
+     ],
+     [
+      "Bloodghast",
+      6.325
+     ],
+     [
+      "Return of the Wildspeaker",
+      6.191
+     ]
+    ]
+   }
+  },
+  {
+   "q": "snake person holding a staff in a swampy forest",
+   "accept": [
+    "Sakura-Tribe Elder"
+   ],
+   "art": {
+    "rank": 1,
+    "top": [
+     [
+      "Sakura-Tribe Elder",
+      6.762
+     ],
+     [
+      "Ignoble Hierarch",
+      6.244
+     ],
+     [
+      "Fanatic of Rhonas",
+      6.201
+     ],
+     [
+      "Wonder",
+      6.06
+     ],
+     [
+      "Realmwalker",
+      5.832
+     ]
+    ]
+   }
+  }
+ ],
+ "jargon": [
+  {
+   "q": "board wipe",
+   "tag": "sweeper",
+   "bm25": {
+    "correct_in_top5": 1,
+    "top": [
+     "S\u00e9ance Board",
+     "Time Wipe"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 3,
+    "top": [
+     "Time Wipe",
+     "S\u00e9ance Board",
+     "Devastation Tide",
+     "Erode",
+     "Farewell"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 4,
+    "top": [
+     "S\u00e9ance Board",
+     "Time Wipe",
+     "Farewell",
+     "River's Rebuke",
+     "In Garruk's Wake"
+    ]
+   }
+  },
+  {
+   "q": "mana rock",
+   "tag": "mana rock",
+   "bm25": {
+    "correct_in_top5": 0,
+    "top": [
+     "Treasure Nabber",
+     "Concordant Crossroads",
+     "Vedalken Orrery",
+     "Obscuring Haze",
+     "Dark Deal"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 1,
+    "top": [
+     "Fellwar Stone",
+     "Mana Flare",
+     "Mana Reflection",
+     "Mana Sculpt",
+     "Mana Confluence"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 5,
+    "top": [
+     "Hedron Archive",
+     "Solar Transformer",
+     "Relic of Sauron",
+     "Fellwar Stone",
+     "Ring of the Lucii"
+    ]
+   }
+  },
+  {
+   "q": "mana dork",
+   "tag": "mana dork",
+   "bm25": {
+    "correct_in_top5": 0,
+    "top": [
+     "Treasure Nabber",
+     "Concordant Crossroads",
+     "Vedalken Orrery",
+     "Obscuring Haze",
+     "Dark Deal"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 0,
+    "top": [
+     "Summon: Fat Chocobo",
+     "Shock",
+     "Krark, the Thumbless",
+     "Coercive Recruiter",
+     "Wild-Magic Sorcerer"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 5,
+    "top": [
+     "Millikin",
+     "Omen Hawker",
+     "Orcish Lumberjack",
+     "Gilded Goose",
+     "Incubation Druid"
+    ]
+   }
+  },
+  {
+   "q": "wheel effect",
+   "tag": "wheel",
+   "bm25": {
+    "correct_in_top5": 0,
+    "top": [
+     "Valorous Stance",
+     "Darksteel Ingot",
+     "Selfless Savior",
+     "Biosynthic Burst",
+     "Flickering Ward"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 4,
+    "top": [
+     "Magus of the Wheel",
+     "Wheel of Misfortune",
+     "Wheel of Fortune",
+     "Decree of Pain",
+     "Wheel of Fate"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 5,
+    "top": [
+     "Elder Brain",
+     "Dark Deal",
+     "Magus of the Wheel",
+     "Wheel of Fortune",
+     "Teferi's Puzzle Box"
+    ]
+   }
+  },
+  {
+   "q": "tutor",
+   "tag": "tutor",
+   "bm25": {
+    "correct_in_top5": 5,
+    "top": [
+     "Personal Tutor",
+     "Sylvan Tutor",
+     "Idyllic Tutor",
+     "Diabolic Tutor",
+     "Profane Tutor"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 5,
+    "top": [
+     "Idyllic Tutor",
+     "Sylvan Tutor",
+     "Enlightened Tutor",
+     "Mystical Tutor",
+     "Demonic Tutor"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 5,
+    "top": [
+     "Worldly Tutor",
+     "Idyllic Tutor",
+     "Sylvan Tutor",
+     "Personal Tutor",
+     "Grim Tutor"
+    ]
+   }
+  },
+  {
+   "q": "fog effect",
+   "tag": "fog",
+   "bm25": {
+    "correct_in_top5": 0,
+    "top": [
+     "Fog Bank",
+     "Valorous Stance",
+     "Darksteel Ingot",
+     "Selfless Savior",
+     "Biosynthic Burst"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 3,
+    "top": [
+     "Fog",
+     "Obscuring Haze",
+     "Chain of Smog",
+     "Smoke Bomb",
+     "Constant Mists"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 2,
+    "top": [
+     "Fog",
+     "Angel's Grace",
+     "Disrupt Decorum",
+     "Obscuring Haze",
+     "Marisi, Breaker of the Coil"
+    ]
+   }
+  },
+  {
+   "q": "sacrifice outlet",
+   "tag": "sacrifice outlet",
+   "bm25": {
+    "correct_in_top5": 2,
+    "top": [
+     "Tireless Tracker",
+     "Aether Spellbomb",
+     "Phyrexian Altar",
+     "Sheoldred's Edict",
+     "Eldrazi Monument"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 3,
+    "top": [
+     "Hope of Ghirapur",
+     "Sacrifice",
+     "Grinding Station",
+     "Blasting Station",
+     "Haywire Mite"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 5,
+    "top": [
+     "Sacrifice",
+     "Tavern Scoundrel",
+     "Plaguecrafter",
+     "Victimize",
+     "Zuran Orb"
+    ]
+   }
+  },
+  {
+   "q": "reanimation spell",
+   "tag": "reanimate",
+   "bm25": {
+    "correct_in_top5": 2,
+    "top": [
+     "Grave Researcher // Reanimate",
+     "Reanimate",
+     "Nightscape Familiar",
+     "Reflections of Littjara",
+     "Flusterstorm"
+    ]
+   },
+   "semantic": {
+    "correct_in_top5": 5,
+    "top": [
+     "Reanimate",
+     "Grave Researcher // Reanimate",
+     "Sevinne's Reclamation",
+     "Necromancy",
+     "Coiling Rebirth"
+    ]
+   },
+   "semantic+tags": {
+    "correct_in_top5": 5,
+    "top": [
+     "Reanimate",
+     "Haunting Voyage",
+     "Afterlife from the Loam",
+     "Restoration Seminar",
+     "Sevinne's Reclamation"
+    ]
+   }
+  }
+ ],
+ "latency_ms": {
+  "bm25": {
+   "median": 36.592721939086914,
+   "max": 652.9552936553955
+  },
+  "semantic": {
+   "median": 107.56134986877441,
+   "max": 287.40787506103516
+  },
+  "semantic+tags": {
+   "median": 97.1686840057373,
+   "max": 258.373498916626
+  },
+  "art": {
+   "median": 96.86446189880371,
+   "max": 292.1891212463379
+  }
+ }
+}

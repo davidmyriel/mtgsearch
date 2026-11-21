@@ -1,0 +1,56 @@
+name: Nightly refresh and regression
+
+# Refreshes the collection from Scryfall's bulk files, then checks that nothing regressed:
+# syntax conformance against Scryfall's API, and the relevance evaluation.
+on:
+  schedule:
+    - cron: "17 11 * * *" # Scryfall publishes bulk files around 10:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TOPK_API_KEY: ${{ secrets.TOPK_API_KEY }}
+      TOPK_REGION: ${{ vars.TOPK_REGION }}
+      MTGSEARCH_COLLECTION: ${{ vars.MTGSEARCH_COLLECTION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -e ".[dev]"
+
+      # The snapshot of what was last ingested lets the run re-send only changed cards.
+      # Without it every card is re-embedded, which is slow and costs money.
+      - uses: actions/cache@v4
+        with:
+          path: data/documents.*.jsonl
+          key: ingest-snapshot-${{ vars.MTGSEARCH_COLLECTION }}-${{ github.run_id }}
+          restore-keys: ingest-snapshot-${{ vars.MTGSEARCH_COLLECTION }}-
+
+      - name: Ingest changed cards
+        run: mtgsearch ingest
+
+      - name: Syntax conformance against Scryfall
+        run: mtgsearch conformance conformance/queries.txt --out conformance-results.json
+
+      - name: Relevance evaluation
+        run: mtgsearch eval --out eval-results.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-results
+          path: |
+            conformance-results.json
+            eval-results.json

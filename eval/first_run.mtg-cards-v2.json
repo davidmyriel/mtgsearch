@@ -1,0 +1,1430 @@
+{
+ "collection": "mtg-cards-v2",
+ "classes": {
+  "descriptive": {
+   "summary": {
+    "bm25": {
+     "top1": 1,
+     "top3": 2,
+     "top10": 5,
+     "out_of": 15
+    },
+    "semantic": {
+     "top1": 8,
+     "top3": 10,
+     "top10": 11,
+     "out_of": 15
+    },
+    "semantic+tags": {
+     "top1": 8,
+     "top3": 10,
+     "top10": 11,
+     "out_of": 15
+    },
+    "search": {
+     "top1": 7,
+     "top3": 10,
+     "top10": 11,
+     "out_of": 15
+    }
+   },
+   "queries": [
+    {
+     "q": "sphinx that draws two cards",
+     "bm25": {
+      "score": 5,
+      "top": [
+       "Sphinx of Enlightenment",
+       "Sphinx's Approach",
+       "Sphinx of False Conclusions",
+       "Oko, the Ringleader",
+       "Consecrated Sphinx"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Consecrated Sphinx",
+       "Sphinx's Insight",
+       "Sphinx's Approach",
+       "Quantum Riddler",
+       "Master of Winds"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Consecrated Sphinx",
+       "Sphinx's Approach",
+       "Sphinx's Insight",
+       "Sphinx of Lost Truths",
+       "Master of Winds"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Consecrated Sphinx",
+       "Sphinx of Enlightenment",
+       "Sphinx of Lost Truths",
+       "Master of Winds",
+       "Atemsis, All-Seeing"
+      ]
+     }
+    },
+    {
+     "q": "one mana artifact that taps for two colorless mana",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Planar Atlas",
+       "Master Splicer",
+       "Sunken Citadel",
+       "Ardenvale Tactician // Dizzying Swoop",
+       "Kami of Whispered Hopes"
+      ]
+     },
+     "semantic": {
+      "score": null,
+      "top": [
+       "Noble's Purse",
+       "White Mana Battery",
+       "Blue Mana Battery",
+       "Guild Globe",
+       "Pentad Prism"
+      ]
+     },
+     "semantic+tags": {
+      "score": null,
+      "top": [
+       "Guardian Idol",
+       "Astrolabe",
+       "Pentad Prism",
+       "Laser Screwdriver",
+       "Black Mana Battery"
+      ]
+     },
+     "search": {
+      "score": null,
+      "top": [
+       "Chromatic Star",
+       "Urn of Godfire",
+       "Pyramid of the Pantheon",
+       "Terrarion",
+       "Mana Screw"
+      ]
+     }
+    },
+    {
+     "q": "exile a creature and its controller gains life equal to its power",
+     "bm25": {
+      "score": 6,
+      "top": [
+       "Attendant of Vraska",
+       "Angelic Chorus",
+       "Nettletooth Djinn",
+       "Cosmogoyf",
+       "Mine Worker"
+      ]
+     },
+     "semantic": {
+      "score": 2,
+      "top": [
+       "Captain Marvel, Shooting Star",
+       "Swords to Plowshares",
+       "Solitude",
+       "Expel the Unworthy",
+       "Last Breath"
+      ]
+     },
+     "semantic+tags": {
+      "score": 2,
+      "top": [
+       "Captain Marvel, Shooting Star",
+       "Swords to Plowshares",
+       "Solitude",
+       "Expel the Unworthy",
+       "Last Breath"
+      ]
+     },
+     "search": {
+      "score": 2,
+      "top": [
+       "Captain Marvel, Shooting Star",
+       "Swords to Plowshares",
+       "Solitude",
+       "Expel the Unworthy",
+       "Last Breath"
+      ]
+     }
+    },
+    {
+     "q": "enchantment where opponents pay one or I draw a card whenever they cast a spell",
+     "bm25": {
+      "score": null,
+      "top": [
+       "How Is This a Par Three?!",
+       "Greatest Show in the Multiverse",
+       "Trouble in Pairs",
+       "The Triumph of Anax",
+       "Uncover the Moon-Letters"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Rhystic Study",
+       "Mystic Remora",
+       "Standstill",
+       "Freyalise's Charm",
+       "Powerbalance"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Rhystic Study",
+       "Standstill",
+       "Mystic Remora",
+       "Reparations",
+       "Unifying Theory"
+      ]
+     },
+     "search": {
+      "score": null,
+      "top": []
+     }
+    },
+    {
+     "q": "whenever an opponent draws a card they pay two or I get a treasure",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Unexpected Windfall",
+       "Monument to Endurance",
+       "Lead Pipe",
+       "Deadly Dispute",
+       "Gold Rush"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Smothering Tithe",
+       "Gleaming Splendor",
+       "Tataru Taru",
+       "Hullbreacher",
+       "Summon: Yojimbo"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Smothering Tithe",
+       "Gleaming Splendor",
+       "Hullbreacher",
+       "Smuggler's Share",
+       "Vazi, Keen Negotiator"
+      ]
+     },
+     "search": {
+      "score": null,
+      "top": []
+     }
+    },
+    {
+     "q": "bounce all my opponents' nonland permanents at instant speed",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Shifting Sky",
+       "Urza's Ruinous Blast",
+       "Intellectual Offering",
+       "Tidehollow Sculler",
+       "Web Up"
+      ]
+     },
+     "semantic": {
+      "score": 7,
+      "top": [
+       "Suspend Aggression",
+       "Windgrace's Judgment",
+       "Ugin's Binding",
+       "Atomize",
+       "Hurkyl's Final Meditation"
+      ]
+     },
+     "semantic+tags": {
+      "score": 9,
+      "top": [
+       "Quicksilver Geyser",
+       "Disperse",
+       "Consuming Tide",
+       "This Town Ain't Big Enough",
+       "Hammerhead Tyrant"
+      ]
+     },
+     "search": {
+      "score": 9,
+      "top": [
+       "Quicksilver Geyser",
+       "Disperse",
+       "Consuming Tide",
+       "This Town Ain't Big Enough",
+       "Hammerhead Tyrant"
+      ]
+     }
+    },
+    {
+     "q": "creature that drains each opponent whenever another creature dies",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Venerated Stormsinger",
+       "The Archimandrite",
+       "Die Young",
+       "Venomcrawler",
+       "Cacophony Scamp"
+      ]
+     },
+     "semantic": {
+      "score": null,
+      "top": [
+       "The Meathook Massacre",
+       "Kardur, Doomscourge",
+       "Mathas, Fiend Seeker",
+       "Gimli, Counter of Kills",
+       "Kheru Bloodsucker"
+      ]
+     },
+     "semantic+tags": {
+      "score": 3,
+      "top": [
+       "Kokusho, the Evening Star",
+       "Brotherhood Patriarch",
+       "Zulaport Cutthroat",
+       "Denethor, Ruling Steward",
+       "Gimli, Counter of Kills"
+      ]
+     },
+     "search": {
+      "score": 3,
+      "top": [
+       "Kokusho, the Evening Star",
+       "Brotherhood Patriarch",
+       "Zulaport Cutthroat",
+       "Denethor, Ruling Steward",
+       "Gimli, Counter of Kills"
+      ]
+     }
+    },
+    {
+     "q": "one mana elf that taps for one green mana",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Razorgrass Invoker",
+       "Night Market",
+       "Gus",
+       "Belbe, Corrupted Observer",
+       "Elven Ambush"
+      ]
+     },
+     "semantic": {
+      "score": null,
+      "top": [
+       "Llanowar Mentor",
+       "Nomadic Elf",
+       "Wirewood Elf",
+       "Quirion Elves",
+       "Marwyn, the Nurturer"
+      ]
+     },
+     "semantic+tags": {
+      "score": null,
+      "top": [
+       "Woodland Mystic",
+       "Llanowar Mentor",
+       "Wirewood Elf",
+       "Druid of the Cowl",
+       "Skyshroud Troopers"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Fyndhorn Elves",
+       "Heritage Druid",
+       "Joraga Treespeaker",
+       "Llanowar Mentor",
+       "Llanowar Elves"
+      ]
+     }
+    },
+    {
+     "q": "two mana sorcery that searches my library for any card and puts it into my hand",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Uncovered Clues",
+       "Everythingamajig",
+       "Time of Need",
+       "Advice from the Fae",
+       "Timberland Ancient"
+      ]
+     },
+     "semantic": {
+      "score": null,
+      "top": [
+       "Dark Petition",
+       "Mastermind's Acquisition",
+       "Demonic Counsel",
+       "Demonic Bargain",
+       "Eerie Procession"
+      ]
+     },
+     "semantic+tags": {
+      "score": null,
+      "top": [
+       "Mastermind's Acquisition",
+       "Demonic Bargain",
+       "Eerie Procession",
+       "Sylvan Scrying",
+       "Rhystic Tutor"
+      ]
+     },
+     "search": {
+      "score": 2,
+      "top": [
+       "Treasure Hunt",
+       "Demonic Tutor",
+       "Sylvan Scrying",
+       "Desperate Research",
+       "Assemble the Team"
+      ]
+     }
+    },
+    {
+     "q": "enchantment that doubles the tokens I create",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Invasion of Belenon // Belenon War Anthem",
+       "Daysquad Marshal",
+       "Fortifying Provisions",
+       "Three Blind Mice",
+       "Evangel of Heliod"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Anointed Procession",
+       "Parallel Lives",
+       "Primal Vigor",
+       "Doubling Season",
+       "Mondrak, Glory Dominus"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Anointed Procession",
+       "Doubling Season",
+       "Primal Vigor",
+       "Parallel Lives",
+       "Renewed Solidarity"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Anointed Procession",
+       "Doubling Season",
+       "Primal Vigor",
+       "Parallel Lives",
+       "Renewed Solidarity"
+      ]
+     }
+    },
+    {
+     "q": "win the game when my library has no cards",
+     "bm25": {
+      "score": 3,
+      "top": [
+       "Satyr Wayfinder",
+       "Sharkey, Tyrant of the Shire",
+       "Jace, Wielder of Mysteries",
+       "Fblthp, Impossibly Lost",
+       "Goblin Bangchuckers"
+      ]
+     },
+     "semantic": {
+      "score": 2,
+      "top": [
+       "Doctor Doom, Unrivaled",
+       "Jace, Wielder of Mysteries",
+       "Laboratory Maniac",
+       "Barren Glory",
+       "Fblthp, Impossibly Lost"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Laboratory Maniac",
+       "Doctor Doom, Unrivaled",
+       "Fblthp, Impossibly Lost",
+       "Jace, Wielder of Mysteries",
+       "Battle of Wits"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Laboratory Maniac",
+       "Doctor Doom, Unrivaled",
+       "Fblthp, Impossibly Lost",
+       "Jace, Wielder of Mysteries",
+       "Battle of Wits"
+      ]
+     }
+    },
+    {
+     "q": "equipment with free equip that gives haste and shroud",
+     "bm25": {
+      "score": 1,
+      "top": [
+       "Lightning Greaves",
+       "Sting, the Glinting Dagger",
+       "Aegis of the Legion",
+       "Cloak of the Bat",
+       "Fleetfeather Sandals"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Lightning Greaves",
+       "Neurok Stealthsuit",
+       "Swiftfoot Boots",
+       "Silver Shroud Costume",
+       "Lavaspur Boots"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Lightning Greaves",
+       "Silver Shroud Costume",
+       "Lavaspur Boots",
+       "Haunted Cloak",
+       "Swiftfoot Boots"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Lightning Greaves",
+       "Silver Shroud Costume",
+       "Lavaspur Boots",
+       "Haunted Cloak",
+       "Swiftfoot Boots"
+      ]
+     }
+    },
+    {
+     "q": "lets me play lands from my graveyard",
+     "bm25": {
+      "score": 8,
+      "top": [
+       "Magus of the Will",
+       "The Binding of the Titans",
+       "Serra Paragon",
+       "Fieldmist Borderpost",
+       "Future Sight"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Conduit of Worlds",
+       "Szarel, Genesis Shepherd",
+       "Mole Man, Moloid Master",
+       "Wrenn and Realmbreaker",
+       "Walk-In Closet // Forgotten Cellar"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Crucible of Worlds",
+       "Walk-In Closet // Forgotten Cellar",
+       "Conduit of Worlds",
+       "Szarel, Genesis Shepherd",
+       "Shaman's Trance"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Crucible of Worlds",
+       "Walk-In Closet // Forgotten Cellar",
+       "Conduit of Worlds",
+       "Szarel, Genesis Shepherd",
+       "Shaman's Trance"
+      ]
+     }
+    },
+    {
+     "q": "stops opponents from casting spells during my turn",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Sen Triplets",
+       "Final-Word Phantom",
+       "Iron-Fist Pulverizer",
+       "Root-Kin Ally",
+       "Tidal Barracuda"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Conqueror's Flail",
+       "Grand Abolisher",
+       "Myrel, Shield of Argive",
+       "Mandate of Peace",
+       "Megatron, Tyrant // Megatron, Destructive Force"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Grand Abolisher",
+       "Mandate of Peace",
+       "Conqueror's Flail",
+       "Myrel, Shield of Argive",
+       "Kutzil, Malamet Exemplar"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Grand Abolisher",
+       "Mandate of Peace",
+       "Conqueror's Flail",
+       "Myrel, Shield of Argive",
+       "Kutzil, Malamet Exemplar"
+      ]
+     }
+    },
+    {
+     "q": "big green creature that gives all my creatures trample and plus X plus X when it enters",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Big Bertha",
+       "Hydradoodle",
+       "Mind Burst",
+       "Kjeldoran War Cry",
+       "Hornbash Mentor"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Craterhoof Behemoth",
+       "Towering Titan",
+       "Earthshaker Giant",
+       "Nissa, Ascended Animist",
+       "Summon: Titan"
+      ]
+     },
+     "semantic+tags": {
+      "score": null,
+      "top": [
+       "Earthshaker Giant",
+       "Towering Titan",
+       "Spider-Man, Miles Morales",
+       "Rothga, Bonded Engulfer",
+       "Nissa, Ascended Animist"
+      ]
+     },
+     "search": {
+      "score": null,
+      "top": [
+       "Earthshaker Giant",
+       "Towering Titan",
+       "Spider-Man, Miles Morales",
+       "Rothga, Bonded Engulfer",
+       "Old One Eye"
+      ]
+     }
+    }
+   ]
+  },
+  "numeric": {
+   "summary": {
+    "bm25": {
+     "top1": 2,
+     "top3": 2,
+     "top10": 2,
+     "out_of": 8
+    },
+    "semantic": {
+     "top1": 4,
+     "top3": 6,
+     "top10": 7,
+     "out_of": 8
+    },
+    "semantic+tags": {
+     "top1": 2,
+     "top3": 4,
+     "top10": 6,
+     "out_of": 8
+    },
+    "search": {
+     "top1": 3,
+     "top3": 6,
+     "top10": 8,
+     "out_of": 8
+    }
+   },
+   "queries": [
+    {
+     "q": "two mana blue instant that counters any spell",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Condescend",
+       "Smokebraider",
+       "Don't Make a Sound",
+       "Jwari Disruption // Jwari Ruins",
+       "Exquisite Firecraft"
+      ]
+     },
+     "semantic": {
+      "score": null,
+      "top": [
+       "Thassa's Rebuff",
+       "Complicate",
+       "Counterbore",
+       "Fervent Denial",
+       "Spellgyre"
+      ]
+     },
+     "semantic+tags": {
+      "score": null,
+      "top": [
+       "Contradict",
+       "Countermand",
+       "Nullify",
+       "Negate",
+       "Frightful Delusion"
+      ]
+     },
+     "search": {
+      "score": 6,
+      "top": [
+       "Nullify",
+       "Negate",
+       "Lose Focus",
+       "Quench",
+       "Confound"
+      ]
+     }
+    },
+    {
+     "q": "one mana red instant that deals three damage to any target",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Genesis Effect",
+       "Char",
+       "Light of Judgment",
+       "Goblin Bangchuckers",
+       "Ghostly Keybearer"
+      ]
+     },
+     "semantic": {
+      "score": 6,
+      "top": [
+       "Fiery Temper",
+       "Ghostfire",
+       "Incinerate",
+       "Open Fire",
+       "Sonic Seizure"
+      ]
+     },
+     "semantic+tags": {
+      "score": null,
+      "top": [
+       "Fire Ambush",
+       "Fiery Temper",
+       "Searing Spear",
+       "Carbonize",
+       "Incinerate"
+      ]
+     },
+     "search": {
+      "score": 2,
+      "top": [
+       "Collateral Damage",
+       "Lightning Bolt",
+       "Shard Volley",
+       "Sonic Seizure",
+       "Shock"
+      ]
+     }
+    },
+    {
+     "q": "zero mana artifact that taps for mana",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Fire Diamond",
+       "Zero, Incorporeal Sensate",
+       "Thornglint Bridge",
+       "Ashling's Prerogative",
+       "Planar Atlas"
+      ]
+     },
+     "semantic": {
+      "score": 2,
+      "top": [
+       "Paradise Mantle",
+       "Mox Tantalite",
+       "Chrome Mox",
+       "Mana Crypt",
+       "Lotus Petal"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Mox Tantalite",
+       "Abyssal Lotus",
+       "Mox Pearl",
+       "Mana Crypt",
+       "Lotus Petal"
+      ]
+     },
+     "search": {
+      "score": 2,
+      "top": [
+       "Paradise Mantle",
+       "Mox Tantalite",
+       "Abyssal Lotus",
+       "Mox Jet",
+       "Mox Pearl"
+      ]
+     }
+    },
+    {
+     "q": "four mana white sorcery that destroys all creatures",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Catastrophe",
+       "Dúnedain Blade",
+       "Subterranean Tremors",
+       "Kindle",
+       "Keeper of the Dead"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Day of Judgment",
+       "Kirtar's Wrath",
+       "March of Souls",
+       "Avenge",
+       "Wrath of God"
+      ]
+     },
+     "semantic+tags": {
+      "score": 2,
+      "top": [
+       "Fumigate",
+       "Day of Judgment",
+       "March of Souls",
+       "Doomskar",
+       "Wrath of God"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Day of Judgment",
+       "Supreme Verdict",
+       "Wrath of God",
+       "Divine Reckoning",
+       "Kaya's Wrath"
+      ]
+     }
+    },
+    {
+     "q": "four mana green sorcery that searches for two basic lands and puts them onto the battlefield",
+     "bm25": {
+      "score": 1,
+      "top": [
+       "Explosive Vegetation",
+       "Planar Engineering",
+       "Mental Journey",
+       "Edge of Autumn",
+       "Entish Restoration"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Circuitous Route",
+       "New Generation's Technique",
+       "Celebrate the Harvest",
+       "Reach the Horizon",
+       "Peregrination"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Nissa's Expedition",
+       "Map the Frontier",
+       "Seek the Horizon",
+       "Traverse the Outlands",
+       "Explosive Vegetation"
+      ]
+     },
+     "search": {
+      "score": 3,
+      "top": [
+       "Map the Frontier",
+       "Seek the Horizon",
+       "Explosive Vegetation",
+       "Path of the Animist",
+       "Celebrate the Harvest"
+      ]
+     }
+    },
+    {
+     "q": "two mana green creature that taps for one mana of any color",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Hermitic Herbalist",
+       "Kami of Whispered Hopes",
+       "Base Camp",
+       "Sunken Citadel",
+       "Arbor Adherent"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Ilysian Caryatid",
+       "Paradise Druid",
+       "Manaweft Sliver",
+       "Three Tree Rootweaver",
+       "Arbor Adherent"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Oasis Ritualist",
+       "Great Forest Druid",
+       "Xenobotanist",
+       "Lifespring Druid",
+       "Utopia Tree"
+      ]
+     },
+     "search": {
+      "score": 4,
+      "top": [
+       "Sylvok Explorer",
+       "Great Forest Druid",
+       "Xenobotanist",
+       "Ilysian Caryatid",
+       "Utopia Tree"
+      ]
+     }
+    },
+    {
+     "q": "one mana white instant that gives a creature protection from a color of my choice",
+     "bm25": {
+      "score": 1,
+      "top": [
+       "Brave the Elements",
+       "Gods Willing",
+       "Stave Off",
+       "Faith's Shield",
+       "Razor Barrier"
+      ]
+     },
+     "semantic": {
+      "score": 2,
+      "top": [
+       "Feat of Resistance",
+       "Faith's Shield",
+       "Angelic Intervention",
+       "Gods Willing",
+       "Akroma's Blessing"
+      ]
+     },
+     "semantic+tags": {
+      "score": 3,
+      "top": [
+       "Feat of Resistance",
+       "Shelter",
+       "Gods Willing",
+       "Angelic Intervention",
+       "Blessed Breath"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Gods Willing",
+       "Blessed Breath",
+       "Faith's Shield",
+       "Stave Off",
+       "Brave the Elements"
+      ]
+     }
+    },
+    {
+     "q": "one mana black instant that puts any card from my library on top of it",
+     "bm25": {
+      "score": null,
+      "top": [
+       "Spin into Myth",
+       "Prying Questions",
+       "Psychic Surgery",
+       "Uncovered Clues",
+       "Sphinx-Bone Wand"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Vampiric Tutor",
+       "Tainted Pact",
+       "Spin into Myth",
+       "Insidious Dreams",
+       "Moonlight Bargain"
+      ]
+     },
+     "semantic+tags": {
+      "score": 1,
+      "top": [
+       "Vampiric Tutor",
+       "Painful Memories",
+       "Insidious Dreams",
+       "Tainted Pact",
+       "Agonizing Memories"
+      ]
+     },
+     "search": {
+      "score": 1,
+      "top": [
+       "Vampiric Tutor",
+       "Misinformation",
+       "Entomb",
+       "Demonic Consultation",
+       "Spoils of the Vault"
+      ]
+     }
+    }
+   ]
+  },
+  "jargon": {
+   "summary": {
+    "bm25": {
+     "correct_in_top5": 11,
+     "out_of": 40
+    },
+    "semantic": {
+     "correct_in_top5": 20,
+     "out_of": 40
+    },
+    "semantic+tags": {
+     "correct_in_top5": 35,
+     "out_of": 40
+    },
+    "search": {
+     "correct_in_top5": 29,
+     "out_of": 40
+    }
+   },
+   "queries": [
+    {
+     "q": "board wipe",
+     "bm25": {
+      "score": 1,
+      "top": [
+       "Boarding Party",
+       "Time Wipe",
+       "Wipe Clean",
+       "Wipe Away",
+       "Boarded Window"
+      ]
+     },
+     "semantic": {
+      "score": 1,
+      "top": [
+       "Soulcipher Board // Cipherbound Spirit",
+       "Time Wipe",
+       "Wipe Away",
+       "Séance Board",
+       "Boarded Window"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Worldfire",
+       "Bearer of the Heavens",
+       "Apocalypse",
+       "Once More with Feeling",
+       "Worldslayer"
+      ]
+     },
+     "search": {
+      "score": 0,
+      "top": [
+       "Prize Pig",
+       "Woolly Razorback",
+       "Bronzeplate Boar",
+       "Scandalmonger",
+       "First Little Pig"
+      ]
+     }
+    },
+    {
+     "q": "mana rock",
+     "bm25": {
+      "score": 0,
+      "top": [
+       "Park Map",
+       "Rock Slide",
+       "Wu Spy",
+       "Rock Jockey",
+       "Rock Star"
+      ]
+     },
+     "semantic": {
+      "score": 3,
+      "top": [
+       "Mana Geode",
+       "Mana Crypt",
+       "The Mana Rig",
+       "Mana Screw",
+       "Toggo, Goblin Weaponsmith"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Mana Geode",
+       "Mana Crypt",
+       "Mana Screw",
+       "Mana Prism",
+       "Red Mana Battery"
+      ]
+     },
+     "search": {
+      "score": 5,
+      "top": [
+       "Mana Geode",
+       "Mana Crypt",
+       "Mana Screw",
+       "Mana Prism",
+       "Red Mana Battery"
+      ]
+     }
+    },
+    {
+     "q": "mana dork",
+     "bm25": {
+      "score": 0,
+      "top": [
+       "Mana Flare",
+       "Mana Prism",
+       "Drain Power",
+       "Spell Blast",
+       "Lotus Petal"
+      ]
+     },
+     "semantic": {
+      "score": 0,
+      "top": [
+       "Gosta Dirk",
+       "Summon: Fat Chocobo",
+       "Okk",
+       "Vrock",
+       "Mana Crypt"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Undercellar Myconid",
+       "Millikin",
+       "Orcish Lumberjack",
+       "Shizuko, Caller of Autumn",
+       "Koilos Roc"
+      ]
+     },
+     "search": {
+      "score": 5,
+      "top": [
+       "Undercellar Myconid",
+       "Millikin",
+       "Orcish Lumberjack",
+       "Shizuko, Caller of Autumn",
+       "Koilos Roc"
+      ]
+     }
+    },
+    {
+     "q": "wheel effect",
+     "bm25": {
+      "score": 1,
+      "top": [
+       "Transmogrifying Licid",
+       "Strategy, Schmategy",
+       "Ferris Wheel",
+       "Glorious End",
+       "Murderous Spoils"
+      ]
+     },
+     "semantic": {
+      "score": 3,
+      "top": [
+       "Wheel of Potential",
+       "Wheel of Sun and Moon",
+       "Wheel of Torture",
+       "Magus of the Wheel",
+       "Wheel of Misfortune"
+      ]
+     },
+     "semantic+tags": {
+      "score": 3,
+      "top": [
+       "Wheel of Torture",
+       "Shocker",
+       "Wheel of Sun and Moon",
+       "Wheel and Deal",
+       "Strategy, Schmategy"
+      ]
+     },
+     "search": {
+      "score": 3,
+      "top": [
+       "Wheel of Torture",
+       "Shocker",
+       "Wheel of Sun and Moon",
+       "Wheel and Deal",
+       "Strategy, Schmategy"
+      ]
+     }
+    },
+    {
+     "q": "tutor",
+     "bm25": {
+      "score": 5,
+      "top": [
+       "Vampiric Tutor",
+       "Grim Tutor",
+       "Worldly Tutor",
+       "Emeritus of Woe // Demonic Tutor",
+       "Goblin Tutor"
+      ]
+     },
+     "semantic": {
+      "score": 5,
+      "top": [
+       "Sylvan Tutor",
+       "Demonic Tutor",
+       "Infernal Tutor",
+       "Worldly Tutor",
+       "Diabolic Tutor"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Idyllic Tutor",
+       "Sylvan Tutor",
+       "Cruel Tutor",
+       "Grim Tutor",
+       "Demonic Tutor"
+      ]
+     },
+     "search": {
+      "score": 4,
+      "top": [
+       "Booster Tutor",
+       "Combat Tutorial",
+       "Cruel Tutor",
+       "Demonic Tutor",
+       "Diabolic Tutor"
+      ]
+     }
+    },
+    {
+     "q": "fog effect",
+     "bm25": {
+      "score": 0,
+      "top": [
+       "Murderous Spoils",
+       "Fog of Gnats",
+       "Fog Patch",
+       "Overzealous Muscle",
+       "Blinding Fog"
+      ]
+     },
+     "semantic": {
+      "score": 3,
+      "top": [
+       "Fog",
+       "Blinding Fog",
+       "Fog on the Barrow-Downs",
+       "Heavy Fog",
+       "Fog of War"
+      ]
+     },
+     "semantic+tags": {
+      "score": 2,
+      "top": [
+       "Thoughtweft Gambit",
+       "Githzerai Monk",
+       "Fog",
+       "Angel's Grace",
+       "Lull"
+      ]
+     },
+     "search": {
+      "score": 2,
+      "top": [
+       "Thoughtweft Gambit",
+       "Githzerai Monk",
+       "Fog",
+       "Angel's Grace",
+       "Lull"
+      ]
+     }
+    },
+    {
+     "q": "sacrifice outlet",
+     "bm25": {
+      "score": 2,
+      "top": [
+       "Pick Your Poison",
+       "Territorial Dispute",
+       "To the Slaughter",
+       "Ashnod's Altar",
+       "Samite Censer-Bearer"
+      ]
+     },
+     "semantic": {
+      "score": 2,
+      "top": [
+       "Sacrifice Play",
+       "Hit // Run",
+       "Vessel of Malignity",
+       "Louisoix's Sacrifice",
+       "Goblin Lookout"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Sacrifice",
+       "Slobad, Iron Goblin",
+       "Sarcatog",
+       "Oath of Lim-Dûl",
+       "Daemogoth Woe-Eater"
+      ]
+     },
+     "search": {
+      "score": 5,
+      "top": [
+       "Sacrifice",
+       "Slobad, Iron Goblin",
+       "Sarcatog",
+       "Oath of Lim-Dûl",
+       "Daemogoth Woe-Eater"
+      ]
+     }
+    },
+    {
+     "q": "reanimation spell",
+     "bm25": {
+      "score": 2,
+      "top": [
+       "Reanimate",
+       "Rotlung Reanimator",
+       "Grave Researcher // Reanimate",
+       "Madame Hydra, Reanimated",
+       "Sentinel Tower"
+      ]
+     },
+     "semantic": {
+      "score": 3,
+      "top": [
+       "Diregraf Rebirth",
+       "Macabre Reconstruction",
+       "Blessed Reincarnation",
+       "Revoke Demise",
+       "Graveyard Shift"
+      ]
+     },
+     "semantic+tags": {
+      "score": 5,
+      "top": [
+       "Geth's Summons",
+       "Return to the Ranks",
+       "Edgar's Awakening",
+       "Diregraf Rebirth",
+       "Revoke Demise"
+      ]
+     },
+     "search": {
+      "score": 5,
+      "top": [
+       "Geth's Summons",
+       "Return to the Ranks",
+       "Edgar's Awakening",
+       "Diregraf Rebirth",
+       "Revoke Demise"
+      ]
+     }
+    }
+   ]
+  }
+ },
+ "latency_ms": {
+  "bm25": {
+   "median": 37,
+   "max": 256,
+   "n": 31
+  },
+  "semantic": {
+   "median": 94,
+   "max": 477,
+   "n": 31
+  },
+  "semantic+tags": {
+   "median": 92,
+   "max": 152,
+   "n": 31
+  },
+  "search": {
+   "median": 130,
+   "max": 298,
+   "n": 31
+  }
+ }
+}
