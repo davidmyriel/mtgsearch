@@ -8,3 +8,16 @@ power include:extras
 -pow>=1 t:sphinx
     Scryfall reads a negated comparison as a negated name word and returns every Sphinx.
     We negate the comparison itself, which is what the query says.
+
+o:"~ deals" t:instant mv=1 c:r
+    We return one card Scryfall does not: "Khaaaaaaaaaaaannn!", whose text starts with its own
+    name. Unexplained; probably Scryfall's name substitution trips on the punctuation.
+
+t:phenomenon
+    Scryfall returns 28 cards, we return 21. Six are oversized event cards that are missing from
+    Scryfall's one-per-card bulk file, and one has a joke type line on the printing that file
+    picks. Indexing every printing (the default_cards file) would close this.
+
+is:digital t:sphinx
+    `is:digital` is true when any printing is digital. That is printing-level data, so the
+    keyword is reported as unsupported rather than answered from one printing.

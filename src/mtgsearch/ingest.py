@@ -67,7 +67,7 @@ def build_documents(data_dir: Path) -> list[dict]:
     return [build_document(c, tags.get(c["oracle_id"])) for c in scryfall.read_jsonl_gz(cards_path)]
 
 
-def upsert(docs: Iterable[dict], log=print) -> str | None:
+def upsert(docs: Iterable[dict], log=print, expected: int | None = None) -> str | None:
     from topk_sdk.error import CollectionAlreadyExistsError
 
     client = config.client()
@@ -83,14 +83,31 @@ def upsert(docs: Iterable[dict], log=print) -> str | None:
             log(f"  {min(i + BATCH, len(docs))}/{len(docs)} documents, {time.time() - t0:.0f}s")
     count = col.count(lsn=lsn)
     log(f"collection count {count}")
-    if count < len(docs):
-        raise SystemExit(f"expected at least {len(docs)} documents, collection has {count}")
+    if count < (expected or len(docs)):
+        raise SystemExit(f"expected at least {expected or len(docs)} documents, collection has {count}")
     return lsn
 
 
-def run(data_dir: Path = config.DATA_DIR, dry_run: bool = False) -> None:
+def changed(docs: list[dict], snapshot: Path) -> tuple[list[dict], list[str]]:
+    """Compare with the last ingested snapshot. Returns (new or changed documents, removed ids)."""
+    if not snapshot.exists():
+        return docs, []
+    previous = {d["_id"]: d for d in map(json.loads, snapshot.open())}
+    current = {d["_id"] for d in docs}
+    return [d for d in docs if previous.get(d["_id"]) != d], sorted(set(previous) - current)
+
+
+def run(data_dir: Path = config.DATA_DIR, dry_run: bool = False, full: bool = False) -> None:
+    """Refresh the collection. Only new or changed cards are re-sent unless `full` is set,
+    so a daily run re-embeds a handful of cards rather than the whole set."""
     docs = build_documents(data_dir)
-    print(f"built {len(docs)} documents")
-    (data_dir / "documents.jsonl").write_text("".join(json.dumps(d) + "\n" for d in docs))
-    if not dry_run:
-        upsert(docs)
+    snapshot = data_dir / f"documents.{config.COLLECTION}.jsonl"
+    todo, removed = (docs, []) if full else changed(docs, snapshot)
+    print(f"built {len(docs)} documents: {len(todo)} to upsert, {len(removed)} to delete")
+    if dry_run:
+        return
+    if todo:
+        upsert(todo, expected=len(docs) if not removed else None)
+    if removed:
+        config.collection().delete(removed)
+    snapshot.write_text("".join(json.dumps(d) + "\n" for d in docs))

@@ -65,7 +65,7 @@ def test_transform_card_keeps_per_face_values(docs):
     assert d["c_sets"] == ["R", "W"]  # one colour set per face, not their union
     assert d["id_sets"] == ["WR"]
     assert (d["pow_min"], d["pow_max"]) == (4.0, 6.0)
-    assert d["stat_rel"] == ["pow=tou", "pow>tou"]  # 4/4 front, 6/5 back
+    assert d["stat_rel"] == ["pow<tou", "pow=tou", "pow>tou"]  # 4/4 and 6/5, compared across faces
     assert d["pt_num"] == 8.0  # front face only
     assert d["mana_cost"] == "{3}{W}{W}"
     assert "indestructible" in d["oracle_lc"] and "deals 3 damage" in d["oracle_lc"]

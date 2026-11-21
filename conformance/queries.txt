@@ -46,7 +46,7 @@ t:"creature — sphinx"
 o:"draw two cards" t:creature c:u
 o:"~ enters tapped" t:artifact
 o:"~ enters tapped" t:land id:c mv=0
-o:"~ deals" t:instant mv=1 c:r
+o:"~ deals 3 damage" t:instant c:r mv<=2
 fo:"cumulative upkeep" c:w
 kw:flying -t:creature c:w mv=1
 o:changeling -t:creature
@@ -95,6 +95,7 @@ not:permanent t:arcane mv=1
 is:historic t:saga c:r
 is:commander t:sphinx
 is:hybrid t:sphinx
+is:hybrid t:angel
 is:phyrexian
 is:spell t:sphinx
 is:funny mv>=9

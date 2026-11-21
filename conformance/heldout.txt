@@ -1,0 +1,102 @@
+# Held-out conformance queries. Written after the rules were tuned on queries.txt and before
+# any of these were run, so the first-run pass rate is an unbiased estimate. Do not tune against
+# this file: when a failure here is fixed, move the query to queries.txt and add a new one here.
+
+# names
+counterspell
+"sol ring"
+jace mind
+!"Jace, the Mind Sculptor"
+-dragon t:dragon c:r mv=4
+name:/^the \w+$/
+
+# colours and colour identity
+c:wubrg
+c>=3 t:angel
+c<2 t:dragon mv>=8
+c:g c:u t:elf
+color=gruul t:werewolf
+c>rg t:dragon
+id=wu t:legendary t:bird
+id:abzan t:planeswalker
+identity>=wubrg
+id:1 t:land o:"any color"
+
+# types
+t:equipment t:legendary mv<=1
+t:aura -t:enchantment
+t:"artifact creature" t:golem pow>=6
+t:human t:wizard c=u mv=1
+t:land t:artifact
+t:god t:creature c:r
+t:battle
+t:dinosaur t:legendary c:g
+
+# rules text and keywords
+o:"destroy all creatures" c:w mv<=4
+o:"extra turn" c:u t:sorcery
+o:"can't be countered" t:creature c:g mv<=3
+fo:"can block only creatures with flying"
+o:"~ can't be blocked" t:creature c:u mv=2
+kw:trample kw:haste t:dragon
+keyword:deathtouch c:g t:snake
+o:/sacrifice a creature:/ c:b mv<=2
+t:/^legendary artifact$/
+
+# mana value, power, toughness, loyalty
+mv=7 t:angel
+mv<=1 t:dragon
+mv>=10 c:g
+cmc:3 t:planeswalker c:w
+pow=0 tou>=7
+pow>=7 tou<=3
+tou=1 pow>=5 c:r
+pow<tou t:dragon mv<=4
+pow>=tou t:wall
+loy<=2 t:planeswalker
+pt<=1 t:creature c:w mv>=3
+pt=7 t:angel
+
+# format legality
+f:modern t:planeswalker c:g mv=3
+f:legacy -f:modern t:elf mv=1
+banned:modern t:land
+banned:pauper
+restricted:vintage t:artifact
+f:premodern t:sliver
+
+# is: flags
+is:dfc t:werewolf c:g mv=2
+is:split c:m mv>=7
+is:vanilla t:dragon
+is:bear t:elf
+is:reserved c:r t:creature mv=3
+is:commander t:angel c=w mv<=3
+not:spell t:creature
+is:historic -t:legendary -t:artifact
+is:hybrid t:elf
+is:phyrexian t:instant
+is:leveler c:w
+
+# community tags
+otag:sweeper mv<=2
+otag:tutor t:artifact mv=2
+function:removal t:land
+otag:mana-dork c:u
+
+# popularity
+edhrec<=100 t:creature
+edhrec>=20000 t:angel
+
+# or and nesting
+(t:elf or t:goblin) t:wizard mv=1
+t:angel (c:b or c:r) -c:w
+c:u (o:"draw a card" or o:"draw two cards") t:instant mv=1
+-(t:creature or t:land) c:g mv=0
+
+# extras
+t:conspiracy
+t:token t:angel
+t:emblem o:draw
+angel include:extras mv>=7
+is:funny t:goblin c:r mv=1

@@ -37,7 +37,7 @@ ALL_COLOR_SETS = [frozenset(c) for n in range(6) for c in combinations(COLORS, n
 FORMAT_ALIASES = {"edh": "commander", "pdh": "paupercommander"}
 FLAGS = {
     "split", "flip", "transform", "meld", "leveler", "mdfc", "dfc", "permanent", "spell", "historic",
-    "vanilla", "bear", "commander", "hybrid", "phyrexian", "reserved", "gamechanger", "digital", "funny",
+    "vanilla", "bear", "commander", "hybrid", "phyrexian", "reserved", "gamechanger", "funny",
 }  # fmt: skip
 FLAG_ALIASES = {"tdfc": "transform"}
 STATS = {"power": "pow", "toughness": "tou", "loyalty": "loy"}
@@ -205,6 +205,8 @@ def _keyword(kw: Keyword, options: Options):
         flag = FLAG_ALIASES.get(value.lower(), value.lower())
         if flag not in FLAGS:
             raise Unsupported(f"'{kw.key}:{value}' is not supported yet")
+        if canonical == "is" and flag == "funny":
+            options.include_extras = True  # playtest and holiday cards are only findable this way
         test = ("in", "flags", flag)
         return test if canonical == "is" else ("not", test)
     if canonical == "otag":

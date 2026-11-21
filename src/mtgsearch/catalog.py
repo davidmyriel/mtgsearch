@@ -17,6 +17,20 @@ def type_word_set() -> frozenset[str]:
     return frozenset(resources.files("mtgsearch").joinpath(FILE).read_text(encoding="utf-8").split())
 
 
-def build(documents: Iterable[dict]) -> list[str]:
-    """All type words that appear on cards Scryfall shows by default or on extras."""
-    return sorted({w for d in documents for w in d.get("type_words", [])})
+def build(cards: Iterable[dict]) -> list[str]:
+    """Type words from Scryfall card objects: cards shown by default, plus real game extras.
+
+    Words that only occur on memorabilia and other hidden oddities ("Summon Legend") are left
+    out, otherwise `t:legend` would stop matching "Legendary".
+    """
+    from .documents import is_extra, type_words
+
+    game_extras = {"token", "double_faced_token", "emblem", "planar", "scheme", "vanguard"}
+    words: set[str] = set()
+    for card in cards:
+        if not is_extra(card) or card["layout"] in game_extras:
+            line = card.get("type_line") or " // ".join(
+                f.get("type_line", "") for f in card.get("card_faces", [])
+            )
+            words.update(type_words(line))
+    return sorted(words)

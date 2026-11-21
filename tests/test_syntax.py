@@ -69,6 +69,7 @@ def test_parse_errors(bad):
         "order:usd",
         "pow>loy",
         r"o:/\spp/",
+        "is:digital",
     ],
 )
 def test_unsupported_keywords_are_reported_not_ignored(query):
@@ -145,7 +146,7 @@ def test_numbers(docs):
     assert matches(docs, "mv=1") == ["Llanowar Elves", "Sol Ring"]
     assert matches(docs, "mv:odd t:creature") == [AVACYN, "Boros Reckoner", "Llanowar Elves"]
     assert matches(docs, "pow>=4") == [AVACYN, "Consecrated Sphinx"]
-    assert matches(docs, "tou>pow") == ["Consecrated Sphinx", "Tarmogoyf"]
+    assert matches(docs, "tou>pow") == [AVACYN, "Consecrated Sphinx", "Tarmogoyf"]  # 5 toughness vs 4 power
     assert matches(docs, "loy=3") == ["Jace, the Mind Sculptor"]
     assert matches(docs, "pt=10") == ["Consecrated Sphinx"]
     assert matches(docs, "edhrec<10") == ["Sol Ring"]
@@ -195,6 +196,11 @@ def test_extras_are_hidden_unless_revealed(docs):
     assert "Goblin" in matches(docs, "t:token")
     assert "Goblin" not in matches(docs, "t:planeswalker or c:r")  # "plane" in "planeswalker" must not reveal
     assert "Goblin" in matches(docs, "name:/^goblin$/")  # a name regex searches extras too
+    assert compile_query("is:funny")[0] == ("in", "flags", "funny")  # is:funny reveals extras
+    assert compile_query("not:funny")[0] == (
+        "and",
+        [("not", ("in", "flags", "funny")), ("eq", "extra", False)],
+    )
 
 
 def test_display_options():

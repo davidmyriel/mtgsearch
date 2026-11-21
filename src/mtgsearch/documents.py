@@ -100,7 +100,8 @@ def _values(card: dict, key: str) -> list[float]:
 
 
 def _flags(card: dict, type_lc: str, oracle: str, full_oracle: str) -> list[str]:
-    layout, cost = card["layout"], _first(card, "mana_cost") or ""
+    # Front face (or first half) only: a hybrid symbol on an adventure half does not count.
+    layout, cost = card["layout"], (_first(card, "mana_cost") or "").split(" // ")[0]
     front = _faces(card)[0]
     front_type = fold(front.get("type_line") or card.get("type_line") or "")
     power, toughness = stat(_first(card, "power")), stat(_first(card, "toughness"))
@@ -128,10 +129,10 @@ def _flags(card: dict, type_lc: str, oracle: str, full_oracle: str) -> list[str]
         flags.add("hybrid")
     if "/P}" in cost or "/P}" in full_oracle:
         flags.add("phyrexian")
-    for key, name in (("reserved", "reserved"), ("game_changer", "gamechanger"), ("digital", "digital")):
+    for key, name in (("reserved", "reserved"), ("game_changer", "gamechanger")):
         if card.get(key):
             flags.add(name)
-    if card.get("set_type") == "funny":
+    if card.get("set_type") == "funny" or "playtest" in (card.get("promo_types") or []):
         flags.add("funny")
     return sorted(flags)
 
@@ -183,11 +184,11 @@ def build_document(card: dict, tags: dict | None = None) -> dict:
     else:
         color_sets = sorted({color_key(f.get("colors", [])) for f in faces})
 
-    # Power and toughness can match on any face; their comparison (pow>tou) too.
+    # Power and toughness match on any face. Scryfall also compares them across faces:
+    # `pow>tou` holds when some face's power exceeds some face's toughness.
     relations = set()
-    for holder in [card, *card.get("card_faces", [])]:
-        p, t = stat(holder.get("power")), stat(holder.get("toughness"))
-        if p is not None and t is not None:
+    for p in _values(card, "power"):
+        for t in _values(card, "toughness"):
             relations.add("pow>tou" if p > t else "pow<tou" if p < t else "pow=tou")
     front_p, front_t = stat(faces[0].get("power")), stat(faces[0].get("toughness"))
 
