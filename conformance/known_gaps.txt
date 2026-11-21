@@ -1,0 +1,10 @@
+# Queries where we knowingly differ from Scryfall. They are not counted in the conformance rate.
+# Format: query, then an indented line explaining the difference.
+
+power include:extras
+    Scryfall also matches flavour names of individual printings (a Lightning Greaves printed as a
+    Power Rangers card). That is printing-level data, which this version does not index.
+
+-pow>=1 t:sphinx
+    Scryfall reads a negated comparison as a negated name word and returns every Sphinx.
+    We negate the comparison itself, which is what the query says.

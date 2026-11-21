@@ -1,0 +1,121 @@
+# Scryfall-syntax queries used for differential testing against Scryfall's own API.
+# One query per line. Lines starting with # are comments.
+# Each query is run on Scryfall and on our TopK collection; the two result sets must match.
+
+# names
+lightning bolt
+!"lightning bolt"
+!fire
+sphinx
+urzas tower
+-fire c:r t:instant mv=1
+through (depths or sands or mists)
+name:/\bizzet\b/
+name:/sphinx/
+ightning mv=1 c:r
+
+# colours and colour identity
+c:rg t:sphinx
+c=uw t:angel
+color>=uw -c:red t:wizard
+c:colorless t:creature pow>=10
+c:m t:sphinx
+c=2 is:bear
+c:azorius t:sphinx
+c<=bant c>=1 t:dragon
+c!=u t:sphinx
+c:r t:angel pow=6
+c=1 t:angel t:legendary mv=5
+c:m t:werewolf
+id<=esper t:instant mv>=6
+id:c t:land o:"draw a card"
+id:quandrix t:hydra
+
+# types
+t:merfolk t:legend
+t:goblin -t:creature
+t:"legendary creature" t:sphinx
+t:leg t:sphinx
+t:fish
+t:wolf mv=2
+t:jelly
+t:sph
+t:"creature — sphinx"
+
+# rules text and keywords
+o:"draw two cards" t:creature c:u
+o:"~ enters tapped" t:artifact
+o:"~ enters tapped" t:land id:c mv=0
+o:"~ deals" t:instant mv=1 c:r
+fo:"cumulative upkeep" c:w
+kw:flying -t:creature c:w mv=1
+o:changeling -t:creature
+o:"whenever an opponent draws a card"
+o:/draws? two cards/ t:sphinx
+t:creature o:/^{T}:/ c:u mv=1
+
+# mana value, power, toughness, loyalty
+mv=0 t:artifact -t:creature
+mv>=12
+mv:even t:sphinx
+manavalue:odd t:sphinx
+pow>=8 c:u
+pow>tou c:w t:creature mv=1
+tou>pow t:elf
+pow=tou t:sphinx
+pt>=20
+t:planeswalker loy=3
+loy>=7
+pow=6 t:angel
+pow<=0 t:creature c:g mv>=5
+tou>=13
+-kw:flying t:sphinx
+
+# format legality
+f:pauper t:sphinx
+f:standard t:sphinx
+banned:legacy
+restricted:vintage
+banned:commander t:creature
+f:vintage -f:legacy t:artifact
+
+# is: flags
+is:split c:u
+is:flip
+is:meld
+is:mdfc t:land
+is:transform t:planeswalker
+is:leveler
+is:vanilla c:g mv=1
+is:bear c:b
+is:reserved t:land
+is:gamechanger
+is:permanent t:rebel
+not:permanent t:arcane mv=1
+is:historic t:saga c:r
+is:commander t:sphinx
+is:hybrid t:sphinx
+is:phyrexian
+is:spell t:sphinx
+is:funny mv>=9
+is:funny t:sphinx
+
+# community tags
+otag:wheel
+function:fog
+otag:mana-rock mv=1
+
+# popularity
+edhrec<=10
+edhrec>30000 t:sphinx
+
+# or and nesting
+t:fish or t:bird c:u mv=1
+t:legendary (t:goblin or t:elf) mv>=6
+
+# extras
+t:scheme
+t:vanguard
+t:emblem
+t:token t:sphinx
+sphinx include:extras

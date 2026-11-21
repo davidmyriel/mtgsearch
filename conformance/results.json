@@ -1,0 +1,949 @@
+{
+ "summary": {
+  "pass": 41,
+  "fail": 39,
+  "unsupported": 0,
+  "error": 0
+ },
+ "results": [
+  {
+   "query": "lightning bolt",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"lightning bolt\"",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!fire",
+   "status": "fail",
+   "scryfall_total": 1,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [
+    "Start // Fire"
+   ],
+   "note": ""
+  },
+  {
+   "query": "sphinx",
+   "status": "fail",
+   "scryfall_total": 57,
+   "ours_total": 58,
+   "missing": [],
+   "extra": [
+    "MagicConsecrated Sphinx"
+   ],
+   "note": ""
+  },
+  {
+   "query": "urzas tower",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-fire c:r t:instant mv=1",
+   "status": "fail",
+   "scryfall_total": 151,
+   "ours_total": 154,
+   "missing": [],
+   "extra": [
+    "Establishing Shot",
+    "Tax Bolt",
+    "Whammy Burn"
+   ],
+   "note": ""
+  },
+  {
+   "query": "through (depths or sands or mists)",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "name:/\\bizzet\\b/",
+   "status": "fail",
+   "scryfall_total": 21,
+   "ours_total": 18,
+   "missing": [
+    "Izzet League",
+    "Izzet Steam Maze",
+    "Ral, Izzet Viceroy Emblem"
+   ],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c:rg t:sphinx",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c=uw t:angel",
+   "status": "fail",
+   "scryfall_total": 11,
+   "ours_total": 12,
+   "missing": [],
+   "extra": [
+    "Lulu, Curious Hollyphant"
+   ],
+   "note": ""
+  },
+  {
+   "query": "color>=uw -c:red t:wizard",
+   "status": "fail",
+   "scryfall_total": 68,
+   "ours_total": 77,
+   "missing": [],
+   "extra": [
+    "Gale, Holy Conduit",
+    "Imoen, Honorable Trickster",
+    "Niko, Spark of Victory",
+    "Sygg, Wanderwine Wisdom // Sygg, Wanderbrine Shield",
+    "The Fact Checker",
+    "The Keeper of the Yellow Hat",
+    "The Multiplayer Nitpickers",
+    "Valko Indorian, Researcher"
+   ],
+   "note": ""
+  },
+  {
+   "query": "c:colorless t:creature pow>=10",
+   "status": "fail",
+   "scryfall_total": 26,
+   "ours_total": 28,
+   "missing": [
+    "Elbrus, the Binding Blade // Withengar Unbound"
+   ],
+   "extra": [
+    "Emrakul and Chatterfang",
+    "Kozilek, Compleated",
+    "That Which Was Compleated"
+   ],
+   "note": ""
+  },
+  {
+   "query": "c:m t:sphinx",
+   "status": "pass",
+   "scryfall_total": 27,
+   "ours_total": 27,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c=2 is:bear",
+   "status": "fail",
+   "scryfall_total": 258,
+   "ours_total": 266,
+   "missing": [],
+   "extra": [
+    "Ano'thr, Equipment Commander",
+    "Loyal Cathar // Unhallowed Cathar",
+    "Panicked Bystander // Cackling Culprit",
+    "Plargg, Dean of Chaos // Augusta, Dean of Order",
+    "Pokey, the Scallywagg",
+    "Sygg, Wanderwine Wisdom // Sygg, Wanderbrine Shield",
+    "Syx, Robot Overlord",
+    "Valko Indorian, Researcher"
+   ],
+   "note": ""
+  },
+  {
+   "query": "c:azorius t:sphinx",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c<=bant c>=1 t:dragon",
+   "status": "fail",
+   "scryfall_total": 109,
+   "ours_total": 115,
+   "missing": [],
+   "extra": [
+    "Faerie Dragon",
+    "Kharis & The Beholder",
+    "Prismatic Dragon",
+    "Skanos, Blue Dragon Vassal",
+    "Skanos, Green Dragon Vassal",
+    "Skanos, White Dragon Vassal"
+   ],
+   "note": ""
+  },
+  {
+   "query": "c!=u t:sphinx",
+   "status": "pass",
+   "scryfall_total": 31,
+   "ours_total": 31,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "id<=esper t:instant mv>=6",
+   "status": "fail",
+   "scryfall_total": 110,
+   "ours_total": 115,
+   "missing": [],
+   "extra": [
+    "Blue Screen of Death",
+    "Call Up Emrakul to Help",
+    "Chic // Ago",
+    "Command the Chaff",
+    "There // They're // Their"
+   ],
+   "note": ""
+  },
+  {
+   "query": "id:c t:land o:\"draw a card\"",
+   "status": "fail",
+   "scryfall_total": 20,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [
+    "The Forgotten Place"
+   ],
+   "note": ""
+  },
+  {
+   "query": "id:quandrix t:hydra",
+   "status": "pass",
+   "scryfall_total": 52,
+   "ours_total": 52,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:merfolk t:legend",
+   "status": "fail",
+   "scryfall_total": 46,
+   "ours_total": 49,
+   "missing": [],
+   "extra": [
+    "Keeper of the Secret Lair",
+    "The Countering Runner",
+    "The Scholar of Seas"
+   ],
+   "note": ""
+  },
+  {
+   "query": "t:goblin -t:creature",
+   "status": "fail",
+   "scryfall_total": 7,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [
+    "Goblin Polka Band"
+   ],
+   "note": ""
+  },
+  {
+   "query": "t:\"legendary creature\" t:sphinx",
+   "status": "pass",
+   "scryfall_total": 20,
+   "ours_total": 20,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:leg t:sphinx",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:\"draw two cards\" t:creature c:u",
+   "status": "fail",
+   "scryfall_total": 59,
+   "ours_total": 61,
+   "missing": [],
+   "extra": [
+    "The Commander Recommender",
+    "The Value Knight"
+   ],
+   "note": ""
+  },
+  {
+   "query": "o:\"~ enters tapped\" t:artifact",
+   "status": "fail",
+   "scryfall_total": 82,
+   "ours_total": 7,
+   "missing": [
+    "Abyssal Lotus",
+    "Aeon Engine",
+    "Altar of the Lost",
+    "Arc Reactor",
+    "Balamb Garden, SeeD Academy // Balamb Garden, Airborne",
+    "Bronze Tablet",
+    "Charcoal Diamond",
+    "Clay Revenant"
+   ],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "fo:\"cumulative upkeep\" c:w",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "kw:flying -t:creature c:w mv=1",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:changeling -t:creature",
+   "status": "fail",
+   "scryfall_total": 17,
+   "ours_total": 19,
+   "missing": [],
+   "extra": [
+    "Everyone's an Impostor",
+    "You and Ooze Army?"
+   ],
+   "note": ""
+  },
+  {
+   "query": "o:\"whenever an opponent draws a card\"",
+   "status": "fail",
+   "scryfall_total": 16,
+   "ours_total": 19,
+   "missing": [],
+   "extra": [
+    "Inzerva, Master of Insights",
+    "MagicConsecrated Sphinx",
+    "Red Smothering Tithe"
+   ],
+   "note": ""
+  },
+  {
+   "query": "o:/draws? two cards/ t:sphinx",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:creature o:/^{T}:/ c:u mv=1",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "mv=0 t:artifact -t:creature",
+   "status": "fail",
+   "scryfall_total": 170,
+   "ours_total": 182,
+   "missing": [],
+   "extra": [
+    "Artifact Unknown Shores",
+    "Black Tulip",
+    "Deep Dish Pizza",
+    "Gleemox",
+    "Mindslaver Toolkit",
+    "Mirrored Lotus",
+    "Mox Poison",
+    "Orb of Origin"
+   ],
+   "note": ""
+  },
+  {
+   "query": "mv>=12",
+   "status": "pass",
+   "scryfall_total": 28,
+   "ours_total": 28,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "mv:even t:sphinx",
+   "status": "fail",
+   "scryfall_total": 47,
+   "ours_total": 48,
+   "missing": [],
+   "extra": [
+    "MagicConsecrated Sphinx"
+   ],
+   "note": ""
+  },
+  {
+   "query": "manavalue:odd t:sphinx",
+   "status": "pass",
+   "scryfall_total": 44,
+   "ours_total": 44,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pow>=8 c:u",
+   "status": "fail",
+   "scryfall_total": 46,
+   "ours_total": 50,
+   "missing": [
+    "Bruce Banner // The Incredible Hulk",
+    "Ludevic's Test Subject // Ludevic's Abomination"
+   ],
+   "extra": [
+    "Lorthos, Tentacled Terror",
+    "Riven Turnbull and Princess Lucrezia",
+    "Slivdrazi Monstrosity",
+    "The Bird Champion",
+    "The Octopus Official",
+    "Wowzer, the Aspirational"
+   ],
+   "note": ""
+  },
+  {
+   "query": "pow>tou c:w t:creature mv=1",
+   "status": "fail",
+   "scryfall_total": 39,
+   "ours_total": 35,
+   "missing": [
+    "Bushi Tenderfoot // Kenzo the Hardhearted",
+    "Cecil, Dark Knight // Cecil, Redeemed Paladin",
+    "Chaplain of Alms // Chapel Shieldgeist",
+    "Tarkir Duneshaper // Burnished Dunestomper",
+    "Town Gossipmonger // Incited Rabble"
+   ],
+   "extra": [
+    "Frontier Explorer"
+   ],
+   "note": ""
+  },
+  {
+   "query": "tou>pow t:elf",
+   "status": "fail",
+   "scryfall_total": 187,
+   "ours_total": 197,
+   "missing": [
+    "Ayara, Widow of the Realm // Ayara, Furnace Queen",
+    "Kianne, Dean of Substance // Imbraham, Dean of Theory"
+   ],
+   "extra": [
+    "Jaheira, Heroic Harper",
+    "Jaheira, Insightful Harper",
+    "Jaheira, Merciful Harper",
+    "Jaheira, Ruthless Harper",
+    "Jaheira, Stirring Harper",
+    "M'Odo, the Gnarled Oracle",
+    "Tarelily, Lovestruck Archer",
+    "Viconia, Disciple of Arcana"
+   ],
+   "note": ""
+  },
+  {
+   "query": "pow=tou t:sphinx",
+   "status": "pass",
+   "scryfall_total": 50,
+   "ours_total": 50,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pt>=20",
+   "status": "fail",
+   "scryfall_total": 73,
+   "ours_total": 79,
+   "missing": [
+    "Infinity Elemental"
+   ],
+   "extra": [
+    "Elbrus, the Binding Blade // Withengar Unbound",
+    "Emrakul and Chatterfang",
+    "Kharis & The Beholder",
+    "Kozilek, Compleated",
+    "Riven Turnbull and Princess Lucrezia",
+    "That Which Was Compleated",
+    "Wowzer, the Aspirational"
+   ],
+   "note": ""
+  },
+  {
+   "query": "t:planeswalker loy=3",
+   "status": "fail",
+   "scryfall_total": 78,
+   "ours_total": 84,
+   "missing": [],
+   "extra": [
+    "Chandra, Gremlin Wrangler",
+    "Huatli, Inventor's Inspiration",
+    "Kaya, Ghost Haunter",
+    "Nissa, Pride of Zendikar",
+    "Saheeli, Poet's Muse",
+    "Svega, the Unconventional"
+   ],
+   "note": ""
+  },
+  {
+   "query": "loy>=7",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-pow>=1 t:sphinx",
+   "status": "fail",
+   "scryfall_total": 91,
+   "ours_total": 0,
+   "missing": [
+    "Aerid Konstrari",
+    "Agency Outfitter",
+    "Alhammarret, High Arbiter",
+    "Arbiter of the Ideal",
+    "Archive Arbiter",
+    "Argent Sphinx",
+    "Arjun, the Shifting Flame",
+    "Atemsis, All-Seeing"
+   ],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "f:pauper t:sphinx",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "f:standard t:sphinx",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "banned:legacy",
+   "status": "pass",
+   "scryfall_total": 171,
+   "ours_total": 171,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "restricted:vintage",
+   "status": "pass",
+   "scryfall_total": 52,
+   "ours_total": 52,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "banned:commander t:creature",
+   "status": "pass",
+   "scryfall_total": 18,
+   "ours_total": 18,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "f:vintage -f:legacy t:artifact",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:split c:u",
+   "status": "fail",
+   "scryfall_total": 48,
+   "ours_total": 53,
+   "missing": [],
+   "extra": [
+    "Chic // Ago",
+    "Knowing // Half the Battle",
+    "Takesies // Backsies",
+    "There // They're // Their",
+    "Yeah Nah // Nah Yeah"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:flip",
+   "status": "fail",
+   "scryfall_total": 21,
+   "ours_total": 22,
+   "missing": [],
+   "extra": [
+    "Wicked // Cursed"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:meld",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:mdfc t:land",
+   "status": "pass",
+   "scryfall_total": 60,
+   "ours_total": 60,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:transform t:planeswalker",
+   "status": "fail",
+   "scryfall_total": 16,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [
+    "Liliana's Other Contract // Liliana's Undead Minion"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:leveler",
+   "status": "fail",
+   "scryfall_total": 25,
+   "ours_total": 26,
+   "missing": [],
+   "extra": [
+    "Under-Construction Skyscraper"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:vanilla c:g mv=1",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:bear c:b",
+   "status": "fail",
+   "scryfall_total": 227,
+   "ours_total": 232,
+   "missing": [],
+   "extra": [
+    "Bad Knight",
+    "Magus of the Chains",
+    "Syr Konrad's Squire",
+    "The No Mana Bard",
+    "The Roaming Guild Pack"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:reserved t:land",
+   "status": "pass",
+   "scryfall_total": 45,
+   "ours_total": 45,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:gamechanger",
+   "status": "pass",
+   "scryfall_total": 53,
+   "ours_total": 53,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:permanent t:rebel",
+   "status": "fail",
+   "scryfall_total": 87,
+   "ours_total": 89,
+   "missing": [],
+   "extra": [
+    "Tarkiran Towelsbane",
+    "The Rebellious Intelligence"
+   ],
+   "note": ""
+  },
+  {
+   "query": "not:permanent t:arcane mv=1",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:historic t:saga c:r",
+   "status": "fail",
+   "scryfall_total": 66,
+   "ours_total": 68,
+   "missing": [],
+   "extra": [
+    "Saga of Krark Losing His Thumb",
+    "The Legend of Arena"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:commander t:sphinx",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:hybrid t:sphinx",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:phyrexian",
+   "status": "fail",
+   "scryfall_total": 73,
+   "ours_total": 40,
+   "missing": [
+    "Aetherblade Agent // Gitaxian Mindstinger",
+    "Ayara, Widow of the Realm // Ayara, Furnace Queen",
+    "Blightreaper Thallid // Blightsower Thallid",
+    "Blinding Souleater",
+    "Bonded Herdbeast // Plated Kilnbeast",
+    "Captive Weird // Compleated Conjurer",
+    "Drivnod, Carnage Dominus",
+    "Etali, Primal Conqueror // Etali, Primal Sickness"
+   ],
+   "extra": [
+    "Kozilek, Compleated",
+    "Phyrexian Chimney Imp",
+    "That Which Was Compleated"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:spell t:sphinx",
+   "status": "fail",
+   "scryfall_total": 91,
+   "ours_total": 92,
+   "missing": [],
+   "extra": [
+    "MagicConsecrated Sphinx"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:funny t:sphinx",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "otag:wheel",
+   "status": "fail",
+   "scryfall_total": 150,
+   "ours_total": 162,
+   "missing": [],
+   "extra": [
+    "Abian, Luvion Usurper",
+    "Ambergris, Agent of Balance",
+    "Ambergris, Agent of Destruction",
+    "Ambergris, Agent of Law",
+    "Ambergris, Agent of Progress",
+    "Ambergris, Agent of Tyranny",
+    "Chancellor of the Mulligan",
+    "Lutri, Pauper Otter"
+   ],
+   "note": ""
+  },
+  {
+   "query": "function:fog",
+   "status": "fail",
+   "scryfall_total": 94,
+   "ours_total": 97,
+   "missing": [],
+   "extra": [
+    "Peel Out",
+    "Sarah's Wings",
+    "That's No Moonmist"
+   ],
+   "note": ""
+  },
+  {
+   "query": "otag:mana-rock mv=1",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "edhrec<=10",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "edhrec>30000 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:fish or t:bird c:u mv=1",
+   "status": "fail",
+   "scryfall_total": 69,
+   "ours_total": 105,
+   "missing": [],
+   "extra": [
+    "Avizoa",
+    "Blastoneuron",
+    "Clinging Anemones",
+    "Cloudsculpt Armorer",
+    "Cloudsculpt Technician",
+    "Dormant Gomazoa",
+    "Electrozoa",
+    "Esperzoa"
+   ],
+   "note": ""
+  },
+  {
+   "query": "t:legendary (t:goblin or t:elf) mv>=6",
+   "status": "fail",
+   "scryfall_total": 17,
+   "ours_total": 24,
+   "missing": [],
+   "extra": [
+    "Gut, Bestial Fanatic",
+    "Gut, Brutal Fanatic",
+    "Gut, Devious Fanatic",
+    "Gut, Furious Fanatic",
+    "Gut, Zealous Fanatic",
+    "Rocco, Snack Supplier",
+    "The Massive Zatcatl"
+   ],
+   "note": ""
+  },
+  {
+   "query": "t:scheme",
+   "status": "pass",
+   "scryfall_total": 102,
+   "ours_total": 102,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:vanguard",
+   "status": "pass",
+   "scryfall_total": 107,
+   "ours_total": 107,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:emblem",
+   "status": "pass",
+   "scryfall_total": 90,
+   "ours_total": 90,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:token t:sphinx",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "power include:extras",
+   "status": "fail",
+   "scryfall_total": 96,
+   "ours_total": 92,
+   "missing": [
+    "Freyalise, Llanowar's Fury",
+    "Lightning Greaves",
+    "Sisay, Weatherlight Captain",
+    "Sword of War and Peace"
+   ],
+   "extra": [],
+   "note": ""
+  }
+ ]
+}
