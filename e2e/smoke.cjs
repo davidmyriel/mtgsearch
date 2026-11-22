@@ -137,11 +137,15 @@ async function run(name, contextOptions) {
   const priced = prices.filter((p) => !Number.isNaN(p));
   check(priced.length > 5 && priced.every((p, i) => i === 0 || p <= priced[i - 1]), `[${name}] price sort lists the dearest printings first`);
 
+  await search(page, "m=4UU t:sphinx");
+  check((await page.textContent("#status")).startsWith("Scryfall syntax"), `[${name}] a mana cost is read as syntax`);
+  check((await firstCards(page, 24)).includes("Consecrated Sphinx"), `[${name}] a mana cost search finds Consecrated Sphinx`);
+
   await search(page, "lightning bolt");
   check((await page.textContent("#status")).startsWith("Card name"), `[${name}] a card name takes the name path`);
   check((await firstCards(page, 1))[0] === "Lightning Bolt", `[${name}] Lightning Bolt is first`);
 
-  await search(page, "m:2WW t:sphinx");
+  await search(page, "lang:ja t:sphinx");
   check((await page.textContent("#status")).startsWith("Not supported yet"), `[${name}] unsupported keyword is explained`);
   const statusTop = await page.$eval("#status", (el) => el.getBoundingClientRect().top);
   check(statusTop < page.viewportSize().height, `[${name}] the explanation is visible without scrolling`);

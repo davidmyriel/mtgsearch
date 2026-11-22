@@ -36,6 +36,8 @@ export function evaluate(p: IR, doc: Doc): boolean {
       return String(doc[p[1]] ?? "").includes(p[2]);
     case "in":
       return Array.isArray(doc[p[1]]) && (doc[p[1]] as unknown[]).includes(p[2]);
+    case "oneof":
+      return typeof doc[p[1]] === "string" && p[2].includes(doc[p[1]] as string);
     case "re":
       return new RegExp(p[2], "im").test(String(doc[p[1]] ?? ""));
   }

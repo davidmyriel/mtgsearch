@@ -2,6 +2,7 @@
 //
 //   npm run conformance                        conformance/queries.txt
 //   npm run conformance -- conformance/heldout.txt --out results.json
+//   npm run conformance -- probes.txt --theirs     only print what Scryfall returns
 //
 // A query passes when the totals match and, where Scryfall's full result list was fetched,
 // the two sets of ids are identical: Oracle ids for cards, printing ids for `unique:prints`. Scryfall's API is used only for this comparison:
@@ -164,10 +165,24 @@ export async function run(queriesPath: string, outPath: string | null, log = con
   return outcomes;
 }
 
+/** Print what Scryfall alone returns for each query: for working out a rule before writing it. */
+async function theirs(queriesPath: string, log = console.log) {
+  for (const query of readQueries(queriesPath)) {
+    const result = await scryfallSearch(query, /\bunique:prints\b/i.test(query));
+    const names = [...result.found.values()].sort();
+    log(`${String(result.total).padStart(6)}  ${query}`);
+    if (names.length) log(`        ${names.slice(0, 10).join("; ")}${names.length > 10 ? "; ..." : ""}`);
+  }
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const out = args.includes("--out") ? args[args.indexOf("--out") + 1] : null;
   const file = args.find((a, i) => !a.startsWith("--") && args[i - 1] !== "--out") ?? "conformance/queries.txt";
-  const outcomes = await run(file, out);
-  process.exit(outcomes.every((o) => o.status === "pass") ? 0 : 1);
+  if (args.includes("--theirs")) {
+    await theirs(file);
+  } else {
+    const outcomes = await run(file, out);
+    process.exit(outcomes.every((o) => o.status === "pass") ? 0 : 1);
+  }
 }

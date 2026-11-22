@@ -1,0 +1,62 @@
+# Mana keywords: m:, devotion:, produces:.
+# Tuning set: the rules in app/mana.ts were written from Scryfall's answers to these.
+# Run with: npm run conformance -- conformance/mana.txt
+
+m:2WW t:angel
+m={2}{W}{W} t:angel
+m:WW t:angel mv=4
+m:2 t:angel mv=4
+m:3 t:angel mv=4
+m>=WWW t:angel
+m>WW t:angel mv<=4
+m<=WW t:angel
+m<WW t:angel
+m=WW
+m!=WW t:angel mv=2
+m:{R/W} t:creature mv=3 c:rw
+m:{W/P} t:creature
+m:X t:angel
+m:{S} t:creature
+m:{C} t:eldrazi mv<=4
+m:RU t:instant mv=4
+m:0 t:artifact mv=0
+m:{1}{R} t:instant mv=4 is:split
+devotion:uuu t:sphinx
+devotion:{u}{u}{u} t:sphinx
+devotion>=uuuu t:creature c:u mv<=5
+devotion:w t:angel mv=3
+devotion:{r/w}{r/w}{r/w} mv=3 -!"practiced scrollsmith"
+devotion=uu t:sphinx
+produces:g t:creature mv=1
+produces=g t:creature mv=1
+produces<=g t:creature mv=1
+produces:wu t:land r:rare set:dom
+produces:c t:artifact mv=1
+produces>=3 t:creature mv=2
+produces:wubrg t:creature mv=2
+produces=wubrg t:creature mv=2
+-produces:g t:creature mv=1 c:g kw:reach
+m:0 t:land set:dom
+m<=W t:land set:dom
+m:1W t:angel mv=2
+m:{W/R} t:creature mv=3 c:rw
+m:X t:instant c:r mv=1
+m:w t:angel mv=1
+m:WU t:creature is:dfc mv=2
+m>=2 t:angel mv=3
+m=2W t:angel
+m:{2/W} t:creature
+m:{G/U/P}
+produces<=wu t:land set:m13
+produces:wu t:land set:m13
+produces>wu t:land set:m13
+produces:green t:creature mv=1
+produces=2 t:land set:m13
+produces:c t:land set:dom
+devotion:g t:creature mv=1 kw:reach
+devotion>uu t:sphinx
+devotion<=u t:sphinx
+devotion:www t:sorcery
+devotion:rrr t:instant
+devotion:www mv=3 c:w
+devotion<=w t:instant mv=1 c:w

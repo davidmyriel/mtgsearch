@@ -36,12 +36,13 @@ CARDS = [
         power="4", toughness="6", edhrec_rank=661,
     ),
     card(
-        "Sol Ring", "Artifact", "{T}: Add {C}{C}.", mana_cost="{1}", cmc=1.0, edhrec_rank=1,
+        "Sol Ring", "Artifact", "{T}: Add {C}{C}.", mana_cost="{1}", cmc=1.0, edhrec_rank=1, produced_mana=["C"],
         legalities={**LEGAL, "modern": "not_legal", "vintage": "restricted", "legacy": "banned"},
     ),
     card(
         "Llanowar Elves", "Creature — Elf Druid", "{T}: Add {G}.",
         mana_cost="{G}", cmc=1.0, colors=["G"], color_identity=["G"], power="1", toughness="1",
+        produced_mana=["G"],
     ),
     card(
         "Grizzly Bears", "Creature — Bear", "",

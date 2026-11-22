@@ -9,8 +9,10 @@
 //   ["cmp", field, op, number]      numeric comparison; a missing value never matches
 //   ["has", field, text]            substring of a text field
 //   ["in", field, value]            membership in a list field
+//   ["oneof", field, values]        a text field equal to one of several values
 //   ["re", field, pattern]          case-insensitive, multi-line regular expression
 
+import { devotion, mana, produces } from "./mana.ts";
 import { fold, plain } from "./normalize.ts";
 import { KEYWORDS, QueryError, Unsupported } from "./parser.ts";
 import type { Keyword, Node } from "./parser.ts";
@@ -28,6 +30,7 @@ export type IR =
   | ["cmp", string, Op, number]
   | ["has", string, string]
   | ["in", string, string]
+  | ["oneof", string, string[]]
   | ["re", string, string];
 
 export type Unique = "cards" | "prints" | "art";
@@ -336,6 +339,9 @@ function keyword(kw: Keyword, options: Working): IR {
   }
   if (canonical === "otag") return ["in", "otags", value.toLowerCase().replaceAll(" ", "-")];
   if (canonical === "edhrec") return ["cmp", "edhrec_rank", numericOp, number(kw.key, value)];
+  if (canonical === "mana") return mana(kw);
+  if (canonical === "devotion") return devotion(kw);
+  if (canonical === "produces") return produces(kw);
 
   // printing-level keywords
   if (canonical === "rarity") return rarity(kw);

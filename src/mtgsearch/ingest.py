@@ -59,6 +59,8 @@ def cards_schema() -> dict:
         "restricted": list_("text"),
         "flags": list_("text"),
         "otags": list_("text"),
+        "m_syms": list_("text"),
+        "produces": list_("text"),
         "extra": bool_().required(),
         "edhrec_rank": int_(),
         "usd": float_(),
@@ -129,6 +131,10 @@ class Target:
     embedded: tuple[str, ...]
     # Fields that move daily for most documents.
     volatile: tuple[str, ...]
+    # Fields an earlier version of this job wrote and this one does not. A field update merges
+    # into the stored document, so these have to be cleared by name. The list can be emptied
+    # once every collection has been refreshed by a version that carries it.
+    retired: tuple[str, ...] = ()
 
 
 CARDS = Target("cards", config.COLLECTION, cards_schema, ("rules", "rules_tagged"), ("edhrec_rank", "usd"))
@@ -234,7 +240,7 @@ def plan(
     of every field except the embedded text brings a document fully up to date without
     embedding it again.
     """
-    fields = sorted(set().union(*docs) - set(target.embedded))
+    fields = sorted((set().union(*docs) | set(target.retired)) - set(target.embedded))
     upserts, updates = [], []
     for doc in docs:
         old = state.get(doc["_id"])

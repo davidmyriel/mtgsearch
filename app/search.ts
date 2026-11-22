@@ -88,6 +88,17 @@ function compare(left: Expr, op: Op, right: number): Expr {
   }
 }
 
+// TopK accepts a limited number of operands in one any() or all(); longer lists are nested.
+const MAX_OPERANDS = 30;
+
+function nested(combine: (exprs: Expr[]) => Expr, exprs: Expr[]): Expr {
+  if (exprs.length === 1) return exprs[0];
+  if (exprs.length <= MAX_OPERANDS) return combine(exprs);
+  const chunks: Expr[] = [];
+  for (let i = 0; i < exprs.length; i += MAX_OPERANDS) chunks.push(nested(combine, exprs.slice(i, i + MAX_OPERANDS)));
+  return nested(combine, chunks);
+}
+
 /** Translate a predicate to a TopK filter expression, or null when it matches every document. */
 export function toTopk(p: IR): Expr | null {
   switch (p[0]) {
@@ -95,13 +106,11 @@ export function toTopk(p: IR): Expr | null {
       return null;
     case "and": {
       const parts = p[1].map(toTopk).filter((e): e is Expr => e !== null);
-      if (parts.length === 0) return null;
-      return parts.length > 1 ? all(parts) : parts[0];
+      return parts.length === 0 ? null : nested(all, parts);
     }
     case "or": {
       const parts = p[1].map(toTopk);
-      if (parts.some((e) => e === null)) return null;
-      return parts.length > 1 ? any(parts as Expr[]) : (parts[0] as Expr);
+      return parts.some((e) => e === null) ? null : nested(any, parts as Expr[]);
     }
     case "not": {
       const inner = toTopk(p[1]);
@@ -116,6 +125,8 @@ export function toTopk(p: IR): Expr | null {
     case "has":
     case "in":
       return field(p[1]).isNotNull().and(field(p[1]).contains(p[2]));
+    case "oneof":
+      return field(p[1]).isNotNull().and(field(p[1]).in(p[2]));
     case "re":
       return field(p[1]).isNotNull().and(field(p[1]).regexpMatch(`(?im)${p[2]}`));
   }
@@ -224,24 +235,13 @@ export async function grouped(col: Collection, predicate: IR, o: PrintingOptions
   });
 }
 
-// TopK accepts a limited number of operands in one any(); longer lists are nested.
-const MAX_OPERANDS = 30;
-
-function either(exprs: Expr[]): Expr {
-  if (exprs.length === 1) return exprs[0];
-  if (exprs.length <= MAX_OPERANDS) return any(exprs);
-  const chunks: Expr[] = [];
-  for (let i = 0; i < exprs.length; i += MAX_OPERANDS) chunks.push(either(exprs.slice(i, i + MAX_OPERANDS)));
-  return either(chunks);
-}
-
 /** The printing documents that show these groups, in the same order. */
 async function shown(col: Collection, groups: Group[]): Promise<Hit[]> {
   if (!groups.length) return [];
   const id = (oracle: unknown, rank: unknown) => `${oracle}:${rank}`;
   // A card's printings have distinct pref_ranks, so each pair names exactly one printing.
   const pairs = groups.map((g) => field("oracle_id").eq(g.oracle_id).and(field("pref_rank").eq(g.rank)));
-  const rows = await col.query(select(pick(PRINTING_DISPLAY)).filter(either(pairs)).limit(groups.length));
+  const rows = await col.query(select(pick(PRINTING_DISPLAY)).filter(nested(any, pairs)).limit(groups.length));
   const found = new Map(rows.map((row) => [id(row.oracle_id, row.pref_rank), row]));
   return groups.flatMap((g) => {
     const row = found.get(id(g.oracle_id, g.rank));

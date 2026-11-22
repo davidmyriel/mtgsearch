@@ -69,6 +69,77 @@ def price(prices: dict, *keys: str) -> float | None:
     return None
 
 
+_SYMBOL = re.compile(r"\{([^}]+)\}")
+# Mana costs are compared per part: each half of a split card, each face with a cost.
+MAX_COST_PARTS = 2
+NO_COST = "none"
+
+
+def parse_cost(cost: str) -> tuple[int, list[str]]:
+    """A mana cost as (generic amount, sorted other symbols). "{2}{W}{W}" -> (2, ["W", "W"]).
+
+    Hybrid symbols are written with their halves in alphabetical order, so {R/W} and {W/R}
+    are the same symbol.
+    """
+    generic, symbols = 0, []
+    for symbol in _SYMBOL.findall(cost):
+        if symbol.isdigit():
+            generic += int(symbol)
+        else:
+            symbols.append("/".join(sorted(symbol.upper().split("/"))))
+    return generic, sorted(symbols)
+
+
+def cost_key(generic: int, symbols: list[str]) -> str:
+    """Canonical text of a cost, for exact comparison."""
+    return f"{generic}|{','.join(symbols)}"
+
+
+def cost_parts(card: dict) -> list[str]:
+    """The card's mana costs: both halves of a split card, every face that has one."""
+    costs = [card.get("mana_cost") or ""] + [f.get("mana_cost") or "" for f in card.get("card_faces", [])]
+    parts: list[str] = []
+    for cost in costs:
+        for part in cost.split(" // "):
+            if part and part not in parts:
+                parts.append(part)
+    return parts[:MAX_COST_PARTS]
+
+
+def mana_fields(card: dict) -> dict:
+    """Fields behind `m:`, `devotion:` and `produces:`.
+
+    Per cost part N: `mN_key` (the whole cost, for =), `mN_gen` (generic mana, for comparisons)
+    and, in `m_syms`, one token "N:W:2" for each symbol it has at least that many of.
+    Devotion counts the coloured symbols of a permanent's first part: `dev_W` for one colour,
+    and `dev_WU` for devotion to two colours, where a symbol of either colour counts once.
+    """
+    parts = cost_parts(card)
+    fields: dict = {"m_syms": []}
+    for n, part in enumerate(parts):
+        generic, symbols = parse_cost(part)
+        fields[f"m{n}_key"] = cost_key(generic, symbols)
+        fields[f"m{n}_gen"] = generic
+        for symbol in sorted(set(symbols)):
+            fields["m_syms"] += [f"{n}:{symbol}:{i}" for i in range(1, symbols.count(symbol) + 1)]
+    front = (card.get("card_faces") or [card])[0]
+    front_type = fold(front.get("type_line") or card.get("type_line") or "")
+    if not parts:
+        fields["m0_key"] = NO_COST
+    elif any(t in front_type for t in PERMANENT_TYPES):
+        # Only permanents have devotion: an instant's symbols never count.
+        halves = [set(symbol.split("/")) for symbol in parse_cost(parts[0])[1]]
+        for i, first in enumerate(COLORS):
+            fields[f"dev_{first}"] = sum(first in half for half in halves)
+            for second in COLORS[i + 1 :]:
+                fields[f"dev_{first}{second}"] = sum(bool({first, second} & half) for half in halves)
+    produced = [c for c in COLORS + "C" if c in (card.get("produced_mana") or [])]
+    fields["produces"] = produced
+    fields["produces_n"] = len(produced)
+    # Zero counts are left out: a missing value reads as zero in the compiler.
+    return {k: v for k, v in fields.items() if v not in (0, []) or k.endswith("_gen")}
+
+
 def color_key(colors) -> str:
     """Canonical name of a colour set: letters in WUBRG order, or "C" for colourless."""
     return "".join(c for c in COLORS if c in colors) or "C"
@@ -255,6 +326,7 @@ def build_document(card: dict, tags: dict | None = None, aggregate: dict | None 
         "restricted": sorted(f for f, s in legal.items() if s == "restricted"),
         "flags": _flags(card, fold(type_line), oracle, full_oracle),
         "otags": tags["slugs"],
+        **mana_fields(card),
         "extra": is_extra(card),
         "edhrec_rank": card.get("edhrec_rank"),
         # display fields

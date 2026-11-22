@@ -38,3 +38,18 @@ in:rare
     masterpieces, From the Vault, memorabilia and Secret Lair drops do not count; expansions,
     core sets, commander decks, masters, duel decks and other box sets do. Set types with no
     example to test (premium decks, spellbooks) are assumed to count.
+
+devotion:{r/w}{r/w}{r/w} mv=3
+    We return one card Scryfall does not: Practiced Scrollsmith, {R}{R/W}{W}. By the game's
+    rules its devotion to red and white is three (each symbol counts once), which is what we
+    count. Scryfall counts {R}{W}{W} as three but not this cost; unexplained.
+
+devotion={b/g}{b/g} t:elf
+    We return three cards Scryfall does not, each costing {B/G}{B/G} with or without generic
+    mana. Their devotion to black and green is two by the game's rules. Scryfall seems to
+    count a hybrid symbol of exactly the two colours asked about twice, so "=" misses them.
+
+m<=R t:goblin
+    Scryfall also returns Krark, the Thumbless, which costs {1}{R}. The printing Scryfall
+    picks for that card is a reversible one whose cost is recorded on its faces only, so it
+    reads as having no cost. We compare the real cost.

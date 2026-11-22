@@ -1,0 +1,25 @@
+# Mana keywords, held out: written after the rules were fixed and never used to tune them.
+# Run with: npm run conformance -- conformance/mana_heldout.txt
+
+m:GG t:elf
+m=1G t:elf
+m:{G/W} t:creature mv=2
+m>=3 t:goblin mv=3
+m<=R t:goblin
+m<RR t:goblin
+m:XX t:creature
+m:{B/P}
+m:UUU t:wizard
+m!=U t:wizard mv=1
+m:{2}{B}{B} t:zombie
+m:BBB t:demon
+devotion:bbb t:demon
+devotion>=ggg t:elf
+devotion={b/g}{b/g} t:elf
+devotion<r t:goblin
+produces:r t:goblin
+produces=wu t:land
+produces>=4 t:land r:rare year=2020
+produces:b t:creature mv<=2 c:b
+produces<=rg t:creature mv=2
+produces!=g t:elf mv=1 produces>=1

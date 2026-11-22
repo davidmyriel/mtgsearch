@@ -17,13 +17,14 @@ kw:/fly/
 -
 
 # unsupported
-m:2WW
 is:fetchland
 pow>loy
 loy<pt
 o:/\spp/
 include:tokens
-devotion:uu
+devotion:wu
+m<=9WWWWUUUUBBBBRRRRGGGG
+block:ice
 lang:ja
 new:art
 in:japanese

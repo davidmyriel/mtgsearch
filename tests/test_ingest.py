@@ -1,4 +1,6 @@
-from mtgsearch.ingest import PRINTINGS, content_hash, plan, text_hash
+from dataclasses import replace
+
+from mtgsearch.ingest import CARDS, PRINTINGS, content_hash, plan, text_hash
 
 STORED = ("_id", "content_hash", "text_hash", "edhrec_rank", "usd")
 
@@ -131,3 +133,11 @@ def test_printings_have_no_embedded_text_so_every_change_is_a_field_update():
     moved = printing(set="2xm")
     assert plan([moved], state, PRINTINGS) == ([], [moved], [])
     assert plan([printing()], {}, PRINTINGS) == ([printing()], [], [])
+
+
+def test_fields_the_job_no_longer_writes_are_cleared_by_a_field_update():
+    target = replace(CARDS, retired=("old_field",))
+    (update,) = plan([doc(name="B")], stored(doc()), target)[1]
+    assert update["old_field"] is None and update["name"] == "B"
+    # a rank-only update stays small
+    assert plan([doc(edhrec_rank=11)], stored(doc()), target)[1] == [{"_id": "a", "edhrec_rank": 11}]

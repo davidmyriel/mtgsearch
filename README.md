@@ -83,6 +83,8 @@ Measured on 22 November 2026 against the full card set. Raw output is in `confor
 | Card-level held-out set, 77 queries | 74 match | 77 match |
 | Printing tuning set, 75 queries, plus 4 price queries | 75 of 79 | 79 match |
 | Printing held-out set, 61 queries | 53 match | 59 match |
+| Mana tuning set, 58 queries | | 58 match |
+| Mana held-out set, 22 queries | 18 match | 19 match |
 
 The first-run column is the honest measure of how well the rules generalise; the held-out
 sets have since been used to fix rules, so they are no longer untouched. Differences that
@@ -121,6 +123,7 @@ Read these with care:
 | Colour | `c:` `id:` with every comparison, colour names, guilds, shards, wedges, counts |
 | Text and type | `t:` `o:` `fo:` `kw:` including `~` |
 | Numbers | `mv` `pow` `tou` `pt` `loy`, `pow>tou`, `mv:even` |
+| Mana | `m:` with every comparison (`m:2WW`, `m={R/W}{R/W}`, `m<=1G`), `devotion:`, `produces:` as a set of colours or a count |
 | Legality and tags | `f:` `banned:` `restricted:`, `edhrec`, `otag:` / `function:` |
 | Card flags | `is:` split, flip, transform, meld, leveler, mdfc, dfc, permanent, spell, historic, vanilla, bear, commander, hybrid, phyrexian, reserved, gamechanger, funny |
 | Printings | `set:` `st:` `cn:` `r:` (with comparisons) `a:` `ft:` `wm:` `frame:` `border:` `stamp:` `game:` `year` `date` (a day, a year or a set code) `usd` `eur` `tix` |
@@ -129,10 +132,10 @@ Read these with care:
 | Results | `unique:cards`, `unique:prints`, `unique:art`, `prefer:` oldest, newest, usd-low, usd-high (and eur, tix), `include:extras` |
 | Sorting | `order:` name, cmc, power, toughness, edhrec, released, usd, eur, tix, rarity; `direction:` |
 
-Not yet, and reported as unsupported rather than silently ignored: mana cost symbols (`m:`,
-`devotion:`, `produces:`), `lang:` and non-English printings, `new:`, `block:`, `cube:`, art tags
-(`art:`), land-cycle shortcuts such as `is:fetchland`, `order:` by set or artist, and Scryfall's
-`\spp`, `\smm`, `\spt` regex shorthands.
+Not yet, and reported as unsupported rather than silently ignored: `lang:` and non-English
+printings, `new:`, `block:`, `cube:`, art tags (`art:`), land-cycle shortcuts such as
+`is:fetchland`, `order:` by set or artist, and Scryfall's `\spp`, `\smm`, `\spt` regex
+shorthands.
 
 Known differences from Scryfall are listed with reasons in `conformance/known_gaps.txt`.
 

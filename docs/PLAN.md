@@ -36,7 +36,7 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
 - [x] Ingest pipeline from Scryfall bulk files, incremental, versioned collections
 - [x] Syntax compiler for card-level keywords (see README for the list)
 - [x] Differential testing against Scryfall's API: 97/97 tuning, 74/77 held-out first run (77/77 now)
-- [ ] Mana cost keywords: `m:`, `devotion:`, `produces:`
+- [x] Mana cost keywords: `m:`, `devotion:`, `produces:` (58/58 tuning, 18/22 held-out first run)
 - [ ] Remaining `is:` shortcuts (land cycles and the like) and Scryfall's regex shorthands
 - [ ] Grow the held-out conformance set to about 200 queries; run it nightly
 

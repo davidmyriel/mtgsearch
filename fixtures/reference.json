@@ -14350,6 +14350,4695 @@
    }
   },
   {
+   "query": "m:2WW t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "0:W:2"
+         ],
+         [
+          "cmp",
+          "m0_gen",
+          ">=",
+          2
+         ]
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "1:W:2"
+         ],
+         [
+          "cmp",
+          "m1_gen",
+          ">=",
+          2
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m={2}{W}{W} t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "eq",
+        "m0_key",
+        "2|W,W"
+       ],
+       [
+        "eq",
+        "m1_key",
+        "2|W,W"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:WW t:angel mv=4",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:W:2"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:W:2"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      4
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:2 t:angel mv=4",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "cmp",
+        "m0_gen",
+        ">=",
+        2
+       ],
+       [
+        "cmp",
+        "m1_gen",
+        ">=",
+        2
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      4
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:3 t:angel mv=4",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "cmp",
+        "m0_gen",
+        ">=",
+        3
+       ],
+       [
+        "cmp",
+        "m1_gen",
+        ">=",
+        3
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      4
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m>=WWW t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:W:3"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:W:3"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m>WW t:angel mv<=4",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "0:W:2"
+         ],
+         [
+          "not",
+          [
+           "eq",
+           "m0_key",
+           "0|W,W"
+          ]
+         ]
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "1:W:2"
+         ],
+         [
+          "not",
+          [
+           "eq",
+           "m1_key",
+           "0|W,W"
+          ]
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "<=",
+      4
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m<=WW t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "oneof",
+        "m0_key",
+        [
+         "0|",
+         "0|W",
+         "0|W,W",
+         "none"
+        ]
+       ],
+       [
+        "oneof",
+        "m1_key",
+        [
+         "0|",
+         "0|W",
+         "0|W,W"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m<WW t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "oneof",
+        "m0_key",
+        [
+         "0|",
+         "0|W",
+         "none"
+        ]
+       ],
+       [
+        "oneof",
+        "m1_key",
+        [
+         "0|",
+         "0|W"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m=WW",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "eq",
+        "m0_key",
+        "0|W,W"
+       ],
+       [
+        "eq",
+        "m1_key",
+        "0|W,W"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m!=WW t:angel mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "not",
+        [
+         "eq",
+         "m0_key",
+         "0|W,W"
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "cmp",
+          "m1_gen",
+          ">=",
+          0
+         ],
+         [
+          "not",
+          [
+           "eq",
+           "m1_key",
+           "0|W,W"
+          ]
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{R/W} t:creature mv=3 c:rw",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:R/W:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:R/W:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      3
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{W/P} t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:P/W:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:P/W:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:X t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:X:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:X:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{S} t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:S:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:S:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{C} t:eldrazi mv<=4",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:C:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:C:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "eldrazi"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "<=",
+      4
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:RU t:instant mv=4",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "0:R:1"
+         ],
+         [
+          "in",
+          "m_syms",
+          "0:U:1"
+         ]
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "1:R:1"
+         ],
+         [
+          "in",
+          "m_syms",
+          "1:U:1"
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      4
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:0 t:artifact mv=0",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "cmp",
+        "m0_gen",
+        ">=",
+        0
+       ],
+       [
+        "cmp",
+        "m1_gen",
+        ">=",
+        0
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "artifact"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      0
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{1}{R} t:instant mv=4 is:split",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "0:R:1"
+         ],
+         [
+          "cmp",
+          "m0_gen",
+          ">=",
+          1
+         ]
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "1:R:1"
+         ],
+         [
+          "cmp",
+          "m1_gen",
+          ">=",
+          1
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      4
+     ],
+     [
+      "in",
+      "flags",
+      "split"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv",
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:uuu t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_U",
+      ">=",
+      3
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:{u}{u}{u} t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_U",
+      ">=",
+      3
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion>=uuuu t:creature c:u mv<=5",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_U",
+      ">=",
+      4
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "U"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "<=",
+      5
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:w t:angel mv=3",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_W",
+      ">=",
+      1
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      3
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:{r/w}{r/w}{r/w} mv=3 -!\"practiced scrollsmith\"",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_WR",
+      ">=",
+      3
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      3
+     ],
+     [
+      "not",
+      [
+       "in",
+       "names_lc",
+       "practiced scrollsmith"
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "devotion=uu t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_U",
+      "=",
+      2
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:g t:creature mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "G"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces=g t:creature mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "G"
+     ],
+     [
+      "cmp",
+      "produces_n",
+      "=",
+      1
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces<=g t:creature mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "produces_n",
+      ">=",
+      1
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "W"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "U"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "B"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "R"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "C"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:wu t:land r:rare set:dom",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "W"
+     ],
+     [
+      "in",
+      "produces",
+      "U"
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "rarity",
+      "rare"
+     ],
+     [
+      "eq",
+      "set",
+      "dom"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "r",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:c t:artifact mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "C"
+     ],
+     [
+      "in",
+      "type_words",
+      "artifact"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces>=3 t:creature mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "produces_n",
+      ">=",
+      3
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:wubrg t:creature mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "W"
+     ],
+     [
+      "in",
+      "produces",
+      "U"
+     ],
+     [
+      "in",
+      "produces",
+      "B"
+     ],
+     [
+      "in",
+      "produces",
+      "R"
+     ],
+     [
+      "in",
+      "produces",
+      "G"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces=wubrg t:creature mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "W"
+     ],
+     [
+      "in",
+      "produces",
+      "U"
+     ],
+     [
+      "in",
+      "produces",
+      "B"
+     ],
+     [
+      "in",
+      "produces",
+      "R"
+     ],
+     [
+      "in",
+      "produces",
+      "G"
+     ],
+     [
+      "cmp",
+      "produces_n",
+      "=",
+      5
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-produces:g t:creature mv=1 c:g kw:reach",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "G"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "keywords_lc",
+      "reach"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "m:0 t:land set:dom",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "cmp",
+        "m0_gen",
+        ">=",
+        0
+       ],
+       [
+        "cmp",
+        "m1_gen",
+        ">=",
+        0
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "set",
+      "dom"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m<=W t:land set:dom",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "oneof",
+        "m0_key",
+        [
+         "0|",
+         "0|W",
+         "none"
+        ]
+       ],
+       [
+        "oneof",
+        "m1_key",
+        [
+         "0|",
+         "0|W"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "set",
+      "dom"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:1W t:angel mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "0:W:1"
+         ],
+         [
+          "cmp",
+          "m0_gen",
+          ">=",
+          1
+         ]
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "1:W:1"
+         ],
+         [
+          "cmp",
+          "m1_gen",
+          ">=",
+          1
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{W/R} t:creature mv=3 c:rw",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:R/W:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:R/W:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      3
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:X t:instant c:r mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:X:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:X:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "R"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:w t:angel mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:W:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:W:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:WU t:creature is:dfc mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "0:W:1"
+         ],
+         [
+          "in",
+          "m_syms",
+          "0:U:1"
+         ]
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "1:W:1"
+         ],
+         [
+          "in",
+          "m_syms",
+          "1:U:1"
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "in",
+      "flags",
+      "dfc"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "is",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m>=2 t:angel mv=3",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "cmp",
+        "m0_gen",
+        ">=",
+        2
+       ],
+       [
+        "cmp",
+        "m1_gen",
+        ">=",
+        2
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      3
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m=2W t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "eq",
+        "m0_key",
+        "2|W"
+       ],
+       [
+        "eq",
+        "m1_key",
+        "2|W"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{2/W} t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:2/W:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:2/W:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{G/U/P}",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:G/P/U:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:G/P/U:1"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces<=wu t:land set:m13",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "produces_n",
+      ">=",
+      1
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "B"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "R"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "G"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "C"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "set",
+      "m13"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:wu t:land set:m13",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "W"
+     ],
+     [
+      "in",
+      "produces",
+      "U"
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "set",
+      "m13"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces>wu t:land set:m13",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "W"
+     ],
+     [
+      "in",
+      "produces",
+      "U"
+     ],
+     [
+      "cmp",
+      "produces_n",
+      ">",
+      2
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "set",
+      "m13"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:green t:creature mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "G"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces=2 t:land set:m13",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "produces_n",
+      "=",
+      2
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "set",
+      "m13"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:c t:land set:dom",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "C"
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "set",
+      "dom"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:g t:creature mv=1 kw:reach",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_G",
+      ">=",
+      1
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "in",
+      "keywords_lc",
+      "reach"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t",
+     "mv",
+     "kw"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion>uu t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_U",
+      ">",
+      2
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion<=u t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "cmp",
+       "dev_U",
+       ">",
+       1
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:www t:sorcery",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_W",
+      ">=",
+      3
+     ],
+     [
+      "in",
+      "type_words",
+      "sorcery"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:rrr t:instant",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_R",
+      ">=",
+      3
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:www mv=3 c:w",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_W",
+      ">=",
+      3
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      3
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "W"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion<=w t:instant mv=1 c:w",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "cmp",
+       "dev_W",
+       ">",
+       1
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "W"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:GG t:elf",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:G:2"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:G:2"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "elf"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m=1G t:elf",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "eq",
+        "m0_key",
+        "1|G"
+       ],
+       [
+        "eq",
+        "m1_key",
+        "1|G"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "elf"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{G/W} t:creature mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:G/W:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:G/W:1"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m>=3 t:goblin mv=3",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "cmp",
+        "m0_gen",
+        ">=",
+        3
+       ],
+       [
+        "cmp",
+        "m1_gen",
+        ">=",
+        3
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "goblin"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      3
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m<=R t:goblin",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "oneof",
+        "m0_key",
+        [
+         "0|",
+         "0|R",
+         "none"
+        ]
+       ],
+       [
+        "oneof",
+        "m1_key",
+        [
+         "0|",
+         "0|R"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "goblin"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m<RR t:goblin",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "oneof",
+        "m0_key",
+        [
+         "0|",
+         "0|R",
+         "none"
+        ]
+       ],
+       [
+        "oneof",
+        "m1_key",
+        [
+         "0|",
+         "0|R"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "goblin"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:XX t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:X:2"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:X:2"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{B/P}",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:B/P:1"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:B/P:1"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:UUU t:wizard",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:U:3"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:U:3"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "wizard"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m!=U t:wizard mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "not",
+        [
+         "eq",
+         "m0_key",
+         "0|U"
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "cmp",
+          "m1_gen",
+          ">=",
+          0
+         ],
+         [
+          "not",
+          [
+           "eq",
+           "m1_key",
+           "0|U"
+          ]
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "wizard"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:{2}{B}{B} t:zombie",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "0:B:2"
+         ],
+         [
+          "cmp",
+          "m0_gen",
+          ">=",
+          2
+         ]
+        ]
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "m_syms",
+          "1:B:2"
+         ],
+         [
+          "cmp",
+          "m1_gen",
+          ">=",
+          2
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "zombie"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "m:BBB t:demon",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "m_syms",
+        "0:B:3"
+       ],
+       [
+        "in",
+        "m_syms",
+        "1:B:3"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "demon"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "m",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion:bbb t:demon",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_B",
+      ">=",
+      3
+     ],
+     [
+      "in",
+      "type_words",
+      "demon"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion>=ggg t:elf",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_G",
+      ">=",
+      3
+     ],
+     [
+      "in",
+      "type_words",
+      "elf"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion={b/g}{b/g} t:elf",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "dev_BG",
+      "=",
+      2
+     ],
+     [
+      "in",
+      "type_words",
+      "elf"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "devotion<r t:goblin",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "cmp",
+       "dev_R",
+       ">=",
+       1
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "goblin"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "devotion",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:r t:goblin",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "R"
+     ],
+     [
+      "in",
+      "type_words",
+      "goblin"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces=wu t:land",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "W"
+     ],
+     [
+      "in",
+      "produces",
+      "U"
+     ],
+     [
+      "cmp",
+      "produces_n",
+      "=",
+      2
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces>=4 t:land r:rare year=2020",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "produces_n",
+      ">=",
+      4
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "rarity",
+      "rare"
+     ],
+     [
+      "cmp",
+      "year",
+      "=",
+      2020
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "r",
+     "year"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces:b t:creature mv<=2 c:b",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "produces",
+      "B"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "<=",
+      2
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "B"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces<=rg t:creature mv=2",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "produces_n",
+      ">=",
+      1
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "W"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "U"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "B"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "produces",
+       "C"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "produces!=g t:elf mv=1 produces>=1",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "produces",
+         "G"
+        ],
+        [
+         "cmp",
+         "produces_n",
+         "=",
+         1
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "elf"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "cmp",
+      "produces_n",
+      ">=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "produces",
+     "t",
+     "mv",
+     "produces"
+    ],
+    "words": []
+   }
+  },
+  {
    "query": "o:\"unterminated",
    "error": "QueryError"
   },
@@ -14402,11 +19091,6 @@
    "error": "QueryError"
   },
   {
-   "query": "m:2WW",
-   "error": "Unsupported",
-   "message": "'m:' is not supported yet"
-  },
-  {
    "query": "is:fetchland",
    "error": "Unsupported",
    "message": "'is:fetchland' is not supported yet"
@@ -14432,9 +19116,19 @@
    "message": "'include:tokens' is not supported yet"
   },
   {
-   "query": "devotion:uu",
+   "query": "devotion:wu",
    "error": "Unsupported",
-   "message": "'devotion:' is not supported yet"
+   "message": "'devotion' takes one colour or one two-colour hybrid symbol, repeated, such as uuu or {r/w}{r/w}"
+  },
+  {
+   "query": "m<=9WWWWUUUUBBBBRRRRGGGG",
+   "error": "Unsupported",
+   "message": "'m' with < or <= needs a shorter mana cost"
+  },
+  {
+   "query": "block:ice",
+   "error": "Unsupported",
+   "message": "'block:' is not supported yet"
   },
   {
    "query": "lang:ja",

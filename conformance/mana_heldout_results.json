@@ -1,0 +1,216 @@
+{
+ "summary": {
+  "pass": 19,
+  "fail": 3,
+  "unsupported": 0,
+  "error": 0
+ },
+ "results": [
+  {
+   "query": "m:GG t:elf",
+   "status": "pass",
+   "scryfall_total": 77,
+   "ours_total": 77,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m=1G t:elf",
+   "status": "pass",
+   "scryfall_total": 107,
+   "ours_total": 107,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m:{G/W} t:creature mv=2",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m>=3 t:goblin mv=3",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m<=R t:goblin",
+   "status": "fail",
+   "scryfall_total": 86,
+   "ours_total": 85,
+   "missing": [
+    "Krark, the Thumbless // Krark, the Thumbless"
+   ],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m<RR t:goblin",
+   "status": "fail",
+   "scryfall_total": 86,
+   "ours_total": 85,
+   "missing": [
+    "Krark, the Thumbless // Krark, the Thumbless"
+   ],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m:XX t:creature",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m:{B/P}",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m:UUU t:wizard",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m!=U t:wizard mv=1",
+   "status": "pass",
+   "scryfall_total": 38,
+   "ours_total": 38,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m:{2}{B}{B} t:zombie",
+   "status": "pass",
+   "scryfall_total": 75,
+   "ours_total": 75,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m:BBB t:demon",
+   "status": "pass",
+   "scryfall_total": 25,
+   "ours_total": 25,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "devotion:bbb t:demon",
+   "status": "pass",
+   "scryfall_total": 26,
+   "ours_total": 26,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "devotion>=ggg t:elf",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "devotion={b/g}{b/g} t:elf",
+   "status": "fail",
+   "scryfall_total": 118,
+   "ours_total": 121,
+   "missing": [],
+   "extra": [
+    "Golgari Guildmage",
+    "Lluwen, Imperfect Naturalist",
+    "Tribune of Rot"
+   ],
+   "note": ""
+  },
+  {
+   "query": "devotion<r t:goblin",
+   "status": "pass",
+   "scryfall_total": 69,
+   "ours_total": 69,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces:r t:goblin",
+   "status": "pass",
+   "scryfall_total": 24,
+   "ours_total": 24,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces=wu t:land",
+   "status": "pass",
+   "scryfall_total": 43,
+   "ours_total": 43,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces>=4 t:land r:rare year=2020",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces:b t:creature mv<=2 c:b",
+   "status": "pass",
+   "scryfall_total": 30,
+   "ours_total": 30,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces<=rg t:creature mv=2",
+   "status": "pass",
+   "scryfall_total": 68,
+   "ours_total": 68,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces!=g t:elf mv=1 produces>=1",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  }
+ ]
+}

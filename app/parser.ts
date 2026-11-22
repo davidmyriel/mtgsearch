@@ -47,6 +47,7 @@ const SUPPORTED: Record<string, string> = {
   border: "border", frame: "frame", stamp: "stamp", game: "game",
   year: "year", date: "date",
   usd: "usd", eur: "eur", tix: "tix",
+  m: "mana", mana: "mana", devotion: "devotion", produces: "produces",
   // true of the card across all its printings
   in: "in", prints: "prints", sets: "sets",
   include: "include", order: "order", sort: "order", direction: "direction", dir: "direction",
@@ -54,7 +55,7 @@ const SUPPORTED: Record<string, string> = {
 };
 
 const NOT_YET =
-  "m mana devotion produces b block cube new lang language has art atag arttag cheapest " +
+  "b block cube new lang language has art atag arttag cheapest " +
   "paperprints papersets illustrations artists";
 
 /** alias -> canonical keyword. A null value means recognised but not implemented yet. */

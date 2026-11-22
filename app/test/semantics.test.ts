@@ -58,7 +58,7 @@ test("malformed queries are QueryErrors", () => {
 });
 
 test("unsupported keywords are reported, never silently ignored", () => {
-  for (const query of ["m:2WW", "devotion:u", "is:fetchland", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy", String.raw`o:/\spp/`]) {
+  for (const query of ["block:ice", "cube:vintage", "is:fetchland", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy", String.raw`o:/\spp/`]) {
     assert.throws(() => compile(query), Unsupported, query);
   }
 });

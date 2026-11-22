@@ -39,6 +39,17 @@
    "permanent",
    "spell"
   ],
+  "m_syms": [
+   "0:U:1",
+   "0:U:2"
+  ],
+  "m0_key": "4|U,U",
+  "m0_gen": 4,
+  "dev_WU": 2,
+  "dev_U": 2,
+  "dev_UB": 2,
+  "dev_UR": 2,
+  "dev_UG": 2,
   "extra": false,
   "edhrec_rank": 661,
   "mana_cost": "{4}{U}{U}",
@@ -139,6 +150,17 @@
    "permanent",
    "spell"
   ],
+  "m_syms": [
+   "0:U:1",
+   "0:U:2"
+  ],
+  "m0_key": "4|U,U",
+  "m0_gen": 4,
+  "dev_WU": 2,
+  "dev_U": 2,
+  "dev_UB": 2,
+  "dev_UR": 2,
+  "dev_UG": 2,
   "extra": false,
   "edhrec_rank": 661,
   "mana_cost": "{4}{U}{U}",
@@ -238,6 +260,17 @@
    "permanent",
    "spell"
   ],
+  "m_syms": [
+   "0:U:1",
+   "0:U:2"
+  ],
+  "m0_key": "4|U,U",
+  "m0_gen": 4,
+  "dev_WU": 2,
+  "dev_U": 2,
+  "dev_UB": 2,
+  "dev_UR": 2,
+  "dev_UG": 2,
   "extra": false,
   "edhrec_rank": 661,
   "mana_cost": "{4}{U}{U}",
@@ -335,6 +368,12 @@
    "mana-rock",
    "ramp"
   ],
+  "m0_key": "1|",
+  "m0_gen": 1,
+  "produces": [
+   "C"
+  ],
+  "produces_n": 1,
   "extra": false,
   "edhrec_rank": 1,
   "mana_cost": "{1}",
@@ -423,6 +462,12 @@
    "mana-rock",
    "ramp"
   ],
+  "m0_key": "1|",
+  "m0_gen": 1,
+  "produces": [
+   "C"
+  ],
+  "produces_n": 1,
   "extra": false,
   "edhrec_rank": 1,
   "mana_cost": "{1}",
@@ -517,6 +562,12 @@
    "mana-rock",
    "ramp"
   ],
+  "m0_key": "1|",
+  "m0_gen": 1,
+  "produces": [
+   "C"
+  ],
+  "produces_n": 1,
   "extra": false,
   "edhrec_rank": 1,
   "mana_cost": "{1}",
@@ -608,6 +659,20 @@
    "permanent",
    "spell"
   ],
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "0|G",
+  "m0_gen": 0,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
+  "produces": [
+   "G"
+  ],
+  "produces_n": 1,
   "extra": false,
   "mana_cost": "{G}",
   "type_line": "Creature — Elf Druid",
@@ -700,6 +765,20 @@
    "permanent",
    "spell"
   ],
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "0|G",
+  "m0_gen": 0,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
+  "produces": [
+   "G"
+  ],
+  "produces_n": 1,
   "extra": false,
   "mana_cost": "{G}",
   "type_line": "Creature — Elf Druid",
@@ -789,6 +868,16 @@
    "spell",
    "vanilla"
   ],
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "1|G",
+  "m0_gen": 1,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
   "extra": false,
   "mana_cost": "{1}{G}",
   "type_line": "Creature — Bear",
@@ -891,6 +980,17 @@
    "spell",
    "transform"
   ],
+  "m_syms": [
+   "0:W:1",
+   "0:W:2"
+  ],
+  "m0_key": "3|W,W",
+  "m0_gen": 3,
+  "dev_W": 2,
+  "dev_WU": 2,
+  "dev_WB": 2,
+  "dev_WR": 2,
+  "dev_WG": 2,
   "extra": false,
   "mana_cost": "{3}{W}{W}",
   "type_line": "Legendary Creature — Angel // Legendary Creature — Angel",
@@ -983,6 +1083,7 @@
    "permanent",
    "vanilla"
   ],
+  "m0_key": "none",
   "extra": true,
   "mana_cost": "",
   "type_line": "Token Creature — Goblin",
