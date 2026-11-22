@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mtgsearch</title>
+<meta name="description" content="Search Magic: The Gathering cards with Scryfall syntax or plain English.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="top">
+  <a class="wordmark" href="/">mtgsearch</a>
+  <p class="tagline">Find a card by its syntax, its name, or what you remember about it.</p>
+</header>
+
+<main>
+  <form id="search" class="search" role="search" action="/" method="get">
+    <label class="sr-only" for="q">Search cards</label>
+    <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
+           autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+    <button type="submit">Search</button>
+  </form>
+
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+
+  <section id="intro" class="intro" aria-label="Example searches">
+    <h2>Try one</h2>
+    <ul class="examples">
+      <li><button type="button" data-q="sphinx that draws two cards">sphinx that draws two cards</button><span>plain English</span></li>
+      <li><button type="button" data-q="c:u t:sphinx o:&quot;draw two cards&quot;">c:u t:sphinx o:"draw two cards"</button><span>Scryfall syntax</span></li>
+      <li><button type="button" data-q="c:u t:sphinx draws when opponents draw">c:u t:sphinx draws when opponents draw</button><span>both at once</span></li>
+      <li><button type="button" data-q="one mana elf that taps for green mana">one mana elf that taps for green mana</button><span>cost and type are read from the words</span></li>
+      <li><button type="button" data-q="dwarf destroys lands">dwarf destroys lands</button><span>plain English</span></li>
+      <li><button type="button" data-q="lightning bolt">lightning bolt</button><span>a card name</span></li>
+    </ul>
+    <details class="help">
+      <summary>What can I type?</summary>
+      <p><strong>A card name</strong>, or part of one. Matching cards come back most-played first.</p>
+      <p><strong>Scryfall syntax.</strong> Colour (<code>c:</code>, <code>id:</code>), type (<code>t:</code>), rules text
+        (<code>o:</code>, <code>kw:</code>), mana value, power, toughness and loyalty (<code>mv</code>, <code>pow</code>,
+        <code>tou</code>, <code>loy</code>), legality (<code>f:</code>, <code>banned:</code>), tags (<code>otag:</code>),
+        <code>is:</code> flags, <code>-</code> to negate, <code>or</code>, parentheses and regular expressions.</p>
+      <p><strong>Plain English.</strong> Describe the card. An opening such as "two mana blue instant" is applied as a filter.</p>
+      <p><strong>Not yet:</strong> anything about a particular printing, such as set, rarity, artist or price, and mana cost symbols (<code>m:</code>).</p>
+    </details>
+  </section>
+
+  <ol id="results" class="grid"></ol>
+</main>
+
+<dialog id="card" class="sheet" aria-labelledby="card-name">
+  <form method="dialog"><button class="close" aria-label="Close">Close</button></form>
+  <div class="sheet-body">
+    <img id="card-image" alt="" width="488" height="680">
+    <div class="sheet-text">
+      <h2 id="card-name"></h2>
+      <p id="card-line" class="line"></p>
+      <p id="card-rules" class="rules"></p>
+      <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
+    </div>
+  </div>
+</dialog>
+
+<footer class="foot">
+  <p>Card data and images come from <a href="https://scryfall.com" rel="noopener">Scryfall</a>. This site is not
+    produced or endorsed by Scryfall.</p>
+  <p>Unofficial fan content permitted under the Wizards of the Coast Fan Content Policy. Card text and images are
+    copyright Wizards of the Coast LLC. Not approved or endorsed by Wizards of the Coast.</p>
+</footer>
+
+<script src="/static/app.js" defer></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-"""Command line: mtgsearch ingest | catalog | search | conformance | eval."""
+"""Command line: mtgsearch ingest | catalog | search | serve | conformance | eval."""
 
 import argparse
 from pathlib import Path
@@ -29,6 +29,10 @@ def main(argv: list[str] | None = None) -> None:
     evaluate.add_argument("--out", default=None)
     evaluate.add_argument("--classes", nargs="*", default=None)
 
+    serve = sub.add_parser("serve", help="run the web app (needs the 'web' extra)")
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=8000)
+
     args = parser.parse_args(argv)
 
     if args.command == "ingest":
@@ -58,6 +62,10 @@ def main(argv: list[str] | None = None) -> None:
         results = conformance_module.run(Path(args.queries), Path(args.out) if args.out else None)
         if any(r.status != "pass" for r in results):
             raise SystemExit(1)
+    elif args.command == "serve":
+        import uvicorn
+
+        uvicorn.run("mtgsearch.web:app", host=args.host, port=args.port)
     elif args.command == "eval":
         from . import evaluate as evaluate_module
 

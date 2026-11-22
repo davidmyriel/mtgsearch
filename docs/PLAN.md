@@ -27,11 +27,10 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 
 ## Stages
 
-### 0. Setup: done except CI secrets
-- [x] Repository on GitHub, lint, unit tests, CI workflows (both have run and pass)
-- [ ] Rotate the API key that was pasted into chat; create separate keys for CI, staging, production
-- [ ] Add the `TOPK_API_KEY` secret on GitHub. Until then the integration tests and the nightly
-      refresh skip themselves. `TOPK_REGION` and `MTGSEARCH_COLLECTION` variables are optional.
+### 0. Setup: done except key rotation
+- [x] Repository on GitHub, lint, unit tests, CI workflows
+- [x] `TOPK_API_KEY` secret on GitHub: integration tests and the nightly refresh run with it
+- [ ] Revoke the first API key that was pasted into chat; create separate keys for CI, staging, production
 
 ### 1. Card-level search parity: mostly done
 - [x] Ingest pipeline from Scryfall bulk files, incremental, versioned collections
@@ -62,12 +61,17 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 - Exit, proposed and to be confirmed on the larger set: right card in the top 3 for 80% of descriptive,
   85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon
 
-### 4. Product (about a week)
-- [ ] API route: key server-side, rate limiting, query length cap, caching
-- [ ] UI: results grid with full card images from Scryfall, artist credit, link back, which path the
-      query took, example queries, a page showing how it works
+### 4. Product: thin version built, not yet deployed
+- [x] API route: key server-side, rate limiting, query length cap, caching
+- [x] One responsive page for phone and laptop: results grid with full card images from Scryfall,
+      link back, which path the query took, example searches, what can be typed
+- [x] End-to-end browser test at phone and laptop sizes, run in CI
+- [x] Container image, built and started in CI
+- [ ] Deploy it (needs a host account) and point a domain at it
 - [ ] Anonymous query and click logging
-- Exit: end-to-end browser test passes; p95 under 500 ms
+- [ ] Pagination past the first 60 results; sort controls
+- [ ] Measure p95 latency under load
+- Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms
 
 ### 5. Internal alpha (3–4 days)
 - [ ] Bug bash; every failed query goes into the query set
@@ -88,12 +92,13 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 | Integration | TopK returns what the Python evaluator predicts; each search path end to end | `pytest -m integration` |
 | Conformance | Our result set equals Scryfall's for the same query | `mtgsearch conformance` |
 | Relevance regression | Ranking quality per query class against a stored baseline | `mtgsearch eval` |
-| End to end | Browser test on the deployed app | Stage 4 |
+| End to end | The real page in Chromium at phone and laptop sizes | `node e2e/smoke.cjs <url>` |
 
 ## CI
 
 - Every push and pull request: lint, format check, unit tests on Python 3.10 and 3.13.
-- Same-repository pushes and pull requests: integration tests, when the TopK secret is configured.
+- Same-repository pushes and pull requests: integration tests and the browser test, when the TopK
+  secret is configured; the container image is built and started on every run.
 - Nightly: incremental ingest, conformance on the tuning set, relevance evaluation, results uploaded.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.

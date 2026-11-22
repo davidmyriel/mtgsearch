@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -35,7 +36,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     # Secrets are not available to pull requests from forks.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     env:
       TOPK_API_KEY: ${{ secrets.TOPK_API_KEY }}
       TOPK_REGION: ${{ vars.TOPK_REGION }}
@@ -53,3 +54,52 @@ jobs:
       - name: Skipped
         if: env.TOPK_API_KEY == ''
         run: echo "TOPK_API_KEY secret is not configured; integration tests skipped."
+
+  container:
+    name: Build the container and check it serves the page
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t mtgsearch .
+      - name: Start it and request the page
+        run: |
+          docker run -d --name app -p 8000:8000 mtgsearch
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8000/healthz && break; sleep 1; done
+          curl -sf http://127.0.0.1:8000/ | grep -q 'id="search"'
+          curl -sf -o /dev/null http://127.0.0.1:8000/static/app.js
+          curl -sf -o /dev/null http://127.0.0.1:8000/static/app.css
+      - name: Container log
+        if: always()
+        run: docker logs app
+
+  e2e:
+    name: End-to-end in a browser
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      TOPK_API_KEY: ${{ secrets.TOPK_API_KEY }}
+      TOPK_REGION: ${{ vars.TOPK_REGION }}
+      MTGSEARCH_COLLECTION: ${{ vars.MTGSEARCH_COLLECTION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: pip install -e ".[web]"
+      - name: Install Playwright
+        if: env.TOPK_API_KEY != ''
+        run: npm install --no-save playwright && npx playwright install --with-deps chromium
+      - name: Run the app and drive it at phone and laptop sizes
+        if: env.TOPK_API_KEY != ''
+        run: |
+          mtgsearch serve --port 8000 &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8000/healthz && break; sleep 1; done
+          node e2e/smoke.cjs http://127.0.0.1:8000
+      - name: Skipped
+        if: env.TOPK_API_KEY == ''
+        run: echo "TOPK_API_KEY secret is not configured; browser test skipped."

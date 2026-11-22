@@ -10,7 +10,7 @@ c:u t:sphinx draws when opponents draw   both at once: keywords filter, words ra
 lightning bolt                           a card name: name matches, most-played first
 ```
 
-Status: backend only, no web app yet. See [docs/PLAN.md](docs/PLAN.md) for stages and what is next.
+Status: working search with a thin web app. See [docs/PLAN.md](docs/PLAN.md) for stages and what is next.
 
 ## How it works
 
@@ -106,6 +106,40 @@ the first time; later runs only re-send cards that changed).
 mtgsearch search "sphinx that draws two cards"
 ```
 
+## Web app
+
+```bash
+pip install -e ".[web]"
+```
+
+```bash
+mtgsearch serve
+```
+
+Open http://127.0.0.1:8000. It is one responsive page (`src/mtgsearch/static/`) over one endpoint,
+`GET /api/search?q=...`, and works the same on a phone and a laptop. The TopK key stays on the
+server. Because the endpoint is public and plain-English queries cost an inference call, it
+caps queries at 200 characters, caches repeated queries for ten minutes and limits each client
+to 30 uncached searches a minute (`MTGSEARCH_RATE_LIMIT`). The cache and the limit live in the
+process, so they are per server instance.
+
+### Deploying
+
+The `Dockerfile` runs the app on any host that takes a container (Render, Fly.io, Railway,
+Cloud Run and the like):
+
+1. Point the host at this repository and let it build the `Dockerfile`.
+2. Set the `TOPK_API_KEY` environment variable as a secret. `TOPK_REGION` and
+   `MTGSEARCH_COLLECTION` are optional.
+3. Use `/healthz` as the health check. The app listens on `$PORT`, or 8000.
+
+The image trusts forwarded client addresses for rate limiting, so run it behind the host's
+load balancer, not exposed directly. To check a deployment from your machine:
+
+```bash
+node e2e/smoke.cjs https://your-deployment
+```
+
 ## Commands
 
 | Command | Purpose |
@@ -113,10 +147,12 @@ mtgsearch search "sphinx that draws two cards"
 | `mtgsearch ingest [--dry-run] [--full]` | Refresh the collection from Scryfall's bulk data |
 | `mtgsearch catalog` | Regenerate the type-word catalogue after new sets add types |
 | `mtgsearch search "<query>"` | Run one query |
+| `mtgsearch serve` | Run the web app locally |
 | `mtgsearch conformance [file]` | Compare syntax queries with Scryfall's API |
 | `mtgsearch eval` | Score the ranking strategies on `eval/queries.json` |
 | `pytest` | Unit tests, no network |
 | `pytest -m integration` | Tests against the live collection (needs `TOPK_API_KEY`) |
+| `node e2e/smoke.cjs <url>` | Drive the running app in a browser at phone and laptop sizes (needs Playwright) |
 
 Collections are versioned (`mtg-cards-v2`). To change the schema, set `MTGSEARCH_COLLECTION`
 to the next version and ingest; never delete and recreate a collection under the same name.
