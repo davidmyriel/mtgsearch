@@ -12,7 +12,7 @@ t:dragon r:mythic usd<5                  printings: set, rarity, artist, price, 
 !"lightning bolt" unique:prints          every printing of a card
 ```
 
-Status: working search over cards and printings with a thin web app, ready to deploy on Netlify. See
+Status: working search over cards and printings with a thin web app, deployed on Netlify. See
 [docs/PLAN.md](docs/PLAN.md) for stages and what is next.
 
 ## How it is put together

@@ -69,15 +69,20 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
 - Exit, proposed and to be confirmed on the larger set: right card in the top 3 for 80% of descriptive,
   85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon
 
-### 4. Product: thin version built for Netlify, not yet deployed
+### 4. Product: thin version deployed on Netlify
 - [x] Search endpoint: key server-side, rate limiting, query length cap, caching
 - [x] One responsive page for phone and laptop: results grid with full card images from Scryfall,
       link back, which path the query took, example searches, what can be typed
 - [x] One implementation of search, in TypeScript, running as a Netlify Function
 - [x] End-to-end browser test at phone and laptop sizes, run in CI on the local server and as
       Netlify serves the site; Netlify's own build exercised in CI
-- [ ] Connect the repository in Netlify, set `TOPK_API_KEY`, deploy; run the browser test against the
-      live URL. Not verifiable from the repository: Netlify's CDN cache and its rate limit
+- [x] Connected the repository in Netlify, set `TOPK_API_KEY`, deployed. The browser test passes
+      against the live URL (123 checks at phone, laptop and dark-mode sizes), repeated searches are
+      answered from Netlify's CDN cache, and the security headers are served
+- [ ] Confirm the per-client rate limit on the live site. It counts per address, so it needs a
+      client with one address: about 80 different searches in a minute should start returning 429.
+      Netlify validates the rule at the end of each deploy and a rule that fails validation does
+      not fail the deploy, so also look for it in the deploy log
 - [x] Paging ("Show more") and a sort menu, including newest printing and price
 - [x] Printing details in the card view (set, number, rarity, artist, price, flavour text) and a
       link from a card to all of its printings
