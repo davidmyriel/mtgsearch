@@ -68,6 +68,7 @@ def build_documents(data_dir: Path) -> list[dict]:
     docs = [build_document(c, tags.get(c["oracle_id"])) for c in scryfall.read_jsonl_gz(cards_path)]
     for doc in docs:
         doc["content_hash"] = content_hash(doc)
+        doc["text_hash"] = text_hash(doc)
     return docs
 
 
@@ -92,23 +93,34 @@ def upsert(docs: Iterable[dict], log=print, expected: int | None = None) -> str 
     return lsn
 
 
-# Fields that move daily for most cards and are never part of the embedded text. A card whose
-# only change is in these gets a small field update instead of being re-sent and re-embedded.
+# The fields TopK embeds. Writing them costs an inference call per card, so they are only
+# re-sent when their text changes; every other field can be written with a cheap field update.
+EMBEDDED = ("rules", "rules_tagged")
+# Fields that move daily for most cards.
 VOLATILE = ("edhrec_rank", "usd")
-UPDATE_BATCH = 1000
+HASHES = ("content_hash", "text_hash")
+UPDATE_BATCH = 250
 ID_PREFIXES = "0123456789abcdef"  # document ids are UUIDs
 BUCKET_LIMIT = 5000
 
 
-def content_hash(doc: dict) -> str:
-    """Fingerprint of everything in a document except the volatile fields."""
-    stable = {k: v for k, v in doc.items() if k not in VOLATILE and k != "content_hash"}
-    text = json.dumps(stable, sort_keys=True, ensure_ascii=False)
+def _digest(value) -> str:
+    text = json.dumps(value, sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:20]
 
 
+def content_hash(doc: dict) -> str:
+    """Fingerprint of everything in a document except the volatile fields."""
+    return _digest({k: v for k, v in doc.items() if k not in VOLATILE and k not in HASHES})
+
+
+def text_hash(doc: dict) -> str:
+    """Fingerprint of the embedded text alone."""
+    return _digest([doc.get(k) for k in EMBEDDED])
+
+
 def stored_state(col) -> dict[str, dict]:
-    """What the collection holds now: id -> its content hash and volatile fields.
+    """What the collection holds now: id -> its hashes and volatile fields.
 
     The collection itself is the record of what has been ingested, so a run needs no local
     snapshot and behaves the same from any machine. Read in one query per id prefix.
@@ -118,7 +130,7 @@ def stored_state(col) -> dict[str, dict]:
     state: dict[str, dict] = {}
     for prefix in ID_PREFIXES:
         rows = col.query(
-            select("content_hash", *VOLATILE).filter(field("_id").starts_with(prefix)).limit(BUCKET_LIMIT)
+            select(*HASHES, *VOLATILE).filter(field("_id").starts_with(prefix)).limit(BUCKET_LIMIT)
         )
         if len(rows) >= BUCKET_LIMIT:
             raise SystemExit(
@@ -127,6 +139,19 @@ def stored_state(col) -> dict[str, dict]:
         state.update({row["_id"]: row for row in rows})
     if len(state) != col.count():
         raise SystemExit("could not read every document's state by id prefix; refusing to guess what changed")
+
+    # Documents written without a text hash (before it existed, or by an older version of this
+    # job): derive it from the stored text, so they are not re-embedded just to record it.
+    if any(row.get("text_hash") is None for row in state.values()):
+        for prefix in (a + b for a in ID_PREFIXES for b in ID_PREFIXES):
+            rows = col.query(
+                select(*EMBEDDED)
+                .filter(field("_id").starts_with(prefix))
+                .filter(field("text_hash").is_null())
+                .limit(BUCKET_LIMIT)
+            )
+            for row in rows:
+                state[row["_id"]].update(text_hash=text_hash(row), backfill=True)
     return state
 
 
@@ -138,16 +163,21 @@ def _same(new, old) -> bool:
 
 
 def plan(docs: list[dict], state: dict[str, dict]) -> tuple[list[dict], list[dict], list[str]]:
-    """Decide what to write. Returns (documents to send in full, field updates, ids to delete)."""
+    """Decide what to write. Returns (documents to send in full, field updates, ids to delete).
+
+    A field update merges into the stored document and a null removes a field, so an update
+    of every field except the embedded text brings a card fully up to date without embedding it.
+    """
+    fields = sorted(set().union(*docs) - set(EMBEDDED))
     upserts, updates = [], []
     for doc in docs:
         old = state.get(doc["_id"])
-        if old is None or old.get("content_hash") != doc["content_hash"]:
-            upserts.append(doc)  # new, changed, or stored before hashes existed
-        elif any(old.get(k) is not None and k not in doc for k in VOLATILE):
-            upserts.append(doc)  # an update merges fields, so it cannot remove a rank or price
+        if old is None or old.get("text_hash") != doc["text_hash"]:
+            upserts.append(doc)  # new, or its embedded text changed
+        elif old.get("content_hash") != doc["content_hash"] or old.get("backfill"):
+            updates.append({k: doc.get(k) for k in fields})
         else:
-            moved = {k: doc[k] for k in VOLATILE if k in doc and not _same(doc[k], old.get(k))}
+            moved = {k: doc.get(k) for k in VOLATILE if not _same(doc.get(k), old.get(k))}
             if moved:
                 updates.append({"_id": doc["_id"], **moved})
     removed = sorted(set(state) - {d["_id"] for d in docs})
@@ -158,23 +188,24 @@ def update_fields(updates: list[dict], log=print) -> None:
     col, t0 = config.collection(), time.time()
     for i in range(0, len(updates), UPDATE_BATCH):
         col.update(updates[i : i + UPDATE_BATCH], False)  # False: do not fail on a missing id
-    log(f"  {len(updates)} rank or price updates, {time.time() - t0:.0f}s")
+    log(f"  {len(updates)} field updates, {time.time() - t0:.0f}s")
 
 
 def run(data_dir: Path = config.DATA_DIR, dry_run: bool = False, full: bool = False) -> None:
     """Refresh the collection from today's bulk files.
 
-    Unless `full` is set, the run compares against what the collection already holds: only new
-    or changed cards are re-sent, and cards whose rank or price moved get a field update. A
-    daily run therefore re-embeds a few dozen cards rather than the whole set.
+    Unless `full` is set, the run compares against what the collection already holds. Only
+    cards that are new or whose embedded text changed are sent in full; any other change,
+    including a field this job has only just started to produce, is a field update. A daily
+    run therefore embeds a few dozen cards rather than the whole set.
     """
     docs = build_documents(data_dir)
     exists = any(c.name == config.COLLECTION for c in config.client().collections().list())
     state = {} if full or not exists else stored_state(config.collection())
     upserts, updates, removed = plan(docs, state)
     print(
-        f"built {len(docs)} documents: {len(upserts)} to send in full, "
-        f"{len(updates)} rank or price updates, {len(removed)} to delete"
+        f"built {len(docs)} documents: {len(upserts)} to send in full (embedded), "
+        f"{len(updates)} field updates, {len(removed)} to delete"
     )
     if dry_run:
         return

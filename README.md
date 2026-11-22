@@ -168,10 +168,17 @@ mtgsearch ingest
 ```
 
 That downloads Scryfall's bulk files into `data/` and brings the collection up to date. It
-compares today's cards with what the collection already holds: new or changed cards are sent
-in full, cards whose popularity rank or price moved get a small field update, and everything
-else is left alone. A first run takes about three minutes; a daily run takes under a minute
-and re-embeds a few dozen cards.
+compares today's cards with what the collection already holds (each document stores a hash of
+its embedded text and a hash of everything else):
+
+- a new card, or one whose embedded text changed, is sent in full and embedded;
+- any other change is a field update that leaves the embedding alone. That covers popularity
+  rank and price, which move daily, and also fields the job has only just started to produce,
+  so adding a filter field to every card takes about two minutes and no inference;
+- cards Scryfall no longer lists are deleted.
+
+A first run takes about three minutes; a daily run takes under a minute and embeds a few
+dozen cards.
 
 Collections are versioned (`mtg-cards-v2`). To change the schema, set `MTGSEARCH_COLLECTION`
 to the next version and ingest; never delete and recreate a collection under the same name.
