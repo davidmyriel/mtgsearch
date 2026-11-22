@@ -76,7 +76,12 @@ picked up: at the boundary between plan steps unless something is broken.
       plain text wins on numeric queries
 - [ ] Grow the query set to about 150 with a second reviewer; write art descriptions from memory
 - [ ] Index art for the full set and add art to the combined score (needs the cost decision above)
-- [ ] Minimum score for "no good match"
+- [ ] Minimum score for "no good match". Measured on 22 November 2026: 23 plain-English queries
+      from the evaluation set had a top score between 8.5 and 21.7, and 10 queries about nothing
+      in the game (tax returns, train times, gibberish) between 3.5 and 6.6. So there is a gap,
+      but the score grows with the length of the query: the lowest on-topic score belongs to
+      the shortest query. A fixed cut-off would call short, good queries weak. It needs a score
+      adjusted for length and the larger query set before it is switched on
 - Exit, proposed and to be confirmed on the larger set: right card in the top 3 for 80% of descriptive,
   85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon
 
