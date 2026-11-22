@@ -85,10 +85,18 @@ Measured on 22 November 2026 against the full card set. Raw output is in `confor
 | Printing held-out set, 61 queries | 53 match | 59 match |
 | Mana tuning set, 58 queries | | 58 match |
 | Mana held-out set, 22 queries | 18 match | 19 match |
+| `is:` shortcuts, 54 queries (land cycles, party, modal and so on) | 35 of 49 | 54 match |
+| Second held-out set, 54 queries across all of the above | 52 match | 52 match |
+| Regex shorthands tuning set, 16 queries (`\spp`, `\smr` and so on) | | 16 match |
 
-The first-run column is the honest measure of how well the rules generalise; the held-out
-sets have since been used to fix rules, so they are no longer untouched. Differences that
+The first-run column is the honest measure of how well the rules generalise; the earlier
+held-out sets have since been used to fix rules, so they are no longer untouched. The second
+held-out set was written after every rule was fixed and has not been tuned on: 52 of 54 (96%),
+and both misses belong to differences already listed as known gaps. Differences that
 remain are listed with reasons in `conformance/known_gaps.txt`.
+
+The nightly run repeats all of it. A tuning set must match in full. A held-out set is compared
+with its saved run (`--baseline`), and fails only if a query that matched then no longer does.
 
 **Relevance** (frozen query set; an accepted card's rank):
 
@@ -129,13 +137,14 @@ Read these with care:
 
 | Area | Supported |
 |---|---|
-| Names and logic | Card names, `!exact`, `name:`, `-negation`, `or`, parentheses, regex on name, type, text and flavour text |
+| Names and logic | Card names, `!exact`, `name:`, `-negation`, `or`, parentheses, regex on name, type, text and flavour text, with Scryfall's shorthands (`\spp` `\smm` `\spt` `\sm` `\sc` `\ss` `\smr` `\smh` `\smp`) |
 | Colour | `c:` `id:` with every comparison, colour names, guilds, shards, wedges, counts |
 | Text and type | `t:` `o:` `fo:` `kw:` including `~` |
 | Numbers | `mv` `pow` `tou` `pt` `loy`, `pow>tou`, `mv:even` |
 | Mana | `m:` with every comparison (`m:2WW`, `m={R/W}{R/W}`, `m<=1G`), `devotion:`, `produces:` as a set of colours or a count |
 | Legality and tags | `f:` `banned:` `restricted:`, `edhrec`, `otag:` / `function:` |
-| Card flags | `is:` split, flip, transform, meld, leveler, mdfc, dfc, permanent, spell, historic, vanilla, bear, commander, hybrid, phyrexian, reserved, gamechanger, funny |
+| Card flags | `is:` split, flip, transform, meld, leveler, mdfc, dfc, permanent, spell, historic, vanilla, frenchvanilla, bear, commander, hybrid, phyrexian, reserved, gamechanger, funny |
+| Shortcuts | Land cycles: `is:` fetchland, shockland, dual, checkland, fastland, painland, filterland, bounceland, bikeland, canopyland, gainland, scryland, shadowland, storageland, creatureland, triland, tangoland, triome, slowland, bondland, pathway, surveilland, vergeland (and their other names, such as `is:manland`). Groups: `is:` party, outlaw, companion, partner, oathbreaker, duelcommander, brawler, modal, adventure, augmentation, masterpiece, firstprint |
 | Printings | `set:` `st:` `cn:` `r:` (with comparisons) `a:` `ft:` `wm:` `frame:` `border:` `stamp:` `game:` `year` `date` (a day, a year or a set code) `usd` `eur` `tix` |
 | Printing flags | `is:` foil, nonfoil, etched, promo, reprint, digital, fullart, textless, spotlight, booster, hires, showcase, extended, borderless, old, new, ub, and every promo type (`is:prerelease`, `is:buyabox`, ...) |
 | Across printings | `in:` a set, rarity or game; `prints`, `sets` |
@@ -143,9 +152,7 @@ Read these with care:
 | Sorting | `order:` name, cmc, power, toughness, edhrec, released, usd, eur, tix, rarity; `direction:` |
 
 Not yet, and reported as unsupported rather than silently ignored: `lang:` and non-English
-printings, `new:`, `block:`, `cube:`, art tags (`art:`), land-cycle shortcuts such as
-`is:fetchland`, `order:` by set or artist, and Scryfall's `\spp`, `\smm`, `\spt` regex
-shorthands.
+printings, `new:`, `block:`, `cube:`, art tags (`art:`), and `order:` by set or artist.
 
 Known differences from Scryfall are listed with reasons in `conformance/known_gaps.txt`.
 
@@ -167,21 +174,36 @@ Put your key in `.env` and export it (`set -a; . ./.env; set +a`). Then:
 npm run dev
 ```
 
-Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over one endpoint,
-`GET /api/search`, and works the same on a phone and a laptop. The key stays on the server.
-A search lives at `/?q=...` and each card has its own address, `/card/<set>/<number>/<name>`
-(for example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
+Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over two endpoints,
+`GET /api/search` and `GET /api/card`, and works the same on a phone and a laptop. The key
+stays on the server.
+A search lives at `/?q=...`, with its sort, direction, what a result is and the page of results
+in the address too (`/?q=t:sphinx&order=cmc&dir=desc&page=2`), so a reload or a shared link
+opens at the same place. Each card has its own address, `/card/<set>/<number>/<name>` (for
+example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
 
 | Parameter | Meaning |
 |---|---|
 | `q` | The query, up to 200 characters |
 | `k`, `offset` | Page size (default 24, at most 60) and how many results to skip |
-| `order`, `dir` | Sort by `name`, `cmc`, `power`, `toughness`, `edhrec`, `released`, `usd`, `eur`, `tix` or `rarity`; `dir=desc` reverses. An `order:` keyword in the query wins. Ignored for results ranked by meaning |
+| `order`, `dir` | Sort by `name`, `cmc`, `power`, `toughness`, `edhrec`, `released`, `usd`, `eur`, `tix` or `rarity`; `dir` is `asc` or `desc`, and without it release dates run newest first and everything else ascends. An `order:` or `direction:` keyword in the query wins. Ignored for results ranked by meaning |
+| `unique` | What a result is: `cards` (the default), `prints` or `art`. A `unique:` keyword in the query wins |
 
-The answer carries `total`, `unit` (what the total counts: cards, printings or illustrations),
+The answer carries `understood`, a syntax query said back in words with one entry for each
+condition (`t:sphinx mv<=3` is "the type includes “sphinx”" and "the mana value is 3 or less"),
+which the page shows under the status line so that a wrong reading is easy to spot. It also
+carries `total`, `unit` (what the total counts: cards, printings or illustrations),
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
-"Show more" button and sort menu. Each hit names the printing shown: set, collector number,
-rarity, artist, release date and price. Results ranked by meaning stop at 120.
+pager and its three controls (show, sort, direction). The page asks for 60 results at a time.
+Each hit names the printing shown: set, collector number, rarity, artist, release date and
+price. Results ranked by meaning stop at 120. TopK returns nothing beyond the first 10,000 of
+a result, so `k` plus `offset` is held to that and `has_more` is false there.
+
+`GET /api/card?set=<code>&cn=<collector number>` is what a card's own page shows: `card`, that
+printing with its printed power and toughness (`stats`, also loyalty or defense) and three
+lists of formats (`legal`, `banned`, `restricted`); and `printings`, the card's printings
+newest first with set, number, rarity, date and price, at most 60. An address with no card
+is a 404.
 
 To run a single query from the terminal:
 

@@ -3,6 +3,8 @@
 //   npm run conformance                        conformance/queries.txt
 //   npm run conformance -- conformance/heldout.txt --out results.json
 //   npm run conformance -- probes.txt --theirs     only print what Scryfall returns
+//   npm run conformance -- conformance/heldout2.txt --baseline conformance/heldout2_results.json
+//                                              fail only if a query that matched before no longer does
 //
 // A query passes when the totals match and, where Scryfall's full result list was fetched,
 // the two sets of ids are identical: Oracle ids for cards, printing ids for `unique:prints`. Scryfall's API is used only for this comparison:
@@ -27,8 +29,10 @@ export const MIN_INTERVAL_MS = 600;
 // They also ask clients to cache what they download for at least 24 hours.
 const CACHE_DIR = fileURLToPath(new URL("../data/scryfall-cache/", import.meta.url));
 const CACHE_MS = 24 * 60 * 60 * 1000;
-const MAX_PAGES = 4;
-const MAX_IDS = 5000;
+// Pages of 175 results fetched per query; beyond that only totals are compared. Raise it with
+// CONFORMANCE_MAX_PAGES to see every difference in a large result while working out a rule.
+const MAX_PAGES = Number(process.env.CONFORMANCE_MAX_PAGES) || 4;
+const MAX_IDS = 10_000;
 
 export type Outcome = {
   query: string;
@@ -165,6 +169,21 @@ export async function run(queriesPath: string, outPath: string | null, log = con
   return outcomes;
 }
 
+/**
+ * Compare a run with an earlier one. A held-out set is never tuned, so it keeps the differences
+ * it had on the day it was written; what must not happen is a query that matched then and does
+ * not now. A query the earlier run does not know has to match.
+ */
+export function againstBaseline(outcomes: Outcome[], baseline: { query: string; status: string }[]) {
+  const before = new Map(baseline.map((b) => [b.query, b.status]));
+  const passes = (o: Outcome) => o.status === "pass";
+  return {
+    regressed: outcomes.filter((o) => !passes(o) && (before.get(o.query) ?? "pass") === "pass").map((o) => o.query),
+    stillDiffer: outcomes.filter((o) => !passes(o) && before.has(o.query) && before.get(o.query) !== "pass").map((o) => o.query),
+    nowMatch: outcomes.filter((o) => passes(o) && before.has(o.query) && before.get(o.query) !== "pass").map((o) => o.query),
+  };
+}
+
 /** Print what Scryfall alone returns for each query: for working out a rule before writing it. */
 async function theirs(queriesPath: string, log = console.log) {
   for (const query of readQueries(queriesPath)) {
@@ -177,10 +196,20 @@ async function theirs(queriesPath: string, log = console.log) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
-  const out = args.includes("--out") ? args[args.indexOf("--out") + 1] : null;
-  const file = args.find((a, i) => !a.startsWith("--") && args[i - 1] !== "--out") ?? "conformance/queries.txt";
+  const option = (name: string) => (args.includes(name) ? args[args.indexOf(name) + 1] : null);
+  const out = option("--out");
+  const baseline = option("--baseline");
+  const file = args.find((a, i) => !a.startsWith("--") && !["--out", "--baseline"].includes(args[i - 1])) ?? "conformance/queries.txt";
   if (args.includes("--theirs")) {
     await theirs(file);
+  } else if (baseline) {
+    // read before the run, in case --out names the same file
+    const earlier = JSON.parse(readFileSync(baseline, "utf8")).results;
+    const { regressed, stillDiffer, nowMatch } = againstBaseline(await run(file, out), earlier);
+    console.log(`against ${baseline}: ${regressed.length} regressed, ${stillDiffer.length} still differ as before, ${nowMatch.length} match that did not`);
+    for (const query of regressed) console.log(`  REGRESSED  ${query}`);
+    for (const query of nowMatch) console.log(`  now matches (refresh the baseline)  ${query}`);
+    process.exit(regressed.length ? 1 : 0);
   } else {
     const outcomes = await run(file, out);
     process.exit(outcomes.every((o) => o.status === "pass") ? 0 : 1);

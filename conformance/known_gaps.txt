@@ -50,6 +50,30 @@ devotion={b/g}{b/g} t:elf
     count a hybrid symbol of exactly the two colours asked about twice, so "=" misses them.
 
 m<=R t:goblin
-    Scryfall also returns Krark, the Thumbless, which costs {1}{R}. The printing Scryfall
-    picks for that card is a reversible one whose cost is recorded on its faces only, so it
-    reads as having no cost. We compare the real cost.
+m<=1 t:artifact t:creature
+    Scryfall also returns Krark, the Thumbless, which costs {1}{R}, and for the second query
+    Blightsteel Colossus and Darksteel Colossus. The printing Scryfall picks for each of those
+    cards is a reversible one whose cost is recorded on its faces only, so the card reads as
+    having no cost. We compare the real cost.
+
+frame:1997 is:foil t:goblin
+    We return one card Scryfall does not, Embermage Goblin. Not investigated; probably one of
+    the printings Scryfall hides without marking in the bulk data.
+
+is:frenchvanilla
+    Scryfall returns 1,096 cards; we return those and 79 more. Ours is every creature whose
+    text is only keyword abilities, a mana cost allowed after one. Scryfall leaves out a card
+    when "Protection from ..." starts a line (Black Knight), when keywords are separated by
+    semicolons (Bayou Dragonfly), when reminder text has a line to itself, and for a few newer
+    keywords such as Plot. Those look like limits of its parser rather than a definition.
+
+is:brawler
+    We return ten legal Brawl commanders that Scryfall leaves out, among them Ragavan, Nimble
+    Pilferer, Old Stickfingers and Light-Paws, Emperor's Voice. Nothing in the card data sets
+    them apart; Scryfall may be applying a list that is not published with the cards.
+
+is:oathbreaker
+    Scryfall also returns Ashaya's Enduring Bond, a legendary sorcery. We return planeswalkers.
+
+is:modal
+    Scryfall also returns Celebr-8000, an Un-card with a dice table and no modes to choose.

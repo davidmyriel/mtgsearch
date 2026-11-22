@@ -23,6 +23,9 @@ const QUERY_FILES = [
   "conformance/prices.txt",
   "conformance/mana.txt",
   "conformance/mana_heldout.txt",
+  "conformance/shortcuts.txt",
+  "conformance/heldout2.txt",
+  "conformance/regex.txt",
   "fixtures/extra_queries.txt",
 ];
 

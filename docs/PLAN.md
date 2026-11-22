@@ -40,8 +40,17 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] Syntax compiler for card-level keywords (see README for the list)
 - [x] Differential testing against Scryfall's API: 97/97 tuning, 74/77 held-out first run (77/77 now)
 - [x] Mana cost keywords: `m:`, `devotion:`, `produces:` (58/58 tuning, 18/22 held-out first run)
-- [ ] Remaining `is:` shortcuts (land cycles and the like) and Scryfall's regex shorthands
-- [ ] Grow the held-out conformance set to about 200 queries; run it nightly
+- [x] `is:` shortcuts: 23 land cycles with their other names, and party, outlaw, companion,
+      partner, oathbreaker, duelcommander, brawler, modal, adventure, augmentation, frenchvanilla,
+      masterpiece, firstprint (54/54 on the tuning set; four differences kept on purpose are in
+      `conformance/known_gaps.txt`). `is:commander` now includes legendary Vehicles, Spacecraft
+      and Backgrounds, as Scryfall's does
+- [x] Scryfall's regex shorthands: `\spp`, `\smm`, `\spt` and the symbol ones `\sm`, `\sc`,
+      `\ss`, `\smr`, `\smh`, `\smp` (16/16 on the tuning set)
+- [x] Held-out conformance: 214 queries in four sets. The newest, 54 queries across cards,
+      printings, mana and shortcuts, matched 52 on its first run (96%)
+- [x] Run the held-out sets nightly as well as the tuning sets: each is compared with its saved
+      run, and a query that matched before and no longer does fails the job
 
 ### 2. Printing-level parity: mostly done
 - [x] Second collection with one document per printing (Scryfall's `default_cards` file: 120,275
@@ -55,9 +64,8 @@ picked up: at the boundary between plan steps unless something is broken.
 - [ ] Name search over printed and flavour names
 - [ ] The cases in `conformance/known_gaps.txt`: Arena printings that only exist to be conjured,
       Scryfall's loose match on two-letter artist fragments
-- Exit: held-out conformance at 95% or better with printing keywords included. Held-out is at
-  59 of 61 (97%) after fixes; the honest first-run figure was 87%, so a fresh held-out set is
-  needed before calling this met
+- Exit: held-out conformance at 95% or better with printing keywords included. Met: a fresh
+  held-out set across everything matched 52 of 54 on its first run (`conformance/heldout2.txt`)
 
 ### 3. Relevance (about a week)
 - [x] Frozen query set, evaluation harness, full-corpus baseline
@@ -68,7 +76,12 @@ picked up: at the boundary between plan steps unless something is broken.
       plain text wins on numeric queries
 - [ ] Grow the query set to about 150 with a second reviewer; write art descriptions from memory
 - [ ] Index art for the full set and add art to the combined score (needs the cost decision above)
-- [ ] Minimum score for "no good match"
+- [ ] Minimum score for "no good match". Measured on 22 November 2026: 23 plain-English queries
+      from the evaluation set had a top score between 8.5 and 21.7, and 10 queries about nothing
+      in the game (tax returns, train times, gibberish) between 3.5 and 6.6. So there is a gap,
+      but the score grows with the length of the query: the lowest on-topic score belongs to
+      the shortest query. A fixed cut-off would call short, good queries weak. It needs a score
+      adjusted for length and the larger query set before it is switched on
 - Exit, proposed and to be confirmed on the larger set: right card in the top 3 for 80% of descriptive,
   85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon
 
@@ -86,11 +99,18 @@ picked up: at the boundary between plan steps unless something is broken.
       client with one address: about 80 different searches in a minute should start returning 429.
       Netlify validates the rule at the end of each deploy and a rule that fails validation does
       not fail the deploy, so also look for it in the deploy log
-- [x] Paging ("Show more") and a sort menu, including newest printing and price
+- [x] Paging and sorting. The page of results is in the address and a pager moves between
+      pages of 60, so a reload or a shared link opens at the same place (U-3). Sort key,
+      direction, and cards / printings / illustrations are three separate controls (U-4)
 - [x] Printing details in the card view (set, number, rarity, artist, price, flavour text) and a
       link from a card to all of its printings
 - [x] A page for each card at `/card/<set>/<number>/<name>`, shareable, in place of the popup
       (feedback F-1)
+- [x] The card's page gives printed power and toughness (or loyalty), legality in sixteen
+      formats, and the card's printings with prices, each a link to that printing's page (U-2,
+      brought forward from the browse tier). It is served by a second endpoint, `GET /api/card`
+- [x] The page says how a syntax query was read, each condition in plain words (the first half
+      of U-1). Dropping a term that cannot be used, with a warning, waits for a decision
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms
@@ -124,8 +144,10 @@ picked up: at the boundary between plan steps unless something is broken.
   function bundle with Netlify's tool; lint and test the ingest job on Python 3.10 and 3.13.
 - Same-repository pushes and pull requests, when the TopK secret is configured: live tests, and the
   browser test on the local server and as Netlify serves the site.
-- Nightly: incremental ingest of cards and printings, conformance on both tuning sets, relevance
-  evaluation, results uploaded.
+- Nightly: incremental ingest of cards and printings, conformance on the five tuning sets
+  (cards, printings, mana, shortcuts, regex), the four held-out sets against their saved runs,
+  relevance evaluation, results uploaded. The shortcut set matters most there: twenty land
+  cycles rest on community tags, which anyone can edit.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.
 

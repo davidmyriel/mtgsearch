@@ -1,13 +1,15 @@
-// Local server for development and the browser test: the page from public/ plus /api/search.
+// Local server for development and the browser test: the page from public/ plus /api/search
+// and /api/card.
 //
 //   npm run dev            http://127.0.0.1:8000
 //
 // On Netlify the same page is served by the CDN and the same handler runs as a function
-// (netlify/functions/search.mts); `npx netlify-cli dev --offline` reproduces that setup.
+// (netlify/functions/search.mts and card.mts); `npx netlify-cli dev --offline` reproduces that setup.
 import { readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
-import { handleSearch } from "./api.ts";
+import { handleCard, handleSearch } from "./api.ts";
+import { card } from "./card.ts";
 import { search } from "./search.ts";
 import { collectionsFromEnv } from "./topk.ts";
 
@@ -29,8 +31,11 @@ export const SECURITY_HEADERS: Record<string, string> = {
 export function createDevServer() {
   return createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", "http://localhost");
-    if (url.pathname === "/api/search") {
-      const answer = await handleSearch(url, (query, options) => search(collectionsFromEnv(), query, options));
+    if (url.pathname === "/api/search" || url.pathname === "/api/card") {
+      const answer =
+        url.pathname === "/api/card"
+          ? await handleCard(url, (set, number) => card(collectionsFromEnv(), set, number))
+          : await handleSearch(url, (query, options) => search(collectionsFromEnv(), query, options));
       response.writeHead(answer.status, Object.fromEntries(answer.headers));
       response.end(await answer.text());
       return;

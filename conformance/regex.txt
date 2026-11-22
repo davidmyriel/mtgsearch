@@ -1,0 +1,23 @@
+# Scryfall's regex shorthands (\spp, \smm, \spt, \sm, \sc, \ss, \smr, \smh, \smp).
+# Tuning set: the expansions in app/lower.ts were checked against these.
+# Run with: npm run conformance -- conformance/regex.txt
+
+t:instant o:/\spp/ mv=1 c:g
+t:instant o:/\smm/ mv=1 c:b
+t:land o:/becomes a \spt/
+o:/gets \spp until end of turn/ t:sorcery c:w mv=1
+fo:/\smr/ t:creature mv=1 c:g
+o:/\smr/ t:land r:mythic
+o:/add \sm\sm\sm/ t:creature
+o:/^\ss: draw a card\.$/ t:artifact
+o:/\smh/ t:creature mv=2 c:w
+o:/\smp/ t:instant
+o:/\smp/ t:creature c:b
+o:/add \sc\sc/ t:land c:c
+o:/^\sm, \ss: / t:creature c:r mv=1
+fo:/\spt/ t:enchantment c:g mv=1
+
+# A shorthand wins over whitespace followed by a letter: "\sc" is a coloured symbol, not
+# a space and then "c". "\sa" is not a shorthand and stays whitespace.
+o:/target\screature/ t:instant mv=1 c:g
+o:/draw\sa card/ t:instant mv=1 c:u

@@ -58,7 +58,7 @@ test("malformed queries are QueryErrors", () => {
 });
 
 test("unsupported keywords are reported, never silently ignored", () => {
-  for (const query of ["block:ice", "cube:vintage", "is:fetchland", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy", String.raw`o:/\spp/`]) {
+  for (const query of ["block:ice", "cube:vintage", "is:unicorn", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy"]) {
     assert.throws(() => compile(query), Unsupported, query);
   }
 });
@@ -222,4 +222,28 @@ test("search routing: plain words versus syntax", () => {
   assert.deepEqual(split?.keywords.map((k) => (k.kind === "keyword" ? k.key : k.text)), ["c", "t"]);
   assert.deepEqual(split?.words.map((w) => w.text), ["draws", "when", "opponents", "draw"]);
   assert.equal(splitWords(parse("t:elf or t:goblin")), null); // not a flat list of terms
+});
+
+test("Scryfall's regex shorthands are written out as ordinary regex", () => {
+  const pattern = (query: string) => {
+    const [predicate] = compile(query);
+    const atom = predicate[0] === "and" ? predicate[1][0] : predicate;
+    return new RegExp(atom[2] as string, "im");
+  };
+  assert.ok(pattern(String.raw`o:/\spp/`).test("target creature gets +3/+3 until end of turn."));
+  assert.ok(pattern(String.raw`o:/\spp/`).test("it gets +x/+x") && !pattern(String.raw`o:/\spp/`).test("it gets -1/-1"));
+  assert.ok(pattern(String.raw`o:/\smm/`).test("gets -2/-2") && !pattern(String.raw`o:/\smm/`).test("gets +2/+2"));
+  assert.ok(pattern(String.raw`o:/becomes a \spt/`).test("~ becomes a 3/3 creature") && pattern(String.raw`o:/\spt/`).test("a */* avatar"));
+  assert.ok(!pattern(String.raw`o:/\spt/`).test("gets +1/+1"));
+  // symbols: any mana symbol, a coloured one, any symbol at all
+  assert.ok(pattern(String.raw`o:/add \sm\sm/`).test("{t}: add {c}{c}.") && !pattern(String.raw`o:/^\sm:/`).test("{t}: add {g}."));
+  assert.ok(pattern(String.raw`o:/^\ss:/`).test("{t}: add {g}."));
+  assert.ok(pattern(String.raw`o:/\sc/`).test("add {g}") && !pattern(String.raw`o:/\sc/`).test("add {c}{c}"));
+  // repeated, hybrid and Phyrexian symbols
+  assert.ok(pattern(String.raw`o:/\smr/`).test("add {g}{g}") && pattern(String.raw`o:/\smr/`).test("{g/w}{g/w}: ~ becomes"));
+  assert.ok(!pattern(String.raw`o:/\smr/`).test("add {g}{w}"));
+  assert.ok(pattern(String.raw`o:/\smh/`).test("{w/u}: draw") && !pattern(String.raw`o:/\smh/`).test("{w/p}: draw"));
+  assert.ok(pattern(String.raw`o:/\smp/`).test("{b/p}: draw") && !pattern(String.raw`o:/\smp/`).test("choose up to five {p} worth of modes"));
+  // literal symbols typed in a regex still work, next to a shorthand
+  assert.ok(pattern(String.raw`o:/^{T}: add \sm/`).test("{t}: add {g}."));
 });

@@ -15,6 +15,7 @@
 import { devotion, mana, produces } from "./mana.ts";
 import { fold, plain } from "./normalize.ts";
 import { KEYWORDS, QueryError, Unsupported } from "./parser.ts";
+import { shortcut } from "./shortcuts.ts";
 import type { Keyword, Node } from "./parser.ts";
 import printingFlags from "./printing-flags.json" with { type: "json" };
 import setDates from "./sets.json" with { type: "json" };
@@ -46,7 +47,7 @@ export type Options = {
 const TYPE_WORDS = new Set<string>(typeWords);
 const COLORS = "WUBRG";
 export const COLOR_NAMES: Record<string, string> = { white: "W", blue: "U", black: "B", red: "R", green: "G" };
-const COLOR_SETS: Record<string, string> = {
+export const COLOR_SETS: Record<string, string> = {
   // guilds
   azorius: "WU", dimir: "UB", rakdos: "BR", gruul: "RG", selesnya: "GW",
   orzhov: "WB", izzet: "UR", golgari: "BG", boros: "RW", simic: "GU",
@@ -58,7 +59,7 @@ const COLOR_SETS: Record<string, string> = {
   // four colours, named for the colour they lack
   chaos: "UBRG", aggression: "WBRG", altruism: "WURG", growth: "WUBG", artifice: "WUBR",
 };
-const FORMAT_ALIASES: Record<string, string> = { edh: "commander", pdh: "paupercommander" };
+export const FORMAT_ALIASES: Record<string, string> = { edh: "commander", pdh: "paupercommander" };
 const FLAGS = new Set([
   "split", "flip", "transform", "meld", "leveler", "mdfc", "dfc", "permanent", "spell", "historic",
   "vanilla", "bear", "commander", "hybrid", "phyrexian", "reserved", "gamechanger", "funny",
@@ -81,8 +82,8 @@ export const PREFER: Record<string, [string, boolean]> = {
   "eur-low": ["eur_c", false], "eur-high": ["eur_c", true],
   "tix-low": ["tix_c", false], "tix-high": ["tix_c", true],
 };
-const RARITIES = ["common", "uncommon", "rare", "special", "mythic", "bonus"]; // in rank order
-const RARITY_ALIASES: Record<string, string> = { c: "common", u: "uncommon", r: "rare", s: "special", m: "mythic", b: "bonus" };
+export const RARITIES = ["common", "uncommon", "rare", "special", "mythic", "bonus"]; // in rank order
+export const RARITY_ALIASES: Record<string, string> = { c: "common", u: "uncommon", r: "rare", s: "special", m: "mythic", b: "bonus" };
 const GAMES = new Set(["paper", "mtgo", "arena", "astral", "sega"]);
 const FRAMES = new Set(["1993", "1997", "2003", "2015", "future"]);
 const PRINTING_FLAGS = new Set<string>(printingFlags);
@@ -200,12 +201,44 @@ export function colors(field: string, op: string, value: string, defaultOp: stri
   return anyOf(field, keep.map((s) => s.key));
 }
 
-/** Scryfall allows literal mana symbols such as {T} in a regex; escape those braces. */
+// Scryfall's regex shorthands (its "Scryfall Extensions"), written out as ordinary regex.
+// Its help page describes what each one matches but not the expression, so these were
+// checked against its answers (conformance/regex.txt). The fields they run on are lowercased.
+const COLOR_SYMBOL = String.raw`[wubrg]`;
+const HYBRID = String.raw`(?:[wubrgc2]/[wubrg](?:/p)?)`;
+const PHYREXIAN = String.raw`(?:p|[wubrg]/p|[wubrg]/[wubrg]/p)`;
+const MANA = String.raw`(?:[wubrgcsxyz]|[0-9]+|h[wubrg]|${HYBRID}|${PHYREXIAN})`;
+// A repeated symbol would need a back-reference, which TopK's regex engine does not have.
+// Every symbol that occurs twice in a row is listed: single letters, two-colour hybrids,
+// {2/W} and Phyrexian.
+const REPEATABLE = [
+  ..."wubrgcsx",
+  ...[..."wubrg"].flatMap((a) => [..."wubrg"].filter((b) => b !== a).map((b) => `${a}/${b}`)),
+  ...[..."wubrg"].flatMap((a) => [`2/${a}`, `${a}/p`]),
+];
+const REPEATED = REPEATABLE.map((symbol) => String.raw`\{${symbol}\}\{${symbol}\}`).join("|");
+const SHORTHANDS: [string, string][] = [
+  // longest first, so that \smr is not read as \sm followed by r
+  [String.raw`\smr`, `(?:${REPEATED})`], // a mana symbol twice in a row
+  [String.raw`\smh`, String.raw`\{${HYBRID}\}`], // a hybrid symbol
+  // a Phyrexian symbol with its colour; a bare {P} is the pawprint on the Seasons, which Scryfall leaves out
+  [String.raw`\smp`, String.raw`\{(?:[wubrg]/p|[wubrg]/[wubrg]/p)\}`],
+  [String.raw`\smm`, String.raw`[-−][0-9x]+/[-−][0-9x]+`], // -X/-X
+  [String.raw`\spp`, String.raw`\+[0-9x]+/\+[0-9x]+`], // +X/+X
+  [String.raw`\spt`, String.raw`[0-9x*]+/[0-9x*]+`], // X/X
+  [String.raw`\sm`, String.raw`\{${MANA}\}`], // any mana symbol
+  [String.raw`\sc`, String.raw`\{(?:${COLOR_SYMBOL}|${HYBRID}|[wubrg]/p|[wubrg]/[wubrg]/p)\}`], // a coloured mana symbol
+  [String.raw`\ss`, String.raw`\{[^}]+\}`], // any symbol, {T} included
+];
+
+/**
+ * A user's regex made ready for TopK. Scryfall allows literal symbols such as {T} in a regex,
+ * so those braces are escaped; then its shorthands are written out.
+ */
 function regex(pattern: string): string {
-  if (/\\s(pp|mm|pt)/.test(pattern)) {
-    throw new Unsupported("Scryfall's \\spp, \\smm and \\spt regex shorthands are not supported yet");
-  }
-  return pattern.replace(/\{([^}\d,][^}]*)\}/g, "\\{$1\\}");
+  let out = pattern.replace(/\{([^}\d,][^}]*)\}/g, "\\{$1\\}");
+  for (const [shorthand, expansion] of SHORTHANDS) out = out.replaceAll(shorthand, expansion);
+  return out;
 }
 
 function text(field: string, kw: Keyword): IR {
@@ -332,6 +365,7 @@ function keyword(kw: Keyword, options: Working): IR {
     if (FLAGS.has(flag)) test = ["in", "flags", flag];
     else if (Object.hasOwn(PRINTING_FLAG_ALIASES, flag)) test = PRINTING_FLAG_ALIASES[flag];
     else if (PRINTING_FLAGS.has(flag)) test = ["in", "pflags", flag];
+    else if (shortcut(flag)) test = shortcut(flag) as IR;
     else throw new Unsupported(`'${kw.key}:${value}' is not supported yet`);
     // playtest and holiday cards are only findable this way
     if (canonical === "is" && flag === "funny") options.includeExtras = true;

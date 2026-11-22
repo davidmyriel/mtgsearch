@@ -41,6 +41,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:U:1",
    "0:U:2"
@@ -57,6 +58,7 @@
   "mana_cost": "{4}{U}{U}",
   "type_line": "Creature — Sphinx",
   "oracle_text": "Flying\nWhenever an opponent draws a card, you may draw two cards.",
+  "stats": "4/6",
   "scryfall_uri": "https://scryfall.com/card/x/1/consecrated-sphinx",
   "in_sets": [
    "ima",
@@ -118,6 +120,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "otags": [
    "mana-rock",
    "ramp"
@@ -189,6 +192,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:G:1"
   ],
@@ -207,6 +211,7 @@
   "mana_cost": "{G}",
   "type_line": "Creature — Elf Druid",
   "oracle_text": "{T}: Add {G}.",
+  "stats": "1/1",
   "scryfall_uri": "https://scryfall.com/card/x/1/llanowar-elves",
   "in_sets": [
    "anb",
@@ -268,6 +273,7 @@
    "spell",
    "vanilla"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:G:1"
   ],
@@ -282,6 +288,7 @@
   "mana_cost": "{1}{G}",
   "type_line": "Creature — Bear",
   "oracle_text": "",
+  "stats": "2/2",
   "scryfall_uri": "https://scryfall.com/card/x/1/grizzly-bears",
   "in_sets": [
    "10e"
@@ -339,6 +346,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:G:1"
   ],
@@ -353,6 +361,7 @@
   "mana_cost": "{1}{G}",
   "type_line": "Creature — Lhurgoyf",
   "oracle_text": "Tarmogoyf's power is equal to the number of card types among cards in all graveyards and its toughness is equal to that number plus 1.",
+  "stats": "*/1+*",
   "scryfall_uri": "https://scryfall.com/card/x/1/tarmogoyf",
   "pow_min": 0.0,
   "pow_max": 0.0,
@@ -396,6 +405,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:U:1",
    "0:U:2"
@@ -411,6 +421,7 @@
   "mana_cost": "{2}{U}{U}",
   "type_line": "Legendary Planeswalker — Jace",
   "oracle_text": "+2: Look at the top card of target player's library.\n0: Draw three cards, then put two cards from your hand on top of your library in any order.",
+  "stats": "Loyalty 3",
   "scryfall_uri": "https://scryfall.com/card/x/1/jace,-the-mind-sculptor",
   "loy_min": 3.0,
   "loy_max": 3.0
@@ -448,6 +459,7 @@
   "flags": [
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:B:1",
    "0:U:1"
@@ -501,6 +513,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:R/W:1",
    "0:R/W:2",
@@ -521,6 +534,7 @@
   "mana_cost": "{R/W}{R/W}{R/W}",
   "type_line": "Creature — Minotaur Wizard",
   "oracle_text": "Whenever Boros Reckoner is dealt damage, it deals that much damage to any target.",
+  "stats": "3/3",
   "scryfall_uri": "https://scryfall.com/card/x/1/boros-reckoner",
   "pow_min": 3.0,
   "pow_max": 3.0,
@@ -581,6 +595,7 @@
    "spell",
    "transform"
   ],
+  "layout": "transform",
   "m_syms": [
    "0:W:1",
    "0:W:2"
@@ -596,6 +611,7 @@
   "mana_cost": "{3}{W}{W}",
   "type_line": "Legendary Creature — Angel // Legendary Creature — Angel",
   "oracle_text": "Flash\nFlying, vigilance\nWhen Archangel Avacyn enters, creatures you control gain indestructible until end of turn.\nFlying\nWhen this creature transforms into Avacyn, the Purifier, it deals 3 damage to each other creature and each opponent.",
+  "stats": "4/4 // 6/5",
   "scryfall_uri": "https://scryfall.com/card/x/1/archangel-avacyn-//-avacyn,-the-purifier",
   "in_sets": [
    "soi"
@@ -650,6 +666,7 @@
    "spell",
    "split"
   ],
+  "layout": "split",
   "m_syms": [
    "0:R:1",
    "1:U:1"
@@ -704,11 +721,13 @@
    "permanent",
    "vanilla"
   ],
+  "layout": "token",
   "m0_key": "none",
   "extra": true,
   "mana_cost": "",
   "type_line": "Token Creature — Goblin",
   "oracle_text": "",
+  "stats": "1/1",
   "scryfall_uri": "https://scryfall.com/card/x/1/goblin",
   "in_sets": [
    "tm19"

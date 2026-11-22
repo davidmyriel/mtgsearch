@@ -9,8 +9,9 @@
 import { agg, all, any, field, filter, fn, not, select } from "topk-js/query";
 import { lower, ORDER_FIELDS, PREFER, PRINTING_FIELDS } from "./lower.ts";
 import type { IR, Op, Unique } from "./lower.ts";
+import { explain } from "./explain.ts";
 import { extract } from "./nl.ts";
-import { parse, QueryError, Unsupported } from "./parser.ts";
+import { KEYWORDS, parse, QueryError, Unsupported } from "./parser.ts";
 import type { Keyword, Name, Node } from "./parser.ts";
 
 export type Hit = Record<string, unknown> & { _id: string; name: string; score?: number };
@@ -20,6 +21,7 @@ export type Result = {
   hits: Hit[];
   total: number | null; // exact for syntax and name modes; null when ranked by meaning
   note: string; // what was understood, or why the query was refused
+  understood: string[]; // a syntax query said back in words, one entry for each condition
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
   unit: Unit; // what `total` counts and each hit is
@@ -28,7 +30,8 @@ export type SearchOptions = {
   k?: number;
   offset?: number;
   order?: string | null; // an ORDERS key chosen in the page; an `order:` in the query wins
-  descending?: boolean;
+  descending?: boolean | null; // null: the order's usual direction. A `direction:` in the query wins
+  unique?: Unique | null; // what a result is, chosen in the page; a `unique:` in the query wins
   fields?: string[];
 };
 
@@ -55,7 +58,7 @@ const SHARED = [
   "set", "set_name", "cn", "rarity", "artist", "released", "prints",
 ];
 const CARD_DISPLAY = [...SHARED, "usd"];
-const PRINTING_DISPLAY = [...SHARED, "usd_c", "flavor_text", "oracle_id", "pref_rank"];
+export const PRINTING_DISPLAY = [...SHARED, "usd_c", "flavor_text", "oracle_id", "pref_rank"];
 // Semantic score is the sum over these fields: the plain rules text is more precise for
 // descriptions, the tagged text understands jargon ("mana rock").
 export const SEMANTIC_FIELDS = ["rules", "rules_tagged"];
@@ -143,7 +146,7 @@ async function count(col: Collection, predicate: IR): Promise<number> {
   return Number(rows[0]._count);
 }
 
-const pick = (names: string[]) => Object.fromEntries(names.map((name) => [name, field(name)]));
+export const pick = (names: string[]) => Object.fromEntries(names.map((name) => [name, field(name)]));
 
 /** Sort on a field, cards lacking it last, ties by name (and newest first among printings). */
 function ordering(sortField: string, descending: boolean, printings = false) {
@@ -167,7 +170,7 @@ async function cardPage(col: Collection, predicate: IR, k: number, offset: numbe
 }
 
 /** A printing document as a hit: the same shape as a card hit. */
-function printingHit(row: Hit): Hit {
+export function printingHit(row: Hit): Hit {
   const { usd_c: cents, pref_rank: _rank, ...hit } = row;
   return { ...hit, usd: typeof cents === "number" ? cents / 100 : null } as Hit;
 }
@@ -326,13 +329,17 @@ export function splitWords(ast: Node): { keywords: (Keyword | Name)[]; words: Na
   return { keywords: terms.filter((c) => !(c.kind === "name" && !c.exact)), words };
 }
 
+/** Whether the query itself holds this keyword, under any of its spellings (`dir:`, `direction:`). */
+const given = (ast: Node, canonical: string) =>
+  [...nodes(ast)].some((n) => n.kind === "keyword" && KEYWORDS.get(n.key.toLowerCase()) === canonical);
+
 const fieldName = (order: string | null | undefined) => (order && Object.hasOwn(ORDERS, order) ? ORDERS[order] : null);
 const orderName = (sortField: string) => Object.keys(ORDERS).find((name) => ORDERS[name] === sortField) ?? null;
 const UNITS: Record<Unique, Unit> = { cards: "cards", prints: "printings", art: "illustrations" };
 
 export async function search(cols: Collections, query: string, options: SearchOptions = {}): Promise<Result> {
   const { k = 20, offset = 0, fields = SEMANTIC_FIELDS } = options;
-  const none = { hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit };
+  const none = { hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit, understood: [] as string[] };
   let ast: Node | null = null;
   let predicate: IR = ["all"];
   let parsed: ReturnType<typeof lower>[1] | null = null;
@@ -347,24 +354,27 @@ export async function search(cols: Collections, query: string, options: SearchOp
 
   if (ast !== null && parsed !== null) {
     const plainWords = isPlainWords(ast);
-    // An `order:` in the query wins over the page's menu. Names default to most-played first.
-    const fromQuery = parsed.order !== null;
+    // What the query says wins over the page's controls. Names default to most-played first.
     const sortField = parsed.order ?? fieldName(options.order) ?? (plainWords ? "edhrec_rank" : "name_lc");
-    const descending = fromQuery ? parsed.descending : Boolean(options.order && options.descending);
+    // With no direction from either, newest printings come first and everything else ascends.
+    const descending =
+      parsed.order !== null || given(ast, "direction") ? parsed.descending : (options.descending ?? sortField === "date");
+    const unique: Unique = given(ast, "unique") ? parsed.unique : (options.unique ?? "cards");
     // Anything about a printing, including sorting by price or date, is answered from the printings.
-    const printings = parsed.printings || PRINTING_FIELDS.has(sortField);
+    const printings = parsed.printings || PRINTING_FIELDS.has(sortField) || unique !== "cards";
     const page = printings
-      ? await printingPage(cols.printings, predicate, k, offset, { unique: parsed.unique, prefer: parsed.prefer, sortField, descending })
+      ? await printingPage(cols.printings, predicate, k, offset, { unique, prefer: parsed.prefer, sortField, descending })
       : await cardPage(cols.cards, predicate, k, offset, sortField, descending);
     if (page.total) {
       const hasMore = offset + page.hits.length < page.total;
       const mode = plainWords ? "name" : "syntax";
-      return { mode, hits: page.hits, total: page.total, note: "", hasMore, sortedBy: orderName(sortField), unit: UNITS[parsed.unique] };
+      const understood = explain(ast);
+      return { mode, hits: page.hits, total: page.total, note: "", hasMore, sortedBy: orderName(sortField), unit: UNITS[unique], understood };
     }
     if (!plainWords) {
       const split = splitWords(ast);
       if (!(split && split.keywords.length && split.words.length)) {
-        return { ...none, mode: "syntax", total: 0, note: "", unit: UNITS[parsed.unique] };
+        return { ...none, mode: "syntax", total: 0, note: "", unit: UNITS[unique], understood: explain(ast) };
       }
       // Keywords matched nothing together with the name words: let the words rank by meaning.
       const keywordAst: Node =
@@ -377,7 +387,7 @@ export async function search(cols: Collections, query: string, options: SearchOp
         : await semantic(cols.cards, words, keywordPredicate, wanted, fields);
       const hits = ranked.slice(offset, offset + k);
       const hasMore = ranked.length === offset + k && offset + k < MAX_RANKED;
-      return { ...none, mode: "mixed", hits, hasMore, note: `filtered by keywords, ranked by '${words}'` };
+      return { ...none, mode: "mixed", hits, hasMore, note: `filtered by keywords, ranked by '${words}'`, understood: explain(keywordAst) };
     }
   }
 

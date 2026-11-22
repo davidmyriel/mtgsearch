@@ -225,7 +225,16 @@ def _flags(card: dict, type_lc: str, oracle: str, full_oracle: str) -> list[str]
         flags.add("vanilla")
     if "creature" in front_type and (power, toughness, card.get("cmc")) == (2.0, 2.0, 2.0):
         flags.add("bear")
-    if ("legendary" in front_type and "creature" in front_type) or "can be your commander" in oracle.lower():
+    # Legendary creatures; since the 2025 rules change, legendary Vehicles and Spacecraft that
+    # have a power and toughness; Backgrounds, which share the command zone; and a planeswalker
+    # that is a creature everywhere but the battlefield (Grist). This is Scryfall's is:commander.
+    has_size = front.get("power") is not None or card.get("power") is not None
+    leads = ("creature", "background") + (("vehicle", "spacecraft") if has_size else ())
+    if (
+        ("legendary" in front_type and any(t in front_type for t in leads))
+        or "can be your commander" in oracle.lower()
+        or re.search(r"isn't on the battlefield, it's an? [^.]*creature", oracle)
+    ):
         flags.add("commander")
     if re.search(r"\{[^}/]+/[^}P/]+\}", cost):
         flags.add("hybrid")
@@ -236,7 +245,43 @@ def _flags(card: dict, type_lc: str, oracle: str, full_oracle: str) -> list[str]
             flags.add(name)
     if card.get("set_type") == "funny" or "playtest" in (card.get("promo_types") or []):
         flags.add("funny")
+    if "creature" in front_type and _only_keywords(oracle, card.get("keywords", [])):
+        flags.add("frenchvanilla")
     return sorted(flags)
+
+
+# What may follow a keyword on a French-vanilla card: a mana cost ("Cycling {2}"), what it
+# protects from, or a prototype's cost and size. A number ("Bushido 1") or any other text
+# ("Affinity for artifacts") does not count, which is how Scryfall draws the line.
+_KEYWORD_PARAMETER = re.compile(r"(\{[^}]+\})+( — \d+/\d+)?|from [^.:]+")
+_TYPECYCLING = re.compile(r"\w+cycling (\{[^}]+\})+")
+
+
+def _only_keywords(oracle: str, keywords: list[str]) -> bool:
+    """Whether a card's rules text (reminder text removed) is nothing but keyword abilities.
+
+    "Flying, vigilance" and "Protection from black\nCycling {2}" are. A card with no text at
+    all is plain vanilla, not French vanilla.
+    """
+    names = [fold(k) for k in keywords]
+    lines = [line.strip() for line in fold(oracle).split("\n") if line.strip()]
+    if not lines:
+        return False
+
+    def is_keyword(item: str) -> bool:
+        for k in names:
+            if item == k or (item.startswith(k + " ") and _KEYWORD_PARAMETER.fullmatch(item[len(k) + 1 :])):
+                return True
+        # "Slivercycling {3}" is listed under the keyword Typecycling
+        return "typecycling" in names and _TYPECYCLING.fullmatch(item) is not None
+
+    for line in lines:
+        # A cost written after a dash may itself contain commas: "Escape—{3}{R}{G}, Exile three ..."
+        if any(line.startswith(k + "—") for k in names):
+            continue
+        if not all(is_keyword(item) for item in re.split(r"[,;] ", line)):
+            return False
+    return True
 
 
 def rules_text(card: dict) -> str:
@@ -258,6 +303,19 @@ def rules_text(card: dict) -> str:
         if face.get("oracle_text"):
             lines.append(face["oracle_text"])
     return "\n".join(lines)
+
+
+def stats_text(card: dict) -> str | None:
+    """Power and toughness, loyalty or defense as printed ("*/1+*"), for each face that has one."""
+    parts = []
+    for face in _faces(card):
+        if face.get("power") is not None and face.get("toughness") is not None:
+            parts.append(f"{face['power']}/{face['toughness']}")
+        elif face.get("loyalty"):
+            parts.append(f"Loyalty {face['loyalty']}")
+        elif face.get("defense"):
+            parts.append(f"Defense {face['defense']}")
+    return " // ".join(parts) or None
 
 
 def build_document(card: dict, tags: dict | None = None, aggregate: dict | None = None) -> dict:
@@ -325,6 +383,7 @@ def build_document(card: dict, tags: dict | None = None, aggregate: dict | None 
         "banned": sorted(f for f, s in legal.items() if s == "banned"),
         "restricted": sorted(f for f, s in legal.items() if s == "restricted"),
         "flags": _flags(card, fold(type_line), oracle, full_oracle),
+        "layout": card["layout"],
         "otags": tags["slugs"],
         **mana_fields(card),
         "extra": is_extra(card),
@@ -333,6 +392,7 @@ def build_document(card: dict, tags: dict | None = None, aggregate: dict | None 
         "mana_cost": _first(card, "mana_cost") or "",
         "type_line": type_line,
         "oracle_text": full_oracle,
+        "stats": stats_text(card),
         "image": image,
         "scryfall_uri": card["scryfall_uri"].split("?")[0],
         "artist": card.get("artist"),

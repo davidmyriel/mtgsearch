@@ -51,6 +51,7 @@ test("the dev server serves the page, its assets and nothing else", async () => 
     assert.equal((await fetch(`${base}/missing.html`)).status, 404);
     const bad = await fetch(`${base}/api/search`);
     assert.equal(bad.status, 400); // answered by the handler without needing a TopK key
+    assert.equal((await fetch(`${base}/api/card?set=mh2`)).status, 400); // likewise: no collector number
   } finally {
     server.close();
   }
@@ -60,4 +61,36 @@ test("the Scryfall comparison stays inside Scryfall's published rate limit", asy
   // /cards/search allows 2 requests a second: https://scryfall.com/docs/api/rate-limits
   const { MIN_INTERVAL_MS } = await import("../conformance.ts");
   assert.ok(MIN_INTERVAL_MS >= 500, `one request every ${MIN_INTERVAL_MS} ms is faster than 2 a second`);
+});
+
+test("the page asks for pages the endpoint will serve", async () => {
+  const { MAX_REACH, MAX_RESULTS } = await import("../api.ts");
+  const { MAX_PRINTINGS } = await import("../card.ts");
+  const { readFileSync } = await import("node:fs");
+  const script = readFileSync(new URL("../../public/app.js", import.meta.url), "utf8");
+  const constant = (name: string) => Number((script.match(new RegExp(`const ${name} = (\\d+);`)) ?? [])[1]);
+  assert.equal(constant("PAGE_SIZE"), MAX_RESULTS);
+  assert.equal(constant("MAX_REACH"), MAX_REACH);
+  assert.equal(constant("MAX_LISTED"), MAX_PRINTINGS);
+});
+
+test("a held-out set fails only when a query that matched before stops matching", async () => {
+  const { againstBaseline } = await import("../conformance.ts");
+  const outcome = (query: string, status: "pass" | "fail" | "unsupported") =>
+    ({ query, status, scryfall_total: 0, ours_total: 0, missing: [], extra: [], note: "" });
+  const baseline = [
+    { query: "matched", status: "pass" },
+    { query: "differed", status: "fail" },
+    { query: "fixed since", status: "fail" },
+    { query: "broke", status: "pass" },
+  ];
+  const result = againstBaseline(
+    [outcome("matched", "pass"), outcome("differed", "fail"), outcome("fixed since", "pass"), outcome("broke", "fail"), outcome("new and wrong", "unsupported")],
+    baseline,
+  );
+  // a query the baseline has never seen is held to the same standard as one that matched
+  assert.deepEqual(result.regressed, ["broke", "new and wrong"]);
+  assert.deepEqual(result.stillDiffer, ["differed"]);
+  assert.deepEqual(result.nowMatch, ["fixed since"]);
+  assert.deepEqual(againstBaseline([outcome("matched", "pass")], baseline).regressed, []);
 });

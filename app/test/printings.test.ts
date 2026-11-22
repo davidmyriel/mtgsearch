@@ -110,7 +110,7 @@ test("is: and not: for printings", () => {
   assert.deepEqual(ids("is:new t:sphinx"), ["ima-47", "pima-47s"]);
   // card-level flags still work on printings, and unknown ones are still refused
   assert.deepEqual(ids("is:transform"), ["soi-5"]);
-  assert.throws(() => compile("is:fetchland"), Unsupported);
+  assert.throws(() => compile("is:unicorn"), Unsupported);
 });
 
 test("in:, prints and sets are facts about the card, true on every printing and on the card", () => {

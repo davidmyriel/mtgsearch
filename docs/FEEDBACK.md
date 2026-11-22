@@ -53,3 +53,75 @@ and the Scryfall comparison where results could move.
   because the page is static and the preview tags would have to be written on the server per
   card. That is a suggestion from the developer, not feedback; it would be size M and belongs
   with the browse tier unless asked for sooner.
+
+## From the interface study
+
+On 22 November 2026 the project owner asked for a study of how Scryfall's interface is built
+and behaves ([SCRYFALL_UI.md](SCRYFALL_UI.md)). It lists eighteen things their interface offers
+that ours does not. These are the ones worth adopting, scheduled by the same slots. They are
+structure and behaviour only: their name, logo, palette, typefaces, icons and wording are their
+identity and are not copied.
+
+| Id | Item | Size | Slot | Status |
+|---|---|---|---|---|
+| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary | First half done. The second half waits: dropping a term reverses an earlier rule, asked of the owner |
+| U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | L | Next boundary | Done |
+| U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary | Done |
+| U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Done |
+| U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) | Open |
+| U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner | Open |
+| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Waiting |
+| U-8 | Rulings on the card page | L | With the browse tier: needs Scryfall's rulings file in the ingest | Open |
+| U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier | Open |
+
+Larger tiles, a fuller empty state and a runnable syntax reference are in the study too; they
+are small and can ride along with U-1 to U-4.
+
+### U-2. What the card's page shows
+
+- **Taken on 22 November 2026**, at the boundary after the regex shorthands. It was scheduled
+  after U-1, but U-1 waits for an answer and nothing in U-2 depends on it.
+- **Size was L, not M:** printed power and toughness were not in the documents, only the numbers
+  used for filtering. A display field was added and both collections were refreshed as field
+  updates, with no re-embedding.
+- **What was done:** the page gives power and toughness as printed ("*/1+*"), or loyalty or
+  defense; legality in sixteen formats, as a word with a colour, not a colour alone; and the
+  card's printings newest first with set, number, rarity, year and price. Each printing is a link
+  to its own page, the one on screen is marked, and Back returns to the previous printing. A card
+  with more than 60 printings lists the newest 60 and links to a search for all of them. A card
+  opened from the results shows at once and the rest fills in when it arrives.
+- **Not included:** rulings (U-8), and each face of a two-faced card set out separately.
+
+### U-3 and U-4. Pages of results, and three controls
+
+- **Taken on 22 November 2026**, at the boundary after U-2.
+- **What was done:** results come 60 to a page. The page is in the address (`page=2`) and a pager
+  below the results has First, Previous, Next and Last, which are links, so a page can be opened
+  in a new tab, reloaded or shared. "Show more", which added to the grid and was lost on a
+  reload, is gone. Above the results, one menu became three: what a result is (cards, printings
+  or illustrations), the sort key, and the direction. All three are in the address.
+- **What wins:** `unique:`, `order:` or `direction:` written in the query wins over the controls,
+  and the "Show" control then shows what the query asked for.
+- **Size was M, not S, for U-4:** the endpoint had no way to be asked for printings or
+  illustrations except in the query, and a direction with no sort key was ignored.
+- **Limits, said on the page:** results ranked by meaning have no total, so their pager has no
+  Last and they end at 120. No result can be paged past 10,000; the pager says to narrow the
+  search there.
+
+### U-1. Saying how the query was read (first half)
+
+- **Taken on 22 November 2026**, at the boundary after U-3 and U-4. Only the half that changes
+  no earlier decision.
+- **What was done:** a query in Scryfall syntax, or a card name, is said back in words under the
+  status line, one entry for each condition that has to hold: `id:rg t:dragon -c:g` reads "its
+  colour identity is within red and green", "the type includes “dragon”", "its colours do not
+  include green". It says what was typed, including the defaults that are easy to forget (a bare
+  `c:` means at least these colours, a bare `id:` means within them, a bare `m:` means at least
+  this cost). Plain-English searches keep their own line ("filtered to ...").
+- **The wording is ours.** Scryfall's sentence was not copied; only the idea of saying the query
+  back.
+- **Still waiting:** when a term cannot be used, running the rest and saying which term was
+  left out. Today such a query is refused with the reason, which was a decision made early on
+  ("reported as unsupported rather than silently ignored"). Recommended: adopt it, because the
+  warning keeps the honesty and the refusal costs the reader the whole search.
+

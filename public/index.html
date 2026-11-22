@@ -26,21 +26,39 @@
   <div class="bar">
     <p id="status" class="status" role="status" aria-live="polite"></p>
     <div id="tools" class="tools" hidden>
-      <label for="sort">Sort</label>
-      <select id="sort">
-        <option value="">Default</option>
-        <option value="edhrec">Most played</option>
-        <option value="name">Name, A to Z</option>
-        <option value="cmc">Mana value, low to high</option>
-        <option value="cmc:desc">Mana value, high to low</option>
-        <option value="power:desc">Power, high to low</option>
-        <option value="toughness:desc">Toughness, high to low</option>
-        <option value="released:desc">Newest printing first</option>
-        <option value="usd">Price, low to high</option>
-        <option value="usd:desc">Price, high to low</option>
-      </select>
+      <label>Show
+        <select id="unique">
+          <option value="">Cards</option>
+          <option value="prints">Printings</option>
+          <option value="art">Illustrations</option>
+        </select>
+      </label>
+      <label>Sort
+        <select id="sort">
+          <option value="">Default</option>
+          <option value="name">Name</option>
+          <option value="cmc">Mana value</option>
+          <option value="power">Power</option>
+          <option value="toughness">Toughness</option>
+          <option value="edhrec">Most played</option>
+          <option value="released">Release date</option>
+          <option value="rarity">Rarity</option>
+          <option value="usd">Price (USD)</option>
+          <option value="eur">Price (EUR)</option>
+          <option value="tix">Price (TIX)</option>
+        </select>
+      </label>
+      <label>Direction
+        <select id="dir">
+          <option value="">Auto</option>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </label>
     </div>
   </div>
+  <!-- A syntax query said back in words, one entry for each condition that has to hold. -->
+  <ul id="understood" class="understood" aria-label="How the query was read" hidden></ul>
 
   <section id="intro" class="intro" aria-label="Example searches">
     <h2>Try one</h2>
@@ -61,18 +79,27 @@
         (<code>o:</code>, <code>kw:</code>), mana value, power, toughness and loyalty (<code>mv</code>, <code>pow</code>,
         <code>tou</code>, <code>loy</code>), mana cost (<code>m:2WW</code>), devotion and the mana a card makes
         (<code>produces:g</code>), legality (<code>f:</code>, <code>banned:</code>), tags (<code>otag:</code>),
-        <code>is:</code> flags, <code>-</code> to negate, <code>or</code>, parentheses and regular expressions.</p>
+        <code>is:</code> flags and shortcuts (<code>is:fetchland</code>, <code>is:commander</code>, <code>is:modal</code>),
+        <code>-</code> to negate, <code>or</code>, parentheses and regular expressions (<code>o:/gets \spp/</code> finds
+        "gets +2/+2").</p>
       <p><strong>Printings.</strong> Set (<code>set:</code>), rarity (<code>r:</code>), artist (<code>a:</code>), flavour text
         (<code>ft:</code>), frame, border and game, year and date, price (<code>usd&lt;1</code>), and whether a card was ever
         printed somewhere (<code>in:</code>). A card is shown by a printing that matches. Add <code>unique:prints</code> to
         list every printing, or <code>unique:art</code> for every illustration.</p>
       <p><strong>Plain English.</strong> Describe the card. An opening such as "two mana blue instant" is applied as a filter.</p>
-      <p><strong>Not yet:</strong> languages other than English, art tags, and a few shortcuts such as <code>is:fetchland</code>.</p>
+      <p><strong>Not yet:</strong> languages other than English, art tags, blocks and cubes.</p>
     </details>
   </section>
 
   <ol id="results" class="grid"></ol>
-  <button id="more" class="more" type="button" hidden>Show more</button>
+  <!-- The page of results is in the address (?page=2), so these are links. -->
+  <nav id="pager" class="pager" aria-label="Pages of results" hidden>
+    <a id="page-first">First</a>
+    <a id="page-prev" rel="prev">Previous</a>
+    <span id="page-now"></span>
+    <a id="page-next" rel="next">Next</a>
+    <a id="page-last">Last</a>
+  </nav>
 
   <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
   <article id="card" class="card" aria-labelledby="card-name" hidden>
@@ -83,16 +110,25 @@
         <h1 id="card-name"></h1>
         <p id="card-line" class="line"></p>
         <p id="card-rules" class="rules"></p>
+        <p id="card-stats" class="stats"></p>
         <p id="card-flavor" class="flavor"></p>
         <p id="card-printing" class="printing"></p>
         <p id="card-artist" class="printing"></p>
         <div class="actions">
-          <button id="card-prints" class="out" type="button" hidden></button>
           <button id="card-copy" class="out" type="button">Copy link</button>
           <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
         </div>
+        <section id="card-legality" class="detail" aria-labelledby="legality-title" hidden>
+          <h2 id="legality-title">Legality</h2>
+          <dl id="legality-list" class="legality"></dl>
+        </section>
       </div>
     </div>
+    <section id="card-printings" class="detail" aria-labelledby="printings-title" hidden>
+      <h2 id="printings-title">Printings</h2>
+      <ul id="printings-list" class="prints"></ul>
+      <button id="card-prints" class="out" type="button" hidden></button>
+    </section>
   </article>
 </main>
 

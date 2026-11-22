@@ -2,6 +2,7 @@
 //
 // The page has two views. The results view lives at /?q=... and the card view at
 // /card/<set>/<number>/<name>, so a card has an address that can be shared and opened directly.
+// A search's address also holds its sort, direction, what a result is, and the page of results.
 "use strict";
 
 const form = document.getElementById("search");
@@ -10,21 +11,44 @@ const intro = document.getElementById("intro");
 const statusLine = document.getElementById("status");
 const results = document.getElementById("results");
 const tools = document.getElementById("tools");
-const sort = document.getElementById("sort");
-const more = document.getElementById("more");
+const sortSelect = document.getElementById("sort");
+const dirSelect = document.getElementById("dir");
+const uniqueSelect = document.getElementById("unique");
+const pager = document.getElementById("pager");
+const understood = document.getElementById("understood");
 const cardView = document.getElementById("card");
 const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
 const copyButton = document.getElementById("card-copy");
+const legalitySection = document.getElementById("card-legality");
+const printingsSection = document.getElementById("card-printings");
+const printingsList = document.getElementById("printings-list");
 
 const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
-// What a result is, as the endpoint names it, and the word for one of them.
+// Results on one page, and how far into a result the endpoint will go. Keep in step with
+// MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
+const PAGE_SIZE = 60;
+const MAX_REACH = 10000;
+const LAST_PAGE = Math.floor(MAX_REACH / PAGE_SIZE); // the last page that fits whole
+// What a result is, as the endpoint names it: the word for one, and its value in the "Show" menu.
 const UNITS = { cards: "card", printings: "printing", illustrations: "illustration" };
+const UNIQUE_OF = { cards: "", printings: "prints", illustrations: "art" };
+// The formats a card's page gives the legality for, in the order they are listed.
+const FORMATS = [
+  ["standard", "Standard"], ["pioneer", "Pioneer"], ["modern", "Modern"], ["legacy", "Legacy"],
+  ["vintage", "Vintage"], ["pauper", "Pauper"], ["commander", "Commander"], ["oathbreaker", "Oathbreaker"],
+  ["brawl", "Brawl"], ["standardbrawl", "Standard Brawl"], ["historic", "Historic"], ["timeless", "Timeless"],
+  ["alchemy", "Alchemy"], ["penny", "Penny Dreadful"], ["premodern", "Premodern"], ["oldschool", "Old School"],
+];
+// /api/card lists at most this many printings; a card with more gets a link to search for all.
+const MAX_LISTED = 60;
 // Sort orders decided by a printing rather than by the card.
 const PRINTING_ORDERS = new Set(["released", "usd", "eur", "tix", "rarity"]);
+// A search as its address names it. Empty strings are the defaults and are left out of the address.
+const EMPTY = { query: "", order: "", dir: "", unique: "", page: 1 };
 let inFlight = null;
-let current = { query: "", sort: "", unit: "cards" }; // what the grid is showing
+let current = { ...EMPTY, unit: "cards" }; // what the grid is showing
 let resultsScroll = 0; // where the results were scrolled to when a card was opened
 
 function plural(n, word) {
@@ -35,6 +59,8 @@ const price = (usd) => (typeof usd === "number" ? `$${usd.toFixed(2)}` : "");
 const year = (released) => (released ? released.slice(0, 4) : "");
 const capital = (word) => (word ? word[0].toUpperCase() + word.slice(1) : "");
 const setAndNumber = (hit) => (hit.set ? `${hit.set.toUpperCase()}${hit.collector_number ? ` #${hit.collector_number}` : ""}` : "");
+/** A click that should be left to the browser: it opens the link in a new tab or window. */
+const modified = (event) => event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
 
 // --- addresses -------------------------------------------------------------------------
 
@@ -61,37 +87,50 @@ function parseCardPath(pathname) {
   }
 }
 
-// The address bar holds the query and the sort, so a search can be shared and the back button works.
+/** The search the address bar names. Anything it does not understand falls back to the default. */
 function readAddress() {
   const params = new URLSearchParams(location.search);
-  const order = params.get("order") || "";
-  return { query: params.get("q") || "", sort: order && params.get("dir") === "desc" ? `${order}:desc` : order };
+  const page = Number.parseInt(params.get("page") || "1", 10);
+  const dir = params.get("dir");
+  const unique = params.get("unique");
+  return {
+    query: (params.get("q") || "").trim(),
+    order: params.get("order") || "",
+    dir: dir === "asc" || dir === "desc" ? dir : "",
+    unique: unique === "prints" || unique === "art" ? unique : "",
+    page: page > 1 ? Math.min(page, LAST_PAGE) : 1,
+  };
 }
 
-function address(query, sortValue) {
+/** The address of a search, so that it can be shared, reloaded, and reached with Back. */
+function searchPath(view) {
   const params = new URLSearchParams();
-  if (query) params.set("q", query);
-  const [order, direction] = sortValue.split(":");
-  if (order) params.set("order", order);
-  if (direction) params.set("dir", direction);
-  return params;
+  if (view.query) params.set("q", view.query);
+  for (const key of ["order", "dir", "unique"]) if (view[key]) params.set(key, view[key]);
+  if (view.page > 1) params.set("page", String(view.page));
+  const text = params.toString();
+  return text ? `/?${text}` : "/";
 }
+
+const sameSearch = (a, b) => ["query", "order", "dir", "unique", "page"].every((key) => a[key] === b[key]);
 
 // --- results view ----------------------------------------------------------------------
 
 // What the status line says for each path a query can take.
-function describe(data, shown) {
-  const partial = data.total > shown ? `, showing ${shown}` : "";
-  const total = () => `${plural(data.total, UNITS[data.unit] || "card")}${partial}`;
+function describe(data, view) {
+  const first = (view.page - 1) * PAGE_SIZE + 1;
+  const range = `${first.toLocaleString("en")}–${(first + data.hits.length - 1).toLocaleString("en")}`;
+  const total = () => `${plural(data.total, UNITS[data.unit] || "card")}${data.total > data.hits.length ? `, showing ${range}` : ""}`;
+  const ranked = view.page === 1 ? `top ${data.hits.length}` : `results ${range}`;
   switch (data.mode) {
     case "syntax":
       return ["Scryfall syntax", total()];
     case "name":
       return ["Card name", total()];
     case "mixed":
-      return ["Syntax and plain English", `${data.note}, top ${shown}`];
+      return ["Syntax and plain English", `${data.note}, ${ranked}`];
     case "semantic":
-      return ["Plain English", data.note ? `filtered to ${data.note}, top ${shown}` : `top ${shown} by meaning`];
+      return ["Plain English", data.note ? `filtered to ${data.note}, ${ranked}` : `${ranked} by meaning`];
     default:
       return ["", ""];
   }
@@ -142,8 +181,7 @@ function tile(hit, captioned) {
     link.append(image);
   }
   link.addEventListener("click", (event) => {
-    // Leave modified clicks alone: they open the card's page in a new tab or window.
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    if (modified(event)) return;
     event.preventDefault();
     openCard(hit);
   });
@@ -157,47 +195,93 @@ function tile(hit, captioned) {
   return item;
 }
 
+/** How a syntax query was read: each condition in words. Nothing for plain English. */
+function showUnderstood(conditions) {
+  understood.replaceChildren(
+    ...(conditions || []).map((condition) => {
+      const item = document.createElement("li");
+      item.textContent = condition;
+      return item;
+    }),
+  );
+  understood.hidden = understood.children.length === 0;
+}
+
 /** Show the results view. The grid is left as it was, so coming back from a card is instant. */
 function showResults() {
   document.body.classList.remove("viewing-card");
   cardView.hidden = true;
 }
 
-// Fetch one page of results. `append` adds to the grid (Show more); otherwise the grid is replaced.
-async function run(query, { push = true, append = false, sortValue = "" } = {}) {
-  query = query.trim();
-  if (!append) {
-    showResults();
-    input.value = query;
-    sort.value = sortValue;
-    // Absolute, so that a search started from a card's page goes back to the results address.
-    if (push) history.pushState(null, "", query ? `/?${address(query, sortValue)}` : "/");
-    document.title = query ? `${query} · mtgsearch` : "mtgsearch";
-    document.body.classList.toggle("searched", Boolean(query));
-  }
+/**
+ * The links between pages of results. With a total, the number of pages is known; results
+ * ranked by meaning have none, and there is a next page for as long as the endpoint says so.
+ */
+function showPager(view, data) {
+  const pages = data.total === null ? null : Math.max(1, Math.ceil(data.total / PAGE_SIZE));
+  const reach = pages === null ? null : Math.min(pages, LAST_PAGE); // the endpoint stops at MAX_REACH
+  const hasNext = reach === null ? Boolean(data.has_more) : view.page < reach;
+  pager.hidden = view.page === 1 && !hasNext;
+  const link = (id, page, enabled) => {
+    const element = document.getElementById(id);
+    if (enabled) {
+      element.href = searchPath({ ...view, page });
+      element.dataset.page = String(page);
+      element.removeAttribute("aria-disabled");
+    } else {
+      element.removeAttribute("href");
+      element.setAttribute("aria-disabled", "true");
+    }
+  };
+  link("page-first", 1, view.page > 1);
+  link("page-prev", Math.min(view.page - 1, reach ?? view.page - 1), view.page > 1);
+  link("page-next", view.page + 1, hasNext);
+  link("page-last", reach ?? view.page, reach !== null && view.page < reach);
+  document.getElementById("page-last").hidden = reach === null;
+  const now = pages === null ? `Page ${view.page}` : `Page ${view.page.toLocaleString("en")} of ${pages.toLocaleString("en")}`;
+  const capped = reach !== null && reach < pages && view.page >= reach;
+  document.getElementById("page-now").textContent = capped ? `${now}. Narrow the search to see further.` : now;
+}
+
+// Run a search and show one page of its results. `push` adds it to the history; it is false
+// when the address already names this search (a reload, a shared link, Back and Forward).
+async function run(search, { push = true } = {}) {
+  const view = { ...EMPTY };
+  for (const key of Object.keys(EMPTY)) if (search[key]) view[key] = search[key];
+  view.query = view.query.trim();
+  showResults();
+  input.value = view.query;
+  sortSelect.value = view.order;
+  dirSelect.value = view.dir;
+  uniqueSelect.value = view.unique;
+  if (push) history.pushState(null, "", searchPath(view));
+  document.title = view.query ? `${view.query} · mtgsearch` : "mtgsearch";
+  document.body.classList.toggle("searched", Boolean(view.query));
   if (inFlight) inFlight.abort();
-  if (!query) {
+  if (!view.query) {
     intro.hidden = false;
-    tools.hidden = more.hidden = true;
+    tools.hidden = pager.hidden = true;
+    showUnderstood([]);
     results.replaceChildren();
-    current = { query: "", sort: "", unit: "cards" };
+    current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
     return;
   }
 
   intro.hidden = true;
-  more.disabled = true;
-  if (!append) setStatus("", "Searching…");
+  setStatus("", "Searching…");
   const controller = new AbortController();
   inFlight = controller;
   const fail = (label, detail) => {
-    if (!append) results.replaceChildren();
-    tools.hidden = more.hidden = true;
+    results.replaceChildren();
+    tools.hidden = pager.hidden = true;
+    showUnderstood([]);
+    current = { ...EMPTY, unit: "cards" };
     setStatus(label, detail, true);
   };
   try {
-    const params = address(query, sortValue);
-    if (append) params.set("offset", String(results.children.length));
+    const params = new URLSearchParams({ q: view.query, k: String(PAGE_SIZE), offset: String((view.page - 1) * PAGE_SIZE) });
+    for (const key of ["order", "dir", "unique"]) if (view[key]) params.set(key, view[key]);
     const response = await fetch(`/api/search?${params}`, { signal: controller.signal });
     const data = await response.json();
     if (!response.ok) return fail("", data.error || "Something went wrong.");
@@ -207,59 +291,127 @@ async function run(query, { push = true, append = false, sortValue = "" } = {}) 
       return fail("Not supported yet", `${data.note}. See "What can I type?" below.`);
     }
     const captioned = data.unit !== "cards" || PRINTING_ORDERS.has(data.sorted_by);
-    const tiles = data.hits.map((hit) => tile(hit, captioned));
-    if (append) results.append(...tiles);
-    else results.replaceChildren(...tiles);
-    current = { query, sort: sortValue, unit: data.unit };
-    const shown = results.children.length;
-    more.hidden = !data.has_more;
+    results.replaceChildren(...data.hits.map((hit) => tile(hit, captioned)));
+    current = { ...view, unit: data.unit };
+    // The menu shows what the results are, also when the query itself says so (`unique:prints`).
+    uniqueSelect.value = UNIQUE_OF[data.unit] ?? "";
     // Results ranked by meaning have no other order to offer.
-    tools.hidden = data.sorted_by === null || shown === 0;
-    if (!shown) {
-      setStatus("No cards matched", "Check the syntax, or describe the card in plain words.");
+    tools.hidden = data.sorted_by === null || data.hits.length === 0;
+    showPager(view, data);
+    showUnderstood(data.understood);
+    if (push) window.scrollTo(0, 0);
+    if (!data.hits.length) {
+      const beyond = view.page > 1 && (data.total === null || data.total > 0);
+      setStatus(beyond ? "Nothing on this page" : "No cards matched", beyond ? "The results end before it." : "Check the syntax, or describe the card in plain words.");
       return;
     }
-    const [label, detail] = describe(data, shown);
+    const [label, detail] = describe(data, view);
     setStatus(label, detail, false, data.took_ms);
   } catch (error) {
     if (error.name === "AbortError") return;
     fail("", "Could not reach the server. Check your connection and try again.");
   } finally {
     if (inFlight === controller) inFlight = null;
-    more.disabled = false;
   }
 }
 
 // --- card view -------------------------------------------------------------------------
 
-/** Fill the card view from a hit and show it in place of the results. */
-function showCard(hit) {
-  const text = (id, value) => {
-    const element = document.getElementById(id);
-    element.textContent = value || "";
-    element.hidden = !value;
-  };
+/** Set an element's text, and hide it when there is none. */
+function text(id, value) {
+  const element = document.getElementById(id);
+  element.textContent = value || "";
+  element.hidden = !value;
+}
+
+/** Legality by format: the word says it, for every format in FORMATS. */
+function showLegality(card) {
+  const rows = FORMATS.map(([key, label]) => {
+    const [status, word] = card.restricted.includes(key)
+      ? ["restricted", "Restricted"]
+      : card.banned.includes(key)
+        ? ["banned", "Banned"]
+        : card.legal.includes(key)
+          ? ["legal", "Legal"]
+          : ["not", "Not legal"];
+    const row = document.createElement("div");
+    const format = document.createElement("dt");
+    format.textContent = label;
+    const value = document.createElement("dd");
+    value.className = status;
+    value.textContent = word;
+    row.append(format, value);
+    return row;
+  });
+  document.getElementById("legality-list").replaceChildren(...rows);
+  legalitySection.hidden = false;
+}
+
+/** The card's printings, newest first, each a link to that printing's page. */
+function showPrintings(card, printings) {
+  const rows = printings.map((printing) => {
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = cardPath(printing) || "#";
+    if (printing.set === card.set && printing.collector_number === card.collector_number) link.setAttribute("aria-current", "page");
+    const set = document.createElement("span");
+    set.className = "set";
+    set.textContent = printing.set_name || printing.set.toUpperCase();
+    const meta = document.createElement("span");
+    meta.className = "meta";
+    meta.textContent = [setAndNumber(printing), capital(printing.rarity), year(printing.released)].filter(Boolean).join(" · ");
+    const cost = document.createElement("span");
+    cost.className = "price";
+    cost.textContent = price(printing.usd) || "—";
+    link.append(set, meta, cost);
+    link.addEventListener("click", (event) => {
+      if (modified(event)) return;
+      event.preventDefault();
+      if (link.hasAttribute("aria-current")) return;
+      history.pushState(null, "", link.getAttribute("href"));
+      loadCard({ set: printing.set, number: printing.collector_number });
+    });
+    item.append(link);
+    return item;
+  });
+  printingsList.replaceChildren(...rows);
+  document.getElementById("printings-title").textContent =
+    rows.length >= MAX_LISTED ? `Printings (the newest ${rows.length})` : `Printings (${rows.length})`;
+  // A card with more printings than the list holds links to a search for all of them.
+  offerAllPrintings(card, rows.length >= MAX_LISTED);
+  printingsSection.hidden = rows.length === 0 && printsButton.hidden;
+}
+
+/** The link to a search for every printing. A name holding a double quote cannot be searched exactly. */
+function offerAllPrintings(card, wanted) {
+  const possible = wanted && card.prints > 1 && !card.name.includes('"');
+  printsButton.hidden = !possible;
+  if (possible) {
+    printsButton.textContent = `All ${card.prints} printings`;
+    printsButton.dataset.q = `!"${card.name}" unique:prints order:released`;
+  }
+}
+
+/**
+ * Fill the card view and show it in place of the results. A hit from the results shows at
+ * once; what only the card's page has (printed stats, legality, the printings) is fetched and
+ * filled in when it arrives. `printings` is given when that has already happened.
+ */
+function showCard(hit, printings = null, { keepScroll = false } = {}) {
   const image = document.getElementById("card-image");
   const hasImage = Boolean(hit.image && hit.image.startsWith(IMAGE_HOST));
   image.hidden = !hasImage;
-  image.src = hasImage ? hit.image : "";
+  if (image.getAttribute("src") !== (hasImage ? hit.image : "")) image.src = hasImage ? hit.image : "";
   image.alt = hit.name;
   document.getElementById("card-name").textContent = hit.name;
   text("card-line", [hit.mana_cost, hit.type_line].filter(Boolean).join("  ·  "));
   text("card-rules", hit.oracle_text);
+  text("card-stats", hit.stats);
   text("card-flavor", hit.flavor_text);
   // The printing shown: its set, number, rarity and year, then artist and price.
   const set = hit.set_name ? `${hit.set_name}${setAndNumber(hit) ? ` (${setAndNumber(hit)})` : ""}` : setAndNumber(hit);
   text("card-printing", [set, capital(hit.rarity), year(hit.released)].filter(Boolean).join(" · "));
   text("card-artist", [hit.artist ? `Illustrated by ${hit.artist}` : "", price(hit.usd)].filter(Boolean).join(" · "));
-  // Offer the card's other printings, unless the grid already lists printings. A name holding
-  // a double quote cannot be written as an exact-name search.
-  const others = current.unit === "cards" && hit.prints > 1 && !hit.name.includes('"');
-  printsButton.hidden = !others;
-  if (others) {
-    printsButton.textContent = `All ${hit.prints} printings`;
-    printsButton.dataset.q = `!"${hit.name}" unique:prints order:released`;
-  }
   const link = document.getElementById("card-link");
   const hasLink = Boolean(hit.scryfall_uri && hit.scryfall_uri.startsWith(CARD_HOST));
   link.hidden = !hasLink;
@@ -271,7 +423,45 @@ function showCard(hit) {
   document.body.classList.add("viewing-card", "searched");
   intro.hidden = true;
   cardView.hidden = false;
-  window.scrollTo(0, 0);
+  if (!keepScroll) window.scrollTo(0, 0);
+
+  if (printings) {
+    showLegality(hit);
+    showPrintings(hit, printings);
+  } else {
+    legalitySection.hidden = printingsSection.hidden = true;
+    loadDetails(hit);
+  }
+}
+
+/** Fetch what the card's page shows beyond a search result, for the card now on screen. */
+async function loadDetails(hit) {
+  const path = cardPath(hit);
+  if (!path) return;
+  const data = await fetchCard(hit.set, hit.collector_number);
+  if (location.pathname !== path) return; // the reader has moved on
+  if (!data || !data.card) {
+    // Without the list, at least offer the search for the card's printings.
+    offerAllPrintings(hit, true);
+    printingsSection.hidden = printsButton.hidden;
+    document.getElementById("printings-title").textContent = "Printings";
+    printingsList.replaceChildren();
+    return;
+  }
+  // Kept with the history entry, so Back and Forward show the whole page without asking again.
+  history.replaceState({ card: data.card, printings: data.printings }, "");
+  showCard(data.card, data.printings, { keepScroll: true });
+}
+
+/** GET /api/card. Null when the request fails; `{ error }` when the server says why. */
+async function fetchCard(set, number) {
+  try {
+    const response = await fetch(`/api/card?${new URLSearchParams({ set: set.toLowerCase(), cn: number })}`);
+    const data = await response.json();
+    return response.ok ? data : { error: data.error || "Something went wrong.", missing: response.status === 404 };
+  } catch {
+    return null;
+  }
 }
 
 /** Open a card from the results: go to its address and show it. */
@@ -282,36 +472,36 @@ function openCard(hit) {
   showCard(hit);
 }
 
-/** A card's address was opened directly: fetch that printing and show it. */
+/** A card's address was opened directly, or another printing was chosen: fetch it and show it. */
 async function loadCard({ set, number }) {
   if (inFlight) inFlight.abort();
-  const controller = new AbortController();
-  inFlight = controller;
-  showResults();
-  intro.hidden = true;
-  document.body.classList.add("searched");
-  setStatus("", "Loading the card…");
-  try {
-    const query = `set:${set.toLowerCase()} cn:"${number.replaceAll('"', "")}" unique:prints`;
-    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "1" })}`, { signal: controller.signal });
-    const data = await response.json();
-    if (!response.ok) return setStatus("", data.error || "Something went wrong.", true);
-    if (!data.hits || !data.hits.length) {
+  inFlight = null;
+  const path = location.pathname;
+  const fromCard = !cardView.hidden; // moving between printings: keep the page while it loads
+  if (!fromCard) {
+    showResults();
+    intro.hidden = true;
+    document.body.classList.add("searched");
+    setStatus("", "Loading the card…");
+  }
+  const data = await fetchCard(set, number);
+  if (location.pathname !== path) return;
+  if (!data || data.error) {
+    showResults();
+    if (data && data.missing) {
       intro.hidden = false;
       return setStatus("No card at this address", `Nothing is numbered ${number} in the set "${set}".`, true);
     }
-    setStatus("", "");
-    showCard(data.hits[0]);
-  } catch (error) {
-    if (error.name !== "AbortError") setStatus("", "Could not reach the server. Check your connection and try again.", true);
-  } finally {
-    if (inFlight === controller) inFlight = null;
+    return setStatus("", data ? data.error : "Could not reach the server. Check your connection and try again.", true);
   }
+  setStatus("", "");
+  history.replaceState({ card: data.card, printings: data.printings }, "");
+  showCard(data.card, data.printings);
 }
 
 backButton.addEventListener("click", () => history.back());
 
-printsButton.addEventListener("click", () => run(printsButton.dataset.q));
+printsButton.addEventListener("click", () => run({ query: printsButton.dataset.q }));
 
 copyButton.addEventListener("click", async () => {
   try {
@@ -327,32 +517,45 @@ copyButton.addEventListener("click", async () => {
 /** Show whatever the current address names. `state` is the history entry's, if it has one. */
 function route(state) {
   const card = parseCardPath(location.pathname);
-  if (state && state.card) return showCard(state.card);
+  if (state && state.card) return showCard(state.card, state.printings || null);
   if (card) return loadCard(card);
-  const { query, sort: sortValue } = readAddress();
+  const view = readAddress();
   // Coming back from a card to the search that is still on screen: no need to ask again.
-  if (query && query === current.query && sortValue === current.sort && results.children.length) {
+  if (view.query && sameSearch(view, current) && results.children.length) {
     showResults();
-    document.title = `${query} · mtgsearch`;
+    document.title = `${view.query} · mtgsearch`;
     window.scrollTo(0, resultsScroll);
     return;
   }
-  run(query, { push: false, sortValue });
+  run(view, { push: false });
 }
 
+// A new query starts from the defaults: first page, default order, cards.
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  run(input.value);
+  run({ query: input.value });
   input.blur(); // dismiss the phone keyboard so results are visible
 });
 
 intro.addEventListener("click", (event) => {
   const example = event.target.closest("button[data-q]");
-  if (example) run(example.dataset.q);
+  if (example) run({ query: example.dataset.q });
 });
 
-sort.addEventListener("change", () => run(current.query, { sortValue: sort.value }));
-more.addEventListener("click", () => run(current.query, { append: true, sortValue: current.sort }));
+// Changing what is shown or how it is sorted keeps the query and goes back to the first page.
+for (const select of [sortSelect, dirSelect, uniqueSelect]) {
+  select.addEventListener("change", () =>
+    run({ query: current.query, order: sortSelect.value, dir: dirSelect.value, unique: uniqueSelect.value }),
+  );
+}
+
+// The pager's links are real addresses; an ordinary click is answered without leaving the page.
+pager.addEventListener("click", (event) => {
+  const link = event.target.closest("a[href]");
+  if (!link || modified(event)) return;
+  event.preventDefault();
+  run({ ...current, page: Number(link.dataset.page) });
+});
 
 window.addEventListener("popstate", (event) => route(event.state));
 

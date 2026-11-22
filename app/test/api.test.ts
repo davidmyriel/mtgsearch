@@ -1,7 +1,8 @@
 // The HTTP contract, with a stubbed search: no network and no TopK key.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { handleSearch, MAX_OFFSET, MAX_QUERY_CHARS, MAX_RESULTS } from "../api.ts";
+import { handleCard, handleSearch, MAX_QUERY_CHARS, MAX_REACH, MAX_RESULTS } from "../api.ts";
+import type { CardPage } from "../card.ts";
 import type { Result, SearchOptions } from "../search.ts";
 
 const HIT = {
@@ -23,7 +24,7 @@ const HIT = {
   prints: 11,
   score: 4.25219,
 };
-const SEMANTIC: Result = { mode: "semantic", hits: [HIT], total: null, note: "sphinx", hasMore: true, sortedBy: null, unit: "cards" };
+const SEMANTIC: Result = { mode: "semantic", hits: [HIT], total: null, note: "sphinx", hasMore: true, sortedBy: null, unit: "cards", understood: [] };
 
 function stub(result: Result = SEMANTIC) {
   const calls: [string, SearchOptions][] = [];
@@ -43,7 +44,7 @@ test("returns the documented shape", async () => {
   assert.equal(response.status, 200);
   const body = await response.json();
   // whitespace is normalised; defaults are filled in
-  assert.deepEqual(calls, [["sphinx that draws two cards", { k: 24, offset: 0, order: null, descending: false }]]);
+  assert.deepEqual(calls, [["sphinx that draws two cards", { k: 24, offset: 0, order: null, descending: null, unique: null }]]);
   assert.equal(typeof body.took_ms, "number");
   delete body.took_ms;
   assert.deepEqual(body, {
@@ -52,6 +53,7 @@ test("returns the documented shape", async () => {
     total: null,
     unit: "cards",
     note: "sphinx",
+    understood: [],
     hits: [
       {
         id: "abc",
@@ -106,16 +108,44 @@ test("page size and offset are clamped", async () => {
   await get({ q: "goblin", k: "-3", offset: "-5" }, search);
   assert.deepEqual(
     calls.map(([, o]) => [o.k, o.offset]),
-    [[MAX_RESULTS, MAX_OFFSET], [1, 0]],
+    [[MAX_RESULTS, MAX_REACH - MAX_RESULTS], [1, 0]],
   );
 });
 
+test("a page never reaches past what TopK will return, and says there is no more at that point", async () => {
+  const many: Result = { mode: "syntax", hits: [HIT], total: 19_000, note: "", hasMore: true, sortedBy: "name", unit: "cards", understood: [] };
+  const { calls, search } = stub(many);
+  const last = await (await get({ q: "t:creature", k: "60", offset: String(MAX_REACH - 60) }, search)).json();
+  const before = await (await get({ q: "t:creature", k: "60", offset: String(MAX_REACH - 120) }, search)).json();
+  const small = await (await get({ q: "t:creature", k: "10", offset: String(MAX_REACH) }, search)).json();
+  // limit + offset stays within the reach, whatever the page size
+  assert.ok(calls.every(([, o]) => (o.k ?? 0) + (o.offset ?? 0) <= MAX_REACH));
+  assert.deepEqual([last.offset, last.has_more], [MAX_REACH - 60, false]);
+  assert.deepEqual([before.offset, before.has_more], [MAX_REACH - 120, true]);
+  assert.deepEqual([small.offset, small.has_more], [MAX_REACH - 10, false]);
+});
+
 test("paging and sort parameters reach the search and come back in the answer", async () => {
-  const sorted: Result = { mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "cmc", unit: "cards" };
+  const sorted: Result = { mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "cmc", unit: "cards", understood: [] };
   const { calls, search } = stub(sorted);
   const body = await (await get({ q: "t:sphinx", offset: "24", order: "cmc", dir: "desc" }, search)).json();
-  assert.deepEqual(calls[0][1], { k: 24, offset: 24, order: "cmc", descending: true });
+  assert.deepEqual(calls[0][1], { k: 24, offset: 24, order: "cmc", descending: true, unique: null });
   assert.deepEqual([body.offset, body.has_more, body.sorted_by, body.total], [24, true, "cmc", 91]);
+});
+
+test("direction is ascending, descending or left to the order; unique is cards, prints or art", async () => {
+  const { calls, search } = stub();
+  await get({ q: "t:sphinx", order: "released", dir: "asc", unique: "prints" }, search);
+  await get({ q: "t:sphinx", order: "released", unique: "art" }, search);
+  await get({ q: "t:sphinx", dir: "sideways", unique: "cards" }, search);
+  assert.deepEqual(
+    calls.map(([, o]) => [o.order, o.descending, o.unique]),
+    [["released", false, "prints"], ["released", null, "art"], [null, null, "cards"]],
+  );
+  const bad = await get({ q: "t:sphinx", unique: "everything" }, search);
+  assert.equal(bad.status, 400);
+  assert.match((await bad.json()).error, /unique must be one of: cards, prints, art/);
+  assert.equal(calls.length, 3);
 });
 
 test("successful answers may be cached by the CDN, never by the browser alone", async () => {
@@ -170,7 +200,7 @@ test("a setup problem is named, so it shows on the page and not only in the log"
 
 test("unsupported syntax is passed through for the page to explain", async () => {
   const refused: Result = {
-    mode: "unsupported", hits: [], total: null, note: "'lang:' is not supported yet", hasMore: false, sortedBy: null, unit: "cards",
+    mode: "unsupported", hits: [], total: null, note: "'lang:' is not supported yet", hasMore: false, sortedBy: null, unit: "cards", understood: [],
   };
   const body = await (await get({ q: "lang:ja" }, stub(refused).search)).json();
   assert.equal(body.mode, "unsupported");
@@ -180,7 +210,7 @@ test("unsupported syntax is passed through for the page to explain", async () =>
 
 test("a missing image is null, not absent", async () => {
   const { image: _unused, ...withoutImage } = HIT;
-  const named: Result = { mode: "name", hits: [withoutImage], total: 1, note: "", hasMore: false, sortedBy: "edhrec", unit: "cards" };
+  const named: Result = { mode: "name", hits: [withoutImage], total: 1, note: "", hasMore: false, sortedBy: "edhrec", unit: "cards", understood: [] };
   const body = await (await get({ q: "sphinx" }, stub(named).search)).json();
   assert.equal(body.hits[0].image, null);
   assert.equal(body.total, 1);
@@ -188,11 +218,89 @@ test("a missing image is null, not absent", async () => {
 
 test("a printing search says what its total counts and returns the printing's details", async () => {
   const printing = { ...HIT, _id: "p1", oracle_id: "abc", flavor_text: "Blessed by the hands of Jin-Gitaxias.", usd: 34.97 };
-  const prints: Result = { mode: "syntax", hits: [printing], total: 11, note: "", hasMore: false, sortedBy: "released", unit: "printings" };
+  const prints: Result = { mode: "syntax", hits: [printing], total: 11, note: "", hasMore: false, sortedBy: "released", unit: "printings", understood: [] };
   const body = await (await get({ q: '!"consecrated sphinx" unique:prints', order: "released", dir: "desc" }, stub(prints).search)).json();
   assert.deepEqual([body.unit, body.total, body.sorted_by], ["printings", 11, "released"]);
   assert.deepEqual(
     [body.hits[0].id, body.hits[0].flavor_text, body.hits[0].usd, body.hits[0].collector_number],
     ["p1", "Blessed by the hands of Jin-Gitaxias.", 34.97, "43"],
   );
+});
+
+// --- GET /api/card ---------------------------------------------------------------------
+
+const PRINTING = {
+  ...HIT, _id: "p1", oracle_id: "abc", usd: 20.49, flavor_text: "Blessed by the hands of Jin-Gitaxias.",
+  stats: "4/6", legal: ["commander", "legacy", "vintage"], banned: ["duel"],
+};
+const OLDER = { _id: "p0", name: "Consecrated Sphinx", set: "mbs", set_name: "Mirrodin Besieged", cn: "21", rarity: "mythic", released: "2011-02-04", usd: null };
+const PAGE: CardPage = { card: PRINTING, printings: [PRINTING, OLDER] };
+const getCard = (params: Record<string, string>, card: Parameters<typeof handleCard>[1]) =>
+  handleCard(new URL(`https://example.test/api/card?${new URLSearchParams(params)}`), card);
+
+test("a card's page: the printing with its stats and legality, and the card's printings", async () => {
+  const calls: string[][] = [];
+  const response = await getCard({ set: " 2X2 ", cn: "43" }, async (set, number) => {
+    calls.push([set, number]);
+    return PAGE;
+  });
+  assert.equal(response.status, 200);
+  assert.deepEqual(calls, [["2x2", "43"]]); // the set code is lowercased and trimmed
+  assert.match(response.headers.get("Netlify-CDN-Cache-Control") ?? "", /max-age=600/);
+  const body = await response.json();
+  assert.equal(typeof body.took_ms, "number");
+  assert.deepEqual(
+    [body.card.id, body.card.name, body.card.collector_number, body.card.stats, body.card.usd],
+    ["p1", "Consecrated Sphinx", "43", "4/6", 20.49],
+  );
+  // every legality list is present, empty when the card has none of that status
+  assert.deepEqual([body.card.legal, body.card.banned, body.card.restricted], [["commander", "legacy", "vintage"], ["duel"], []]);
+  assert.deepEqual(body.printings, [
+    { id: "p1", name: "Consecrated Sphinx", set: "2x2", set_name: "Double Masters 2022", collector_number: "43", rarity: "mythic", released: "2022-07-08", usd: 20.49 },
+    { id: "p0", name: "Consecrated Sphinx", set: "mbs", set_name: "Mirrodin Besieged", collector_number: "21", rarity: "mythic", released: "2011-02-04", usd: null },
+  ]);
+});
+
+test("a card without a size has null stats", async () => {
+  const { stats: _none, ...spell } = PRINTING;
+  const body = await (await getCard({ set: "2x2", cn: "43" }, async () => ({ card: spell, printings: [] }))).json();
+  assert.equal(body.card.stats, null);
+  assert.deepEqual(body.printings, []);
+});
+
+test("an address with no card is a 404 that says so", async () => {
+  const response = await getCard({ set: "nosuchset", cn: "999" }, async () => null);
+  assert.equal(response.status, 404);
+  assert.match((await response.json()).error, /Nothing is numbered 999 in the set "nosuchset"/);
+});
+
+test("a malformed card address is refused without a lookup", async () => {
+  let called = false;
+  const card = async () => {
+    called = true;
+    return PAGE;
+  };
+  for (const params of [{}, { set: "mh2" }, { cn: "45" }, { set: "m h2", cn: "45" }, { set: "mh2", cn: "x".repeat(21) }, { set: "a".repeat(11), cn: "1" }]) {
+    assert.equal((await getCard(params as Record<string, string>, card)).status, 400, JSON.stringify(params));
+  }
+  assert.equal(called, false);
+});
+
+test("a failed card lookup is a 502, or a 503 that names a setup problem", async () => {
+  const quiet = console.error;
+  console.error = () => {};
+  try {
+    const down = await getCard({ set: "mh2", cn: "45" }, async () => {
+      throw new Error("connection reset");
+    });
+    assert.equal(down.status, 502);
+    assert.equal(down.headers.get("Cache-Control"), "no-store");
+    const noKey = await getCard({ set: "mh2", cn: "45" }, async () => {
+      throw new Error("TOPK_API_KEY is not set");
+    });
+    assert.equal(noKey.status, 503);
+    assert.match((await noKey.json()).error, /no TopK API key/);
+  } finally {
+    console.error = quiet;
+  }
 });
