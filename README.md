@@ -104,6 +104,16 @@ Median client-side latency per query, network included: 39 ms keyword, 123 ms se
 A printing query typically takes 80 to 150 ms; the broadest one tried (`game:paper`, 33,375
 cards grouped from their printings) takes about 500 ms.
 
+Re-measured after the collection had received several rounds of field updates (new filter
+fields, no re-embedding; `eval/after_field_updates.mtg-cards-v2.json`): every semantic row is
+unchanged except that the full pipeline's first-place count rose from 9 to 10, and each
+strategy's top five are identical for 30 of the 31 queries. The keyword row dropped to
+0 / 0 / 2, 1 / 1 / 2 and 7. BM25 scores on the updated collection are no longer comparable
+between cards: `match("lightning bolt")` on the name field ranks "Riddle of Lightning" above
+"Lightning Bolt", while the older collection that was never updated ranks it first. Nothing
+in the app's search path uses BM25, so results are unaffected, but the keyword baseline
+should be re-measured on a freshly written collection before it is published.
+
 Read these with care:
 
 - The query set is small (31 queries) and its accepted answers come from one person's card

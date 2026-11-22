@@ -129,6 +129,13 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
 
 ## Risks
 
+- **Keyword scores after field updates.** After partial `update()` calls, BM25 scores in the
+  cards collection stopped being comparable between cards (see the note under the relevance
+  table in the README). Search does not use BM25, so nothing visible changed. To find out:
+  whether scores recover once TopK compacts the collection, and whether this is expected
+  behaviour. It matters for the published benchmark's keyword baseline and for anyone who
+  adds keyword search later.
+
 - **Two languages.** Search is TypeScript and ingest is Python, because TopK's JavaScript SDK cannot
   write whole numbers into decimal fields. If that changes, the ingest job (about 550 lines) can move
   to TypeScript and the repository becomes single-language.
