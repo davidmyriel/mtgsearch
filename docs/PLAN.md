@@ -93,8 +93,9 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] End-to-end browser test at phone and laptop sizes, run in CI on the local server and as
       Netlify serves the site; Netlify's own build exercised in CI
 - [x] Connected the repository in Netlify, set `TOPK_API_KEY`, deployed. The browser test passes
-      against the live URL (270 checks at phone, laptop and dark-mode sizes, after the third
-      merge on 22 November 2026), repeated searches are
+      against the live URL (337 checks at phone, laptop and dark-mode sizes and on a 320-pixel
+      screen, after the fourth merge on 22 November 2026, which carried the redesign), repeated
+      searches are
       answered from Netlify's CDN cache, and the security headers are served
 - [ ] Confirm the per-client rate limit on the live site. It counts per address, so it needs a
       client with one address: about 80 different searches in a minute should start returning 429.
