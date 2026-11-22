@@ -1,6 +1,6 @@
 # Scryfall interface study, for mtgsearch
 
-Studied on 22 November 2026 (21:41 to 21:54 UTC). The purpose is to understand how Scryfall's interface is built and behaves so that mtgsearch can decide which structure and behaviour to adopt. Nothing here is meant for copying their brand: the logo, name, artwork, stylesheets and scripts were not saved. Screenshots named below are in the same directory as this file.
+Studied on 22 November 2026 (21:41 to 21:54 UTC). The purpose is to understand how Scryfall's interface is built and behaves so that mtgsearch can decide which structure and behaviour to adopt. Nothing here is meant for copying their brand: the logo, name, artwork, stylesheets and scripts were not saved. Screenshots named below were taken for reference and are not in the repository (see Files at the end).
 
 Contents
 
