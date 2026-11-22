@@ -45,7 +45,8 @@ picked up: at the boundary between plan steps unless something is broken.
       masterpiece, firstprint (54/54 on the tuning set; four differences kept on purpose are in
       `conformance/known_gaps.txt`). `is:commander` now includes legendary Vehicles, Spacecraft
       and Backgrounds, as Scryfall's does
-- [ ] Scryfall's regex shorthands (`\spp`, `\smm`, `\spt`)
+- [x] Scryfall's regex shorthands: `\spp`, `\smm`, `\spt` and the symbol ones `\sm`, `\sc`,
+      `\ss`, `\smr`, `\smh`, `\smp` (16/16 on the tuning set)
 - [x] Held-out conformance: 214 queries in four sets. The newest, 54 queries across cards,
       printings, mana and shortcuts, matched 52 on its first run (96%)
 - [ ] Run the held-out sets nightly as well as the tuning sets

@@ -20,7 +20,6 @@ kw:/fly/
 is:unicorn
 pow>loy
 loy<pt
-o:/\spp/
 include:tokens
 devotion:wu
 m<=9WWWWUUUUBBBBRRRRGGGG

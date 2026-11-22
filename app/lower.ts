@@ -201,12 +201,44 @@ export function colors(field: string, op: string, value: string, defaultOp: stri
   return anyOf(field, keep.map((s) => s.key));
 }
 
-/** Scryfall allows literal mana symbols such as {T} in a regex; escape those braces. */
+// Scryfall's regex shorthands (its "Scryfall Extensions"), written out as ordinary regex.
+// Its help page describes what each one matches but not the expression, so these were
+// checked against its answers (conformance/regex.txt). The fields they run on are lowercased.
+const COLOR_SYMBOL = String.raw`[wubrg]`;
+const HYBRID = String.raw`(?:[wubrgc2]/[wubrg](?:/p)?)`;
+const PHYREXIAN = String.raw`(?:p|[wubrg]/p|[wubrg]/[wubrg]/p)`;
+const MANA = String.raw`(?:[wubrgcsxyz]|[0-9]+|h[wubrg]|${HYBRID}|${PHYREXIAN})`;
+// A repeated symbol would need a back-reference, which TopK's regex engine does not have.
+// Every symbol that occurs twice in a row is listed: single letters, two-colour hybrids,
+// {2/W} and Phyrexian.
+const REPEATABLE = [
+  ..."wubrgcsx",
+  ...[..."wubrg"].flatMap((a) => [..."wubrg"].filter((b) => b !== a).map((b) => `${a}/${b}`)),
+  ...[..."wubrg"].flatMap((a) => [`2/${a}`, `${a}/p`]),
+];
+const REPEATED = REPEATABLE.map((symbol) => String.raw`\{${symbol}\}\{${symbol}\}`).join("|");
+const SHORTHANDS: [string, string][] = [
+  // longest first, so that \smr is not read as \sm followed by r
+  [String.raw`\smr`, `(?:${REPEATED})`], // a mana symbol twice in a row
+  [String.raw`\smh`, String.raw`\{${HYBRID}\}`], // a hybrid symbol
+  // a Phyrexian symbol with its colour; a bare {P} is the pawprint on the Seasons, which Scryfall leaves out
+  [String.raw`\smp`, String.raw`\{(?:[wubrg]/p|[wubrg]/[wubrg]/p)\}`],
+  [String.raw`\smm`, String.raw`[-−][0-9x]+/[-−][0-9x]+`], // -X/-X
+  [String.raw`\spp`, String.raw`\+[0-9x]+/\+[0-9x]+`], // +X/+X
+  [String.raw`\spt`, String.raw`[0-9x*]+/[0-9x*]+`], // X/X
+  [String.raw`\sm`, String.raw`\{${MANA}\}`], // any mana symbol
+  [String.raw`\sc`, String.raw`\{(?:${COLOR_SYMBOL}|${HYBRID}|[wubrg]/p|[wubrg]/[wubrg]/p)\}`], // a coloured mana symbol
+  [String.raw`\ss`, String.raw`\{[^}]+\}`], // any symbol, {T} included
+];
+
+/**
+ * A user's regex made ready for TopK. Scryfall allows literal symbols such as {T} in a regex,
+ * so those braces are escaped; then its shorthands are written out.
+ */
 function regex(pattern: string): string {
-  if (/\\s(pp|mm|pt)/.test(pattern)) {
-    throw new Unsupported("Scryfall's \\spp, \\smm and \\spt regex shorthands are not supported yet");
-  }
-  return pattern.replace(/\{([^}\d,][^}]*)\}/g, "\\{$1\\}");
+  let out = pattern.replace(/\{([^}\d,][^}]*)\}/g, "\\{$1\\}");
+  for (const [shorthand, expansion] of SHORTHANDS) out = out.replaceAll(shorthand, expansion);
+  return out;
 }
 
 function text(field: string, kw: Keyword): IR {

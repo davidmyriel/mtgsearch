@@ -51,6 +51,7 @@ jobs:
           npm run conformance -- conformance/printings.txt --out conformance-printings-results.json
           npm run conformance -- conformance/mana.txt --out conformance-mana-results.json
           npm run conformance -- conformance/shortcuts.txt --out conformance-shortcuts-results.json
+          npm run conformance -- conformance/regex.txt --out conformance-regex-results.json
 
       - name: Relevance evaluation
         if: env.TOPK_API_KEY != ''
@@ -65,6 +66,7 @@ jobs:
             conformance-printings-results.json
             conformance-mana-results.json
             conformance-shortcuts-results.json
+            conformance-regex-results.json
             eval-results.json
 
       - name: Skipped

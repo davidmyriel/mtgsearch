@@ -133,7 +133,7 @@ Read these with care:
 
 | Area | Supported |
 |---|---|
-| Names and logic | Card names, `!exact`, `name:`, `-negation`, `or`, parentheses, regex on name, type, text and flavour text |
+| Names and logic | Card names, `!exact`, `name:`, `-negation`, `or`, parentheses, regex on name, type, text and flavour text, with Scryfall's shorthands (`\spp` `\smm` `\spt` `\sm` `\sc` `\ss` `\smr` `\smh` `\smp`) |
 | Colour | `c:` `id:` with every comparison, colour names, guilds, shards, wedges, counts |
 | Text and type | `t:` `o:` `fo:` `kw:` including `~` |
 | Numbers | `mv` `pow` `tou` `pt` `loy`, `pow>tou`, `mv:even` |
@@ -148,8 +148,7 @@ Read these with care:
 | Sorting | `order:` name, cmc, power, toughness, edhrec, released, usd, eur, tix, rarity; `direction:` |
 
 Not yet, and reported as unsupported rather than silently ignored: `lang:` and non-English
-printings, `new:`, `block:`, `cube:`, art tags (`art:`), `order:` by set or artist, and
-Scryfall's `\spp`, `\smm`, `\spt` regex shorthands.
+printings, `new:`, `block:`, `cube:`, art tags (`art:`), and `order:` by set or artist.
 
 Known differences from Scryfall are listed with reasons in `conformance/known_gaps.txt`.
 

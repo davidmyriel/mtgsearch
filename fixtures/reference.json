@@ -25121,6 +25121,1520 @@
    }
   },
   {
+   "query": "t:instant o:/\\spp/ mv=1 c:g",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "re",
+      "oracle_lc",
+      "\\+[0-9x]+/\\+[0-9x]+"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t",
+     "o",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "t:instant o:/\\smm/ mv=1 c:b",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "re",
+      "oracle_lc",
+      "[-−][0-9x]+/[-−][0-9x]+"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "B"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t",
+     "o",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "t:land o:/becomes a \\spt/",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "re",
+      "oracle_lc",
+      "becomes a [0-9x*]+/[0-9x*]+"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t",
+     "o"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/gets \\spp until end of turn/ t:sorcery c:w mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "gets \\+[0-9x]+/\\+[0-9x]+ until end of turn"
+     ],
+     [
+      "in",
+      "type_words",
+      "sorcery"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "W"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "fo:/\\smr/ t:creature mv=1 c:g",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "fulloracle_lc",
+      "(?:\\{w\\}\\{w\\}|\\{u\\}\\{u\\}|\\{b\\}\\{b\\}|\\{r\\}\\{r\\}|\\{g\\}\\{g\\}|\\{c\\}\\{c\\}|\\{s\\}\\{s\\}|\\{x\\}\\{x\\}|\\{w/u\\}\\{w/u\\}|\\{w/b\\}\\{w/b\\}|\\{w/r\\}\\{w/r\\}|\\{w/g\\}\\{w/g\\}|\\{u/w\\}\\{u/w\\}|\\{u/b\\}\\{u/b\\}|\\{u/r\\}\\{u/r\\}|\\{u/g\\}\\{u/g\\}|\\{b/w\\}\\{b/w\\}|\\{b/u\\}\\{b/u\\}|\\{b/r\\}\\{b/r\\}|\\{b/g\\}\\{b/g\\}|\\{r/w\\}\\{r/w\\}|\\{r/u\\}\\{r/u\\}|\\{r/b\\}\\{r/b\\}|\\{r/g\\}\\{r/g\\}|\\{g/w\\}\\{g/w\\}|\\{g/u\\}\\{g/u\\}|\\{g/b\\}\\{g/b\\}|\\{g/r\\}\\{g/r\\}|\\{2/w\\}\\{2/w\\}|\\{w/p\\}\\{w/p\\}|\\{2/u\\}\\{2/u\\}|\\{u/p\\}\\{u/p\\}|\\{2/b\\}\\{2/b\\}|\\{b/p\\}\\{b/p\\}|\\{2/r\\}\\{2/r\\}|\\{r/p\\}\\{r/p\\}|\\{2/g\\}\\{2/g\\}|\\{g/p\\}\\{g/p\\})"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "fo",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/\\smr/ t:land r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "(?:\\{w\\}\\{w\\}|\\{u\\}\\{u\\}|\\{b\\}\\{b\\}|\\{r\\}\\{r\\}|\\{g\\}\\{g\\}|\\{c\\}\\{c\\}|\\{s\\}\\{s\\}|\\{x\\}\\{x\\}|\\{w/u\\}\\{w/u\\}|\\{w/b\\}\\{w/b\\}|\\{w/r\\}\\{w/r\\}|\\{w/g\\}\\{w/g\\}|\\{u/w\\}\\{u/w\\}|\\{u/b\\}\\{u/b\\}|\\{u/r\\}\\{u/r\\}|\\{u/g\\}\\{u/g\\}|\\{b/w\\}\\{b/w\\}|\\{b/u\\}\\{b/u\\}|\\{b/r\\}\\{b/r\\}|\\{b/g\\}\\{b/g\\}|\\{r/w\\}\\{r/w\\}|\\{r/u\\}\\{r/u\\}|\\{r/b\\}\\{r/b\\}|\\{r/g\\}\\{r/g\\}|\\{g/w\\}\\{g/w\\}|\\{g/u\\}\\{g/u\\}|\\{g/b\\}\\{g/b\\}|\\{g/r\\}\\{g/r\\}|\\{2/w\\}\\{2/w\\}|\\{w/p\\}\\{w/p\\}|\\{2/u\\}\\{2/u\\}|\\{u/p\\}\\{u/p\\}|\\{2/b\\}\\{2/b\\}|\\{b/p\\}\\{b/p\\}|\\{2/r\\}\\{2/r\\}|\\{r/p\\}\\{r/p\\}|\\{2/g\\}\\{2/g\\}|\\{g/p\\}\\{g/p\\})"
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/add \\sm\\sm\\sm/ t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "add \\{(?:[wubrgcsxyz]|[0-9]+|h[wubrg]|(?:[wubrgc2]/[wubrg](?:/p)?)|(?:p|[wubrg]/p|[wubrg]/[wubrg]/p))\\}\\{(?:[wubrgcsxyz]|[0-9]+|h[wubrg]|(?:[wubrgc2]/[wubrg](?:/p)?)|(?:p|[wubrg]/p|[wubrg]/[wubrg]/p))\\}\\{(?:[wubrgcsxyz]|[0-9]+|h[wubrg]|(?:[wubrgc2]/[wubrg](?:/p)?)|(?:p|[wubrg]/p|[wubrg]/[wubrg]/p))\\}"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/^\\ss: draw a card\\.$/ t:artifact",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "^\\{[^}]+\\}: draw a card\\.$"
+     ],
+     [
+      "in",
+      "type_words",
+      "artifact"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/\\smh/ t:creature mv=2 c:w",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "\\{(?:[wubrgc2]/[wubrg](?:/p)?)\\}"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "W"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/\\smp/ t:instant",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "\\{(?:[wubrg]/p|[wubrg]/[wubrg]/p)\\}"
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/\\smp/ t:creature c:b",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "\\{(?:[wubrg]/p|[wubrg]/[wubrg]/p)\\}"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "B"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/add \\sc\\sc/ t:land c:c",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "add \\{(?:[wubrg]|(?:[wubrgc2]/[wubrg](?:/p)?)|[wubrg]/p|[wubrg]/[wubrg]/p)\\}\\{(?:[wubrg]|(?:[wubrgc2]/[wubrg](?:/p)?)|[wubrg]/p|[wubrg]/[wubrg]/p)\\}"
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "in",
+      "c_sets",
+      "C"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/^\\sm, \\ss: / t:creature c:r mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "^\\{(?:[wubrgcsxyz]|[0-9]+|h[wubrg]|(?:[wubrgc2]/[wubrg](?:/p)?)|(?:p|[wubrg]/p|[wubrg]/[wubrg]/p))\\}, \\{[^}]+\\}: "
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "R"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "fo:/\\spt/ t:enchantment c:g mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "fulloracle_lc",
+      "[0-9x*]+/[0-9x*]+"
+     ],
+     [
+      "in",
+      "type_words",
+      "enchantment"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "fo",
+     "t",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/target\\screature/ t:instant mv=1 c:g",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "target\\{(?:[wubrg]|(?:[wubrgc2]/[wubrg](?:/p)?)|[wubrg]/p|[wubrg]/[wubrg]/p)\\}reature"
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "o:/draw\\sa card/ t:instant mv=1 c:u",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "oracle_lc",
+      "draw\\sa card"
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "U"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "o",
+     "t",
+     "mv",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
    "query": "o:\"unterminated",
    "error": "QueryError"
   },
@@ -25186,11 +26700,6 @@
    "query": "loy<pt",
    "error": "Unsupported",
    "message": "comparing loyalty with powtou is not supported yet"
-  },
-  {
-   "query": "o:/\\spp/",
-   "error": "Unsupported",
-   "message": "Scryfall's \\spp, \\smm and \\spt regex shorthands are not supported yet"
   },
   {
    "query": "include:tokens",
