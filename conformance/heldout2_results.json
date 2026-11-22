@@ -1,0 +1,501 @@
+{
+ "summary": {
+  "pass": 52,
+  "fail": 2,
+  "unsupported": 0,
+  "error": 0
+ },
+ "results": [
+  {
+   "query": "t:wizard c:u mv=2 pow>=2",
+   "status": "pass",
+   "scryfall_total": 89,
+   "ours_total": 89,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:\"each opponent\" t:enchantment c:b",
+   "status": "pass",
+   "scryfall_total": 85,
+   "ours_total": 85,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "kw:deathtouch c:g t:creature mv<=2",
+   "status": "pass",
+   "scryfall_total": 43,
+   "ours_total": 43,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "id:rg t:dragon -c:g",
+   "status": "pass",
+   "scryfall_total": 193,
+   "ours_total": 193,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c>=wub t:creature",
+   "status": "pass",
+   "scryfall_total": 119,
+   "ours_total": 119,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "f:pauper t:elf mv=1",
+   "status": "pass",
+   "scryfall_total": 54,
+   "ours_total": 54,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "banned:modern t:artifact",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:/draw (two|three) cards/ t:sorcery mv<=3",
+   "status": "pass",
+   "scryfall_total": 67,
+   "ours_total": 67,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:\"legendary land\" id:c",
+   "status": "pass",
+   "scryfall_total": 25,
+   "ours_total": 25,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pow>tou t:goblin mv=1",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "loy>=6 t:planeswalker c:r",
+   "status": "pass",
+   "scryfall_total": 7,
+   "ours_total": 7,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:vanilla t:beast",
+   "status": "pass",
+   "scryfall_total": 22,
+   "ours_total": 22,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:hybrid t:creature mv=2 c:gw",
+   "status": "pass",
+   "scryfall_total": 14,
+   "ours_total": 14,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "otag:removal c:w mv=1 t:instant",
+   "status": "pass",
+   "scryfall_total": 49,
+   "ours_total": 49,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-t:creature -t:land kw:flash c:g mv=2",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "name:/^the / t:artifact mv=3",
+   "status": "pass",
+   "scryfall_total": 20,
+   "ours_total": 20,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"sol ring\"",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "\"swords to\"",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:commander t:angel mv=3",
+   "status": "pass",
+   "scryfall_total": 12,
+   "ours_total": 12,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:historic t:saga c:r",
+   "status": "pass",
+   "scryfall_total": 66,
+   "ours_total": 66,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:mh2 a:\"chris rahn\"",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "year=2015 r:mythic t:planeswalker",
+   "status": "pass",
+   "scryfall_total": 22,
+   "ours_total": 22,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "border:borderless t:land r:rare year=2023",
+   "status": "pass",
+   "scryfall_total": 50,
+   "ours_total": 50,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:1997 is:foil t:goblin",
+   "status": "fail",
+   "scryfall_total": 97,
+   "ours_total": 98,
+   "missing": [],
+   "extra": [
+    "embermage goblin"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:promo t:planeswalker c:w",
+   "status": "pass",
+   "scryfall_total": 61,
+   "ours_total": 61,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "game:mtgo -game:paper t:goblin",
+   "status": "pass",
+   "scryfall_total": 74,
+   "ours_total": 74,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "date>=2024-01-01 t:wizard r:mythic c:u",
+   "status": "pass",
+   "scryfall_total": 62,
+   "ours_total": 62,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:paper -in:mtgo t:elf r:rare",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "prints>=40 t:instant",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"counterspell\" unique:prints frame:1993",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "st:core r:common t:wall",
+   "status": "pass",
+   "scryfall_total": 18,
+   "ours_total": 18,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "wm:izzet r:uncommon",
+   "status": "pass",
+   "scryfall_total": 34,
+   "ours_total": 34,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "ft:dragon t:goblin",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "cn:100 set:dom",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "mv:odd t:angel r:mythic",
+   "status": "pass",
+   "scryfall_total": 40,
+   "ours_total": 40,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"serra angel\" unique:art",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 1 Scryfall results"
+  },
+  {
+   "query": "m:{U/B} t:creature mv=3",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m=UU t:wizard",
+   "status": "pass",
+   "scryfall_total": 12,
+   "ours_total": 12,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m>=3G t:beast mv=4",
+   "status": "pass",
+   "scryfall_total": 32,
+   "ours_total": 32,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "devotion:bb t:zombie mv=2",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces>=2 t:creature mv=1",
+   "status": "pass",
+   "scryfall_total": 33,
+   "ours_total": 33,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "m<=1 t:artifact t:creature",
+   "status": "fail",
+   "scryfall_total": 56,
+   "ours_total": 54,
+   "missing": [
+    "Blightsteel Colossus // Blightsteel Colossus",
+    "Darksteel Colossus // Darksteel Colossus"
+   ],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "produces=c t:land r:common year=2020",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:shockland produces:u",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:fetchland in:ktk",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:creatureland id:u",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:party is:outlaw mv=1",
+   "status": "pass",
+   "scryfall_total": 53,
+   "ours_total": 53,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:modal t:instant c:b mv=2",
+   "status": "pass",
+   "scryfall_total": 23,
+   "ours_total": 23,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:partner c:g",
+   "status": "pass",
+   "scryfall_total": 54,
+   "ours_total": 54,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:adventure t:elf",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:bikeland or is:triome",
+   "status": "pass",
+   "scryfall_total": 20,
+   "ours_total": 20,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "not:firstprint !\"lightning helix\"",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:duelcommander t:elf mv=3",
+   "status": "pass",
+   "scryfall_total": 52,
+   "ours_total": 52,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:masterpiece t:artifact mv=1",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  }
+ ]
+}

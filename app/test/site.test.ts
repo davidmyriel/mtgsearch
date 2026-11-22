@@ -61,3 +61,24 @@ test("the Scryfall comparison stays inside Scryfall's published rate limit", asy
   const { MIN_INTERVAL_MS } = await import("../conformance.ts");
   assert.ok(MIN_INTERVAL_MS >= 500, `one request every ${MIN_INTERVAL_MS} ms is faster than 2 a second`);
 });
+
+test("a held-out set fails only when a query that matched before stops matching", async () => {
+  const { againstBaseline } = await import("../conformance.ts");
+  const outcome = (query: string, status: "pass" | "fail" | "unsupported") =>
+    ({ query, status, scryfall_total: 0, ours_total: 0, missing: [], extra: [], note: "" });
+  const baseline = [
+    { query: "matched", status: "pass" },
+    { query: "differed", status: "fail" },
+    { query: "fixed since", status: "fail" },
+    { query: "broke", status: "pass" },
+  ];
+  const result = againstBaseline(
+    [outcome("matched", "pass"), outcome("differed", "fail"), outcome("fixed since", "pass"), outcome("broke", "fail"), outcome("new and wrong", "unsupported")],
+    baseline,
+  );
+  // a query the baseline has never seen is held to the same standard as one that matched
+  assert.deepEqual(result.regressed, ["broke", "new and wrong"]);
+  assert.deepEqual(result.stillDiffer, ["differed"]);
+  assert.deepEqual(result.nowMatch, ["fixed since"]);
+  assert.deepEqual(againstBaseline([outcome("matched", "pass")], baseline).regressed, []);
+});

@@ -49,7 +49,8 @@ picked up: at the boundary between plan steps unless something is broken.
       `\ss`, `\smr`, `\smh`, `\smp` (16/16 on the tuning set)
 - [x] Held-out conformance: 214 queries in four sets. The newest, 54 queries across cards,
       printings, mana and shortcuts, matched 52 on its first run (96%)
-- [ ] Run the held-out sets nightly as well as the tuning sets
+- [x] Run the held-out sets nightly as well as the tuning sets: each is compared with its saved
+      run, and a query that matched before and no longer does fails the job
 
 ### 2. Printing-level parity: mostly done
 - [x] Second collection with one document per printing (Scryfall's `default_cards` file: 120,275
@@ -131,9 +132,10 @@ picked up: at the boundary between plan steps unless something is broken.
   function bundle with Netlify's tool; lint and test the ingest job on Python 3.10 and 3.13.
 - Same-repository pushes and pull requests, when the TopK secret is configured: live tests, and the
   browser test on the local server and as Netlify serves the site.
-- Nightly: incremental ingest of cards and printings, conformance on the four tuning sets
-  (cards, printings, mana, shortcuts), relevance evaluation, results uploaded. The shortcut set
-  matters most there: twenty land cycles rest on community tags, which anyone can edit.
+- Nightly: incremental ingest of cards and printings, conformance on the five tuning sets
+  (cards, printings, mana, shortcuts, regex), the four held-out sets against their saved runs,
+  relevance evaluation, results uploaded. The shortcut set matters most there: twenty land
+  cycles rest on community tags, which anyone can edit.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.
 

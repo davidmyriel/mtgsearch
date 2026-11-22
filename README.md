@@ -87,12 +87,16 @@ Measured on 22 November 2026 against the full card set. Raw output is in `confor
 | Mana held-out set, 22 queries | 18 match | 19 match |
 | `is:` shortcuts, 54 queries (land cycles, party, modal and so on) | 35 of 49 | 54 match |
 | Second held-out set, 54 queries across all of the above | 52 match | 52 match |
+| Regex shorthands tuning set, 16 queries (`\spp`, `\smr` and so on) | | 16 match |
 
 The first-run column is the honest measure of how well the rules generalise; the earlier
 held-out sets have since been used to fix rules, so they are no longer untouched. The second
 held-out set was written after every rule was fixed and has not been tuned on: 52 of 54 (96%),
 and both misses belong to differences already listed as known gaps. Differences that
 remain are listed with reasons in `conformance/known_gaps.txt`.
+
+The nightly run repeats all of it. A tuning set must match in full. A held-out set is compared
+with its saved run (`--baseline`), and fails only if a query that matched then no longer does.
 
 **Relevance** (frozen query set; an accepted card's rank):
 
