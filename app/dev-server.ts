@@ -30,7 +30,7 @@ export function createDevServer() {
   return createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", "http://localhost");
     if (url.pathname === "/api/search") {
-      const answer = await handleSearch(url, (query, k) => search(collectionFromEnv(), query, k));
+      const answer = await handleSearch(url, (query, options) => search(collectionFromEnv(), query, options));
       response.writeHead(answer.status, Object.fromEntries(answer.headers));
       response.end(await answer.text());
       return;

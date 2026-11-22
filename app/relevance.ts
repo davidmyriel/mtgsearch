@@ -40,7 +40,7 @@ async function rank(col: Collection, strategy: Strategy, query: string, k: numbe
   } else if (strategy === "semantic") rows = await semantic(col, query, VISIBLE, k, ["rules"]);
   else if (strategy === "semantic+tags") rows = await semantic(col, query, VISIBLE, k, ["rules_tagged"]);
   else if (strategy === "both") rows = await semantic(col, query, VISIBLE, k, ["rules", "rules_tagged"]);
-  else rows = (await search(col, query, k)).hits;
+  else rows = (await search(col, query, { k })).hits;
   latency.set(strategy, [...(latency.get(strategy) ?? []), performance.now() - started]);
   return rows;
 }

@@ -7,7 +7,7 @@ if (!query) {
   console.error('usage: npm run search -- "<query>"');
   process.exit(2);
 }
-const result = await search(collectionFromEnv(), query, 10);
+const result = await search(collectionFromEnv(), query, { k: 10 });
 console.log(`[${result.mode}${result.total === null ? "" : `, ${result.total} total`}] ${result.note}`);
 for (const hit of result.hits) {
   const score = typeof hit.score === "number" ? `${hit.score.toFixed(3)}  ` : "";

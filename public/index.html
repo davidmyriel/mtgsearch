@@ -23,7 +23,21 @@
     <button type="submit">Search</button>
   </form>
 
-  <p id="status" class="status" role="status" aria-live="polite"></p>
+  <div class="bar">
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <div id="tools" class="tools" hidden>
+      <label for="sort">Sort</label>
+      <select id="sort">
+        <option value="">Default</option>
+        <option value="edhrec">Most played</option>
+        <option value="name">Name, A to Z</option>
+        <option value="cmc">Mana value, low to high</option>
+        <option value="cmc:desc">Mana value, high to low</option>
+        <option value="power:desc">Power, high to low</option>
+        <option value="toughness:desc">Toughness, high to low</option>
+      </select>
+    </div>
+  </div>
 
   <section id="intro" class="intro" aria-label="Example searches">
     <h2>Try one</h2>
@@ -48,6 +62,7 @@
   </section>
 
   <ol id="results" class="grid"></ol>
+  <button id="more" class="more" type="button" hidden>Show more</button>
 </main>
 
 <dialog id="card" class="sheet" aria-labelledby="card-name">

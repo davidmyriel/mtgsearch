@@ -6,25 +6,28 @@ const input = document.getElementById("q");
 const intro = document.getElementById("intro");
 const statusLine = document.getElementById("status");
 const results = document.getElementById("results");
+const tools = document.getElementById("tools");
+const sort = document.getElementById("sort");
+const more = document.getElementById("more");
 const sheet = document.getElementById("card");
 
 const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
 let inFlight = null;
+let current = { query: "", sort: "" }; // what the grid is showing
 
 function plural(n, word) {
-  return `${n} ${word}${n === 1 ? "" : "s"}`;
+  return `${n.toLocaleString("en")} ${word}${n === 1 ? "" : "s"}`;
 }
 
 // What the status line says for each path a query can take.
-function describe(data) {
-  const shown = data.hits.length;
-  const more = data.total > shown ? `, showing the first ${shown}` : "";
+function describe(data, shown) {
+  const partial = data.total > shown ? `, showing ${shown}` : "";
   switch (data.mode) {
     case "syntax":
-      return ["Scryfall syntax", `${plural(data.total, "card")}${more}`];
+      return ["Scryfall syntax", `${plural(data.total, "card")}${partial}`];
     case "name":
-      return ["Card name", `${plural(data.total, "card")}${more}, most-played first`];
+      return ["Card name", `${plural(data.total, "card")}${partial}`];
     case "mixed":
       return ["Syntax and plain English", `${data.note}, top ${shown}`];
     case "semantic":
@@ -101,55 +104,81 @@ sheet.addEventListener("click", (event) => {
   if (event.target === sheet) sheet.close();
 });
 
-async function run(query, { push = true } = {}) {
+// The address bar holds the query and the sort, so a search can be shared and the back button works.
+function readAddress() {
+  const params = new URLSearchParams(location.search);
+  const order = params.get("order") || "";
+  return { query: params.get("q") || "", sort: order && params.get("dir") === "desc" ? `${order}:desc` : order };
+}
+
+function address(query, sortValue) {
+  const params = new URLSearchParams();
+  if (query) params.set("q", query);
+  const [order, direction] = sortValue.split(":");
+  if (order) params.set("order", order);
+  if (direction) params.set("dir", direction);
+  return params;
+}
+
+// Fetch one page of results. `append` adds to the grid (Show more); otherwise the grid is replaced.
+async function run(query, { push = true, append = false, sortValue = "" } = {}) {
   query = query.trim();
-  input.value = query;
-  if (push) {
-    const url = query ? `?q=${encodeURIComponent(query)}` : location.pathname;
-    history.pushState({ q: query }, "", url);
+  if (!append) {
+    input.value = query;
+    sort.value = sortValue;
+    if (push) history.pushState(null, "", query ? `?${address(query, sortValue)}` : location.pathname);
+    document.title = query ? `${query} · mtgsearch` : "mtgsearch";
+    document.body.classList.toggle("searched", Boolean(query));
   }
-  document.title = query ? `${query} · mtgsearch` : "mtgsearch";
-  document.body.classList.toggle("searched", Boolean(query));
   if (inFlight) inFlight.abort();
   if (!query) {
     intro.hidden = false;
+    tools.hidden = more.hidden = true;
     results.replaceChildren();
     setStatus("", "");
     return;
   }
 
   intro.hidden = true;
-  setStatus("", "Searching…");
+  more.disabled = true;
+  if (!append) setStatus("", "Searching…");
   const controller = new AbortController();
   inFlight = controller;
+  const fail = (label, detail) => {
+    if (!append) results.replaceChildren();
+    tools.hidden = more.hidden = true;
+    setStatus(label, detail, true);
+  };
   try {
-    const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal });
+    const params = address(query, sortValue);
+    if (append) params.set("offset", String(results.children.length));
+    const response = await fetch(`/api/search?${params}`, { signal: controller.signal });
     const data = await response.json();
-    if (!response.ok) {
-      results.replaceChildren();
-      setStatus("", data.error || "Something went wrong.", true);
-      return;
-    }
+    if (!response.ok) return fail("", data.error || "Something went wrong.");
     if (data.mode === "unsupported") {
-      results.replaceChildren();
       intro.hidden = false;
       document.body.classList.remove("searched");
-      setStatus("Not supported yet", `${data.note}. See "What can I type?" below.`, true);
-      return;
+      return fail("Not supported yet", `${data.note}. See "What can I type?" below.`);
     }
-    results.replaceChildren(...data.hits.map(tile));
-    if (!data.hits.length) {
+    if (append) results.append(...data.hits.map(tile));
+    else results.replaceChildren(...data.hits.map(tile));
+    current = { query, sort: sortValue };
+    const shown = results.children.length;
+    more.hidden = !data.has_more;
+    // Results ranked by meaning have no other order to offer.
+    tools.hidden = data.sorted_by === null || shown === 0;
+    if (!shown) {
       setStatus("No cards matched", "Check the syntax, or describe the card in plain words.");
       return;
     }
-    const [label, detail] = describe(data);
+    const [label, detail] = describe(data, shown);
     setStatus(label, detail, false, data.took_ms);
   } catch (error) {
     if (error.name === "AbortError") return;
-    results.replaceChildren();
-    setStatus("", "Could not reach the server. Check your connection and try again.", true);
+    fail("", "Could not reach the server. Check your connection and try again.");
   } finally {
     if (inFlight === controller) inFlight = null;
+    more.disabled = false;
   }
 }
 
@@ -164,8 +193,12 @@ intro.addEventListener("click", (event) => {
   if (example) run(example.dataset.q);
 });
 
+sort.addEventListener("change", () => run(current.query, { sortValue: sort.value }));
+more.addEventListener("click", () => run(current.query, { append: true, sortValue: current.sort }));
+
 window.addEventListener("popstate", () => {
-  run(new URLSearchParams(location.search).get("q") || "", { push: false });
+  const { query, sort: sortValue } = readAddress();
+  run(query, { push: false, sortValue });
 });
 
 // "/" focuses the search box, as on most search sites.
@@ -177,4 +210,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-run(new URLSearchParams(location.search).get("q") || "", { push: false });
+{
+  const { query, sort: sortValue } = readAddress();
+  run(query, { push: false, sortValue });
+}

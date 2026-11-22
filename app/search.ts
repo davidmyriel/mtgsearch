@@ -15,7 +15,32 @@ import { parse, QueryError, Unsupported } from "./parser.ts";
 import type { Keyword, Name, Node } from "./parser.ts";
 
 export type Hit = Record<string, unknown> & { _id: string; name: string; score?: number };
-export type Result = { mode: string; hits: Hit[]; total: number | null; note: string };
+export type Result = {
+  mode: string; // syntax | name | mixed | semantic | unsupported
+  hits: Hit[];
+  total: number | null; // exact for syntax and name modes; null when ranked by meaning
+  note: string; // what was understood, or why the query was refused
+  hasMore: boolean;
+  sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
+};
+export type SearchOptions = {
+  k?: number;
+  offset?: number;
+  order?: string | null; // an ORDERS key chosen in the page; an `order:` in the query wins
+  descending?: boolean;
+  fields?: string[];
+};
+
+/** Sort orders offered to the page, and the document field each one sorts on. */
+export const ORDERS: Record<string, string> = {
+  name: "name_lc",
+  cmc: "cmc",
+  power: "pow_max",
+  toughness: "tou_max",
+  edhrec: "edhrec_rank",
+};
+// Results ranked by meaning are paged by fetching a longer list, so they stop here.
+export const MAX_RANKED = 120;
 
 /** The part of a TopK collection client that search needs; lets tests pass a fake. */
 export type Collection = {
@@ -96,13 +121,14 @@ async function count(col: Collection, predicate: IR): Promise<number> {
 
 const displayFields = () => Object.fromEntries(DISPLAY.map((name) => [name, field(name)]));
 
-/** Cards matching a predicate, by a document field or, by default, most-played first. */
-async function filtered(col: Collection, predicate: IR, k: number, order: string | null = null, descending = false) {
+/** One page of the cards matching a predicate, sorted on a document field. */
+async function filtered(col: Collection, predicate: IR, k: number, offset: number, sortField: string, descending: boolean) {
   let query = select(displayFields());
   const expr = toTopk(predicate);
   if (expr !== null) query = query.filter(expr);
-  const key = order ? field(order) : field("edhrec_rank").coalesce(UNRANKED);
-  return col.query(query.sort(key, !descending).limit(k));
+  // Cards without a popularity rank sort last rather than first.
+  const key = sortField === "edhrec_rank" ? field(sortField).coalesce(UNRANKED) : field(sortField);
+  return col.query(query.sort(key, !descending).limit(k).offset(offset));
 }
 
 /** Rank the cards matching `predicate` by similarity of meaning to `text`. */
@@ -145,48 +171,63 @@ export function splitWords(ast: Node): { keywords: (Keyword | Name)[]; words: Na
   return { keywords: terms.filter((c) => !(c.kind === "name" && !c.exact)), words };
 }
 
-export async function search(col: Collection, query: string, k = 20, fields = SEMANTIC_FIELDS): Promise<Result> {
+const fieldName = (order: string | null | undefined) => (order && Object.hasOwn(ORDERS, order) ? ORDERS[order] : null);
+const orderName = (sortField: string) => Object.keys(ORDERS).find((name) => ORDERS[name] === sortField) ?? null;
+
+export async function search(col: Collection, query: string, options: SearchOptions = {}): Promise<Result> {
+  const { k = 20, offset = 0, fields = SEMANTIC_FIELDS } = options;
+  const none = { hits: [], total: null, hasMore: false, sortedBy: null };
   let ast: Node | null = null;
   let predicate: IR = ["all"];
-  let options = { includeExtras: false, order: null as string | null, descending: false };
+  let parsed = { includeExtras: false, order: null as string | null, descending: false };
   try {
     ast = parse(query);
-    [predicate, options] = lower(ast);
+    [predicate, parsed] = lower(ast);
   } catch (error) {
-    if (error instanceof Unsupported) return { mode: "unsupported", hits: [], total: null, note: error.message };
+    if (error instanceof Unsupported) return { ...none, mode: "unsupported", note: error.message };
     if (!(error instanceof QueryError)) throw error;
     ast = null; // not Scryfall syntax: treat as plain English
   }
 
-  if (ast !== null && isPlainWords(ast)) {
-    const total = await count(col, predicate);
-    if (total) return { mode: "name", hits: await filtered(col, predicate, k), total, note: "" };
-  } else if (ast !== null) {
+  if (ast !== null) {
+    const plainWords = isPlainWords(ast);
     const total = await count(col, predicate);
     if (total) {
-      const hits = await filtered(col, predicate, k, options.order ?? "name_lc", options.descending);
-      return { mode: "syntax", hits, total, note: "" };
+      // An `order:` in the query wins over the page's menu. Names default to most-played first.
+      const fromQuery = parsed.order !== null;
+      const sortField = parsed.order ?? fieldName(options.order) ?? (plainWords ? "edhrec_rank" : "name_lc");
+      const descending = fromQuery ? parsed.descending : Boolean(options.order && options.descending);
+      const hits = await filtered(col, predicate, k, offset, sortField, descending);
+      const hasMore = offset + hits.length < total;
+      return { mode: plainWords ? "name" : "syntax", hits, total, note: "", hasMore, sortedBy: orderName(sortField) };
     }
-    const split = splitWords(ast);
-    if (!(split && split.keywords.length && split.words.length)) {
-      return { mode: "syntax", hits: [], total: 0, note: "" };
+    if (!plainWords) {
+      const split = splitWords(ast);
+      if (!(split && split.keywords.length && split.words.length)) {
+        return { ...none, mode: "syntax", total: 0, note: "" };
+      }
+      // Keywords matched nothing together with the name words: let the words rank by meaning.
+      const keywordAst: Node =
+        split.keywords.length === 1 ? split.keywords[0] : { kind: "and", children: split.keywords };
+      const [keywordPredicate] = lower(keywordAst);
+      const words = split.words.map((w) => w.text).join(" ");
+      const ranked = await semantic(col, words, keywordPredicate, Math.min(offset + k, MAX_RANKED), fields);
+      const hits = ranked.slice(offset, offset + k);
+      const hasMore = ranked.length === offset + k && offset + k < MAX_RANKED;
+      return { ...none, mode: "mixed", hits, hasMore, note: `filtered by keywords, ranked by '${words}'` };
     }
-    // Keywords matched nothing together with the name words: let the words rank by meaning.
-    const keywordAst: Node =
-      split.keywords.length === 1 ? split.keywords[0] : { kind: "and", children: split.keywords };
-    const [keywordPredicate] = lower(keywordAst);
-    const words = split.words.map((w) => w.text).join(" ");
-    const hits = await semantic(col, words, keywordPredicate, k, fields);
-    return { mode: "mixed", hits, total: null, note: `filtered by keywords, ranked by '${words}'` };
   }
 
   const extracted = extract(query);
-  let hits = await semantic(col, query, and(extracted.predicate, VISIBLE), k, fields);
-  if (extracted.any && hits.length < k) {
+  const wanted = Math.min(offset + k, MAX_RANKED);
+  let ranked = await semantic(col, query, and(extracted.predicate, VISIBLE), wanted, fields);
+  if (extracted.any && ranked.length < wanted) {
     // the filter was too strict: top up without it
-    const seen = new Set(hits.map((h) => h._id));
-    const more = await semantic(col, query, VISIBLE, k, fields);
-    hits = hits.concat(more.filter((h) => !seen.has(h._id)));
+    const seen = new Set(ranked.map((h) => h._id));
+    const more = await semantic(col, query, VISIBLE, wanted, fields);
+    ranked = ranked.concat(more.filter((h) => !seen.has(h._id))).slice(0, wanted);
   }
-  return { mode: "semantic", hits: hits.slice(0, k), total: null, note: extracted.notes.join(", ") };
+  const hits = ranked.slice(offset, offset + k);
+  const hasMore = ranked.length === offset + k && offset + k < MAX_RANKED;
+  return { ...none, mode: "semantic", hits, hasMore, note: extracted.notes.join(", ") };
 }

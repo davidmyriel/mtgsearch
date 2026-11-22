@@ -115,8 +115,18 @@ npm run dev
 ```
 
 Open http://127.0.0.1:8000. The page (`public/`) is one responsive view over one endpoint,
-`GET /api/search?q=...`, and works the same on a phone and a laptop. The key stays on the
-server. To run a single query from the terminal:
+`GET /api/search`, and works the same on a phone and a laptop. The key stays on the server.
+
+| Parameter | Meaning |
+|---|---|
+| `q` | The query, up to 200 characters |
+| `k`, `offset` | Page size (default 24, at most 60) and how many results to skip |
+| `order`, `dir` | Sort by `name`, `cmc`, `power`, `toughness` or `edhrec`; `dir=desc` reverses. An `order:` keyword in the query wins. Ignored for results ranked by meaning |
+
+The answer carries `total`, `has_more` and `sorted_by` (null when ranked by meaning), which
+drive the page's "Show more" button and sort menu. Results ranked by meaning stop at 120.
+
+To run a single query from the terminal:
 
 ```bash
 npm run search -- "sphinx that draws two cards"

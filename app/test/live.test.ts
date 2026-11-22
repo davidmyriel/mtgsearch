@@ -45,18 +45,53 @@ test("keywords mixed with plain words", { skip }, async () => {
 test("negation, regex and comparisons run on TopK", { skip }, async () => {
   const col = collection();
   assert.deepEqual(names(await search(col, "-kw:flying t:sphinx")), ["Petra Sphinx"]);
-  assert.equal((await search(col, "t:creature o:/^{T}:/ c:u mv=1", 60)).total, 13);
-  assert.equal((await search(col, "t:fish", 1)).total, 59); // whole word: no Jellyfish
+  assert.equal((await search(col, "t:creature o:/^{T}:/ c:u mv=1", { k: 60 })).total, 13);
+  assert.equal((await search(col, "t:fish", { k: 1 })).total, 59); // whole word: no Jellyfish
 });
 
 test("the handler answers end to end", { skip }, async () => {
   const col = collection();
-  const response = await handleSearch(new URL("https://x.test/api/search?q=dwarf+destroys+lands&k=3"), (q, k) =>
-    search(col, q, k),
+  const response = await handleSearch(new URL("https://x.test/api/search?q=dwarf+destroys+lands&k=3"), (q, options) =>
+    search(col, q, options),
   );
   assert.equal(response.status, 200);
   const body = await response.json();
   assert.equal(body.mode, "semantic");
   assert.equal(body.hits.length, 3);
   assert.ok(body.hits[0].image.startsWith("https://cards.scryfall.io/"));
+});
+
+test("paging returns consecutive, non-overlapping pages", { skip }, async () => {
+  const col = collection();
+  const first = await search(col, "t:sphinx", { k: 10 });
+  const second = await search(col, "t:sphinx", { k: 10, offset: 10 });
+  assert.equal(first.hits.length, 10);
+  assert.ok(first.hasMore && first.total !== null && first.total > 20);
+  assert.equal(new Set([...names(first), ...names(second)]).size, 20);
+  assert.deepEqual(names(await search(col, "t:sphinx", { k: 20 })), [...names(first), ...names(second)]);
+  const last = await search(col, "t:sphinx", { k: 10, offset: first.total - 3 });
+  assert.equal(last.hits.length, 3);
+  assert.equal(last.hasMore, false);
+});
+
+test("the page's sort order applies unless the query has its own", { skip }, async () => {
+  const col = collection();
+  const cost = (hit: Record<string, unknown>) => String(hit.mana_cost);
+  const byName = await search(col, "t:sphinx", { k: 5 });
+  assert.equal(byName.sortedBy, "name");
+  assert.deepEqual(names(byName), [...names(byName)].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+  const expensive = await search(col, "t:sphinx", { k: 3, order: "cmc", descending: true });
+  assert.equal(expensive.sortedBy, "cmc");
+  const cheap = await search(col, "t:sphinx", { k: 3, order: "cmc" });
+  assert.notDeepEqual(names(expensive), names(cheap));
+  assert.ok(cost(expensive.hits[0]).length >= cost(cheap.hits[0]).length);
+  // `order:` written in the query wins over the menu
+  const explicit = await search(col, "t:sphinx order:name", { k: 5, order: "cmc", descending: true });
+  assert.equal(explicit.sortedBy, "name");
+  assert.deepEqual(names(explicit), names(byName));
+  // plain-English results are ranked by meaning; the menu does not apply
+  const ranked = await search(col, "sphinx that draws two cards", { k: 5, order: "cmc" });
+  assert.equal(ranked.sortedBy, null);
+  const page2 = await search(col, "sphinx that draws two cards", { k: 5, offset: 5 });
+  assert.equal(new Set([...names(ranked), ...names(page2)]).size, 10);
 });

@@ -2,13 +2,15 @@
 // unit-tested with a stubbed search. It mirrors src/mtgsearch/web.py: the page works against
 // either server.
 
-import type { Hit, Result } from "./search.ts";
+import { ORDERS } from "./search.ts";
+import type { Hit, Result, SearchOptions } from "./search.ts";
 
-export type SearchFn = (query: string, k: number) => Promise<Result>;
+export type SearchFn = (query: string, options: SearchOptions) => Promise<Result>;
 
 export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
 export const MAX_RESULTS = 60;
+export const MAX_OFFSET = 10_000;
 const HIT_FIELDS = ["name", "mana_cost", "type_line", "oracle_text", "image", "scryfall_uri"];
 
 // Repeated queries are answered by Netlify's CDN without running the function or calling TopK.
@@ -28,6 +30,13 @@ function json(body: unknown, status: number, headers: Record<string, string>): R
 
 const error = (status: number, message: string) => json({ error: message }, status, NOT_CACHED);
 
+/** A whole-number parameter clamped to a range; the fallback when absent; null when malformed. */
+function clamp(raw: string | null, fallback: number, low: number, high: number): number | null {
+  if (raw === null) return fallback;
+  if (!/^-?\d+$/.test(raw.trim())) return null;
+  return Math.max(low, Math.min(Number.parseInt(raw, 10), high));
+}
+
 function hit(row: Hit): Record<string, unknown> {
   const out: Record<string, unknown> = { id: row._id };
   for (const name of HIT_FIELDS) out[name] = row[name] ?? null;
@@ -39,14 +48,19 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
   const query = (url.searchParams.get("q") ?? "").split(/\s+/).filter(Boolean).join(" ");
   if (!query) return error(400, "Type something to search for.");
   if (query.length > MAX_QUERY_CHARS) return error(400, `Queries are limited to ${MAX_QUERY_CHARS} characters.`);
-  const rawK = url.searchParams.get("k");
-  if (rawK !== null && !/^-?\d+$/.test(rawK.trim())) return error(400, "k must be a number.");
-  const k = Math.max(1, Math.min(rawK === null ? DEFAULT_RESULTS : Number.parseInt(rawK, 10), MAX_RESULTS));
+  const k = clamp(url.searchParams.get("k"), DEFAULT_RESULTS, 1, MAX_RESULTS);
+  const offset = clamp(url.searchParams.get("offset"), 0, 0, MAX_OFFSET);
+  if (k === null || offset === null) return error(400, "k and offset must be whole numbers.");
+  const order = url.searchParams.get("order");
+  if (order !== null && !Object.hasOwn(ORDERS, order)) {
+    return error(400, `order must be one of: ${Object.keys(ORDERS).join(", ")}.`);
+  }
+  const descending = url.searchParams.get("dir") === "desc";
 
   const started = performance.now();
   let result: Result;
   try {
-    result = await search(query, k);
+    result = await search(query, { k, offset, order, descending });
   } catch (cause) {
     console.error(`search failed for ${JSON.stringify(query)}:`, cause);
     return error(502, "The search backend is unavailable. Try again shortly.");
@@ -58,6 +72,9 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
       total: result.total,
       note: result.note,
       hits: result.hits.map(hit),
+      offset,
+      has_more: result.hasMore,
+      sorted_by: result.sortedBy,
       took_ms: Math.round(performance.now() - started),
     },
     200,

@@ -9,7 +9,7 @@ export default async (request: Request): Promise<Response> => {
     return new Response("Method not allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
   }
   // The collection client is created on first use and reused while the instance stays warm.
-  return handleSearch(new URL(request.url), (query, k) => search(collectionFromEnv(), query, k));
+  return handleSearch(new URL(request.url), (query, options) => search(collectionFromEnv(), query, options));
 };
 
 export const config: Config = {
