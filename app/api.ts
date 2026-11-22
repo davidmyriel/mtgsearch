@@ -1,10 +1,12 @@
-// The HTTP contract of GET /api/search, independent of Netlify and of TopK so it can be
-// unit-tested with a stubbed search.
+// The HTTP contract of GET /api/search and GET /api/card, independent of Netlify and of TopK
+// so it can be unit-tested with a stubbed search.
 
+import type { CardPage } from "./card.ts";
 import { ORDERS } from "./search.ts";
 import type { Hit, Result, SearchOptions } from "./search.ts";
 
 export type SearchFn = (query: string, options: SearchOptions) => Promise<Result>;
+export type CardFn = (set: string, number: string) => Promise<CardPage | null>;
 
 export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
@@ -17,6 +19,9 @@ const HIT_FIELDS: Record<string, string> = {
   set: "set", set_name: "set_name", cn: "collector_number", rarity: "rarity", artist: "artist",
   released: "released", usd: "usd", flavor_text: "flavor_text", prints: "prints",
 };
+// What a card's own page adds, and the columns of its list of printings.
+const LISTS = ["legal", "banned", "restricted"];
+const PRINTING_ROW = ["name", "set", "set_name", "collector_number", "rarity", "released", "usd"];
 
 // Repeated queries are answered by Netlify's CDN without running the function or calling TopK.
 // Card data changes once a day, so ten minutes fresh and an hour stale-while-revalidate is safe.
@@ -67,6 +72,37 @@ export function setupProblem(cause: unknown): string | null {
     return "The TopK project behind this deployment's key does not hold the card collections. Use a key from the project that does, or build them with `mtgsearch ingest`.";
   }
   return null;
+}
+
+/**
+ * GET /api/card?set=<code>&cn=<collector number>: one printing, with its printed power and
+ * toughness and its legality, and the card's printings newest first.
+ */
+export async function handleCard(url: URL, card: CardFn): Promise<Response> {
+  const set = (url.searchParams.get("set") ?? "").trim().toLowerCase();
+  const number = (url.searchParams.get("cn") ?? "").trim();
+  if (!/^[a-z0-9]{2,10}$/.test(set) || !number || number.length > 20) {
+    return error(400, "A card is named by its set code and collector number: /api/card?set=mh2&cn=45.");
+  }
+  const started = performance.now();
+  let page: CardPage | null;
+  try {
+    page = await card(set, number);
+  } catch (cause) {
+    console.error(`card lookup failed for ${set}/${JSON.stringify(number)}:`, cause);
+    const setup = setupProblem(cause);
+    if (setup) return error(503, setup);
+    return error(502, "The search backend is unavailable. Try again shortly.");
+  }
+  if (!page) return json({ error: `Nothing is numbered ${number} in the set "${set}".` }, 404, CACHED);
+  const detail = hit(page.card);
+  detail.stats = page.card.stats ?? null;
+  for (const name of LISTS) detail[name] = Array.isArray(page.card[name]) ? page.card[name] : [];
+  const printings = page.printings.map((row) => {
+    const full = hit(row);
+    return { id: full.id, ...Object.fromEntries(PRINTING_ROW.map((name) => [name, full[name]])) };
+  });
+  return json({ card: detail, printings, took_ms: Math.round(performance.now() - started) }, 200, CACHED);
 }
 
 export async function handleSearch(url: URL, search: SearchFn): Promise<Response> {

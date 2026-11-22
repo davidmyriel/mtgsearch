@@ -305,6 +305,19 @@ def rules_text(card: dict) -> str:
     return "\n".join(lines)
 
 
+def stats_text(card: dict) -> str | None:
+    """Power and toughness, loyalty or defense as printed ("*/1+*"), for each face that has one."""
+    parts = []
+    for face in _faces(card):
+        if face.get("power") is not None and face.get("toughness") is not None:
+            parts.append(f"{face['power']}/{face['toughness']}")
+        elif face.get("loyalty"):
+            parts.append(f"Loyalty {face['loyalty']}")
+        elif face.get("defense"):
+            parts.append(f"Defense {face['defense']}")
+    return " // ".join(parts) or None
+
+
 def build_document(card: dict, tags: dict | None = None, aggregate: dict | None = None) -> dict:
     """Build the TopK document for one Scryfall card object.
 
@@ -379,6 +392,7 @@ def build_document(card: dict, tags: dict | None = None, aggregate: dict | None 
         "mana_cost": _first(card, "mana_cost") or "",
         "type_line": type_line,
         "oracle_text": full_oracle,
+        "stats": stats_text(card),
         "image": image,
         "scryfall_uri": card["scryfall_uri"].split("?")[0],
         "artist": card.get("artist"),

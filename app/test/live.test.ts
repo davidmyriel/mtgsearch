@@ -2,7 +2,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Client } from "topk-js";
-import { handleSearch } from "../api.ts";
+import { handleCard, handleSearch } from "../api.ts";
+import { card, MAX_PRINTINGS } from "../card.ts";
 import { search } from "../search.ts";
 import type { Collection, Collections } from "../search.ts";
 
@@ -167,4 +168,34 @@ test("in: and prints are answered from the cards collection", { skip }, async ()
   const all = await search(cols, "t:sphinx", { k: 1 });
   assert.equal(never.total, (all.total ?? 0) - 3);
   assert.equal((await search(cols, "t:sphinx prints=1", { k: 60 })).hits.every((hit) => hit.prints === 1), true);
+});
+
+test("a card's page: one printing with stats and legality, and its printings newest first", { skip }, async () => {
+  const page = await card(collection(), "IMA", "47");
+  assert.ok(page);
+  assert.equal(page.card.name, "Consecrated Sphinx");
+  assert.equal(page.card.stats, "4/6");
+  assert.ok((page.card.legal as string[]).includes("commander") && !(page.card.legal as string[]).includes("standard"));
+  assert.ok(page.printings.length >= 8 && page.printings.length < MAX_PRINTINGS);
+  assert.ok(page.printings.some((p) => p.set === "ima" && p.cn === "47"), "the printing shown is in the list");
+  const dates = page.printings.map((p) => String(p.released));
+  assert.deepEqual(dates, [...dates].sort().reverse());
+  assert.ok(page.printings.some((p) => typeof p.usd === "number"));
+  // the same through the HTTP handler, as the page receives it
+  const body = await (await handleCard(new URL("https://x.test/api/card?set=ima&cn=47"), (set, number) => card(collection(), set, number))).json();
+  assert.deepEqual([body.card.name, body.card.stats, body.card.set], ["Consecrated Sphinx", "4/6", "ima"]);
+  assert.equal(body.printings.length, page.printings.length);
+});
+
+test("a card with more printings than the page lists stops at the limit; a wrong address finds nothing", { skip }, async () => {
+  const cols = collection();
+  const [forest] = (await search(cols, "!forest", { k: 1 })).hits;
+  const page = await card(cols, String(forest.set), String(forest.cn));
+  assert.ok(page && page.card.name === "Forest");
+  assert.equal(page.printings.length, MAX_PRINTINGS);
+  assert.equal(page.card.stats ?? null, null);
+  assert.equal(await card(cols, "nosuchset", "999"), null);
+  // a planeswalker shows its loyalty
+  const [jace] = (await search(cols, '!"jace, the mind sculptor"', { k: 1 })).hits;
+  assert.equal((await card(cols, String(jace.set), String(jace.cn)))?.card.stats, "Loyalty 3");
 });

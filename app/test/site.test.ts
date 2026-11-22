@@ -51,6 +51,7 @@ test("the dev server serves the page, its assets and nothing else", async () => 
     assert.equal((await fetch(`${base}/missing.html`)).status, 404);
     const bad = await fetch(`${base}/api/search`);
     assert.equal(bad.status, 400); // answered by the handler without needing a TopK key
+    assert.equal((await fetch(`${base}/api/card?set=mh2`)).status, 400); // likewise: no collector number
   } finally {
     server.close();
   }

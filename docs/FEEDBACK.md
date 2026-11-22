@@ -62,17 +62,33 @@ that ours does not. These are the ones worth adopting, scheduled by the same slo
 structure and behaviour only: their name, logo, palette, typefaces, icons and wording are their
 identity and are not copied.
 
-| Id | Item | Size | Slot |
-|---|---|---|---|
-| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary |
-| U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | M | Next boundary, after U-1 |
-| U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary |
-| U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 |
-| U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) |
-| U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner |
-| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it |
-| U-8 | Rulings on the card page | L | With the browse tier: needs Scryfall's rulings file in the ingest |
-| U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier |
+| Id | Item | Size | Slot | Status |
+|---|---|---|---|---|
+| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary | Waiting: dropping a term reverses an earlier rule, asked of the owner |
+| U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | L | Next boundary | Done |
+| U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary | Open |
+| U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Open |
+| U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) | Open |
+| U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner | Open |
+| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Waiting |
+| U-8 | Rulings on the card page | L | With the browse tier: needs Scryfall's rulings file in the ingest | Open |
+| U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier | Open |
 
 Larger tiles, a fuller empty state and a runnable syntax reference are in the study too; they
 are small and can ride along with U-1 to U-4.
+
+### U-2. What the card's page shows
+
+- **Taken on 22 November 2026**, at the boundary after the regex shorthands. It was scheduled
+  after U-1, but U-1 waits for an answer and nothing in U-2 depends on it.
+- **Size was L, not M:** printed power and toughness were not in the documents, only the numbers
+  used for filtering. A display field was added and both collections were refreshed as field
+  updates, with no re-embedding.
+- **What was done:** the page gives power and toughness as printed ("*/1+*"), or loyalty or
+  defense; legality in sixteen formats, as a word with a colour, not a colour alone; and the
+  card's printings newest first with set, number, rarity, year and price. Each printing is a link
+  to its own page, the one on screen is marked, and Back returns to the previous printing. A card
+  with more than 60 printings lists the newest 60 and links to a search for all of them. A card
+  opened from the results shows at once and the rest fills in when it arrives.
+- **Not included:** rulings (U-8), and each face of a two-faced card set out separately.
+

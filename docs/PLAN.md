@@ -99,6 +99,9 @@ picked up: at the boundary between plan steps unless something is broken.
       link from a card to all of its printings
 - [x] A page for each card at `/card/<set>/<number>/<name>`, shareable, in place of the popup
       (feedback F-1)
+- [x] The card's page gives printed power and toughness (or loyalty), legality in sixteen
+      formats, and the card's printings with prices, each a link to that printing's page (U-2,
+      brought forward from the browse tier). It is served by a second endpoint, `GET /api/card`
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

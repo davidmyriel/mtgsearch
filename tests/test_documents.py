@@ -9,6 +9,7 @@ from mtgsearch.documents import (
     parse_cost,
     plain,
     stat,
+    stats_text,
     type_words,
 )
 
@@ -260,3 +261,16 @@ def test_who_can_be_a_commander():
     grist = "As long as Grist isn't on the battlefield, it's a 1/1 Insect creature in addition to its other types."
     assert "commander" in flags("Legendary Planeswalker — Grist", grist)
     assert "commander" not in flags("Legendary Planeswalker — Jace")
+
+
+def test_stats_are_kept_as_printed_for_each_face_that_has_one():
+    assert stats_text({"power": "*", "toughness": "1+*"}) == "*/1+*"
+    assert stats_text({"loyalty": "4"}) == "Loyalty 4"
+    assert stats_text({"defense": "5"}) == "Defense 5"
+    assert stats_text({"oracle_text": "Draw a card."}) is None
+    # a creature that transforms into a planeswalker; a creature with a land on the back
+    faces = [{"power": "2", "toughness": "3"}, {"loyalty": "5"}]
+    assert stats_text({"card_faces": faces}) == "2/3 // Loyalty 5"
+    assert stats_text({"card_faces": [{"power": "3", "toughness": "2"}, {"type_line": "Land"}]}) == "3/2"
+    # a Vehicle has a size too
+    assert stats_text({"type_line": "Artifact — Vehicle", "power": "5", "toughness": "5"}) == "5/5"

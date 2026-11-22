@@ -16,11 +16,23 @@ const cardView = document.getElementById("card");
 const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
 const copyButton = document.getElementById("card-copy");
+const legalitySection = document.getElementById("card-legality");
+const printingsSection = document.getElementById("card-printings");
+const printingsList = document.getElementById("printings-list");
 
 const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
 // What a result is, as the endpoint names it, and the word for one of them.
 const UNITS = { cards: "card", printings: "printing", illustrations: "illustration" };
+// The formats a card's page gives the legality for, in the order they are listed.
+const FORMATS = [
+  ["standard", "Standard"], ["pioneer", "Pioneer"], ["modern", "Modern"], ["legacy", "Legacy"],
+  ["vintage", "Vintage"], ["pauper", "Pauper"], ["commander", "Commander"], ["oathbreaker", "Oathbreaker"],
+  ["brawl", "Brawl"], ["standardbrawl", "Standard Brawl"], ["historic", "Historic"], ["timeless", "Timeless"],
+  ["alchemy", "Alchemy"], ["penny", "Penny Dreadful"], ["premodern", "Premodern"], ["oldschool", "Old School"],
+];
+// /api/card lists at most this many printings; a card with more gets a link to search for all.
+const MAX_LISTED = 60;
 // Sort orders decided by a printing rather than by the card.
 const PRINTING_ORDERS = new Set(["released", "usd", "eur", "tix", "rarity"]);
 let inFlight = null;
@@ -232,34 +244,101 @@ async function run(query, { push = true, append = false, sortValue = "" } = {}) 
 
 // --- card view -------------------------------------------------------------------------
 
-/** Fill the card view from a hit and show it in place of the results. */
-function showCard(hit) {
-  const text = (id, value) => {
-    const element = document.getElementById(id);
-    element.textContent = value || "";
-    element.hidden = !value;
-  };
+/** Set an element's text, and hide it when there is none. */
+function text(id, value) {
+  const element = document.getElementById(id);
+  element.textContent = value || "";
+  element.hidden = !value;
+}
+
+/** Legality by format: the word says it, for every format in FORMATS. */
+function showLegality(card) {
+  const rows = FORMATS.map(([key, label]) => {
+    const [status, word] = card.restricted.includes(key)
+      ? ["restricted", "Restricted"]
+      : card.banned.includes(key)
+        ? ["banned", "Banned"]
+        : card.legal.includes(key)
+          ? ["legal", "Legal"]
+          : ["not", "Not legal"];
+    const row = document.createElement("div");
+    const format = document.createElement("dt");
+    format.textContent = label;
+    const value = document.createElement("dd");
+    value.className = status;
+    value.textContent = word;
+    row.append(format, value);
+    return row;
+  });
+  document.getElementById("legality-list").replaceChildren(...rows);
+  legalitySection.hidden = false;
+}
+
+/** The card's printings, newest first, each a link to that printing's page. */
+function showPrintings(card, printings) {
+  const rows = printings.map((printing) => {
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = cardPath(printing) || "#";
+    if (printing.set === card.set && printing.collector_number === card.collector_number) link.setAttribute("aria-current", "page");
+    const set = document.createElement("span");
+    set.className = "set";
+    set.textContent = printing.set_name || printing.set.toUpperCase();
+    const meta = document.createElement("span");
+    meta.className = "meta";
+    meta.textContent = [setAndNumber(printing), capital(printing.rarity), year(printing.released)].filter(Boolean).join(" · ");
+    const cost = document.createElement("span");
+    cost.className = "price";
+    cost.textContent = price(printing.usd) || "—";
+    link.append(set, meta, cost);
+    link.addEventListener("click", (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      if (link.hasAttribute("aria-current")) return;
+      history.pushState(null, "", link.getAttribute("href"));
+      loadCard({ set: printing.set, number: printing.collector_number });
+    });
+    item.append(link);
+    return item;
+  });
+  printingsList.replaceChildren(...rows);
+  document.getElementById("printings-title").textContent =
+    rows.length >= MAX_LISTED ? `Printings (the newest ${rows.length})` : `Printings (${rows.length})`;
+  // A card with more printings than the list holds links to a search for all of them.
+  offerAllPrintings(card, rows.length >= MAX_LISTED);
+  printingsSection.hidden = rows.length === 0 && printsButton.hidden;
+}
+
+/** The link to a search for every printing. A name holding a double quote cannot be searched exactly. */
+function offerAllPrintings(card, wanted) {
+  const possible = wanted && card.prints > 1 && !card.name.includes('"');
+  printsButton.hidden = !possible;
+  if (possible) {
+    printsButton.textContent = `All ${card.prints} printings`;
+    printsButton.dataset.q = `!"${card.name}" unique:prints order:released`;
+  }
+}
+
+/**
+ * Fill the card view and show it in place of the results. A hit from the results shows at
+ * once; what only the card's page has (printed stats, legality, the printings) is fetched and
+ * filled in when it arrives. `printings` is given when that has already happened.
+ */
+function showCard(hit, printings = null, { keepScroll = false } = {}) {
   const image = document.getElementById("card-image");
   const hasImage = Boolean(hit.image && hit.image.startsWith(IMAGE_HOST));
   image.hidden = !hasImage;
-  image.src = hasImage ? hit.image : "";
+  if (image.getAttribute("src") !== (hasImage ? hit.image : "")) image.src = hasImage ? hit.image : "";
   image.alt = hit.name;
   document.getElementById("card-name").textContent = hit.name;
   text("card-line", [hit.mana_cost, hit.type_line].filter(Boolean).join("  ·  "));
   text("card-rules", hit.oracle_text);
+  text("card-stats", hit.stats);
   text("card-flavor", hit.flavor_text);
   // The printing shown: its set, number, rarity and year, then artist and price.
   const set = hit.set_name ? `${hit.set_name}${setAndNumber(hit) ? ` (${setAndNumber(hit)})` : ""}` : setAndNumber(hit);
   text("card-printing", [set, capital(hit.rarity), year(hit.released)].filter(Boolean).join(" · "));
   text("card-artist", [hit.artist ? `Illustrated by ${hit.artist}` : "", price(hit.usd)].filter(Boolean).join(" · "));
-  // Offer the card's other printings, unless the grid already lists printings. A name holding
-  // a double quote cannot be written as an exact-name search.
-  const others = current.unit === "cards" && hit.prints > 1 && !hit.name.includes('"');
-  printsButton.hidden = !others;
-  if (others) {
-    printsButton.textContent = `All ${hit.prints} printings`;
-    printsButton.dataset.q = `!"${hit.name}" unique:prints order:released`;
-  }
   const link = document.getElementById("card-link");
   const hasLink = Boolean(hit.scryfall_uri && hit.scryfall_uri.startsWith(CARD_HOST));
   link.hidden = !hasLink;
@@ -271,7 +350,45 @@ function showCard(hit) {
   document.body.classList.add("viewing-card", "searched");
   intro.hidden = true;
   cardView.hidden = false;
-  window.scrollTo(0, 0);
+  if (!keepScroll) window.scrollTo(0, 0);
+
+  if (printings) {
+    showLegality(hit);
+    showPrintings(hit, printings);
+  } else {
+    legalitySection.hidden = printingsSection.hidden = true;
+    loadDetails(hit);
+  }
+}
+
+/** Fetch what the card's page shows beyond a search result, for the card now on screen. */
+async function loadDetails(hit) {
+  const path = cardPath(hit);
+  if (!path) return;
+  const data = await fetchCard(hit.set, hit.collector_number);
+  if (location.pathname !== path) return; // the reader has moved on
+  if (!data || !data.card) {
+    // Without the list, at least offer the search for the card's printings.
+    offerAllPrintings(hit, true);
+    printingsSection.hidden = printsButton.hidden;
+    document.getElementById("printings-title").textContent = "Printings";
+    printingsList.replaceChildren();
+    return;
+  }
+  // Kept with the history entry, so Back and Forward show the whole page without asking again.
+  history.replaceState({ card: data.card, printings: data.printings }, "");
+  showCard(data.card, data.printings, { keepScroll: true });
+}
+
+/** GET /api/card. Null when the request fails; `{ error }` when the server says why. */
+async function fetchCard(set, number) {
+  try {
+    const response = await fetch(`/api/card?${new URLSearchParams({ set: set.toLowerCase(), cn: number })}`);
+    const data = await response.json();
+    return response.ok ? data : { error: data.error || "Something went wrong.", missing: response.status === 404 };
+  } catch {
+    return null;
+  }
 }
 
 /** Open a card from the results: go to its address and show it. */
@@ -282,31 +399,31 @@ function openCard(hit) {
   showCard(hit);
 }
 
-/** A card's address was opened directly: fetch that printing and show it. */
+/** A card's address was opened directly, or another printing was chosen: fetch it and show it. */
 async function loadCard({ set, number }) {
   if (inFlight) inFlight.abort();
-  const controller = new AbortController();
-  inFlight = controller;
-  showResults();
-  intro.hidden = true;
-  document.body.classList.add("searched");
-  setStatus("", "Loading the card…");
-  try {
-    const query = `set:${set.toLowerCase()} cn:"${number.replaceAll('"', "")}" unique:prints`;
-    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "1" })}`, { signal: controller.signal });
-    const data = await response.json();
-    if (!response.ok) return setStatus("", data.error || "Something went wrong.", true);
-    if (!data.hits || !data.hits.length) {
+  inFlight = null;
+  const path = location.pathname;
+  const fromCard = !cardView.hidden; // moving between printings: keep the page while it loads
+  if (!fromCard) {
+    showResults();
+    intro.hidden = true;
+    document.body.classList.add("searched");
+    setStatus("", "Loading the card…");
+  }
+  const data = await fetchCard(set, number);
+  if (location.pathname !== path) return;
+  if (!data || data.error) {
+    showResults();
+    if (data && data.missing) {
       intro.hidden = false;
       return setStatus("No card at this address", `Nothing is numbered ${number} in the set "${set}".`, true);
     }
-    setStatus("", "");
-    showCard(data.hits[0]);
-  } catch (error) {
-    if (error.name !== "AbortError") setStatus("", "Could not reach the server. Check your connection and try again.", true);
-  } finally {
-    if (inFlight === controller) inFlight = null;
+    return setStatus("", data ? data.error : "Could not reach the server. Check your connection and try again.", true);
   }
+  setStatus("", "");
+  history.replaceState({ card: data.card, printings: data.printings }, "");
+  showCard(data.card, data.printings);
 }
 
 backButton.addEventListener("click", () => history.back());
@@ -327,7 +444,7 @@ copyButton.addEventListener("click", async () => {
 /** Show whatever the current address names. `state` is the history entry's, if it has one. */
 function route(state) {
   const card = parseCardPath(location.pathname);
-  if (state && state.card) return showCard(state.card);
+  if (state && state.card) return showCard(state.card, state.printings || null);
   if (card) return loadCard(card);
   const { query, sort: sortValue } = readAddress();
   // Coming back from a card to the search that is still on screen: no need to ask again.

@@ -80,6 +80,20 @@ async function run(name, contextOptions) {
   check((await page.getAttribute("#card-link", "href")).startsWith("https://scryfall.com/"), `[${name}] the page links to Scryfall`);
   check(/ \(\w+ #\S+\) · \w+ · \d{4}$/.test(await page.textContent("#card-printing")), `[${name}] the page names the printing shown: set, number, rarity, year`);
   check((await page.textContent("#card-artist")).startsWith("Illustrated by "), `[${name}] the page credits the artist`);
+  // What only the card's page has arrives a moment after the card itself.
+  await page.waitForFunction(() => !document.getElementById("card-printings").hidden);
+  check((await page.textContent("#card-stats")) === "4/6", `[${name}] the page gives power and toughness`);
+  const legality = await page.$$eval("#legality-list div", (rows) =>
+    Object.fromEntries(rows.map((r) => [r.querySelector("dt").textContent, r.querySelector("dd").textContent]))
+  );
+  check(legality.Commander === "Legal" && legality.Standard === "Not legal", `[${name}] and legality by format (Commander ${legality.Commander}, Standard ${legality.Standard})`);
+  const listed = await page.$$eval("#printings-list a", (links) =>
+    links.map((a) => ({ text: a.textContent, current: a.hasAttribute("aria-current"), href: a.getAttribute("href") }))
+  );
+  check(listed.length >= 8 && listed.filter((p) => p.current).length === 1, `[${name}] and the card's printings, with the one shown marked (${listed.length})`);
+  check((listed.find((p) => p.current) || {}).href === new URL(cardUrl).pathname, `[${name}] the marked printing is this page`);
+  check(listed.some((p) => /\$\d+\.\d\d$/.test(p.text)), `[${name}] printings carry their prices`);
+  check(!(await page.isVisible("#card-prints")), `[${name}] a complete list needs no link to a search`);
   await page.waitForFunction(() => document.getElementById("card-image").naturalWidth > 0);
   const cardOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(cardOverflow <= 0, `[${name}] the card page does not scroll sideways (overflow ${cardOverflow}px)`);
@@ -90,6 +104,7 @@ async function run(name, contextOptions) {
   await page.goForward();
   await page.waitForFunction(() => !document.getElementById("card").hidden);
   check((await page.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] Forward shows the card again`);
+  check((await page.$$("#printings-list a")).length === listed.length, `[${name}] with its printings, kept with the history entry`);
 
   // The address works on its own: opened fresh, as someone following a shared link would.
   const fresh = await context.newPage();
@@ -98,6 +113,20 @@ async function run(name, contextOptions) {
   check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] a shared card address opens that card`);
   check((await fresh.textContent("#card-printing")) === (await page.textContent("#card-printing")), `[${name}] and the same printing of it`);
   check(!(await fresh.isVisible("#card-back")), `[${name}] with no "Back to results", as there are none`);
+  check((await fresh.textContent("#card-stats")) === "4/6" && (await fresh.$$("#printings-list a")).length === listed.length, `[${name}] and the same stats and printings`);
+  // Another printing is one tap away, at its own address; Back returns to the first.
+  const marked = (href) => document.querySelector("#printings-list a[aria-current]")?.getAttribute("href") === href;
+  const other = listed.find((p) => !p.current);
+  await fresh.click(`#printings-list a[href="${other.href}"]`);
+  await fresh.waitForFunction(marked, other.href);
+  check(new URL(fresh.url()).pathname === other.href, `[${name}] choosing another printing goes to its address (${other.href})`);
+  check(
+    (await fresh.textContent("#card-name")) === "Consecrated Sphinx" && (await fresh.textContent("#card-printing")) !== (await page.textContent("#card-printing")),
+    `[${name}] and shows that printing`
+  );
+  await fresh.goBack();
+  await fresh.waitForFunction(marked, new URL(cardUrl).pathname);
+  check((await fresh.textContent("#card-printing")) === (await page.textContent("#card-printing")), `[${name}] Back returns to the first printing`);
   await fresh.fill("#q", "lightning bolt");
   await fresh.press("#q", "Enter");
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name"));
@@ -138,14 +167,23 @@ async function run(name, contextOptions) {
   check(await page.isVisible("#more"), `[${name}] ranked results can also show more`);
 
   // Printings: a set search shows each card by its printing in that set, and a card's
-  // details lead to all of its printings.
+  // page lists its printings.
   await search(page, "t:sphinx set:ima");
   check((await page.textContent("#status")).startsWith("Scryfall syntax · 3 cards"), `[${name}] a set search reports cards`);
   check((await page.$$("#results .caption")).length === 0, `[${name}] card results carry no printing captions`);
   await page.click("#results .tile");
   check((await page.textContent("#card-printing")).startsWith("Iconic Masters (IMA #"), `[${name}] the card is shown by its printing in that set`);
   check(new URL(page.url()).pathname.startsWith("/card/ima/"), `[${name}] and its address names that set`);
-  check(/^All \d+ printings$/.test(await page.textContent("#card-prints")), `[${name}] the page offers the card's other printings`);
+  await page.waitForFunction(() => !document.getElementById("card-printings").hidden);
+  check((await page.getAttribute("#printings-list a[aria-current]", "href")).startsWith("/card/ima/"), `[${name}] and that printing is the one marked in its list`);
+
+  // A card with more printings than the page lists links to a search for all of them.
+  await search(page, "!forest");
+  await page.click("#results .tile");
+  await page.waitForFunction(() => !document.getElementById("card-prints").hidden);
+  check((await page.$$("#printings-list a")).length === 60, `[${name}] a basic land lists its newest 60 printings`);
+  check(/^All \d+ printings$/.test(await page.textContent("#card-prints")), `[${name}] and offers all of them`);
+  check(!(await page.isVisible("#card-stats")), `[${name}] a land has no power and toughness line`);
   await page.click("#card-prints");
   await page.waitForFunction(() => /\d+ printings/.test(document.getElementById("status").textContent));
   check(!(await page.isVisible("#card")), `[${name}] choosing them leaves the card's page`);
@@ -158,7 +196,8 @@ async function run(name, contextOptions) {
   check(years.every((y, i) => i === 0 || y <= years[i - 1]), `[${name}] printings are listed newest first`);
   await shot("5-printings");
   await page.click("#results .tile");
-  check(!(await page.isVisible("#card-prints")), `[${name}] a printing's page does not offer the list again`);
+  await page.waitForFunction(() => !document.getElementById("card-printings").hidden);
+  check((await page.$$("#printings-list a[aria-current]")).length === 1, `[${name}] a printing's page marks itself among the printings`);
   await page.waitForFunction(() => document.getElementById("card-image").naturalWidth > 0);
   await shot("6-printing");
   await page.keyboard.press("Escape");

@@ -55,7 +55,7 @@ const SHARED = [
   "set", "set_name", "cn", "rarity", "artist", "released", "prints",
 ];
 const CARD_DISPLAY = [...SHARED, "usd"];
-const PRINTING_DISPLAY = [...SHARED, "usd_c", "flavor_text", "oracle_id", "pref_rank"];
+export const PRINTING_DISPLAY = [...SHARED, "usd_c", "flavor_text", "oracle_id", "pref_rank"];
 // Semantic score is the sum over these fields: the plain rules text is more precise for
 // descriptions, the tagged text understands jargon ("mana rock").
 export const SEMANTIC_FIELDS = ["rules", "rules_tagged"];
@@ -143,7 +143,7 @@ async function count(col: Collection, predicate: IR): Promise<number> {
   return Number(rows[0]._count);
 }
 
-const pick = (names: string[]) => Object.fromEntries(names.map((name) => [name, field(name)]));
+export const pick = (names: string[]) => Object.fromEntries(names.map((name) => [name, field(name)]));
 
 /** Sort on a field, cards lacking it last, ties by name (and newest first among printings). */
 function ordering(sortField: string, descending: boolean, printings = false) {
@@ -167,7 +167,7 @@ async function cardPage(col: Collection, predicate: IR, k: number, offset: numbe
 }
 
 /** A printing document as a hit: the same shape as a card hit. */
-function printingHit(row: Hit): Hit {
+export function printingHit(row: Hit): Hit {
   const { usd_c: cents, pref_rank: _rank, ...hit } = row;
   return { ...hit, usd: typeof cents === "number" ? cents / 100 : null } as Hit;
 }

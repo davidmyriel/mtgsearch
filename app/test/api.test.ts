@@ -1,7 +1,8 @@
 // The HTTP contract, with a stubbed search: no network and no TopK key.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { handleSearch, MAX_OFFSET, MAX_QUERY_CHARS, MAX_RESULTS } from "../api.ts";
+import { handleCard, handleSearch, MAX_OFFSET, MAX_QUERY_CHARS, MAX_RESULTS } from "../api.ts";
+import type { CardPage } from "../card.ts";
 import type { Result, SearchOptions } from "../search.ts";
 
 const HIT = {
@@ -195,4 +196,82 @@ test("a printing search says what its total counts and returns the printing's de
     [body.hits[0].id, body.hits[0].flavor_text, body.hits[0].usd, body.hits[0].collector_number],
     ["p1", "Blessed by the hands of Jin-Gitaxias.", 34.97, "43"],
   );
+});
+
+// --- GET /api/card ---------------------------------------------------------------------
+
+const PRINTING = {
+  ...HIT, _id: "p1", oracle_id: "abc", usd: 20.49, flavor_text: "Blessed by the hands of Jin-Gitaxias.",
+  stats: "4/6", legal: ["commander", "legacy", "vintage"], banned: ["duel"],
+};
+const OLDER = { _id: "p0", name: "Consecrated Sphinx", set: "mbs", set_name: "Mirrodin Besieged", cn: "21", rarity: "mythic", released: "2011-02-04", usd: null };
+const PAGE: CardPage = { card: PRINTING, printings: [PRINTING, OLDER] };
+const getCard = (params: Record<string, string>, card: Parameters<typeof handleCard>[1]) =>
+  handleCard(new URL(`https://example.test/api/card?${new URLSearchParams(params)}`), card);
+
+test("a card's page: the printing with its stats and legality, and the card's printings", async () => {
+  const calls: string[][] = [];
+  const response = await getCard({ set: " 2X2 ", cn: "43" }, async (set, number) => {
+    calls.push([set, number]);
+    return PAGE;
+  });
+  assert.equal(response.status, 200);
+  assert.deepEqual(calls, [["2x2", "43"]]); // the set code is lowercased and trimmed
+  assert.match(response.headers.get("Netlify-CDN-Cache-Control") ?? "", /max-age=600/);
+  const body = await response.json();
+  assert.equal(typeof body.took_ms, "number");
+  assert.deepEqual(
+    [body.card.id, body.card.name, body.card.collector_number, body.card.stats, body.card.usd],
+    ["p1", "Consecrated Sphinx", "43", "4/6", 20.49],
+  );
+  // every legality list is present, empty when the card has none of that status
+  assert.deepEqual([body.card.legal, body.card.banned, body.card.restricted], [["commander", "legacy", "vintage"], ["duel"], []]);
+  assert.deepEqual(body.printings, [
+    { id: "p1", name: "Consecrated Sphinx", set: "2x2", set_name: "Double Masters 2022", collector_number: "43", rarity: "mythic", released: "2022-07-08", usd: 20.49 },
+    { id: "p0", name: "Consecrated Sphinx", set: "mbs", set_name: "Mirrodin Besieged", collector_number: "21", rarity: "mythic", released: "2011-02-04", usd: null },
+  ]);
+});
+
+test("a card without a size has null stats", async () => {
+  const { stats: _none, ...spell } = PRINTING;
+  const body = await (await getCard({ set: "2x2", cn: "43" }, async () => ({ card: spell, printings: [] }))).json();
+  assert.equal(body.card.stats, null);
+  assert.deepEqual(body.printings, []);
+});
+
+test("an address with no card is a 404 that says so", async () => {
+  const response = await getCard({ set: "nosuchset", cn: "999" }, async () => null);
+  assert.equal(response.status, 404);
+  assert.match((await response.json()).error, /Nothing is numbered 999 in the set "nosuchset"/);
+});
+
+test("a malformed card address is refused without a lookup", async () => {
+  let called = false;
+  const card = async () => {
+    called = true;
+    return PAGE;
+  };
+  for (const params of [{}, { set: "mh2" }, { cn: "45" }, { set: "m h2", cn: "45" }, { set: "mh2", cn: "x".repeat(21) }, { set: "a".repeat(11), cn: "1" }]) {
+    assert.equal((await getCard(params as Record<string, string>, card)).status, 400, JSON.stringify(params));
+  }
+  assert.equal(called, false);
+});
+
+test("a failed card lookup is a 502, or a 503 that names a setup problem", async () => {
+  const quiet = console.error;
+  console.error = () => {};
+  try {
+    const down = await getCard({ set: "mh2", cn: "45" }, async () => {
+      throw new Error("connection reset");
+    });
+    assert.equal(down.status, 502);
+    assert.equal(down.headers.get("Cache-Control"), "no-store");
+    const noKey = await getCard({ set: "mh2", cn: "45" }, async () => {
+      throw new Error("TOPK_API_KEY is not set");
+    });
+    assert.equal(noKey.status, 503);
+    assert.match((await noKey.json()).error, /no TopK API key/);
+  } finally {
+    console.error = quiet;
+  }
 });

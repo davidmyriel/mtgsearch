@@ -174,8 +174,9 @@ Put your key in `.env` and export it (`set -a; . ./.env; set +a`). Then:
 npm run dev
 ```
 
-Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over one endpoint,
-`GET /api/search`, and works the same on a phone and a laptop. The key stays on the server.
+Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over two endpoints,
+`GET /api/search` and `GET /api/card`, and works the same on a phone and a laptop. The key
+stays on the server.
 A search lives at `/?q=...` and each card has its own address, `/card/<set>/<number>/<name>`
 (for example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
 
@@ -189,6 +190,12 @@ The answer carries `total`, `unit` (what the total counts: cards, printings or i
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 "Show more" button and sort menu. Each hit names the printing shown: set, collector number,
 rarity, artist, release date and price. Results ranked by meaning stop at 120.
+
+`GET /api/card?set=<code>&cn=<collector number>` is what a card's own page shows: `card`, that
+printing with its printed power and toughness (`stats`, also loyalty or defense) and three
+lists of formats (`legal`, `banned`, `restricted`); and `printings`, the card's printings
+newest first with set, number, rarity, date and price, at most 60. An address with no card
+is a 404.
 
 To run a single query from the terminal:
 
