@@ -66,8 +66,8 @@ identity and are not copied.
 |---|---|---|---|---|
 | U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary | Waiting: dropping a term reverses an earlier rule, asked of the owner |
 | U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | L | Next boundary | Done |
-| U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary | Open |
-| U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Open |
+| U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary | Done |
+| U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Done |
 | U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) | Open |
 | U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner | Open |
 | U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Waiting |
@@ -91,4 +91,20 @@ are small and can ride along with U-1 to U-4.
   with more than 60 printings lists the newest 60 and links to a search for all of them. A card
   opened from the results shows at once and the rest fills in when it arrives.
 - **Not included:** rulings (U-8), and each face of a two-faced card set out separately.
+
+### U-3 and U-4. Pages of results, and three controls
+
+- **Taken on 22 November 2026**, at the boundary after U-2.
+- **What was done:** results come 60 to a page. The page is in the address (`page=2`) and a pager
+  below the results has First, Previous, Next and Last, which are links, so a page can be opened
+  in a new tab, reloaded or shared. "Show more", which added to the grid and was lost on a
+  reload, is gone. Above the results, one menu became three: what a result is (cards, printings
+  or illustrations), the sort key, and the direction. All three are in the address.
+- **What wins:** `unique:`, `order:` or `direction:` written in the query wins over the controls,
+  and the "Show" control then shows what the query asked for.
+- **Size was M, not S, for U-4:** the endpoint had no way to be asked for printings or
+  illustrations except in the query, and a direction with no sort key was ignored.
+- **Limits, said on the page:** results ranked by meaning have no total, so their pager has no
+  Last and they end at 120. No result can be paged past 10,000; the pager says to narrow the
+  search there.
 

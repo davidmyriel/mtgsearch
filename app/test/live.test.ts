@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Client } from "topk-js";
-import { handleCard, handleSearch } from "../api.ts";
+import { handleCard, handleSearch, MAX_REACH, MAX_RESULTS } from "../api.ts";
 import { card, MAX_PRINTINGS } from "../card.ts";
 import { search } from "../search.ts";
 import type { Collection, Collections } from "../search.ts";
@@ -93,6 +93,11 @@ test("the page's sort order applies unless the query has its own", { skip }, asy
   const explicit = await search(col, "t:sphinx order:name", { k: 5, order: "cmc", descending: true });
   assert.equal(explicit.sortedBy, "name");
   assert.deepEqual(names(explicit), names(byName));
+  // a direction alone reverses the default order, from the page or from the query
+  const reversed = await search(col, "t:sphinx", { k: 5, descending: true });
+  assert.deepEqual(names(reversed), [...names(reversed)].sort((a, b) => b.toLowerCase().localeCompare(a.toLowerCase())));
+  assert.deepEqual(names(await search(col, "t:sphinx direction:desc", { k: 5 })), names(reversed));
+  assert.deepEqual(names(await search(col, "t:sphinx direction:asc", { k: 5, descending: true })), names(byName));
   // plain-English results are ranked by meaning; the menu does not apply
   const ranked = await search(col, "sphinx that draws two cards", { k: 5, order: "cmc" });
   assert.equal(ranked.sortedBy, null);
@@ -168,6 +173,41 @@ test("in: and prints are answered from the cards collection", { skip }, async ()
   const all = await search(cols, "t:sphinx", { k: 1 });
   assert.equal(never.total, (all.total ?? 0) - 3);
   assert.equal((await search(cols, "t:sphinx prints=1", { k: 60 })).hits.every((hit) => hit.prints === 1), true);
+});
+
+test("the deepest page the endpoint offers is one TopK will serve", { skip }, async () => {
+  const cols = collection();
+  const ask = (params: Record<string, string>) =>
+    handleSearch(new URL(`https://x.test/api/search?${new URLSearchParams(params)}`), (query, options) => search(cols, query, options));
+  // cards, then printings: both collections have the same ceiling on limit plus offset
+  for (const q of ["t:creature", "t:creature unique:prints"]) {
+    const response = await ask({ q, k: String(MAX_RESULTS), offset: "999999" });
+    assert.equal(response.status, 200, q);
+    const body = await response.json();
+    assert.deepEqual([body.offset, body.hits.length, body.has_more], [MAX_REACH - MAX_RESULTS, MAX_RESULTS, false], q);
+    assert.ok(body.total > MAX_REACH, q);
+  }
+});
+
+test("the page can ask for printings or illustrations; a unique: in the query wins", { skip }, async () => {
+  const cols = collection();
+  const cards = await search(cols, '!"consecrated sphinx"', { k: 60 });
+  const prints = await search(cols, '!"consecrated sphinx"', { k: 60, unique: "prints" });
+  const art = await search(cols, '!"consecrated sphinx"', { k: 60, unique: "art" });
+  assert.deepEqual([cards.unit, cards.total], ["cards", 1]);
+  assert.equal(prints.unit, "printings");
+  assert.equal(art.unit, "illustrations");
+  assert.ok(prints.total !== null && art.total !== null && prints.total >= 8 && art.total > 1 && art.total <= prints.total);
+  // the same as writing it in the query
+  const written = await search(cols, '!"consecrated sphinx" unique:prints', { k: 60 });
+  assert.deepEqual(prints.hits.map((h) => h._id).sort(), written.hits.map((h) => h._id).sort());
+  // ... which wins when the two disagree
+  const both = await search(cols, '!"consecrated sphinx" unique:cards', { k: 60, unique: "prints" });
+  assert.deepEqual([both.unit, both.total], ["cards", 1]);
+  // a release-date sort with no direction is newest first
+  const newest = await search(cols, '!"consecrated sphinx"', { k: 60, unique: "prints", order: "released" });
+  const dates = newest.hits.map((h) => String(h.released));
+  assert.deepEqual(dates, [...dates].sort().reverse());
 });
 
 test("a card's page: one printing with stats and legality, and its printings newest first", { skip }, async () => {

@@ -2,6 +2,7 @@
 //
 // The page has two views. The results view lives at /?q=... and the card view at
 // /card/<set>/<number>/<name>, so a card has an address that can be shared and opened directly.
+// A search's address also holds its sort, direction, what a result is, and the page of results.
 "use strict";
 
 const form = document.getElementById("search");
@@ -10,8 +11,10 @@ const intro = document.getElementById("intro");
 const statusLine = document.getElementById("status");
 const results = document.getElementById("results");
 const tools = document.getElementById("tools");
-const sort = document.getElementById("sort");
-const more = document.getElementById("more");
+const sortSelect = document.getElementById("sort");
+const dirSelect = document.getElementById("dir");
+const uniqueSelect = document.getElementById("unique");
+const pager = document.getElementById("pager");
 const cardView = document.getElementById("card");
 const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
@@ -22,8 +25,14 @@ const printingsList = document.getElementById("printings-list");
 
 const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
-// What a result is, as the endpoint names it, and the word for one of them.
+// Results on one page, and how far into a result the endpoint will go. Keep in step with
+// MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
+const PAGE_SIZE = 60;
+const MAX_REACH = 10000;
+const LAST_PAGE = Math.floor(MAX_REACH / PAGE_SIZE); // the last page that fits whole
+// What a result is, as the endpoint names it: the word for one, and its value in the "Show" menu.
 const UNITS = { cards: "card", printings: "printing", illustrations: "illustration" };
+const UNIQUE_OF = { cards: "", printings: "prints", illustrations: "art" };
 // The formats a card's page gives the legality for, in the order they are listed.
 const FORMATS = [
   ["standard", "Standard"], ["pioneer", "Pioneer"], ["modern", "Modern"], ["legacy", "Legacy"],
@@ -35,8 +44,10 @@ const FORMATS = [
 const MAX_LISTED = 60;
 // Sort orders decided by a printing rather than by the card.
 const PRINTING_ORDERS = new Set(["released", "usd", "eur", "tix", "rarity"]);
+// A search as its address names it. Empty strings are the defaults and are left out of the address.
+const EMPTY = { query: "", order: "", dir: "", unique: "", page: 1 };
 let inFlight = null;
-let current = { query: "", sort: "", unit: "cards" }; // what the grid is showing
+let current = { ...EMPTY, unit: "cards" }; // what the grid is showing
 let resultsScroll = 0; // where the results were scrolled to when a card was opened
 
 function plural(n, word) {
@@ -47,6 +58,8 @@ const price = (usd) => (typeof usd === "number" ? `$${usd.toFixed(2)}` : "");
 const year = (released) => (released ? released.slice(0, 4) : "");
 const capital = (word) => (word ? word[0].toUpperCase() + word.slice(1) : "");
 const setAndNumber = (hit) => (hit.set ? `${hit.set.toUpperCase()}${hit.collector_number ? ` #${hit.collector_number}` : ""}` : "");
+/** A click that should be left to the browser: it opens the link in a new tab or window. */
+const modified = (event) => event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
 
 // --- addresses -------------------------------------------------------------------------
 
@@ -73,37 +86,50 @@ function parseCardPath(pathname) {
   }
 }
 
-// The address bar holds the query and the sort, so a search can be shared and the back button works.
+/** The search the address bar names. Anything it does not understand falls back to the default. */
 function readAddress() {
   const params = new URLSearchParams(location.search);
-  const order = params.get("order") || "";
-  return { query: params.get("q") || "", sort: order && params.get("dir") === "desc" ? `${order}:desc` : order };
+  const page = Number.parseInt(params.get("page") || "1", 10);
+  const dir = params.get("dir");
+  const unique = params.get("unique");
+  return {
+    query: (params.get("q") || "").trim(),
+    order: params.get("order") || "",
+    dir: dir === "asc" || dir === "desc" ? dir : "",
+    unique: unique === "prints" || unique === "art" ? unique : "",
+    page: page > 1 ? Math.min(page, LAST_PAGE) : 1,
+  };
 }
 
-function address(query, sortValue) {
+/** The address of a search, so that it can be shared, reloaded, and reached with Back. */
+function searchPath(view) {
   const params = new URLSearchParams();
-  if (query) params.set("q", query);
-  const [order, direction] = sortValue.split(":");
-  if (order) params.set("order", order);
-  if (direction) params.set("dir", direction);
-  return params;
+  if (view.query) params.set("q", view.query);
+  for (const key of ["order", "dir", "unique"]) if (view[key]) params.set(key, view[key]);
+  if (view.page > 1) params.set("page", String(view.page));
+  const text = params.toString();
+  return text ? `/?${text}` : "/";
 }
+
+const sameSearch = (a, b) => ["query", "order", "dir", "unique", "page"].every((key) => a[key] === b[key]);
 
 // --- results view ----------------------------------------------------------------------
 
 // What the status line says for each path a query can take.
-function describe(data, shown) {
-  const partial = data.total > shown ? `, showing ${shown}` : "";
-  const total = () => `${plural(data.total, UNITS[data.unit] || "card")}${partial}`;
+function describe(data, view) {
+  const first = (view.page - 1) * PAGE_SIZE + 1;
+  const range = `${first.toLocaleString("en")}–${(first + data.hits.length - 1).toLocaleString("en")}`;
+  const total = () => `${plural(data.total, UNITS[data.unit] || "card")}${data.total > data.hits.length ? `, showing ${range}` : ""}`;
+  const ranked = view.page === 1 ? `top ${data.hits.length}` : `results ${range}`;
   switch (data.mode) {
     case "syntax":
       return ["Scryfall syntax", total()];
     case "name":
       return ["Card name", total()];
     case "mixed":
-      return ["Syntax and plain English", `${data.note}, top ${shown}`];
+      return ["Syntax and plain English", `${data.note}, ${ranked}`];
     case "semantic":
-      return ["Plain English", data.note ? `filtered to ${data.note}, top ${shown}` : `top ${shown} by meaning`];
+      return ["Plain English", data.note ? `filtered to ${data.note}, ${ranked}` : `${ranked} by meaning`];
     default:
       return ["", ""];
   }
@@ -154,8 +180,7 @@ function tile(hit, captioned) {
     link.append(image);
   }
   link.addEventListener("click", (event) => {
-    // Leave modified clicks alone: they open the card's page in a new tab or window.
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    if (modified(event)) return;
     event.preventDefault();
     openCard(hit);
   });
@@ -175,41 +200,73 @@ function showResults() {
   cardView.hidden = true;
 }
 
-// Fetch one page of results. `append` adds to the grid (Show more); otherwise the grid is replaced.
-async function run(query, { push = true, append = false, sortValue = "" } = {}) {
-  query = query.trim();
-  if (!append) {
-    showResults();
-    input.value = query;
-    sort.value = sortValue;
-    // Absolute, so that a search started from a card's page goes back to the results address.
-    if (push) history.pushState(null, "", query ? `/?${address(query, sortValue)}` : "/");
-    document.title = query ? `${query} · mtgsearch` : "mtgsearch";
-    document.body.classList.toggle("searched", Boolean(query));
-  }
+/**
+ * The links between pages of results. With a total, the number of pages is known; results
+ * ranked by meaning have none, and there is a next page for as long as the endpoint says so.
+ */
+function showPager(view, data) {
+  const pages = data.total === null ? null : Math.max(1, Math.ceil(data.total / PAGE_SIZE));
+  const reach = pages === null ? null : Math.min(pages, LAST_PAGE); // the endpoint stops at MAX_REACH
+  const hasNext = reach === null ? Boolean(data.has_more) : view.page < reach;
+  pager.hidden = view.page === 1 && !hasNext;
+  const link = (id, page, enabled) => {
+    const element = document.getElementById(id);
+    if (enabled) {
+      element.href = searchPath({ ...view, page });
+      element.dataset.page = String(page);
+      element.removeAttribute("aria-disabled");
+    } else {
+      element.removeAttribute("href");
+      element.setAttribute("aria-disabled", "true");
+    }
+  };
+  link("page-first", 1, view.page > 1);
+  link("page-prev", Math.min(view.page - 1, reach ?? view.page - 1), view.page > 1);
+  link("page-next", view.page + 1, hasNext);
+  link("page-last", reach ?? view.page, reach !== null && view.page < reach);
+  document.getElementById("page-last").hidden = reach === null;
+  const now = pages === null ? `Page ${view.page}` : `Page ${view.page.toLocaleString("en")} of ${pages.toLocaleString("en")}`;
+  const capped = reach !== null && reach < pages && view.page >= reach;
+  document.getElementById("page-now").textContent = capped ? `${now}. Narrow the search to see further.` : now;
+}
+
+// Run a search and show one page of its results. `push` adds it to the history; it is false
+// when the address already names this search (a reload, a shared link, Back and Forward).
+async function run(search, { push = true } = {}) {
+  const view = { ...EMPTY };
+  for (const key of Object.keys(EMPTY)) if (search[key]) view[key] = search[key];
+  view.query = view.query.trim();
+  showResults();
+  input.value = view.query;
+  sortSelect.value = view.order;
+  dirSelect.value = view.dir;
+  uniqueSelect.value = view.unique;
+  if (push) history.pushState(null, "", searchPath(view));
+  document.title = view.query ? `${view.query} · mtgsearch` : "mtgsearch";
+  document.body.classList.toggle("searched", Boolean(view.query));
   if (inFlight) inFlight.abort();
-  if (!query) {
+  if (!view.query) {
     intro.hidden = false;
-    tools.hidden = more.hidden = true;
+    tools.hidden = pager.hidden = true;
     results.replaceChildren();
-    current = { query: "", sort: "", unit: "cards" };
+    current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
     return;
   }
 
   intro.hidden = true;
-  more.disabled = true;
-  if (!append) setStatus("", "Searching…");
+  setStatus("", "Searching…");
   const controller = new AbortController();
   inFlight = controller;
   const fail = (label, detail) => {
-    if (!append) results.replaceChildren();
-    tools.hidden = more.hidden = true;
+    results.replaceChildren();
+    tools.hidden = pager.hidden = true;
+    current = { ...EMPTY, unit: "cards" };
     setStatus(label, detail, true);
   };
   try {
-    const params = address(query, sortValue);
-    if (append) params.set("offset", String(results.children.length));
+    const params = new URLSearchParams({ q: view.query, k: String(PAGE_SIZE), offset: String((view.page - 1) * PAGE_SIZE) });
+    for (const key of ["order", "dir", "unique"]) if (view[key]) params.set(key, view[key]);
     const response = await fetch(`/api/search?${params}`, { signal: controller.signal });
     const data = await response.json();
     if (!response.ok) return fail("", data.error || "Something went wrong.");
@@ -219,26 +276,26 @@ async function run(query, { push = true, append = false, sortValue = "" } = {}) 
       return fail("Not supported yet", `${data.note}. See "What can I type?" below.`);
     }
     const captioned = data.unit !== "cards" || PRINTING_ORDERS.has(data.sorted_by);
-    const tiles = data.hits.map((hit) => tile(hit, captioned));
-    if (append) results.append(...tiles);
-    else results.replaceChildren(...tiles);
-    current = { query, sort: sortValue, unit: data.unit };
-    const shown = results.children.length;
-    more.hidden = !data.has_more;
+    results.replaceChildren(...data.hits.map((hit) => tile(hit, captioned)));
+    current = { ...view, unit: data.unit };
+    // The menu shows what the results are, also when the query itself says so (`unique:prints`).
+    uniqueSelect.value = UNIQUE_OF[data.unit] ?? "";
     // Results ranked by meaning have no other order to offer.
-    tools.hidden = data.sorted_by === null || shown === 0;
-    if (!shown) {
-      setStatus("No cards matched", "Check the syntax, or describe the card in plain words.");
+    tools.hidden = data.sorted_by === null || data.hits.length === 0;
+    showPager(view, data);
+    if (push) window.scrollTo(0, 0);
+    if (!data.hits.length) {
+      const beyond = view.page > 1 && (data.total === null || data.total > 0);
+      setStatus(beyond ? "Nothing on this page" : "No cards matched", beyond ? "The results end before it." : "Check the syntax, or describe the card in plain words.");
       return;
     }
-    const [label, detail] = describe(data, shown);
+    const [label, detail] = describe(data, view);
     setStatus(label, detail, false, data.took_ms);
   } catch (error) {
     if (error.name === "AbortError") return;
     fail("", "Could not reach the server. Check your connection and try again.");
   } finally {
     if (inFlight === controller) inFlight = null;
-    more.disabled = false;
   }
 }
 
@@ -292,7 +349,7 @@ function showPrintings(card, printings) {
     cost.textContent = price(printing.usd) || "—";
     link.append(set, meta, cost);
     link.addEventListener("click", (event) => {
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      if (modified(event)) return;
       event.preventDefault();
       if (link.hasAttribute("aria-current")) return;
       history.pushState(null, "", link.getAttribute("href"));
@@ -428,7 +485,7 @@ async function loadCard({ set, number }) {
 
 backButton.addEventListener("click", () => history.back());
 
-printsButton.addEventListener("click", () => run(printsButton.dataset.q));
+printsButton.addEventListener("click", () => run({ query: printsButton.dataset.q }));
 
 copyButton.addEventListener("click", async () => {
   try {
@@ -446,30 +503,43 @@ function route(state) {
   const card = parseCardPath(location.pathname);
   if (state && state.card) return showCard(state.card, state.printings || null);
   if (card) return loadCard(card);
-  const { query, sort: sortValue } = readAddress();
+  const view = readAddress();
   // Coming back from a card to the search that is still on screen: no need to ask again.
-  if (query && query === current.query && sortValue === current.sort && results.children.length) {
+  if (view.query && sameSearch(view, current) && results.children.length) {
     showResults();
-    document.title = `${query} · mtgsearch`;
+    document.title = `${view.query} · mtgsearch`;
     window.scrollTo(0, resultsScroll);
     return;
   }
-  run(query, { push: false, sortValue });
+  run(view, { push: false });
 }
 
+// A new query starts from the defaults: first page, default order, cards.
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  run(input.value);
+  run({ query: input.value });
   input.blur(); // dismiss the phone keyboard so results are visible
 });
 
 intro.addEventListener("click", (event) => {
   const example = event.target.closest("button[data-q]");
-  if (example) run(example.dataset.q);
+  if (example) run({ query: example.dataset.q });
 });
 
-sort.addEventListener("change", () => run(current.query, { sortValue: sort.value }));
-more.addEventListener("click", () => run(current.query, { append: true, sortValue: current.sort }));
+// Changing what is shown or how it is sorted keeps the query and goes back to the first page.
+for (const select of [sortSelect, dirSelect, uniqueSelect]) {
+  select.addEventListener("change", () =>
+    run({ query: current.query, order: sortSelect.value, dir: dirSelect.value, unique: uniqueSelect.value }),
+  );
+}
+
+// The pager's links are real addresses; an ordinary click is answered without leaving the page.
+pager.addEventListener("click", (event) => {
+  const link = event.target.closest("a[href]");
+  if (!link || modified(event)) return;
+  event.preventDefault();
+  run({ ...current, page: Number(link.dataset.page) });
+});
 
 window.addEventListener("popstate", (event) => route(event.state));
 

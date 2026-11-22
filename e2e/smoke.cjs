@@ -24,6 +24,12 @@ async function search(page, query) {
   await page.waitForFunction(() => !document.getElementById("status").textContent.includes("Searching"));
 }
 
+/** Choose a value in one of the controls above the results and wait for the new results. */
+async function choose(page, selector, value) {
+  await page.selectOption(selector, value);
+  await page.waitForFunction(() => !document.getElementById("status").textContent.includes("Searching"));
+}
+
 async function firstCards(page, n = 3) {
   return page.$$eval("#results img", (imgs, n) => imgs.slice(0, n).map((i) => i.alt), n);
 }
@@ -147,24 +153,66 @@ async function run(name, contextOptions) {
   // Paging and sorting, on a query with more results than one page.
   await search(page, "t:sphinx");
   const total = Number((await page.textContent("#status")).match(/(\d+) cards/)[1]);
-  check(total > 48, `[${name}] t:sphinx reports its total (${total})`);
-  check((await page.$$("#results .tile")).length === 24, `[${name}] first page shows 24 cards`);
-  const firstPage = await firstCards(page, 24);
-  await page.click("#more");
-  await page.waitForFunction(() => document.querySelectorAll("#results .tile").length === 48);
-  check((await page.textContent("#status")).includes("showing 48"), `[${name}] Show more appends a page and updates the count`);
-  const both = await firstCards(page, 48);
-  check(new Set(both).size === 48 && firstPage.every((n, i) => both[i] === n), `[${name}] the second page continues the first`);
-  await page.selectOption("#sort", "cmc:desc");
-  await page.waitForFunction((was) => {
-    const img = document.querySelector("#results img");
-    return img && img.alt !== was && !document.getElementById("status").textContent.includes("Searching");
-  }, firstPage[0]);
-  check(new URL(page.url()).searchParams.get("order") === "cmc" && new URL(page.url()).searchParams.get("dir") === "desc", `[${name}] the chosen sort is in the URL`);
-  check((await page.$$("#results .tile")).length === 24, `[${name}] changing the sort starts again from the first page`);
+  check(total > 60 && total <= 120, `[${name}] t:sphinx reports its total (${total})`);
+  check((await page.$$("#results .tile")).length === 60, `[${name}] first page shows 60 cards`);
+  check((await page.textContent("#status")).includes("showing 1–60"), `[${name}] the status says which results are showing`);
+  check((await page.textContent("#page-now")) === "Page 1 of 2", `[${name}] the pager counts the pages`);
+  check((await page.getAttribute("#page-prev", "aria-disabled")) === "true" && (await page.getAttribute("#page-prev", "href")) === null, `[${name}] there is no previous page to go to`);
+  const firstPage = await firstCards(page, 60);
+  const firstUrl = page.url();
+  await page.click("#page-next");
+  await page.waitForFunction(() => document.getElementById("page-now").textContent === "Page 2 of 2");
+  check(new URL(page.url()).searchParams.get("page") === "2", `[${name}] the page of results is in the address`);
+  const secondPage = await firstCards(page, 60);
+  check(secondPage.length === total - 60 && secondPage.every((n) => !firstPage.includes(n)), `[${name}] the second page continues the first (${secondPage.length} more)`);
+  check((await page.textContent("#status")).includes(`showing 61–${total}`), `[${name}] and says so`);
+  check((await page.evaluate(() => window.scrollY)) === 0, `[${name}] a new page starts at the top`);
+  check((await page.getAttribute("#page-next", "aria-disabled")) === "true", `[${name}] the last page has no next`);
+  // The address is enough: opened fresh, it shows the same page of results.
+  const reopened = await context.newPage();
+  await reopened.goto(page.url());
+  await reopened.waitForFunction(() => document.getElementById("page-now").textContent === "Page 2 of 2");
+  check((await firstCards(reopened, 60)).join("|") === secondPage.join("|"), `[${name}] a shared address opens at the same page`);
+  await reopened.close();
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("page-now").textContent === "Page 1 of 2");
+  check(page.url() === firstUrl && (await firstCards(page, 1))[0] === firstPage[0], `[${name}] Back returns to the first page`);
+  await page.click("#page-last");
+  await page.waitForFunction(() => document.getElementById("page-now").textContent === "Page 2 of 2");
+
+  // Sort key and direction are separate controls; changing either starts again from page one.
+  await choose(page, "#sort", "cmc");
+  const cheapest = (await firstCards(page, 1))[0];
+  check(new URL(page.url()).searchParams.get("order") === "cmc" && !new URL(page.url()).searchParams.has("page"), `[${name}] the chosen sort is in the address, back on page one`);
+  await choose(page, "#dir", "desc");
+  check(new URL(page.url()).searchParams.get("order") === "cmc" && new URL(page.url()).searchParams.get("dir") === "desc", `[${name}] and so is the direction`);
+  check((await firstCards(page, 1))[0] !== cheapest, `[${name}] descending puts a different card first`);
+  check((await page.$$("#results .tile")).length === 60 && (await page.textContent("#page-now")) === "Page 1 of 2", `[${name}] changing the sort starts again from the first page`);
+
+  // Cards, printings or illustrations: the "Show" control, or `unique:` in the query.
+  await search(page, '!"consecrated sphinx"');
+  check((await page.textContent("#status")).startsWith("Scryfall syntax · 1 card"), `[${name}] an exact name is one card`);
+  check(!(await page.isVisible("#pager")), `[${name}] one page of results needs no pager`);
+  await choose(page, "#unique", "prints");
+  const printCount = Number(((await page.textContent("#status")).match(/(\d+) printings/) || [])[1]);
+  check(printCount >= 8 && new URL(page.url()).searchParams.get("unique") === "prints", `[${name}] choosing printings lists them (${printCount}), and the address says so`);
+  check((await page.$$("#results .caption")).length === printCount, `[${name}] each with its caption`);
+  await choose(page, "#unique", "art");
+  const artCount = Number(((await page.textContent("#status")).match(/(\d+) illustrations/) || [])[1]);
+  check(artCount > 1 && artCount <= printCount, `[${name}] choosing illustrations lists those (${artCount})`);
+  await search(page, '!"consecrated sphinx" unique:prints');
+  check((await page.inputValue("#unique")) === "prints", `[${name}] the control shows what the query itself asked for`);
+
+  // Results ranked by meaning have no total: no sort controls, and a next page while there is one.
   await search(page, "sphinx that draws two cards");
-  check(!(await page.isVisible("#tools")), `[${name}] no sort menu for results ranked by meaning`);
-  check(await page.isVisible("#more"), `[${name}] ranked results can also show more`);
+  check(!(await page.isVisible("#tools")), `[${name}] no sort controls for results ranked by meaning`);
+  check((await page.textContent("#page-now")) === "Page 1" && !(await page.isVisible("#page-last")), `[${name}] ranked results have pages but no last page`);
+  await page.click("#page-next");
+  await page.waitForFunction(() => document.getElementById("page-now").textContent === "Page 2");
+  check((await page.textContent("#status")).includes("results 61–"), `[${name}] the second page of ranked results says which they are`);
+  check((await firstCards(page, 1))[0] !== "Consecrated Sphinx", `[${name}] and does not repeat the first`);
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("page-now").textContent === "Page 1");
 
   // Printings: a set search shows each card by its printing in that set, and a card's
   // page lists its printings.
@@ -206,8 +254,9 @@ async function run(name, contextOptions) {
 
   // Sorting cards by price shows the printing that decides the order, with its price.
   await search(page, "t:sphinx r:mythic");
-  await page.selectOption("#sort", "usd:desc");
-  await page.waitForFunction(() => document.querySelectorAll("#results .caption").length > 0);
+  await choose(page, "#sort", "usd");
+  await choose(page, "#dir", "desc");
+  check((await page.$$("#results .caption")).length > 0, `[${name}] a price sort captions the cards with the printing that decides it`);
   const prices = await page.$$eval("#results .caption", (nodes) => nodes.map((n) => Number((n.textContent.match(/\$([\d.]+)/) || [])[1])));
   const priced = prices.filter((p) => !Number.isNaN(p));
   check(priced.length > 5 && priced.every((p, i) => i === 0 || p <= priced[i - 1]), `[${name}] price sort lists the dearest printings first`);

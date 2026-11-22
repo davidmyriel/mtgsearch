@@ -11,7 +11,10 @@ export type CardFn = (set: string, number: string) => Promise<CardPage | null>;
 export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
 export const MAX_RESULTS = 60;
-export const MAX_OFFSET = 10_000;
+// How far into a result a page can reach. TopK refuses a query whose limit plus offset is
+// greater than this, so nothing beyond the first 10,000 results can be returned.
+export const MAX_REACH = 10_000;
+const UNIQUE = ["cards", "prints", "art"];
 // Document field -> name in the response. The last block describes the printing shown.
 const HIT_FIELDS: Record<string, string> = {
   name: "name", mana_cost: "mana_cost", type_line: "type_line", oracle_text: "oracle_text",
@@ -110,18 +113,22 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
   if (!query) return error(400, "Type something to search for.");
   if (query.length > MAX_QUERY_CHARS) return error(400, `Queries are limited to ${MAX_QUERY_CHARS} characters.`);
   const k = clamp(url.searchParams.get("k"), DEFAULT_RESULTS, 1, MAX_RESULTS);
-  const offset = clamp(url.searchParams.get("offset"), 0, 0, MAX_OFFSET);
+  const offset = clamp(url.searchParams.get("offset"), 0, 0, MAX_REACH - (k ?? 0));
   if (k === null || offset === null) return error(400, "k and offset must be whole numbers.");
   const order = url.searchParams.get("order");
   if (order !== null && !Object.hasOwn(ORDERS, order)) {
     return error(400, `order must be one of: ${Object.keys(ORDERS).join(", ")}.`);
   }
-  const descending = url.searchParams.get("dir") === "desc";
+  // "asc" or "desc"; anything else leaves the direction to the order (newest first for dates).
+  const direction = url.searchParams.get("dir");
+  const descending = direction === "desc" ? true : direction === "asc" ? false : null;
+  const unique = url.searchParams.get("unique");
+  if (unique !== null && !UNIQUE.includes(unique)) return error(400, `unique must be one of: ${UNIQUE.join(", ")}.`);
 
   const started = performance.now();
   let result: Result;
   try {
-    result = await search(query, { k, offset, order, descending });
+    result = await search(query, { k, offset, order, descending, unique: unique as SearchOptions["unique"] });
   } catch (cause) {
     console.error(`search failed for ${JSON.stringify(query)}:`, cause);
     const setup = setupProblem(cause);
@@ -137,7 +144,8 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
       note: result.note,
       hits: result.hits.map(hit),
       offset,
-      has_more: result.hasMore,
+      // false when the next page of this size would pass the reach: it could not be served
+      has_more: result.hasMore && offset + 2 * k <= MAX_REACH,
       sorted_by: result.sortedBy,
       took_ms: Math.round(performance.now() - started),
     },

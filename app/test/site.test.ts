@@ -63,6 +63,17 @@ test("the Scryfall comparison stays inside Scryfall's published rate limit", asy
   assert.ok(MIN_INTERVAL_MS >= 500, `one request every ${MIN_INTERVAL_MS} ms is faster than 2 a second`);
 });
 
+test("the page asks for pages the endpoint will serve", async () => {
+  const { MAX_REACH, MAX_RESULTS } = await import("../api.ts");
+  const { MAX_PRINTINGS } = await import("../card.ts");
+  const { readFileSync } = await import("node:fs");
+  const script = readFileSync(new URL("../../public/app.js", import.meta.url), "utf8");
+  const constant = (name: string) => Number((script.match(new RegExp(`const ${name} = (\\d+);`)) ?? [])[1]);
+  assert.equal(constant("PAGE_SIZE"), MAX_RESULTS);
+  assert.equal(constant("MAX_REACH"), MAX_REACH);
+  assert.equal(constant("MAX_LISTED"), MAX_PRINTINGS);
+});
+
 test("a held-out set fails only when a query that matched before stops matching", async () => {
   const { againstBaseline } = await import("../conformance.ts");
   const outcome = (query: string, status: "pass" | "fail" | "unsupported") =>

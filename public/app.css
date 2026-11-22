@@ -165,11 +165,14 @@ code {
 
 .tools {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px 16px;
   color: var(--muted);
   font-size: 0.95rem;
 }
+
+.tools label { display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; }
 
 .tools select {
   max-width: 100%;
@@ -181,20 +184,33 @@ code {
   border-radius: 8px;
 }
 
-.more {
-  display: block;
-  margin: 24px auto 0;
-  padding: 11px 26px;
-  font: inherit;
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 10px;
+  margin-top: 26px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pager a {
+  padding: 9px 16px;
   font-weight: 600;
   color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  cursor: pointer;
+  text-decoration: none;
 }
 
-.more:disabled { opacity: 0.6; cursor: default; }
+.pager a[aria-disabled] { opacity: 0.45; }
+.pager span { padding-inline: 6px; text-align: center; }
+/* On a phone the page number takes its own line, between the two pairs of links. */
+@media (max-width: 520px) {
+  .pager span { order: -1; flex-basis: 100%; }
+}
 
 .status:empty { display: none; }
 .status .took { white-space: nowrap; }
@@ -269,7 +285,7 @@ code {
 /* One card on its own page. The results stay in the document, hidden, so Back is instant. */
 .viewing-card .bar,
 .viewing-card #results,
-.viewing-card #more { display: none; }
+.viewing-card #pager { display: none; }
 
 .card { margin-top: 18px; }
 

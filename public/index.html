@@ -26,19 +26,35 @@
   <div class="bar">
     <p id="status" class="status" role="status" aria-live="polite"></p>
     <div id="tools" class="tools" hidden>
-      <label for="sort">Sort</label>
-      <select id="sort">
-        <option value="">Default</option>
-        <option value="edhrec">Most played</option>
-        <option value="name">Name, A to Z</option>
-        <option value="cmc">Mana value, low to high</option>
-        <option value="cmc:desc">Mana value, high to low</option>
-        <option value="power:desc">Power, high to low</option>
-        <option value="toughness:desc">Toughness, high to low</option>
-        <option value="released:desc">Newest printing first</option>
-        <option value="usd">Price, low to high</option>
-        <option value="usd:desc">Price, high to low</option>
-      </select>
+      <label>Show
+        <select id="unique">
+          <option value="">Cards</option>
+          <option value="prints">Printings</option>
+          <option value="art">Illustrations</option>
+        </select>
+      </label>
+      <label>Sort
+        <select id="sort">
+          <option value="">Default</option>
+          <option value="name">Name</option>
+          <option value="cmc">Mana value</option>
+          <option value="power">Power</option>
+          <option value="toughness">Toughness</option>
+          <option value="edhrec">Most played</option>
+          <option value="released">Release date</option>
+          <option value="rarity">Rarity</option>
+          <option value="usd">Price (USD)</option>
+          <option value="eur">Price (EUR)</option>
+          <option value="tix">Price (TIX)</option>
+        </select>
+      </label>
+      <label>Direction
+        <select id="dir">
+          <option value="">Auto</option>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </label>
     </div>
   </div>
 
@@ -74,7 +90,14 @@
   </section>
 
   <ol id="results" class="grid"></ol>
-  <button id="more" class="more" type="button" hidden>Show more</button>
+  <!-- The page of results is in the address (?page=2), so these are links. -->
+  <nav id="pager" class="pager" aria-label="Pages of results" hidden>
+    <a id="page-first">First</a>
+    <a id="page-prev" rel="prev">Previous</a>
+    <span id="page-now"></span>
+    <a id="page-next" rel="next">Next</a>
+    <a id="page-last">Last</a>
+  </nav>
 
   <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
   <article id="card" class="card" aria-labelledby="card-name" hidden>

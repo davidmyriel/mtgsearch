@@ -94,7 +94,9 @@ picked up: at the boundary between plan steps unless something is broken.
       client with one address: about 80 different searches in a minute should start returning 429.
       Netlify validates the rule at the end of each deploy and a rule that fails validation does
       not fail the deploy, so also look for it in the deploy log
-- [x] Paging ("Show more") and a sort menu, including newest printing and price
+- [x] Paging and sorting. The page of results is in the address and a pager moves between
+      pages of 60, so a reload or a shared link opens at the same place (U-3). Sort key,
+      direction, and cards / printings / illustrations are three separate controls (U-4)
 - [x] Printing details in the card view (set, number, rarity, artist, price, flavour text) and a
       link from a card to all of its printings
 - [x] A page for each card at `/card/<set>/<number>/<name>`, shareable, in place of the popup

@@ -177,19 +177,24 @@ npm run dev
 Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over two endpoints,
 `GET /api/search` and `GET /api/card`, and works the same on a phone and a laptop. The key
 stays on the server.
-A search lives at `/?q=...` and each card has its own address, `/card/<set>/<number>/<name>`
-(for example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
+A search lives at `/?q=...`, with its sort, direction, what a result is and the page of results
+in the address too (`/?q=t:sphinx&order=cmc&dir=desc&page=2`), so a reload or a shared link
+opens at the same place. Each card has its own address, `/card/<set>/<number>/<name>` (for
+example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
 
 | Parameter | Meaning |
 |---|---|
 | `q` | The query, up to 200 characters |
 | `k`, `offset` | Page size (default 24, at most 60) and how many results to skip |
-| `order`, `dir` | Sort by `name`, `cmc`, `power`, `toughness`, `edhrec`, `released`, `usd`, `eur`, `tix` or `rarity`; `dir=desc` reverses. An `order:` keyword in the query wins. Ignored for results ranked by meaning |
+| `order`, `dir` | Sort by `name`, `cmc`, `power`, `toughness`, `edhrec`, `released`, `usd`, `eur`, `tix` or `rarity`; `dir` is `asc` or `desc`, and without it release dates run newest first and everything else ascends. An `order:` or `direction:` keyword in the query wins. Ignored for results ranked by meaning |
+| `unique` | What a result is: `cards` (the default), `prints` or `art`. A `unique:` keyword in the query wins |
 
 The answer carries `total`, `unit` (what the total counts: cards, printings or illustrations),
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
-"Show more" button and sort menu. Each hit names the printing shown: set, collector number,
-rarity, artist, release date and price. Results ranked by meaning stop at 120.
+pager and its three controls (show, sort, direction). The page asks for 60 results at a time.
+Each hit names the printing shown: set, collector number, rarity, artist, release date and
+price. Results ranked by meaning stop at 120. TopK returns nothing beyond the first 10,000 of
+a result, so `k` plus `offset` is held to that and `has_more` is false there.
 
 `GET /api/card?set=<code>&cn=<collector number>` is what a card's own page shows: `card`, that
 printing with its printed power and toughness (`stats`, also loyalty or defense) and three

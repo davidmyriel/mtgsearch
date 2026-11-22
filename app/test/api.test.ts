@@ -1,7 +1,7 @@
 // The HTTP contract, with a stubbed search: no network and no TopK key.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { handleCard, handleSearch, MAX_OFFSET, MAX_QUERY_CHARS, MAX_RESULTS } from "../api.ts";
+import { handleCard, handleSearch, MAX_QUERY_CHARS, MAX_REACH, MAX_RESULTS } from "../api.ts";
 import type { CardPage } from "../card.ts";
 import type { Result, SearchOptions } from "../search.ts";
 
@@ -44,7 +44,7 @@ test("returns the documented shape", async () => {
   assert.equal(response.status, 200);
   const body = await response.json();
   // whitespace is normalised; defaults are filled in
-  assert.deepEqual(calls, [["sphinx that draws two cards", { k: 24, offset: 0, order: null, descending: false }]]);
+  assert.deepEqual(calls, [["sphinx that draws two cards", { k: 24, offset: 0, order: null, descending: null, unique: null }]]);
   assert.equal(typeof body.took_ms, "number");
   delete body.took_ms;
   assert.deepEqual(body, {
@@ -107,16 +107,44 @@ test("page size and offset are clamped", async () => {
   await get({ q: "goblin", k: "-3", offset: "-5" }, search);
   assert.deepEqual(
     calls.map(([, o]) => [o.k, o.offset]),
-    [[MAX_RESULTS, MAX_OFFSET], [1, 0]],
+    [[MAX_RESULTS, MAX_REACH - MAX_RESULTS], [1, 0]],
   );
+});
+
+test("a page never reaches past what TopK will return, and says there is no more at that point", async () => {
+  const many: Result = { mode: "syntax", hits: [HIT], total: 19_000, note: "", hasMore: true, sortedBy: "name", unit: "cards" };
+  const { calls, search } = stub(many);
+  const last = await (await get({ q: "t:creature", k: "60", offset: String(MAX_REACH - 60) }, search)).json();
+  const before = await (await get({ q: "t:creature", k: "60", offset: String(MAX_REACH - 120) }, search)).json();
+  const small = await (await get({ q: "t:creature", k: "10", offset: String(MAX_REACH) }, search)).json();
+  // limit + offset stays within the reach, whatever the page size
+  assert.ok(calls.every(([, o]) => (o.k ?? 0) + (o.offset ?? 0) <= MAX_REACH));
+  assert.deepEqual([last.offset, last.has_more], [MAX_REACH - 60, false]);
+  assert.deepEqual([before.offset, before.has_more], [MAX_REACH - 120, true]);
+  assert.deepEqual([small.offset, small.has_more], [MAX_REACH - 10, false]);
 });
 
 test("paging and sort parameters reach the search and come back in the answer", async () => {
   const sorted: Result = { mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "cmc", unit: "cards" };
   const { calls, search } = stub(sorted);
   const body = await (await get({ q: "t:sphinx", offset: "24", order: "cmc", dir: "desc" }, search)).json();
-  assert.deepEqual(calls[0][1], { k: 24, offset: 24, order: "cmc", descending: true });
+  assert.deepEqual(calls[0][1], { k: 24, offset: 24, order: "cmc", descending: true, unique: null });
   assert.deepEqual([body.offset, body.has_more, body.sorted_by, body.total], [24, true, "cmc", 91]);
+});
+
+test("direction is ascending, descending or left to the order; unique is cards, prints or art", async () => {
+  const { calls, search } = stub();
+  await get({ q: "t:sphinx", order: "released", dir: "asc", unique: "prints" }, search);
+  await get({ q: "t:sphinx", order: "released", unique: "art" }, search);
+  await get({ q: "t:sphinx", dir: "sideways", unique: "cards" }, search);
+  assert.deepEqual(
+    calls.map(([, o]) => [o.order, o.descending, o.unique]),
+    [["released", false, "prints"], ["released", null, "art"], [null, null, "cards"]],
+  );
+  const bad = await get({ q: "t:sphinx", unique: "everything" }, search);
+  assert.equal(bad.status, 400);
+  assert.match((await bad.json()).error, /unique must be one of: cards, prints, art/);
+  assert.equal(calls.length, 3);
 });
 
 test("successful answers may be cached by the CDN, never by the browser alone", async () => {
