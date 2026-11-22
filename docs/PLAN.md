@@ -11,7 +11,8 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 |---|---|
 | What "a copy of Scryfall" means | Same capabilities, own name and visual design. Their look, name and logo are not copied. |
 | Where v0.1 stops | Tier 1: search parity plus the better search |
-| App stack | Python for ingest and evaluation; Next.js with `topk-js` behind a server route for the app |
+| App stack | Decided: a static page plus one TypeScript function on Netlify, with `topk-js`. Python stays the reference implementation and runs ingest, evaluation and the Scryfall comparison |
+| Keep the Python web server | Kept for local development and container hosts; drop it if nothing uses it |
 | Name and branding | Working name only; nothing using "Scryfall" or official-looking Magic branding |
 | Policy sign-off | A person reads Wizards' Fan Content Policy and Scryfall's terms, and tells Scryfall before launch |
 | Indexing art for all 39,356 cards | Not done: roughly 3 GB of images to send and embed, cost not yet known |
@@ -61,16 +62,18 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 - Exit, proposed and to be confirmed on the larger set: right card in the top 3 for 80% of descriptive,
   85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon
 
-### 4. Product: thin version built, not yet deployed
-- [x] API route: key server-side, rate limiting, query length cap, caching
+### 4. Product: thin version built for Netlify, not yet deployed
+- [x] Search endpoint: key server-side, rate limiting, query length cap, caching
 - [x] One responsive page for phone and laptop: results grid with full card images from Scryfall,
       link back, which path the query took, example searches, what can be typed
-- [x] End-to-end browser test at phone and laptop sizes, run in CI
-- [x] Container image, built and started in CI
-- [ ] Deploy it (needs a host account) and point a domain at it
+- [x] Netlify Function in TypeScript, held to the Python reference by a shared fixture
+- [x] End-to-end browser test at phone and laptop sizes, run in CI against both servers
+- [x] Netlify's own build and local server exercised in CI; container image built and started in CI
+- [ ] Connect the repository in Netlify, set `TOPK_API_KEY`, deploy; run the browser test against the
+      live URL. Not verifiable from the repository: Netlify's CDN cache and its rate limit
 - [ ] Anonymous query and click logging
 - [ ] Pagination past the first 60 results; sort controls
-- [ ] Measure p95 latency under load
+- [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms
 
 ### 5. Internal alpha (3–4 days)
@@ -92,13 +95,16 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 | Integration | TopK returns what the Python evaluator predicts; each search path end to end | `pytest -m integration` |
 | Conformance | Our result set equals Scryfall's for the same query | `mtgsearch conformance` |
 | Relevance regression | Ranking quality per query class against a stored baseline | `mtgsearch eval` |
+| Parity | The TypeScript port produces the same filters as the Python reference for about 460 inputs | `npm test`, `fixtures/golden.json` |
 | End to end | The real page in Chromium at phone and laptop sizes | `node e2e/smoke.cjs <url>` |
 
 ## CI
 
 - Every push and pull request: lint, format check, unit tests on Python 3.10 and 3.13.
-- Same-repository pushes and pull requests: integration tests and the browser test, when the TopK
-  secret is configured; the container image is built and started on every run.
+- Every run also type-checks and tests the TypeScript port, builds the function bundle with
+  Netlify's tool, and builds and starts the container image.
+- Same-repository pushes and pull requests: integration tests and the browser test against both
+  servers, when the TopK secret is configured.
 - Nightly: incremental ingest, conformance on the tuning set, relevance evaluation, results uploaded.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.
@@ -112,6 +118,9 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 - The query set and grading rules, so the numbers can be reproduced.
 
 ## Risks
+
+- **Two implementations of search.** The shared fixture catches drift on the inputs it holds, not on
+  inputs nobody wrote down. New keyword work has to land in both.
 
 - **Scryfall's terms** forbid repackaging their data. The plain-English and art search have to be
   the visible point of the product, and Scryfall should hear about it before launch.

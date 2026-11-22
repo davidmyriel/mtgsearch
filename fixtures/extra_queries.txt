@@ -1,0 +1,129 @@
+# Extra syntax inputs for the golden fixture: edge cases, errors and unsupported keywords that
+# the conformance files do not contain. One query per line.
+
+# malformed
+o:"unterminated
+o:/unterminated
+(t:elf
+t:elf )
+t:
+bogus:value
+t:elf -
+c:purple
+mv:three
+pow>=big
+o>=draw
+kw:/fly/
+-
+
+# unsupported
+r:mythic
+s:2x2 t:sphinx
+a:"mark zug"
+m:2WW
+is:fetchland
+not:foil
+unique:prints
+order:usd
+pow>loy
+loy<pt
+o:/\spp/
+is:digital
+include:tokens
+devotion:uu
+
+# operators and values
+c:m
+c:colorless
+c>=c
+c<c
+c:c
+id:colourless
+c!=wubrg
+c<=wubrg
+c>wubrg
+c=0
+c>=5
+id<3
+c:Azorius
+COLOR:Blue
+c:esper id:grixis
+t:"legendary creature"
+t:LEGEND
+T:Fish
+t:jelly
+t:/^legendary artifact$/
+o:"~ enters"
+o:~
+fo:"(then shuffle.)"
+o:/^{T}: add {C}{C}\.$/
+o:/a{2,3}b{1}/
+name:/\bring\b/
+name:bolt
+name:"lim-dûl"
+!"Fire // Ice"
+!urza's
+urza's
+lim-dul's vault
+Séance
+"quoted or phrase"
+or
+elf or
+a b or c
+(a or b) -c
+-(t:creature or t:land) c:g
+- t:elf
+mv:even
+manavalue:ODD
+cmc>=3.5
+mv!=2
+pow=*
+pow:3
+tou<=0
+pow!=2
+loy:4
+pt<5
+pow>=tou
+tou>=pow
+tou=pow
+pow!=tou
+tou<pow
+power>toughness
+f:EDH
+legal:pdh
+banned:vintage restricted:vintage
+is:TDFC
+not:permanent
+is:funny
+not:funny
+otag:"mana rock"
+function:Removal
+edhrec<=100
+edhrecrank>5000
+include:extras
+order:name direction:desc t:elf
+sort:edhrec
+order:power direction:asc
+unique:cards display:grid
+display:text
+t:token
+t:plane
+t:planeswalker
+t:"plane — dominaria"
+t:emblem or t:scheme
+c:u t:sphinx draws when opponents draw
+t:sphinx !fire draws
+sphinx that draws two cards
+
+# numbers: only plain decimals are accepted
+mv:inf
+mv:nan
+mv:1_0
+mv:" 3 "
+mv:.5
+mv:+2
+mv:-1
+pow>=1e1
+edhrec<1.5e3
+mv:0x10
+mv:3.

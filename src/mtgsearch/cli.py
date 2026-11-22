@@ -1,6 +1,7 @@
-"""Command line: mtgsearch ingest | catalog | search | serve | conformance | eval."""
+"""Command line: mtgsearch ingest | catalog | golden | search | serve | conformance | eval."""
 
 import argparse
+import json
 from pathlib import Path
 
 from . import config
@@ -15,6 +16,7 @@ def main(argv: list[str] | None = None) -> None:
     ingest.add_argument("--full", action="store_true", help="re-send every card, not just changed ones")
 
     sub.add_parser("catalog", help="regenerate the type-word catalogue from the bulk data")
+    sub.add_parser("golden", help="rewrite the fixture the TypeScript port is tested against")
 
     search = sub.add_parser("search", help="run one query")
     search.add_argument("query")
@@ -46,7 +48,14 @@ def main(argv: list[str] | None = None) -> None:
         words = catalog.build(cards)
         target = Path(catalog.__file__).with_name(catalog.FILE)
         target.write_text("\n".join(words) + "\n", encoding="utf-8")
-        print(f"wrote {len(words)} type words to {target}")
+        # The Netlify function bundles the same list as JSON.
+        copy = Path(catalog.__file__).resolve().parents[2] / "netlify" / "lib" / "type-words.json"
+        copy.write_text(json.dumps(words, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"wrote {len(words)} type words to {target} and {copy}")
+    elif args.command == "golden":
+        from . import golden
+
+        print(f"wrote {golden.write()} cases to {golden.FIXTURE}")
     elif args.command == "search":
         from .search import search as run_search
 

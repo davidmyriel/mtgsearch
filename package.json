@@ -1,0 +1,21 @@
+{
+  "name": "mtgsearch-web",
+  "private": true,
+  "description": "The Netlify function that serves search. The Python package is the reference implementation.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test \"netlify/test/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "topk-js": "^0.16.1"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0"
+  }
+}

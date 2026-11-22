@@ -55,6 +55,28 @@ jobs:
         if: env.TOPK_API_KEY == ''
         run: echo "TOPK_API_KEY secret is not configured; integration tests skipped."
 
+  node:
+    name: TypeScript port (parity with Python, type-check, Netlify bundle)
+    runs-on: ubuntu-latest
+    env:
+      # Empty on pull requests from forks; the live tests then skip themselves.
+      TOPK_API_KEY: ${{ secrets.TOPK_API_KEY }}
+      TOPK_REGION: ${{ vars.TOPK_REGION }}
+      MTGSEARCH_COLLECTION: ${{ vars.MTGSEARCH_COLLECTION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Build the function bundle the way Netlify does
+        run: |
+          npx -y netlify-cli@27 build --offline
+          unzip -l .netlify/functions/search.zip | grep -q 'topk-js.*\.node$'
+
   container:
     name: Build the container and check it serves the page
     runs-on: ubuntu-latest
@@ -91,6 +113,7 @@ jobs:
         with:
           node-version: 22
       - run: pip install -e ".[web]"
+      - run: npm ci
       - name: Install Playwright
         if: env.TOPK_API_KEY != ''
         run: npm install --no-save playwright && npx playwright install --with-deps chromium
@@ -100,6 +123,12 @@ jobs:
           mtgsearch serve --port 8000 &
           for i in $(seq 1 20); do curl -sf http://127.0.0.1:8000/healthz && break; sleep 1; done
           node e2e/smoke.cjs http://127.0.0.1:8000
+      - name: Serve the site the way Netlify does and drive it the same way
+        if: env.TOPK_API_KEY != ''
+        run: |
+          npx -y netlify-cli@27 dev --offline --port 8899 --no-open > netlify-dev.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf -o /dev/null http://127.0.0.1:8899/ && break; sleep 2; done
+          node e2e/smoke.cjs http://127.0.0.1:8899 || { cat netlify-dev.log; exit 1; }
       - name: Skipped
         if: env.TOPK_API_KEY == ''
         run: echo "TOPK_API_KEY secret is not configured; browser test skipped."

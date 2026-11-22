@@ -10,3 +10,11 @@ docs
 **/__pycache__
 *.egg-info
 .env
+netlify
+node_modules
+fixtures
+package.json
+package-lock.json
+tsconfig.json
+netlify.toml
+.netlify

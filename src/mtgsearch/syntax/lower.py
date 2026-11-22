@@ -57,6 +57,7 @@ _NUM_COMPARE = {
     "<": lambda a, b: a < b, "=": lambda a, b: a == b, "!=": lambda a, b: a != b,
 }  # fmt: skip
 _FLIP = {">": "<", "<": ">", ">=": "<=", "<=": ">=", "=": "=", "!=": "!="}
+_DECIMAL = re.compile(r"[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?")
 _RELATIONS = {">": [">"], "<": ["<"], "=": ["="], ">=": [">", "="], "<=": ["<", "="], "!=": [">", "<"]}
 
 
@@ -68,10 +69,11 @@ class Options:
 
 
 def _number(key: str, value: str) -> float:
-    try:
-        return float(value)
-    except ValueError:
-        raise QueryError(f"'{key}' expects a number, got '{value}'") from None
+    """A plain decimal number. Stricter than float(): no "inf", "nan", "1_000" or padding,
+    so that every implementation of this syntax accepts exactly the same values."""
+    if not _DECIMAL.fullmatch(value):
+        raise QueryError(f"'{key}' expects a number, got '{value}'")
+    return float(value)
 
 
 def _any_of(field: str, values: list[str]):

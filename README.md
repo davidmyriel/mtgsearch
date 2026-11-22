@@ -108,6 +108,46 @@ mtgsearch search "sphinx that draws two cards"
 
 ## Web app
 
+One responsive page (`src/mtgsearch/static/`) over one endpoint, `GET /api/search?q=...`. It
+works the same on a phone and a laptop, and the TopK key never leaves the server. The endpoint
+is public and plain-English queries cost an inference call, so it caps queries at 200
+characters, caches repeated queries and rate-limits each client to 30 searches a minute.
+
+There are two servers for that endpoint. The page works against either.
+
+| Server | Where | Use it for |
+|---|---|---|
+| Netlify Function, TypeScript | `netlify/functions/search.mts`, `netlify/lib/` | The deployed site |
+| Starlette app, Python | `src/mtgsearch/web.py` | Local development, or any host that runs a container |
+
+### Deploying on Netlify
+
+1. In Netlify, add a new project from this Git repository. `netlify.toml` already sets the
+   publish directory, the function and the headers; leave the build command empty.
+2. Under Project configuration > Environment variables, add `TOPK_API_KEY`. On plans that ask
+   for a scope, include Functions. `TOPK_REGION` and `MTGSEARCH_COLLECTION` are optional.
+3. Deploy. Changing a variable needs a new deploy to take effect.
+
+Caching and the rate limit are Netlify's: successful answers are cached at the CDN for ten
+minutes, and the function declares a limit of 30 requests a minute per client. To check a
+deployment from your machine:
+
+```bash
+node e2e/smoke.cjs https://your-site.netlify.app
+```
+
+To run the site locally the way Netlify serves it:
+
+```bash
+npm ci
+```
+
+```bash
+npx netlify-cli dev --offline
+```
+
+### Running the Python server
+
 ```bash
 pip install -e ".[web]"
 ```
@@ -116,29 +156,26 @@ pip install -e ".[web]"
 mtgsearch serve
 ```
 
-Open http://127.0.0.1:8000. It is one responsive page (`src/mtgsearch/static/`) over one endpoint,
-`GET /api/search?q=...`, and works the same on a phone and a laptop. The TopK key stays on the
-server. Because the endpoint is public and plain-English queries cost an inference call, it
-caps queries at 200 characters, caches repeated queries for ten minutes and limits each client
-to 30 uncached searches a minute (`MTGSEARCH_RATE_LIMIT`). The cache and the limit live in the
-process, so they are per server instance.
+Open http://127.0.0.1:8000. Its cache and rate limit (`MTGSEARCH_RATE_LIMIT`) live in the
+process, so they are per server instance. The `Dockerfile` packages this server for hosts that
+take a container: set `TOPK_API_KEY` as a secret, use `/healthz` as the health check, and run
+it behind the host's load balancer, because it trusts forwarded client addresses.
 
-### Deploying
+## Two implementations, one behaviour
 
-The `Dockerfile` runs the app on any host that takes a container (Render, Fly.io, Railway,
-Cloud Run and the like):
+Netlify Functions run JavaScript, so the code that answers a search exists twice: the Python
+package is the reference, checked against Scryfall's API, and `netlify/lib/` is a TypeScript
+port of the parser, the keyword rules, the plain-English filters and the search routing.
 
-1. Point the host at this repository and let it build the `Dockerfile`.
-2. Set the `TOPK_API_KEY` environment variable as a secret. `TOPK_REGION` and
-   `MTGSEARCH_COLLECTION` are optional.
-3. Use `/healthz` as the health check. The app listens on `$PORT`, or 8000.
+`fixtures/golden.json` keeps them identical. It holds what the Python code produces for about
+460 inputs (every conformance query, the evaluation queries and a file of edge cases), and the
+TypeScript tests must reproduce every one. To change search behaviour:
 
-The image trusts forwarded client addresses for rate limiting, so run it behind the host's
-load balancer, not exposed directly. To check a deployment from your machine:
+1. Change the Python and its tests.
+2. Run `mtgsearch golden` to rewrite the fixture. A Python test fails if you forget.
+3. Change `netlify/lib/` until `npm test` passes.
 
-```bash
-node e2e/smoke.cjs https://your-deployment
-```
+Ingest, evaluation and the Scryfall comparison stay Python-only.
 
 ## Commands
 
@@ -147,11 +184,14 @@ node e2e/smoke.cjs https://your-deployment
 | `mtgsearch ingest [--dry-run] [--full]` | Refresh the collection from Scryfall's bulk data |
 | `mtgsearch catalog` | Regenerate the type-word catalogue after new sets add types |
 | `mtgsearch search "<query>"` | Run one query |
-| `mtgsearch serve` | Run the web app locally |
+| `mtgsearch serve` | Run the Python web server locally |
+| `mtgsearch golden` | Rewrite the fixture the TypeScript port is tested against |
 | `mtgsearch conformance [file]` | Compare syntax queries with Scryfall's API |
 | `mtgsearch eval` | Score the ranking strategies on `eval/queries.json` |
 | `pytest` | Unit tests, no network |
 | `pytest -m integration` | Tests against the live collection (needs `TOPK_API_KEY`) |
+| `npm test` | TypeScript tests: parity with Python, the HTTP contract, and live tests when `TOPK_API_KEY` is set |
+| `npm run typecheck` | Type-check the TypeScript |
 | `node e2e/smoke.cjs <url>` | Drive the running app in a browser at phone and laptop sizes (needs Playwright) |
 
 Collections are versioned (`mtg-cards-v2`). To change the schema, set `MTGSEARCH_COLLECTION`

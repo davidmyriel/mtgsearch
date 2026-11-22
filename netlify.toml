@@ -1,0 +1,30 @@
+# Netlify serves the static page and runs one function, netlify/functions/search.mts.
+# Set TOPK_API_KEY in the Netlify UI (Project configuration > Environment variables);
+# variables declared in this file are not available to functions.
+
+[build]
+  # No build command: the page is plain HTML, CSS and JS, and Netlify bundles the function.
+  publish = "src/mtgsearch/static"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  # topk-js is a native Node add-on, so it is shipped as-is instead of being inlined.
+  external_node_modules = ["topk-js"]
+
+# The page asks for /static/app.js and friends, which is where the Python server mounts them.
+# Here the files sit at the root of the publish directory.
+[[redirects]]
+  from = "/static/*"
+  to = "/:splat"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; img-src 'self' https://cards.scryfall.io; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
