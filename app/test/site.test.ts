@@ -28,7 +28,7 @@ test("a card's address is served the page on Netlify, and the page uses absolute
   assert.match(toml, /\[\[redirects\]\]\s+from = "\/random"\s+to = "\/index.html"\s+status = 200/);
   assert.match(toml, /\[\[redirects\]\]\s+from = "\/syntax"\s+to = "\/syntax.html"\s+status = 200/);
   // relative paths would resolve under /card/... and fail; a link within the page (#main) is fine
-  for (const page of ["public/index.html", "public/syntax.html"]) {
+  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
     for (const reference of root(page).match(/(?:src|href)="[^"]+"/g) ?? []) {
       assert.match(reference, /="(?:\/|https:\/\/|#)/, `${page}: ${reference}`);
     }
