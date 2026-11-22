@@ -28,10 +28,10 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 ## Stages
 
 ### 0. Setup: done except CI secrets
-- [x] Repository, lint, unit tests, CI workflow files
+- [x] Repository on GitHub, lint, unit tests, CI workflows (both have run and pass)
 - [ ] Rotate the API key that was pasted into chat; create separate keys for CI, staging, production
-- [ ] Add `TOPK_API_KEY` secret and `TOPK_REGION`, `MTGSEARCH_COLLECTION` variables on GitHub. The
-      workflows have not run yet: this repo has no remote.
+- [ ] Add the `TOPK_API_KEY` secret on GitHub. Until then the integration tests and the nightly
+      refresh skip themselves. `TOPK_REGION` and `MTGSEARCH_COLLECTION` variables are optional.
 
 ### 1. Card-level search parity: mostly done
 - [x] Ingest pipeline from Scryfall bulk files, incremental, versioned collections
