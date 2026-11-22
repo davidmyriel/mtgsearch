@@ -196,6 +196,11 @@ npm run search -- "sphinx that draws two cards"
    `MTGSEARCH_PRINTINGS_COLLECTION` are optional.
 3. Deploy. Changing a variable needs a new deploy to take effect.
 
+If a search on the deployed site answers "This deployment has no TopK API key" or "TopK
+rejected this deployment's API key", the variable is missing, was added after the last
+deploy, is not shared with Functions, or has stray quotes or spaces. Fix it and deploy again.
+Any other failure shows a generic message; the cause is in the function's log in Netlify.
+
 The endpoint is public and plain-English queries cost an inference call, so queries are capped
 at 200 characters, successful answers are cached at Netlify's CDN for ten minutes, and the
 function declares a limit of 30 requests a minute per client. To check a deployment:
