@@ -3,7 +3,7 @@
 Goal: everything Scryfall's search does, plus natural-language and art search, under our own
 name and design, as a public demo of TopK.
 
-Last updated 21 November 2026. Time estimates are rough judgement for one engineer.
+Last updated 22 November 2026. Time estimates are rough judgement for one engineer.
 
 ## Decisions still open
 
@@ -11,7 +11,7 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 |---|---|
 | What "a copy of Scryfall" means | Same capabilities, own name and visual design. Their look, name and logo are not copied. |
 | Where v0.1 stops | Tier 1: search parity plus the better search |
-| App stack | Python for ingest and evaluation; Next.js with `topk-js` behind a server route for the app |
+| App stack | Decided: a static page plus one TypeScript function on Netlify, with `topk-js`. TypeScript is the only implementation of search; a Python job builds the collection |
 | Name and branding | Working name only; nothing using "Scryfall" or official-looking Magic branding |
 | Policy sign-off | A person reads Wizards' Fan Content Policy and Scryfall's terms, and tells Scryfall before launch |
 | Indexing art for all 39,356 cards | Not done: roughly 3 GB of images to send and embed, cost not yet known |
@@ -27,27 +27,34 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 
 ## Stages
 
-### 0. Setup: done except CI secrets
-- [x] Repository on GitHub, lint, unit tests, CI workflows (both have run and pass)
-- [ ] Rotate the API key that was pasted into chat; create separate keys for CI, staging, production
-- [ ] Add the `TOPK_API_KEY` secret on GitHub. Until then the integration tests and the nightly
-      refresh skip themselves. `TOPK_REGION` and `MTGSEARCH_COLLECTION` variables are optional.
+### 0. Setup: done except key rotation
+- [x] Repository on GitHub, lint, unit tests, CI workflows
+- [x] `TOPK_API_KEY` secret on GitHub: integration tests and the nightly refresh run with it
+- [ ] Revoke the first API key that was pasted into chat; create separate keys for CI, staging, production
 
 ### 1. Card-level search parity: mostly done
 - [x] Ingest pipeline from Scryfall bulk files, incremental, versioned collections
 - [x] Syntax compiler for card-level keywords (see README for the list)
-- [x] Differential testing against Scryfall's API: 97/97 tuning, 74/77 held-out first run
-- [ ] Mana cost keywords: `m:`, `devotion:`, `produces:`
+- [x] Differential testing against Scryfall's API: 97/97 tuning, 74/77 held-out first run (77/77 now)
+- [x] Mana cost keywords: `m:`, `devotion:`, `produces:` (58/58 tuning, 18/22 held-out first run)
 - [ ] Remaining `is:` shortcuts (land cycles and the like) and Scryfall's regex shorthands
 - [ ] Grow the held-out conformance set to about 200 queries; run it nightly
 
-### 2. Printing-level parity: not started, the largest remaining gap (2–3 weeks)
-- [ ] Second collection with one document per printing (Scryfall's `default_cards` file, about three
-      times the size)
-- [ ] `set:`, `rarity:`, `artist:`, `flavor:`, prices, `frame:`, `border:`, `game:`, `year:`, `in:`, `new:`
-- [ ] `unique:cards|prints|art` and `prefer:`; check TopK's `group_by` can pick one printing per card
+### 2. Printing-level parity: mostly done
+- [x] Second collection with one document per printing (Scryfall's `default_cards` file: 120,275
+      printings, no embeddings), kept up to date by the same ingest job
+- [x] `set:`, `rarity:`, `cn:`, `artist:`, `flavor:`, `watermark:`, prices, `frame:`, `border:`,
+      `stamp:`, `game:`, `year:`, `date:`, `in:`, `prints`, `sets`, printing-level `is:` flags
+- [x] `unique:cards|prints|art`, `prefer:`, and sorting by release date, price and rarity. One
+      TopK `group_by` returns each matching card and the printing that shows it
+- [x] Differential testing: 79/79 tuning, 53/61 held-out first run, 59/61 after fixes
+- [ ] `new:`, `lang:` and non-English printings, `block:`, `cube:`
 - [ ] Name search over printed and flavour names
-- Exit: held-out conformance at 95% or better with printing keywords included
+- [ ] The cases in `conformance/known_gaps.txt`: Arena printings that only exist to be conjured,
+      Scryfall's loose match on two-letter artist fragments
+- Exit: held-out conformance at 95% or better with printing keywords included. Held-out is at
+  59 of 61 (97%) after fixes; the honest first-run figure was 87%, so a fresh held-out set is
+  needed before calling this met
 
 ### 3. Relevance (about a week)
 - [x] Frozen query set, evaluation harness, full-corpus baseline
@@ -62,12 +69,21 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 - Exit, proposed and to be confirmed on the larger set: right card in the top 3 for 80% of descriptive,
   85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon
 
-### 4. Product (about a week)
-- [ ] API route: key server-side, rate limiting, query length cap, caching
-- [ ] UI: results grid with full card images from Scryfall, artist credit, link back, which path the
-      query took, example queries, a page showing how it works
+### 4. Product: thin version built for Netlify, not yet deployed
+- [x] Search endpoint: key server-side, rate limiting, query length cap, caching
+- [x] One responsive page for phone and laptop: results grid with full card images from Scryfall,
+      link back, which path the query took, example searches, what can be typed
+- [x] One implementation of search, in TypeScript, running as a Netlify Function
+- [x] End-to-end browser test at phone and laptop sizes, run in CI on the local server and as
+      Netlify serves the site; Netlify's own build exercised in CI
+- [ ] Connect the repository in Netlify, set `TOPK_API_KEY`, deploy; run the browser test against the
+      live URL. Not verifiable from the repository: Netlify's CDN cache and its rate limit
+- [x] Paging ("Show more") and a sort menu, including newest printing and price
+- [x] Printing details in the card view (set, number, rarity, artist, price, flavour text) and a
+      link from a card to all of its printings
 - [ ] Anonymous query and click logging
-- Exit: end-to-end browser test passes; p95 under 500 ms
+- [ ] Measure p95 latency under load, including function cold starts
+- Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms
 
 ### 5. Internal alpha (3–4 days)
 - [ ] Bug bash; every failed query goes into the query set
@@ -84,17 +100,22 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 
 | Layer | What it covers | Where |
 |---|---|---|
-| Unit | Document builder, syntax parser and semantics, plain-English filters | `tests/`, no network |
-| Integration | TopK returns what the Python evaluator predicts; each search path end to end | `pytest -m integration` |
-| Conformance | Our result set equals Scryfall's for the same query | `mtgsearch conformance` |
-| Relevance regression | Ranking quality per query class against a stored baseline | `mtgsearch eval` |
-| End to end | Browser test on the deployed app | Stage 4 |
+| App unit tests | Parser, keyword semantics, plain-English filters, search routing, the HTTP contract, the page | `npm test`, no network |
+| Compiler snapshot | The compiled predicate for about 550 inputs is unchanged unless deliberately regenerated | `fixtures/reference.json`, `npm run golden` |
+| Ingest unit tests | Document builder, what a daily run re-sends, the fixtures the app tests read | `pytest`, no network |
+| Live tests | Each search path against the real collection | `npm test` with `TOPK_API_KEY` |
+| Conformance | Our result set equals Scryfall's for the same query | `npm run conformance` |
+| Relevance regression | Ranking quality per query class against a stored baseline | `npm run eval` |
+| End to end | The real page in Chromium at phone and laptop sizes | `node e2e/smoke.cjs <url>` |
 
 ## CI
 
-- Every push and pull request: lint, format check, unit tests on Python 3.10 and 3.13.
-- Same-repository pushes and pull requests: integration tests, when the TopK secret is configured.
-- Nightly: incremental ingest, conformance on the tuning set, relevance evaluation, results uploaded.
+- Every push and pull request: type-check and test the app, check the compiler snapshot, build the
+  function bundle with Netlify's tool; lint and test the ingest job on Python 3.10 and 3.13.
+- Same-repository pushes and pull requests, when the TopK secret is configured: live tests, and the
+  browser test on the local server and as Netlify serves the site.
+- Nightly: incremental ingest of cards and printings, conformance on both tuning sets, relevance
+  evaluation, results uploaded.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.
 
@@ -107,6 +128,17 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 - The query set and grading rules, so the numbers can be reproduced.
 
 ## Risks
+
+- **Keyword scores after field updates.** After partial `update()` calls, BM25 scores in the
+  cards collection stopped being comparable between cards (see the note under the relevance
+  table in the README). Search does not use BM25, so nothing visible changed. To find out:
+  whether scores recover once TopK compacts the collection, and whether this is expected
+  behaviour. It matters for the published benchmark's keyword baseline and for anyone who
+  adds keyword search later.
+
+- **Two languages.** Search is TypeScript and ingest is Python, because TopK's JavaScript SDK cannot
+  write whole numbers into decimal fields. If that changes, the ingest job (about 550 lines) can move
+  to TypeScript and the repository becomes single-language.
 
 - **Scryfall's terms** forbid repackaging their data. The plain-English and art search have to be
   the visible point of the product, and Scryfall should hear about it before launch.

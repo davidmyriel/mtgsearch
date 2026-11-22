@@ -1,7 +1,11 @@
-"""Command line: mtgsearch ingest | catalog | search | conformance | eval."""
+"""Command line for the ingest job: mtgsearch ingest | catalog.
+
+Searching, the Scryfall comparison and the relevance evaluation live in the TypeScript app
+(see package.json scripts).
+"""
 
 import argparse
-from pathlib import Path
+import json
 
 from . import config
 
@@ -10,58 +14,31 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="mtgsearch", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
 
-    ingest = sub.add_parser("ingest", help="refresh the TopK collection from Scryfall's bulk files")
+    ingest = sub.add_parser("ingest", help="refresh the TopK collections from Scryfall's bulk files")
     ingest.add_argument("--dry-run", action="store_true", help="build documents and report, send nothing")
-    ingest.add_argument("--full", action="store_true", help="re-send every card, not just changed ones")
+    ingest.add_argument("--full", action="store_true", help="re-send every document, not just changed ones")
+    ingest.add_argument("--only", choices=("cards", "printings"), help="refresh one collection only")
 
-    sub.add_parser("catalog", help="regenerate the type-word catalogue from the bulk data")
-
-    search = sub.add_parser("search", help="run one query")
-    search.add_argument("query")
-    search.add_argument("-k", type=int, default=10)
-
-    conformance = sub.add_parser("conformance", help="compare syntax queries with Scryfall's API")
-    conformance.add_argument("queries", nargs="?", default="conformance/queries.txt")
-    conformance.add_argument("--out", default=None)
-
-    evaluate = sub.add_parser("eval", help="score ranking strategies on the frozen query set")
-    evaluate.add_argument("queries", nargs="?", default="eval/queries.json")
-    evaluate.add_argument("--out", default=None)
-    evaluate.add_argument("--classes", nargs="*", default=None)
+    sub.add_parser("catalog", help="regenerate the catalogues in app/ from the bulk data")
 
     args = parser.parse_args(argv)
 
     if args.command == "ingest":
         from . import ingest as ingest_module
 
-        ingest_module.run(config.DATA_DIR, dry_run=args.dry_run, full=args.full)
+        ingest_module.run(config.DATA_DIR, dry_run=args.dry_run, full=args.full, only=args.only)
     elif args.command == "catalog":
         from . import catalog, scryfall
 
+        def write(path, value):
+            path.write_text(json.dumps(value, ensure_ascii=False) + "\n", encoding="utf-8")
+            print(f"wrote {len(value)} entries to {path}")
+
         cards = scryfall.read_jsonl_gz(scryfall.download_bulk("oracle_cards", config.DATA_DIR))
-        words = catalog.build(cards)
-        target = Path(catalog.__file__).with_name(catalog.FILE)
-        target.write_text("\n".join(words) + "\n", encoding="utf-8")
-        print(f"wrote {len(words)} type words to {target}")
-    elif args.command == "search":
-        from .search import search as run_search
-
-        result = run_search(args.query, args.k)
-        total = f", {result.total} total" if result.total is not None else ""
-        print(f"[{result.mode}{total}] {result.note}")
-        for hit in result.hits:
-            score = f"{hit['score']:.3f}  " if "score" in hit else ""
-            print(f"  {score}{hit['name']}  {hit.get('mana_cost', '')}  {hit.get('type_line', '')}")
-    elif args.command == "conformance":
-        from . import conformance as conformance_module
-
-        results = conformance_module.run(Path(args.queries), Path(args.out) if args.out else None)
-        if any(r.status != "pass" for r in results):
-            raise SystemExit(1)
-    elif args.command == "eval":
-        from . import evaluate as evaluate_module
-
-        evaluate_module.run(Path(args.queries), Path(args.out) if args.out else None, args.classes)
+        write(catalog.OUTPUT, catalog.build(cards))
+        printings = scryfall.download_bulk("default_cards", config.DATA_DIR)
+        write(catalog.SETS_OUTPUT, catalog.set_dates(scryfall.read_jsonl_gz(printings)))
+        write(catalog.FLAGS_OUTPUT, catalog.printing_flags(scryfall.read_jsonl_gz(printings)))
 
 
 if __name__ == "__main__":

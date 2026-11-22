@@ -1,4 +1,15 @@
-from mtgsearch.documents import INFINITY, color_key, fold, is_extra, plain, stat, type_words
+from mtgsearch.documents import (
+    INFINITY,
+    color_key,
+    cost_parts,
+    fold,
+    is_extra,
+    mana_fields,
+    parse_cost,
+    plain,
+    stat,
+    type_words,
+)
 
 
 def test_fold_and_plain():
@@ -117,3 +128,84 @@ def test_extras():
     assert is_extra({**base, **nowhere, "digital": True})
     assert is_extra({**base, **nowhere, "set": "ph19"}) and is_extra({**base, **nowhere, "set": "hho"})
     assert not is_extra({**base, "digital": True})  # digital but legal somewhere, e.g. Alchemy
+
+
+def test_hidden_extras_follow_what_scryfall_shows():
+    def card(**kw):
+        return {
+            "layout": "normal",
+            "set_type": "expansion",
+            "set": "xyz",
+            "legalities": {"vintage": "legal"},
+            **kw,
+        }
+
+    nowhere = {"vintage": "not_legal", "commander": "not_legal"}
+    assert not is_extra(card())
+    assert is_extra(card(layout="token")) and is_extra(card(set_type="memorabilia"))
+    # dungeons live in token sets, yet are shown
+    assert not is_extra(card(set_type="token", type_line="Dungeon", legalities=nowhere))
+    assert not is_extra(
+        card(set_type="token", layout="double_faced_token", type_line="Dungeon — Undercity // Card")
+    )
+    assert is_extra(card(set_type="memorabilia", type_line="Dungeon"))
+    # legal nowhere: Un-set cards in their own sets and brand-new cards are shown
+    assert not is_extra(card(set="unh", set_type="funny", legalities=nowhere))
+    assert not is_extra(card(set="unf", set_type="funny", promo_types=["playtest"], legalities=nowhere))
+    assert not is_extra(card(set="slc", set_type="box", legalities=nowhere))
+    # ... the rest is hidden
+    assert is_extra(card(set="pal04", set_type="promo", legalities=nowhere))  # promo printing of an Un-card
+    assert is_extra(card(set="sld", set_type="box", promo_types=["poster"], legalities=nowhere))
+    assert is_extra(card(set="sld", set_type="box", type_line="Stickers", legalities=nowhere))
+    assert is_extra(card(set="ulst", set_type="funny", legalities=nowhere))
+    assert is_extra(card(set="cmb1", set_type="masters", promo_types=["playtest"], legalities=nowhere))
+    assert is_extra(card(digital=True, legalities=nowhere))
+    assert not is_extra(card(set="pal04", set_type="promo"))  # a legal card's promo is an ordinary printing
+    # removed for offensive content; printed only in another video game
+    assert is_extra(card(content_warning=True))
+    assert is_extra(card(games=["sega"], digital=True)) and is_extra(card(games=["astral"]))
+    assert not is_extra(card(games=["arena"], digital=True)) and not is_extra(card(games=[]))
+
+
+def test_a_mana_cost_is_generic_plus_symbols_and_hybrids_have_one_spelling():
+    assert parse_cost("{2}{W}{W}") == (2, ["W", "W"])
+    assert parse_cost("{X}{X}{10}{R}") == (10, ["R", "X", "X"])
+    assert parse_cost("{W/R}{R/W}{G/U/P}{2/W}") == (0, ["2/W", "G/P/U", "R/W", "R/W"])
+    assert parse_cost("") == (0, [])
+
+
+def test_cost_parts_are_split_halves_and_faces_with_a_cost(docs):
+    assert cost_parts({"mana_cost": "{1}{R} // {1}{U}"}) == ["{1}{R}", "{1}{U}"]
+    faces = [{"mana_cost": "{3}{W}{W}"}, {"mana_cost": ""}]
+    assert cost_parts({"card_faces": faces}) == ["{3}{W}{W}"]  # a back face without a cost is not a part
+    assert cost_parts({"mana_cost": ""}) == []
+
+
+def test_mana_fields(docs):
+    sphinx = docs["Consecrated Sphinx"]  # {4}{U}{U}
+    assert (sphinx["m0_key"], sphinx["m0_gen"]) == ("4|U,U", 4)
+    assert sphinx["m_syms"] == ["0:U:1", "0:U:2"]
+    assert (sphinx["dev_U"], sphinx["dev_WU"], sphinx["dev_UR"]) == (2, 2, 2)
+    assert "dev_W" not in sphinx and "m1_key" not in sphinx and "produces" not in sphinx
+    reckoner = docs["Boros Reckoner"]  # three {R/W}
+    assert reckoner["m_syms"] == ["0:R/W:1", "0:R/W:2", "0:R/W:3"] and reckoner["m0_gen"] == 0
+    assert (reckoner["dev_R"], reckoner["dev_W"], reckoner["dev_WR"], reckoner["dev_WU"]) == (3, 3, 3, 3)
+    assert "dev_U" not in reckoner and "dev_UB" not in reckoner
+    fire = docs["Fire // Ice"]  # {1}{R} // {1}{U}, an instant
+    assert (fire["m0_key"], fire["m1_key"]) == ("1|R", "1|U")
+    assert fire["m_syms"] == ["0:R:1", "1:U:1"]
+    assert not any(key.startswith("dev_") for key in fire)  # only permanents have devotion
+    ring = docs["Sol Ring"]  # {1}
+    assert (ring["m0_key"], ring["m0_gen"]) == ("1|", 1) and "m_syms" not in ring
+
+
+def test_a_card_without_a_cost_and_what_a_card_produces():
+    land = mana_fields({"mana_cost": "", "produced_mana": ["G", "W", "C"]})
+    assert land == {"m0_key": "none", "produces": ["W", "G", "C"], "produces_n": 3}
+    assert mana_fields({"mana_cost": "{0}"}) == {"m0_key": "0|", "m0_gen": 0}
+
+
+def test_devotion_to_two_colours_counts_each_symbol_once():
+    # {R}{R/W}{W}: two red, two white, and three symbols that are red or white
+    scrollsmith = mana_fields({"mana_cost": "{R}{R/W}{W}", "type_line": "Creature — Dwarf Cleric"})
+    assert (scrollsmith["dev_R"], scrollsmith["dev_W"], scrollsmith["dev_WR"]) == (2, 2, 3)

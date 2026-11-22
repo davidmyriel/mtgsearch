@@ -1,0 +1,685 @@
+{
+ "summary": {
+  "pass": 75,
+  "fail": 0,
+  "unsupported": 0,
+  "error": 0
+ },
+ "results": [
+  {
+   "query": "set:ima",
+   "status": "pass",
+   "scryfall_total": 249,
+   "ours_total": 249,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:ima r:mythic",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "s:m12 r>=rare",
+   "status": "pass",
+   "scryfall_total": 68,
+   "ours_total": 68,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "e:lea r:common",
+   "status": "pass",
+   "scryfall_total": 79,
+   "ours_total": 79,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "st:masters t:sphinx",
+   "status": "pass",
+   "scryfall_total": 33,
+   "ours_total": 33,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-set:ima t:sphinx",
+   "status": "pass",
+   "scryfall_total": 91,
+   "ours_total": 91,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:sphinx (set:ima or set:2x2)",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "r:special t:creature",
+   "status": "pass",
+   "scryfall_total": 166,
+   "ours_total": 166,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "r<uncommon t:sphinx",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "r!=common set:ima",
+   "status": "pass",
+   "scryfall_total": 148,
+   "ours_total": 148,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:ima cn:47",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:ima cn>=250",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:ima cn<10",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "a:\"mark zug\" t:sphinx",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "a:zug",
+   "status": "pass",
+   "scryfall_total": 216,
+   "ours_total": 216,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "a:\"rebecca guay\" c:g",
+   "status": "pass",
+   "scryfall_total": 70,
+   "ours_total": 70,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "ft:phyrexia t:creature",
+   "status": "pass",
+   "scryfall_total": 134,
+   "ours_total": 134,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "ft:/hands of jin-gitaxias/",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-ft:the set:ima",
+   "status": "pass",
+   "scryfall_total": 115,
+   "ours_total": 115,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "wm:phyrexian t:creature",
+   "status": "pass",
+   "scryfall_total": 157,
+   "ours_total": 157,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "wm:orzhov",
+   "status": "pass",
+   "scryfall_total": 104,
+   "ours_total": 104,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:future",
+   "status": "pass",
+   "scryfall_total": 232,
+   "ours_total": 232,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:1993 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:2003 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 30,
+   "ours_total": 30,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:legendary t:sphinx",
+   "status": "pass",
+   "scryfall_total": 19,
+   "ours_total": 19,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:showcase t:sphinx",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "border:white t:sphinx",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "border:borderless t:sphinx",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "border:silver t:creature mv=1",
+   "status": "pass",
+   "scryfall_total": 12,
+   "ours_total": 12,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "stamp:acorn",
+   "status": "pass",
+   "scryfall_total": 141,
+   "ours_total": 141,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "stamp:triangle t:sphinx",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "game:arena t:sphinx",
+   "status": "pass",
+   "scryfall_total": 48,
+   "ours_total": 48,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "game:mtgo t:sphinx",
+   "status": "pass",
+   "scryfall_total": 90,
+   "ours_total": 90,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-game:paper t:sphinx",
+   "status": "pass",
+   "scryfall_total": 25,
+   "ours_total": 25,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "year=2011 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "year<=1994 c:u t:creature",
+   "status": "pass",
+   "scryfall_total": 79,
+   "ours_total": 79,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "date>=2026-01-01 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "date<mrd t:sphinx",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "date>ima t:sphinx r:mythic",
+   "status": "pass",
+   "scryfall_total": 23,
+   "ours_total": 23,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:foil t:sphinx set:ima",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:nonfoil set:sld t:sphinx",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:etched t:sphinx",
+   "status": "pass",
+   "scryfall_total": 6,
+   "ours_total": 6,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:promo t:sphinx",
+   "status": "pass",
+   "scryfall_total": 34,
+   "ours_total": 34,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:reprint t:sphinx set:ima",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "not:reprint t:sphinx",
+   "status": "pass",
+   "scryfall_total": 91,
+   "ours_total": 91,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:digital t:sphinx",
+   "status": "pass",
+   "scryfall_total": 25,
+   "ours_total": 25,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:fullart t:sphinx",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:full t:sphinx",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:textless t:creature",
+   "status": "pass",
+   "scryfall_total": 49,
+   "ours_total": 49,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:spotlight t:sphinx",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:prerelease t:sphinx",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:datestamped t:sphinx",
+   "status": "pass",
+   "scryfall_total": 22,
+   "ours_total": 22,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:buyabox",
+   "status": "pass",
+   "scryfall_total": 98,
+   "ours_total": 98,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:showcase t:sphinx",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:borderless t:sphinx",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:extended t:sphinx",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:old t:sphinx",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:new t:sphinx set:ima",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:ub t:sphinx",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:booster t:sphinx set:ima",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:hires t:sphinx set:ima",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:ima t:sphinx",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-in:ima t:sphinx",
+   "status": "pass",
+   "scryfall_total": 88,
+   "ours_total": 88,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:arena t:sphinx",
+   "status": "pass",
+   "scryfall_total": 48,
+   "ours_total": 48,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:mtgo -in:paper t:creature c:w mv=1",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:rare t:sphinx",
+   "status": "pass",
+   "scryfall_total": 51,
+   "ours_total": 51,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:mythic -in:rare t:sphinx",
+   "status": "pass",
+   "scryfall_total": 24,
+   "ours_total": 24,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "prints>=20 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "prints=1 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "sets>=10 t:sphinx",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "sets=1 t:sphinx r:mythic",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"consecrated sphinx\" unique:prints",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:sphinx set:2x2 unique:prints",
+   "status": "pass",
+   "scryfall_total": 7,
+   "ours_total": 7,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"consecrated sphinx\" unique:art",
+   "status": "pass",
+   "scryfall_total": 6,
+   "ours_total": 6,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 1 Scryfall results"
+  },
+  {
+   "query": "t:sphinx unique:art r:mythic",
+   "status": "pass",
+   "scryfall_total": 52,
+   "ours_total": 52,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 29 Scryfall results"
+  }
+ ]
+}

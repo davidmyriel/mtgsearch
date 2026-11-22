@@ -1,0 +1,94 @@
+# Printing-level syntax: sets, rarity, artists, frames, dates, prices, `in:`, `unique:`.
+# Tuning set: the rules in app/lower.ts and src/mtgsearch/printings.py were adjusted on these.
+# Run with: npm run conformance -- conformance/printings.txt
+
+# sets and rarity
+set:ima
+set:ima r:mythic
+s:m12 r>=rare
+e:lea r:common
+st:masters t:sphinx
+-set:ima t:sphinx
+t:sphinx (set:ima or set:2x2)
+r:special t:creature
+r<uncommon t:sphinx
+r!=common set:ima
+
+# collector number
+set:ima cn:47
+set:ima cn>=250
+set:ima cn<10
+
+# artist, flavour text, watermark
+a:"mark zug" t:sphinx
+a:zug
+a:"rebecca guay" c:g
+ft:phyrexia t:creature
+ft:/hands of jin-gitaxias/
+-ft:the set:ima
+wm:phyrexian t:creature
+wm:orzhov
+
+# frame, border, stamp, game
+frame:future
+frame:1993 t:sphinx
+frame:2003 t:sphinx
+frame:legendary t:sphinx
+frame:showcase t:sphinx
+border:white t:sphinx
+border:borderless t:sphinx
+border:silver t:creature mv=1
+stamp:acorn
+stamp:triangle t:sphinx
+game:arena t:sphinx
+game:mtgo t:sphinx
+-game:paper t:sphinx
+
+# dates
+year=2011 t:sphinx
+year<=1994 c:u t:creature
+date>=2026-01-01 t:sphinx
+date<mrd t:sphinx
+date>ima t:sphinx r:mythic
+
+# is: for printings
+is:foil t:sphinx set:ima
+is:nonfoil set:sld t:sphinx
+is:etched t:sphinx
+is:promo t:sphinx
+is:reprint t:sphinx set:ima
+not:reprint t:sphinx
+is:digital t:sphinx
+is:fullart t:sphinx
+is:full t:sphinx
+is:textless t:creature
+is:spotlight t:sphinx
+is:prerelease t:sphinx
+is:datestamped t:sphinx
+is:buyabox
+is:showcase t:sphinx
+is:borderless t:sphinx
+is:extended t:sphinx
+is:old t:sphinx
+is:new t:sphinx set:ima
+is:ub t:sphinx
+is:booster t:sphinx set:ima
+is:hires t:sphinx set:ima
+
+# the card across all its printings
+in:ima t:sphinx
+-in:ima t:sphinx
+in:arena t:sphinx
+in:mtgo -in:paper t:creature c:w mv=1
+in:rare t:sphinx
+in:mythic -in:rare t:sphinx
+prints>=20 t:sphinx
+prints=1 t:sphinx
+sets>=10 t:sphinx
+sets=1 t:sphinx r:mythic
+
+# what a result is
+!"consecrated sphinx" unique:prints
+t:sphinx set:2x2 unique:prints
+!"consecrated sphinx" unique:art
+t:sphinx unique:art r:mythic

@@ -1,20 +1,20 @@
-"""The catalogue of known type words (supertypes, card types and subtypes).
+"""Small catalogues the search app bundles, generated from the bulk data by `mtgsearch catalog`.
 
-Scryfall matches `t:fish` against whole type words (so it does not find Jellyfish) but matches
-an unknown fragment such as `t:jelly` as a substring. Telling the two apart needs the list of
-real type words. It is generated from the bulk data by `mtgsearch catalog` and committed.
+Type words (supertypes, card types and subtypes). Scryfall matches `t:fish` against whole
+type words (so it does not find Jellyfish) but matches an unknown fragment such as `t:jelly`
+as a substring. Telling the two apart needs the list of real type words (app/type-words.json).
+
+Set release dates, so `date>=ori` can be compared (app/sets.json), and the flags a printing can
+carry, so `is:prerelease` is recognised (app/printing-flags.json). Run it after new sets appear.
 """
 
 from collections.abc import Iterable
-from functools import lru_cache
-from importlib import resources
+from pathlib import Path
 
-FILE = "type_words.txt"
-
-
-@lru_cache
-def type_word_set() -> frozenset[str]:
-    return frozenset(resources.files("mtgsearch").joinpath(FILE).read_text(encoding="utf-8").split())
+APP = Path(__file__).resolve().parents[2] / "app"
+OUTPUT = APP / "type-words.json"
+SETS_OUTPUT = APP / "sets.json"
+FLAGS_OUTPUT = APP / "printing-flags.json"
 
 
 def build(cards: Iterable[dict]) -> list[str]:
@@ -34,3 +34,24 @@ def build(cards: Iterable[dict]) -> list[str]:
             )
             words.update(type_words(line))
     return sorted(words)
+
+
+def set_dates(printings: Iterable[dict]) -> dict[str, str]:
+    """Set code -> release date: the date most of the set's cards share."""
+    from collections import Counter, defaultdict
+
+    dates: dict[str, Counter] = defaultdict(Counter)
+    for p in printings:
+        dates[p["set"]][p["released_at"]] += 1
+    return {code: dates[code].most_common(1)[0][0] for code in sorted(dates)}
+
+
+def printing_flags(printings: Iterable[dict]) -> list[str]:
+    """Every value the `pflags` field of a printing document can hold."""
+    from .printings import FLAG_KEYS
+
+    flags = {name for _, name in FLAG_KEYS}
+    for p in printings:
+        flags.update(p.get("finishes") or [])
+        flags.update(p.get("promo_types") or [])
+    return sorted(flags)

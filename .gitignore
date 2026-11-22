@@ -5,3 +5,7 @@ __pycache__/
 .venv/
 .env
 data/
+node_modules/
+
+# Local Netlify folder
+.netlify

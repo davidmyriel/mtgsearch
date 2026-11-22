@@ -34,21 +34,3 @@ def card_tags(tags: Iterable[dict]) -> dict[str, dict]:
             entry["labels"].add(label)
             entry["slugs"].update(slugs)
     return {k: {"labels": sorted(v["labels"]), "slugs": sorted(v["slugs"])} for k, v in out.items()}
-
-
-def tag_members(tags: Iterable[dict], slug: str) -> set[str]:
-    """Oracle ids carrying a tag or any of its descendants. Used to grade jargon queries."""
-    tags = list(tags)
-    by_id = {t["id"]: t for t in tags}
-    root = next((t for t in tags if slug in (t["slug"], t["label"], *t.get("aliases", []))), None)
-    if root is None:
-        raise KeyError(slug)
-    members, stack, seen = set(), [root["id"]], set()
-    while stack:
-        tag_id = stack.pop()
-        if tag_id in seen or tag_id not in by_id:
-            continue
-        seen.add(tag_id)
-        members.update(g["oracle_id"] for g in by_id[tag_id]["taggings"])
-        stack.extend(by_id[tag_id].get("child_ids", []))
-    return members

@@ -1,14 +1,11 @@
-"""Scryfall access: bulk-data downloads for ingest, and the search API for conformance tests.
+"""Scryfall bulk-data downloads, the only source for ingest.
 
-Bulk files are the only source for ingest. The search API is used solely to compare our
-results against Scryfall's, and is throttled to stay well inside their published rate limit.
+Requests are throttled to stay well inside Scryfall's published rate limit.
 """
 
 import gzip
 import json
 import time
-import urllib.error
-import urllib.parse
 import urllib.request
 from collections.abc import Iterator
 from pathlib import Path
@@ -55,23 +52,3 @@ def read_jsonl_gz(path: Path) -> Iterator[dict]:
         for line in f:
             if line.strip():
                 yield json.loads(line)
-
-
-def api_search(query: str, max_pages: int = 4) -> tuple[int, list[str], bool]:
-    """Run a query on Scryfall. Returns (total, oracle ids fetched, whether the id list is complete)."""
-    url = f"{API}/cards/search?" + urllib.parse.urlencode({"q": query, "unique": "cards"})
-    ids: list[str] = []
-    total = 0
-    for _ in range(max_pages):
-        try:
-            page = json.loads(_get(url))
-        except urllib.error.HTTPError as e:
-            if e.code == 404:  # Scryfall answers "no cards matched" with a 404
-                return 0, [], True
-            raise
-        total = page.get("total_cards", 0)
-        ids += [c.get("oracle_id") or c["card_faces"][0].get("oracle_id") or c["id"] for c in page["data"]]
-        if not page.get("has_more"):
-            return total, ids, True
-        url = page["next_page"]
-    return total, ids, False

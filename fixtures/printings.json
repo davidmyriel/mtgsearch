@@ -1,0 +1,1132 @@
+[
+ {
+  "_id": "nph-30",
+  "name": "Consecrated Sphinx",
+  "name_lc": "consecrated sphinx",
+  "name_plain": "consecrated sphinx",
+  "names_lc": [
+   "consecrated sphinx"
+  ],
+  "type_lc": "creature — sphinx",
+  "type_words": [
+   "creature",
+   "sphinx"
+  ],
+  "oracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "oracle_tilde_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "fulloracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "keywords_lc": [
+   "flying"
+  ],
+  "cmc": 6.0,
+  "cmc_even": true,
+  "c_sets": [
+   "U"
+  ],
+  "id_sets": [
+   "U"
+  ],
+  "stat_rel": [
+   "pow<tou"
+  ],
+  "pt_num": 10.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "m_syms": [
+   "0:U:1",
+   "0:U:2"
+  ],
+  "m0_key": "4|U,U",
+  "m0_gen": 4,
+  "dev_WU": 2,
+  "dev_U": 2,
+  "dev_UB": 2,
+  "dev_UR": 2,
+  "dev_UG": 2,
+  "extra": false,
+  "edhrec_rank": 661,
+  "mana_cost": "{4}{U}{U}",
+  "type_line": "Creature — Sphinx",
+  "oracle_text": "Flying\nWhenever an opponent draws a card, you may draw two cards.",
+  "scryfall_uri": "https://scryfall.com/card/nph/30/x",
+  "artist": "Mark Zug",
+  "set": "nph",
+  "set_name": "NPH",
+  "cn": "30",
+  "released": "2011-05-13",
+  "rarity": "mythic",
+  "in_sets": [
+   "ima",
+   "nph",
+   "pima"
+  ],
+  "in_rarities": [
+   "mythic",
+   "rare"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3,
+  "pow_min": 4.0,
+  "pow_max": 4.0,
+  "tou_min": 6.0,
+  "tou_max": 6.0,
+  "oracle_id": "consecrated-sphinx",
+  "set_type": "expansion",
+  "cn_num": 30.0,
+  "rarity_rank": 4,
+  "artist_lc": "mark zug",
+  "flavor_text": "Blessed by the hands of Jin-Gitaxias.",
+  "flavor_lc": "blessed by the hands of jin-gitaxias.",
+  "watermarks": [
+   "phyrexian"
+  ],
+  "frame": "2003",
+  "border": "black",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20110513,
+  "year": 2011,
+  "usd_c": 4150,
+  "eur_c": 3010,
+  "tix_c": 50,
+  "pflags": [
+   "foil",
+   "nonfoil"
+  ],
+  "art": "art-sphinx",
+  "pref_rank": 1
+ },
+ {
+  "_id": "ima-47",
+  "name": "Consecrated Sphinx",
+  "name_lc": "consecrated sphinx",
+  "name_plain": "consecrated sphinx",
+  "names_lc": [
+   "consecrated sphinx"
+  ],
+  "type_lc": "creature — sphinx",
+  "type_words": [
+   "creature",
+   "sphinx"
+  ],
+  "oracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "oracle_tilde_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "fulloracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "keywords_lc": [
+   "flying"
+  ],
+  "cmc": 6.0,
+  "cmc_even": true,
+  "c_sets": [
+   "U"
+  ],
+  "id_sets": [
+   "U"
+  ],
+  "stat_rel": [
+   "pow<tou"
+  ],
+  "pt_num": 10.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "m_syms": [
+   "0:U:1",
+   "0:U:2"
+  ],
+  "m0_key": "4|U,U",
+  "m0_gen": 4,
+  "dev_WU": 2,
+  "dev_U": 2,
+  "dev_UB": 2,
+  "dev_UR": 2,
+  "dev_UG": 2,
+  "extra": false,
+  "edhrec_rank": 661,
+  "mana_cost": "{4}{U}{U}",
+  "type_line": "Creature — Sphinx",
+  "oracle_text": "Flying\nWhenever an opponent draws a card, you may draw two cards.",
+  "scryfall_uri": "https://scryfall.com/card/ima/47/x",
+  "artist": "Mark Zug",
+  "set": "ima",
+  "set_name": "IMA",
+  "cn": "47",
+  "released": "2017-11-17",
+  "rarity": "mythic",
+  "in_sets": [
+   "ima",
+   "nph",
+   "pima"
+  ],
+  "in_rarities": [
+   "mythic",
+   "rare"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3,
+  "pow_min": 4.0,
+  "pow_max": 4.0,
+  "tou_min": 6.0,
+  "tou_max": 6.0,
+  "oracle_id": "consecrated-sphinx",
+  "set_type": "expansion",
+  "cn_num": 47.0,
+  "rarity_rank": 4,
+  "artist_lc": "mark zug",
+  "frame": "2015",
+  "border": "black",
+  "stamp": "oval",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20171117,
+  "year": 2017,
+  "usd_c": 3497,
+  "eur_c": 2621,
+  "tix_c": 23,
+  "pflags": [
+   "booster",
+   "foil",
+   "hires",
+   "nonfoil",
+   "reprint"
+  ],
+  "art": "art-sphinx",
+  "pref_rank": 0
+ },
+ {
+  "_id": "pima-47s",
+  "name": "Consecrated Sphinx",
+  "name_lc": "consecrated sphinx",
+  "name_plain": "consecrated sphinx",
+  "names_lc": [
+   "consecrated sphinx"
+  ],
+  "type_lc": "creature — sphinx",
+  "type_words": [
+   "creature",
+   "sphinx"
+  ],
+  "oracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "oracle_tilde_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "fulloracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "keywords_lc": [
+   "flying"
+  ],
+  "cmc": 6.0,
+  "cmc_even": true,
+  "c_sets": [
+   "U"
+  ],
+  "id_sets": [
+   "U"
+  ],
+  "stat_rel": [
+   "pow<tou"
+  ],
+  "pt_num": 10.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "m_syms": [
+   "0:U:1",
+   "0:U:2"
+  ],
+  "m0_key": "4|U,U",
+  "m0_gen": 4,
+  "dev_WU": 2,
+  "dev_U": 2,
+  "dev_UB": 2,
+  "dev_UR": 2,
+  "dev_UG": 2,
+  "extra": false,
+  "edhrec_rank": 661,
+  "mana_cost": "{4}{U}{U}",
+  "type_line": "Creature — Sphinx",
+  "oracle_text": "Flying\nWhenever an opponent draws a card, you may draw two cards.",
+  "scryfall_uri": "https://scryfall.com/card/pima/47s/x",
+  "artist": "Mark Zug",
+  "set": "pima",
+  "set_name": "PIMA",
+  "cn": "47s",
+  "released": "2017-11-18",
+  "rarity": "rare",
+  "in_sets": [
+   "ima",
+   "nph",
+   "pima"
+  ],
+  "in_rarities": [
+   "mythic",
+   "rare"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3,
+  "pow_min": 4.0,
+  "pow_max": 4.0,
+  "tou_min": 6.0,
+  "tou_max": 6.0,
+  "oracle_id": "consecrated-sphinx",
+  "set_type": "expansion",
+  "cn_num": 47.0,
+  "rarity_rank": 2,
+  "artist_lc": "mark zug",
+  "frame": "2015",
+  "border": "black",
+  "games": [
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20171118,
+  "year": 2017,
+  "usd_c": 5500,
+  "pflags": [
+   "datestamped",
+   "foil",
+   "prerelease",
+   "promo",
+   "reprint"
+  ],
+  "art": "art-sphinx",
+  "pref_rank": 2
+ },
+ {
+  "_id": "lea-270",
+  "name": "Sol Ring",
+  "name_lc": "sol ring",
+  "name_plain": "sol ring",
+  "names_lc": [
+   "sol ring"
+  ],
+  "type_lc": "artifact",
+  "type_words": [
+   "artifact"
+  ],
+  "oracle_lc": "{t}: add {c}{c}.",
+  "oracle_tilde_lc": "{t}: add {c}{c}.",
+  "fulloracle_lc": "{t}: add {c}{c}.",
+  "cmc": 1.0,
+  "cmc_even": false,
+  "c_sets": [
+   "C"
+  ],
+  "id_sets": [
+   "C"
+  ],
+  "legal": [
+   "commander",
+   "vintage"
+  ],
+  "banned": [
+   "legacy"
+  ],
+  "restricted": [
+   "vintage"
+  ],
+  "flags": [
+   "historic",
+   "permanent",
+   "spell"
+  ],
+  "otags": [
+   "mana-rock",
+   "ramp"
+  ],
+  "m0_key": "1|",
+  "m0_gen": 1,
+  "produces": [
+   "C"
+  ],
+  "produces_n": 1,
+  "extra": false,
+  "edhrec_rank": 1,
+  "mana_cost": "{1}",
+  "type_line": "Artifact",
+  "oracle_text": "{T}: Add {C}{C}.",
+  "scryfall_uri": "https://scryfall.com/card/lea/270/x",
+  "artist": "Mark Tedin",
+  "set": "lea",
+  "set_name": "LEA",
+  "cn": "270",
+  "released": "1993-08-05",
+  "rarity": "uncommon",
+  "in_sets": [
+   "c21",
+   "lea",
+   "sld"
+  ],
+  "in_rarities": [
+   "uncommon"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3,
+  "oracle_id": "sol-ring",
+  "set_type": "expansion",
+  "cn_num": 270.0,
+  "rarity_rank": 1,
+  "artist_lc": "mark tedin",
+  "frame": "1993",
+  "border": "black",
+  "games": [
+   "paper"
+  ],
+  "lang": "en",
+  "date": 19930805,
+  "year": 1993,
+  "usd_c": 150000,
+  "pflags": [
+   "nonfoil"
+  ],
+  "art": "lea-270",
+  "pref_rank": 1
+ },
+ {
+  "_id": "c21-263",
+  "name": "Sol Ring",
+  "name_lc": "sol ring",
+  "name_plain": "sol ring",
+  "names_lc": [
+   "sol ring"
+  ],
+  "type_lc": "artifact",
+  "type_words": [
+   "artifact"
+  ],
+  "oracle_lc": "{t}: add {c}{c}.",
+  "oracle_tilde_lc": "{t}: add {c}{c}.",
+  "fulloracle_lc": "{t}: add {c}{c}.",
+  "cmc": 1.0,
+  "cmc_even": false,
+  "c_sets": [
+   "C"
+  ],
+  "id_sets": [
+   "C"
+  ],
+  "legal": [
+   "commander",
+   "vintage"
+  ],
+  "banned": [
+   "legacy"
+  ],
+  "restricted": [
+   "vintage"
+  ],
+  "flags": [
+   "historic",
+   "permanent",
+   "spell"
+  ],
+  "otags": [
+   "mana-rock",
+   "ramp"
+  ],
+  "m0_key": "1|",
+  "m0_gen": 1,
+  "produces": [
+   "C"
+  ],
+  "produces_n": 1,
+  "extra": false,
+  "edhrec_rank": 1,
+  "mana_cost": "{1}",
+  "type_line": "Artifact",
+  "oracle_text": "{T}: Add {C}{C}.",
+  "scryfall_uri": "https://scryfall.com/card/c21/263/x",
+  "artist": "Mike Bierek",
+  "set": "c21",
+  "set_name": "C21",
+  "cn": "263",
+  "released": "2021-04-23",
+  "rarity": "uncommon",
+  "in_sets": [
+   "c21",
+   "lea",
+   "sld"
+  ],
+  "in_rarities": [
+   "uncommon"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3,
+  "oracle_id": "sol-ring",
+  "set_type": "expansion",
+  "cn_num": 263.0,
+  "rarity_rank": 1,
+  "artist_lc": "mike bierek",
+  "flavor_text": "Lost to time is the artificer's art of trapping light from a distant star.",
+  "flavor_lc": "lost to time is the artificer's art of trapping light from a distant star.",
+  "frame": "2015",
+  "border": "black",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20210423,
+  "year": 2021,
+  "usd_c": 129,
+  "eur_c": 110,
+  "pflags": [
+   "foil",
+   "nonfoil",
+   "reprint"
+  ],
+  "art": "c21-263",
+  "pref_rank": 0
+ },
+ {
+  "_id": "sld-1011",
+  "name": "Sol Ring",
+  "name_lc": "sol ring",
+  "name_plain": "sol ring",
+  "names_lc": [
+   "sol ring"
+  ],
+  "type_lc": "artifact",
+  "type_words": [
+   "artifact"
+  ],
+  "oracle_lc": "{t}: add {c}{c}.",
+  "oracle_tilde_lc": "{t}: add {c}{c}.",
+  "fulloracle_lc": "{t}: add {c}{c}.",
+  "cmc": 1.0,
+  "cmc_even": false,
+  "c_sets": [
+   "C"
+  ],
+  "id_sets": [
+   "C"
+  ],
+  "legal": [
+   "commander",
+   "vintage"
+  ],
+  "banned": [
+   "legacy"
+  ],
+  "restricted": [
+   "vintage"
+  ],
+  "flags": [
+   "historic",
+   "permanent",
+   "spell"
+  ],
+  "otags": [
+   "mana-rock",
+   "ramp"
+  ],
+  "m0_key": "1|",
+  "m0_gen": 1,
+  "produces": [
+   "C"
+  ],
+  "produces_n": 1,
+  "extra": false,
+  "edhrec_rank": 1,
+  "mana_cost": "{1}",
+  "type_line": "Artifact",
+  "oracle_text": "{T}: Add {C}{C}.",
+  "scryfall_uri": "https://scryfall.com/card/sld/1011/x",
+  "artist": "Mike Bierek",
+  "set": "sld",
+  "set_name": "SLD",
+  "cn": "1011",
+  "released": "2022-02-18",
+  "rarity": "rare",
+  "in_sets": [
+   "c21",
+   "lea",
+   "sld"
+  ],
+  "in_rarities": [
+   "uncommon"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3,
+  "oracle_id": "sol-ring",
+  "set_type": "expansion",
+  "cn_num": 1011.0,
+  "rarity_rank": 2,
+  "artist_lc": "mike bierek",
+  "frame": "2015",
+  "frame_effects": [
+   "extendedart"
+  ],
+  "border": "borderless",
+  "games": [
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20220218,
+  "year": 2022,
+  "usd_c": 2000,
+  "pflags": [
+   "etched",
+   "foil",
+   "fullart",
+   "reprint",
+   "universesbeyond"
+  ],
+  "art": "sld-1011",
+  "pref_rank": 2
+ },
+ {
+  "_id": "m19-314",
+  "name": "Llanowar Elves",
+  "name_lc": "llanowar elves",
+  "name_plain": "llanowar elves",
+  "names_lc": [
+   "llanowar elves"
+  ],
+  "type_lc": "creature — elf druid",
+  "type_words": [
+   "creature",
+   "druid",
+   "elf"
+  ],
+  "oracle_lc": "{t}: add {g}.",
+  "oracle_tilde_lc": "{t}: add {g}.",
+  "fulloracle_lc": "{t}: add {g}.",
+  "cmc": 1.0,
+  "cmc_even": false,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 2.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "0|G",
+  "m0_gen": 0,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
+  "produces": [
+   "G"
+  ],
+  "produces_n": 1,
+  "extra": false,
+  "mana_cost": "{G}",
+  "type_line": "Creature — Elf Druid",
+  "oracle_text": "{T}: Add {G}.",
+  "scryfall_uri": "https://scryfall.com/card/m19/314/x",
+  "artist": "Chris Rahn",
+  "set": "m19",
+  "set_name": "M19",
+  "cn": "314",
+  "released": "2018-07-13",
+  "rarity": "common",
+  "in_sets": [
+   "anb",
+   "m19"
+  ],
+  "in_rarities": [
+   "common"
+  ],
+  "in_games": [
+   "arena",
+   "mtgo",
+   "paper"
+  ],
+  "prints": 2,
+  "sets": 2,
+  "pow_min": 1.0,
+  "pow_max": 1.0,
+  "tou_min": 1.0,
+  "tou_max": 1.0,
+  "oracle_id": "llanowar-elves",
+  "set_type": "expansion",
+  "cn_num": 314.0,
+  "rarity_rank": 0,
+  "artist_lc": "chris rahn",
+  "frame": "2015",
+  "border": "black",
+  "games": [
+   "arena",
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20180713,
+  "year": 2018,
+  "usd_c": 25,
+  "tix_c": 3,
+  "pflags": [
+   "foil",
+   "nonfoil",
+   "reprint"
+  ],
+  "art": "m19-314",
+  "pref_rank": 0
+ },
+ {
+  "_id": "anb-13",
+  "name": "Llanowar Elves",
+  "name_lc": "llanowar elves",
+  "name_plain": "llanowar elves",
+  "names_lc": [
+   "llanowar elves"
+  ],
+  "type_lc": "creature — elf druid",
+  "type_words": [
+   "creature",
+   "druid",
+   "elf"
+  ],
+  "oracle_lc": "{t}: add {g}.",
+  "oracle_tilde_lc": "{t}: add {g}.",
+  "fulloracle_lc": "{t}: add {g}.",
+  "cmc": 1.0,
+  "cmc_even": false,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 2.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "0|G",
+  "m0_gen": 0,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
+  "produces": [
+   "G"
+  ],
+  "produces_n": 1,
+  "extra": false,
+  "mana_cost": "{G}",
+  "type_line": "Creature — Elf Druid",
+  "oracle_text": "{T}: Add {G}.",
+  "scryfall_uri": "https://scryfall.com/card/anb/13/x",
+  "artist": "Chris Rahn",
+  "set": "anb",
+  "set_name": "ANB",
+  "cn": "13",
+  "released": "2020-08-13",
+  "rarity": "common",
+  "in_sets": [
+   "anb",
+   "m19"
+  ],
+  "in_rarities": [
+   "common"
+  ],
+  "in_games": [
+   "arena",
+   "mtgo",
+   "paper"
+  ],
+  "prints": 2,
+  "sets": 2,
+  "pow_min": 1.0,
+  "pow_max": 1.0,
+  "tou_min": 1.0,
+  "tou_max": 1.0,
+  "oracle_id": "llanowar-elves",
+  "set_type": "expansion",
+  "cn_num": 13.0,
+  "rarity_rank": 0,
+  "artist_lc": "chris rahn",
+  "frame": "2015",
+  "border": "black",
+  "games": [
+   "arena"
+  ],
+  "lang": "en",
+  "date": 20200813,
+  "year": 2020,
+  "pflags": [
+   "digital",
+   "nonfoil",
+   "reprint"
+  ],
+  "art": "anb-13",
+  "pref_rank": 1
+ },
+ {
+  "_id": "10e-268",
+  "name": "Grizzly Bears",
+  "name_lc": "grizzly bears",
+  "name_plain": "grizzly bears",
+  "names_lc": [
+   "grizzly bears"
+  ],
+  "type_lc": "creature — bear",
+  "type_words": [
+   "bear",
+   "creature"
+  ],
+  "oracle_lc": "",
+  "oracle_tilde_lc": "",
+  "fulloracle_lc": "",
+  "cmc": 2.0,
+  "cmc_even": true,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 4.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "bear",
+   "permanent",
+   "spell",
+   "vanilla"
+  ],
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "1|G",
+  "m0_gen": 1,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
+  "extra": false,
+  "mana_cost": "{1}{G}",
+  "type_line": "Creature — Bear",
+  "oracle_text": "",
+  "scryfall_uri": "https://scryfall.com/card/10e/268/x",
+  "artist": "D. J. Cleland-Hura",
+  "set": "10e",
+  "set_name": "10E",
+  "cn": "268",
+  "released": "2007-07-13",
+  "rarity": "common",
+  "in_sets": [
+   "10e"
+  ],
+  "in_rarities": [
+   "common"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 1,
+  "sets": 1,
+  "pow_min": 2.0,
+  "pow_max": 2.0,
+  "tou_min": 2.0,
+  "tou_max": 2.0,
+  "oracle_id": "grizzly-bears",
+  "set_type": "expansion",
+  "cn_num": 268.0,
+  "rarity_rank": 0,
+  "artist_lc": "d. j. cleland-hura",
+  "flavor_text": "Don't try to outrun one of Dominia's grizzlies.",
+  "flavor_lc": "don't try to outrun one of dominia's grizzlies.",
+  "frame": "2003",
+  "border": "white",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20070713,
+  "year": 2007,
+  "pflags": [
+   "foil",
+   "nonfoil"
+  ],
+  "art": "10e-268",
+  "pref_rank": 0
+ },
+ {
+  "_id": "soi-5",
+  "name": "Archangel Avacyn // Avacyn, the Purifier",
+  "name_lc": "archangel avacyn // avacyn, the purifier",
+  "name_plain": "archangel avacyn avacyn the purifier",
+  "names_lc": [
+   "archangel avacyn",
+   "archangel avacyn // avacyn, the purifier",
+   "avacyn, the purifier"
+  ],
+  "type_lc": "legendary creature — angel // legendary creature — angel",
+  "type_words": [
+   "angel",
+   "creature",
+   "legendary"
+  ],
+  "oracle_lc": "flash\nflying, vigilance\nwhen archangel avacyn enters, creatures you control gain indestructible until end of turn.\nflying\nwhen this creature transforms into avacyn, the purifier, it deals 3 damage to each other creature and each opponent.",
+  "oracle_tilde_lc": "flash\nflying, vigilance\nwhen ~ enters, creatures you control gain indestructible until end of turn.\nflying\nwhen ~ transforms into ~, it deals 3 damage to each other creature and each opponent.",
+  "fulloracle_lc": "flash\nflying, vigilance\nwhen archangel avacyn enters, creatures you control gain indestructible until end of turn.\nflying\nwhen this creature transforms into avacyn, the purifier, it deals 3 damage to each other creature and each opponent.",
+  "keywords_lc": [
+   "flying",
+   "vigilance",
+   "flash"
+  ],
+  "cmc": 5.0,
+  "cmc_even": false,
+  "c_sets": [
+   "R",
+   "W"
+  ],
+  "id_sets": [
+   "WR"
+  ],
+  "stat_rel": [
+   "pow<tou",
+   "pow=tou",
+   "pow>tou"
+  ],
+  "pt_num": 8.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "commander",
+   "dfc",
+   "historic",
+   "permanent",
+   "spell",
+   "transform"
+  ],
+  "m_syms": [
+   "0:W:1",
+   "0:W:2"
+  ],
+  "m0_key": "3|W,W",
+  "m0_gen": 3,
+  "dev_W": 2,
+  "dev_WU": 2,
+  "dev_WB": 2,
+  "dev_WR": 2,
+  "dev_WG": 2,
+  "extra": false,
+  "mana_cost": "{3}{W}{W}",
+  "type_line": "Legendary Creature — Angel // Legendary Creature — Angel",
+  "oracle_text": "Flash\nFlying, vigilance\nWhen Archangel Avacyn enters, creatures you control gain indestructible until end of turn.\nFlying\nWhen this creature transforms into Avacyn, the Purifier, it deals 3 damage to each other creature and each opponent.",
+  "scryfall_uri": "https://scryfall.com/card/soi/5/x",
+  "artist": "James Ryman",
+  "set": "soi",
+  "set_name": "SOI",
+  "cn": "5",
+  "released": "2016-04-08",
+  "rarity": "mythic",
+  "in_sets": [
+   "soi"
+  ],
+  "in_rarities": [
+   "mythic"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 1,
+  "sets": 1,
+  "pow_min": 4.0,
+  "pow_max": 6.0,
+  "tou_min": 4.0,
+  "tou_max": 5.0,
+  "oracle_id": "archangel-avacyn-//-avacyn,-the-purifier",
+  "set_type": "expansion",
+  "cn_num": 5.0,
+  "rarity_rank": 4,
+  "artist_lc": "james ryman",
+  "flavor_text": "A golden helix streaked skyward.",
+  "flavor_lc": "a golden helix streaked skyward.",
+  "frame": "2015",
+  "frame_effects": [
+   "sunmoondfc"
+  ],
+  "border": "black",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20160408,
+  "year": 2016,
+  "usd_c": 1200,
+  "pflags": [
+   "foil",
+   "nonfoil"
+  ],
+  "art": "art-avacyn",
+  "pref_rank": 0
+ },
+ {
+  "_id": "tm19-8",
+  "name": "Goblin",
+  "name_lc": "goblin",
+  "name_plain": "goblin",
+  "names_lc": [
+   "goblin"
+  ],
+  "type_lc": "token creature — goblin",
+  "type_words": [
+   "creature",
+   "goblin",
+   "token"
+  ],
+  "oracle_lc": "",
+  "oracle_tilde_lc": "",
+  "fulloracle_lc": "",
+  "cmc": 0.0,
+  "cmc_even": true,
+  "c_sets": [
+   "R"
+  ],
+  "id_sets": [
+   "R"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 2.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "vanilla"
+  ],
+  "m0_key": "none",
+  "extra": true,
+  "mana_cost": "",
+  "type_line": "Token Creature — Goblin",
+  "oracle_text": "",
+  "scryfall_uri": "https://scryfall.com/card/tm19/8/x",
+  "artist": "Karl Kopinski",
+  "set": "tm19",
+  "set_name": "TM19",
+  "cn": "8",
+  "released": "2018-07-13",
+  "rarity": "common",
+  "in_sets": [
+   "tm19"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 1,
+  "sets": 1,
+  "pow_min": 1.0,
+  "pow_max": 1.0,
+  "tou_min": 1.0,
+  "tou_max": 1.0,
+  "oracle_id": "goblin",
+  "set_type": "token",
+  "cn_num": 8.0,
+  "rarity_rank": 0,
+  "artist_lc": "karl kopinski",
+  "frame": "2015",
+  "border": "black",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20180713,
+  "year": 2018,
+  "pflags": [
+   "foil",
+   "nonfoil"
+  ],
+  "art": "tm19-8",
+  "pref_rank": 0
+ }
+]

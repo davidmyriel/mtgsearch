@@ -1,0 +1,30 @@
+# Extra plain-English inputs for the golden fixture. One query per line.
+blue sphinx
+a 3-drop blue instant
+4 cmc white sorcery that destroys all creatures
+legendary elves that tap for mana
+destroy all creatures for four mana
+artifact that taps for two mana
+cmc 3 green creature
+mana value 2 black instant
+fourteen mana eldrazi
+big colorless creature
+mono red goblin with haste
+the white and blue angel
+red
+protection from red
+board wipe
+token doubler
+spell that counters a spell
+wolves and dwarves
+sphinxes with flying
+zombies
+glass cannon
+café for two mana
+ONE MANA   ELF   that taps
+two-mana, green elf
+'cheap' artifact
+- elf
+12 mana artifact
+100 mana artifact
+one mana one mana elf

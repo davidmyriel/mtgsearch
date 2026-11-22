@@ -304,7 +304,7 @@
    "note": ""
   },
   {
-   "query": "t:\"creature \u2014 sphinx\"",
+   "query": "t:\"creature — sphinx\"",
    "status": "pass",
    "scryfall_total": 80,
    "ours_total": 80,

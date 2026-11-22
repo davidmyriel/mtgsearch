@@ -1,0 +1,7 @@
+# Price comparisons. Prices move every day and our copy is refreshed nightly, so a card that sits
+# on a boundary can differ for a few hours. Run by hand, not as a nightly gate:
+#   npm run conformance -- conformance/prices.txt
+usd>=100 t:sphinx
+usd<0.10 t:sphinx set:ima
+eur>50 t:sphinx
+tix>5 t:sphinx

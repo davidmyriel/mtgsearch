@@ -16,8 +16,40 @@ o:"~ deals" t:instant mv=1 c:r
 t:phenomenon
     Scryfall returns 28 cards, we return 21. Six are oversized event cards that are missing from
     Scryfall's one-per-card bulk file, and one has a joke type line on the printing that file
-    picks. Indexing every printing (the default_cards file) would close this.
+    picks. Card-level queries are answered from that file.
 
-is:digital t:sphinx
-    `is:digital` is true when any printing is digital. That is printing-level data, so the
-    keyword is reported as unsupported rather than answered from one printing.
+ft:/blessed by keiga/
+    A regular expression on flavour text does not look at the back face of a double-faced card
+    on Scryfall, while the plain form (ft:"blessed by keiga") does. We search every face in
+    both forms, so we return Fable of the Mirror-Breaker here and Scryfall does not.
+
+a:rk t:angel
+    For a two-letter fragment Scryfall returns artists that do not contain it (Kev Walker,
+    Igor Kieryluk). Unexplained. Whole names and name parts (a:avon, a:"john avon") agree.
+
+!"lightning bolt" game:arena unique:prints
+    Scryfall hides about fifty Arena printings that exist only so that other cards can conjure
+    them (Black Lotus in Alchemy: Dominaria, Lightning Bolt in Jumpstart: Historic Horizons).
+    Nothing in the bulk data marks them, so we show them. `unique:prints` totals for such cards
+    are higher by those printings.
+
+in:rare
+    Whether a printing counts towards in:<rarity> was worked out from examples: promos,
+    masterpieces, From the Vault, memorabilia and Secret Lair drops do not count; expansions,
+    core sets, commander decks, masters, duel decks and other box sets do. Set types with no
+    example to test (premium decks, spellbooks) are assumed to count.
+
+devotion:{r/w}{r/w}{r/w} mv=3
+    We return one card Scryfall does not: Practiced Scrollsmith, {R}{R/W}{W}. By the game's
+    rules its devotion to red and white is three (each symbol counts once), which is what we
+    count. Scryfall counts {R}{W}{W} as three but not this cost; unexplained.
+
+devotion={b/g}{b/g} t:elf
+    We return three cards Scryfall does not, each costing {B/G}{B/G} with or without generic
+    mana. Their devotion to black and green is two by the game's rules. Scryfall seems to
+    count a hybrid symbol of exactly the two colours asked about twice, so "=" misses them.
+
+m<=R t:goblin
+    Scryfall also returns Krark, the Thumbless, which costs {1}{R}. The printing Scryfall
+    picks for that card is a reversible one whose cost is recorded on its faces only, so it
+    reads as having no cost. We compare the real cost.

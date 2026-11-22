@@ -11,6 +11,7 @@ def _env(name: str, default: str) -> str:
 
 
 COLLECTION = _env("MTGSEARCH_COLLECTION", "mtg-cards-v2")
+PRINTINGS_COLLECTION = _env("MTGSEARCH_PRINTINGS_COLLECTION", "mtg-printings-v1")
 REGION = _env("TOPK_REGION", "aws-us-east-1-elastica")
 DATA_DIR = Path(_env("MTGSEARCH_DATA_DIR", "data"))
 
@@ -29,5 +30,5 @@ def client():
     return Client(api_key=key, region=REGION)
 
 
-def collection():
-    return client().collection(COLLECTION)
+def collection(name: str = COLLECTION):
+    return client().collection(name)

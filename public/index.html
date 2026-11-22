@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mtgsearch</title>
+<meta name="description" content="Search Magic: The Gathering cards with Scryfall syntax or plain English.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="top">
+  <a class="wordmark" href="/">mtgsearch</a>
+  <p class="tagline">Find a card by its syntax, its name, or what you remember about it.</p>
+</header>
+
+<main>
+  <form id="search" class="search" role="search" action="/" method="get">
+    <label class="sr-only" for="q">Search cards</label>
+    <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
+           autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+    <button type="submit">Search</button>
+  </form>
+
+  <div class="bar">
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <div id="tools" class="tools" hidden>
+      <label for="sort">Sort</label>
+      <select id="sort">
+        <option value="">Default</option>
+        <option value="edhrec">Most played</option>
+        <option value="name">Name, A to Z</option>
+        <option value="cmc">Mana value, low to high</option>
+        <option value="cmc:desc">Mana value, high to low</option>
+        <option value="power:desc">Power, high to low</option>
+        <option value="toughness:desc">Toughness, high to low</option>
+        <option value="released:desc">Newest printing first</option>
+        <option value="usd">Price, low to high</option>
+        <option value="usd:desc">Price, high to low</option>
+      </select>
+    </div>
+  </div>
+
+  <section id="intro" class="intro" aria-label="Example searches">
+    <h2>Try one</h2>
+    <ul class="examples">
+      <li><button type="button" data-q="sphinx that draws two cards">sphinx that draws two cards</button><span>plain English</span></li>
+      <li><button type="button" data-q="c:u t:sphinx o:&quot;draw two cards&quot;">c:u t:sphinx o:"draw two cards"</button><span>Scryfall syntax</span></li>
+      <li><button type="button" data-q="c:u t:sphinx draws when opponents draw">c:u t:sphinx draws when opponents draw</button><span>both at once</span></li>
+      <li><button type="button" data-q="one mana elf that taps for green mana">one mana elf that taps for green mana</button><span>cost and type are read from the words</span></li>
+      <li><button type="button" data-q="dwarf destroys lands">dwarf destroys lands</button><span>plain English</span></li>
+      <li><button type="button" data-q="lightning bolt">lightning bolt</button><span>a card name</span></li>
+      <li><button type="button" data-q="t:dragon r:mythic usd&lt;5">t:dragon r:mythic usd&lt;5</button><span>rarity and price</span></li>
+      <li><button type="button" data-q="!&quot;lightning bolt&quot; unique:prints order:released">!"lightning bolt" unique:prints order:released</button><span>every printing of a card</span></li>
+    </ul>
+    <details class="help">
+      <summary>What can I type?</summary>
+      <p><strong>A card name</strong>, or part of one. Matching cards come back most-played first.</p>
+      <p><strong>Scryfall syntax.</strong> Colour (<code>c:</code>, <code>id:</code>), type (<code>t:</code>), rules text
+        (<code>o:</code>, <code>kw:</code>), mana value, power, toughness and loyalty (<code>mv</code>, <code>pow</code>,
+        <code>tou</code>, <code>loy</code>), mana cost (<code>m:2WW</code>), devotion and the mana a card makes
+        (<code>produces:g</code>), legality (<code>f:</code>, <code>banned:</code>), tags (<code>otag:</code>),
+        <code>is:</code> flags, <code>-</code> to negate, <code>or</code>, parentheses and regular expressions.</p>
+      <p><strong>Printings.</strong> Set (<code>set:</code>), rarity (<code>r:</code>), artist (<code>a:</code>), flavour text
+        (<code>ft:</code>), frame, border and game, year and date, price (<code>usd&lt;1</code>), and whether a card was ever
+        printed somewhere (<code>in:</code>). A card is shown by a printing that matches. Add <code>unique:prints</code> to
+        list every printing, or <code>unique:art</code> for every illustration.</p>
+      <p><strong>Plain English.</strong> Describe the card. An opening such as "two mana blue instant" is applied as a filter.</p>
+      <p><strong>Not yet:</strong> languages other than English, art tags, and a few shortcuts such as <code>is:fetchland</code>.</p>
+    </details>
+  </section>
+
+  <ol id="results" class="grid"></ol>
+  <button id="more" class="more" type="button" hidden>Show more</button>
+</main>
+
+<dialog id="card" class="sheet" aria-labelledby="card-name">
+  <form method="dialog"><button class="close" aria-label="Close">Close</button></form>
+  <div class="sheet-body">
+    <img id="card-image" alt="" width="488" height="680">
+    <div class="sheet-text">
+      <h2 id="card-name"></h2>
+      <p id="card-line" class="line"></p>
+      <p id="card-rules" class="rules"></p>
+      <p id="card-flavor" class="flavor"></p>
+      <p id="card-printing" class="printing"></p>
+      <p id="card-artist" class="printing"></p>
+      <div class="actions">
+        <button id="card-prints" class="out" type="button" hidden></button>
+        <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<footer class="foot">
+  <p>Card data and images come from <a href="https://scryfall.com" rel="noopener">Scryfall</a>. This site is not
+    produced or endorsed by Scryfall.</p>
+  <p>Unofficial fan content permitted under the Wizards of the Coast Fan Content Policy. Card text and images are
+    copyright Wizards of the Coast LLC. Not approved or endorsed by Wizards of the Coast.</p>
+</footer>
+
+<script src="/app.js" defer></script>
+</body>
+</html>
