@@ -35,7 +35,9 @@ export function createDevServer() {
       response.end(await answer.text());
       return;
     }
-    const name = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
+    // A card's page, /card/<set>/<number>/<name>, is the same page (see [[redirects]] in netlify.toml).
+    const isPage = url.pathname === "/" || url.pathname.startsWith("/card/");
+    const name = isPage ? "index.html" : url.pathname.slice(1);
     const type = TYPES[name.split(".").pop() ?? ""];
     try {
       if (!type || !/^[\w.-]+$/.test(name)) throw new Error("not a public file");

@@ -12,7 +12,7 @@ t:dragon r:mythic usd<5                  printings: set, rarity, artist, price, 
 !"lightning bolt" unique:prints          every printing of a card
 ```
 
-Status: working search over cards and printings with a thin web app, ready to deploy on Netlify. See
+Status: working search over cards and printings with a thin web app, deployed on Netlify. See
 [docs/PLAN.md](docs/PLAN.md) for stages and what is next.
 
 ## How it is put together
@@ -167,8 +167,10 @@ Put your key in `.env` and export it (`set -a; . ./.env; set +a`). Then:
 npm run dev
 ```
 
-Open http://127.0.0.1:8000. The page (`public/`) is one responsive view over one endpoint,
+Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over one endpoint,
 `GET /api/search`, and works the same on a phone and a laptop. The key stays on the server.
+A search lives at `/?q=...` and each card has its own address, `/card/<set>/<number>/<name>`
+(for example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
 
 | Parameter | Meaning |
 |---|---|
@@ -195,6 +197,11 @@ npm run search -- "sphinx that draws two cards"
    for a scope, include Functions. `TOPK_REGION`, `MTGSEARCH_COLLECTION` and
    `MTGSEARCH_PRINTINGS_COLLECTION` are optional.
 3. Deploy. Changing a variable needs a new deploy to take effect.
+
+If a search on the deployed site answers "This deployment has no TopK API key" or "TopK
+rejected this deployment's API key", the variable is missing, was added after the last
+deploy, is not shared with Functions, or has stray quotes or spaces. Fix it and deploy again.
+Any other failure shows a generic message; the cause is in the function's log in Netlify.
 
 The endpoint is public and plain-English queries cost an inference call, so queries are capped
 at 200 characters, successful answers are cached at Netlify's CDN for ten minutes, and the

@@ -50,6 +50,25 @@ function hit(row: Hit): Record<string, unknown> {
   return out;
 }
 
+/**
+ * A failure that only whoever runs the deployment can fix, said plainly so that it shows on
+ * the page instead of only in the function's log. These reveal that the setup is wrong, never
+ * a key or anything else from the error. Any other failure stays a generic 502.
+ */
+export function setupProblem(cause: unknown): string | null {
+  const message = cause instanceof Error ? cause.message : String(cause);
+  if (message.includes("TOPK_API_KEY is not set")) {
+    return "This deployment has no TopK API key. Set TOPK_API_KEY where the search function can read it, then deploy again.";
+  }
+  if (/unauthenticated|invalid api key|permission ?denied/i.test(message)) {
+    return "TopK rejected this deployment's API key. Check TOPK_API_KEY (no quotes or spaces around it), then deploy again.";
+  }
+  if (/collection not found/i.test(message)) {
+    return "The TopK project behind this deployment's key does not hold the card collections. Use a key from the project that does, or build them with `mtgsearch ingest`.";
+  }
+  return null;
+}
+
 export async function handleSearch(url: URL, search: SearchFn): Promise<Response> {
   const query = (url.searchParams.get("q") ?? "").split(/\s+/).filter(Boolean).join(" ");
   if (!query) return error(400, "Type something to search for.");
@@ -69,6 +88,8 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
     result = await search(query, { k, offset, order, descending });
   } catch (cause) {
     console.error(`search failed for ${JSON.stringify(query)}:`, cause);
+    const setup = setupProblem(cause);
+    if (setup) return error(503, setup);
     return error(502, "The search backend is unavailable. Try again shortly.");
   }
   return json(

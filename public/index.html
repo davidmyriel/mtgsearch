@@ -73,26 +73,28 @@
 
   <ol id="results" class="grid"></ol>
   <button id="more" class="more" type="button" hidden>Show more</button>
-</main>
 
-<dialog id="card" class="sheet" aria-labelledby="card-name">
-  <form method="dialog"><button class="close" aria-label="Close">Close</button></form>
-  <div class="sheet-body">
-    <img id="card-image" alt="" width="488" height="680">
-    <div class="sheet-text">
-      <h2 id="card-name"></h2>
-      <p id="card-line" class="line"></p>
-      <p id="card-rules" class="rules"></p>
-      <p id="card-flavor" class="flavor"></p>
-      <p id="card-printing" class="printing"></p>
-      <p id="card-artist" class="printing"></p>
-      <div class="actions">
-        <button id="card-prints" class="out" type="button" hidden></button>
-        <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
+  <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
+  <article id="card" class="card" aria-labelledby="card-name" hidden>
+    <button id="card-back" class="out back" type="button" hidden>Back to results</button>
+    <div class="card-body">
+      <img id="card-image" alt="" width="488" height="680">
+      <div class="card-text">
+        <h1 id="card-name"></h1>
+        <p id="card-line" class="line"></p>
+        <p id="card-rules" class="rules"></p>
+        <p id="card-flavor" class="flavor"></p>
+        <p id="card-printing" class="printing"></p>
+        <p id="card-artist" class="printing"></p>
+        <div class="actions">
+          <button id="card-prints" class="out" type="button" hidden></button>
+          <button id="card-copy" class="out" type="button">Copy link</button>
+          <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
+        </div>
       </div>
     </div>
-  </div>
-</dialog>
+  </article>
+</main>
 
 <footer class="foot">
   <p>Card data and images come from <a href="https://scryfall.com" rel="noopener">Scryfall</a>. This site is not

@@ -141,6 +141,33 @@ test("a backend failure is a 502 that leaks nothing and is not cached", async ()
   }
 });
 
+test("a setup problem is named, so it shows on the page and not only in the log", async () => {
+  const quiet = console.error;
+  console.error = () => {};
+  const failing = (message: string) => get({ q: "elf" }, async () => { throw new Error(message); });
+  try {
+    // the messages are what the app and TopK's client actually raise
+    const cases: [string, RegExp][] = [
+      ["TOPK_API_KEY is not set; see .env.example", /has no TopK API key/],
+      ['TopkError(Unauthenticated("Invalid api key"))', /rejected this deployment's API key/],
+      ["collection not found", /does not hold the card collections/],
+    ];
+    for (const [message, expected] of cases) {
+      const response = await failing(message);
+      assert.equal(response.status, 503, message);
+      assert.match((await response.json()).error, expected);
+      assert.equal(response.headers.get("cache-control"), "no-store");
+    }
+    // the reply is a fixed sentence: nothing from the error itself is passed on
+    const leaky = await failing('TopkError(Unauthenticated("Invalid api key")) for key sk-secret-123');
+    assert.ok(!(await leaky.text()).includes("sk-secret-123"));
+    // anything else stays a generic 502
+    assert.equal((await failing("connection reset by peer")).status, 502);
+  } finally {
+    console.error = quiet;
+  }
+});
+
 test("unsupported syntax is passed through for the page to explain", async () => {
   const refused: Result = {
     mode: "unsupported", hits: [], total: null, note: "'lang:' is not supported yet", hasMore: false, sortedBy: null, unit: "cards",
