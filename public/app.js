@@ -16,6 +16,7 @@ const dirSelect = document.getElementById("dir");
 const uniqueSelect = document.getElementById("unique");
 const pager = document.getElementById("pager");
 const understood = document.getElementById("understood");
+const ignored = document.getElementById("ignored");
 const cardView = document.getElementById("card");
 const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
@@ -195,6 +196,20 @@ function tile(hit, captioned) {
   return item;
 }
 
+/** Terms that could not be used: the search ran without them, and this says which and why. */
+function showIgnored(terms) {
+  ignored.replaceChildren(
+    ...(terms || []).map(({ term, reason }) => {
+      const item = document.createElement("li");
+      const typed = document.createElement("strong");
+      typed.textContent = term;
+      item.append(typed, ` was left out: ${reason}.`);
+      return item;
+    }),
+  );
+  ignored.hidden = ignored.children.length === 0;
+}
+
 /** How a syntax query was read: each condition in words. Nothing for plain English. */
 function showUnderstood(conditions) {
   understood.replaceChildren(
@@ -262,6 +277,7 @@ async function run(search, { push = true } = {}) {
     intro.hidden = false;
     tools.hidden = pager.hidden = true;
     showUnderstood([]);
+    showIgnored([]);
     results.replaceChildren();
     current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
@@ -276,6 +292,7 @@ async function run(search, { push = true } = {}) {
     results.replaceChildren();
     tools.hidden = pager.hidden = true;
     showUnderstood([]);
+    showIgnored([]);
     current = { ...EMPTY, unit: "cards" };
     setStatus(label, detail, true);
   };
@@ -288,7 +305,8 @@ async function run(search, { push = true } = {}) {
     if (data.mode === "unsupported") {
       intro.hidden = false;
       document.body.classList.remove("searched");
-      return fail("Not supported yet", `${data.note}. See "What can I type?" below.`);
+      // Every term was one that cannot be used, so there is nothing left to search for.
+      return fail("Nothing here could be used", `${data.note}. See "What can I type?" below.`);
     }
     const captioned = data.unit !== "cards" || PRINTING_ORDERS.has(data.sorted_by);
     results.replaceChildren(...data.hits.map((hit) => tile(hit, captioned)));
@@ -299,6 +317,7 @@ async function run(search, { push = true } = {}) {
     tools.hidden = data.sorted_by === null || data.hits.length === 0;
     showPager(view, data);
     showUnderstood(data.understood);
+    showIgnored(data.ignored);
     if (push) window.scrollTo(0, 0);
     if (!data.hits.length) {
       const beyond = view.page > 1 && (data.total === null || data.total > 0);

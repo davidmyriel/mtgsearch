@@ -57,6 +57,8 @@
       </label>
     </div>
   </div>
+  <!-- Terms that could not be used and were left out of the search, each with the reason. -->
+  <ul id="ignored" class="ignored" aria-label="Left out of the search" hidden></ul>
   <!-- A syntax query said back in words, one entry for each condition that has to hold. -->
   <ul id="understood" class="understood" aria-label="How the query was read" hidden></ul>
 
@@ -87,7 +89,8 @@
         printed somewhere (<code>in:</code>). A card is shown by a printing that matches. Add <code>unique:prints</code> to
         list every printing, or <code>unique:art</code> for every illustration.</p>
       <p><strong>Plain English.</strong> Describe the card. An opening such as "two mana blue instant" is applied as a filter.</p>
-      <p><strong>Not yet:</strong> languages other than English, art tags, blocks and cubes.</p>
+      <p><strong>Not yet:</strong> languages other than English, art tags, blocks and cubes. A term that cannot be
+        used is left out, the page says which, and the rest of the search runs.</p>
     </details>
   </section>
 

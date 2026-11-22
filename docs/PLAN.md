@@ -93,7 +93,8 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] End-to-end browser test at phone and laptop sizes, run in CI on the local server and as
       Netlify serves the site; Netlify's own build exercised in CI
 - [x] Connected the repository in Netlify, set `TOPK_API_KEY`, deployed. The browser test passes
-      against the live URL (123 checks at phone, laptop and dark-mode sizes), repeated searches are
+      against the live URL (270 checks at phone, laptop and dark-mode sizes, after the third
+      merge on 22 November 2026), repeated searches are
       answered from Netlify's CDN cache, and the security headers are served
 - [ ] Confirm the per-client rate limit on the live site. It counts per address, so it needs a
       client with one address: about 80 different searches in a minute should start returning 429.
@@ -109,8 +110,8 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] The card's page gives printed power and toughness (or loyalty), legality in sixteen
       formats, and the card's printings with prices, each a link to that printing's page (U-2,
       brought forward from the browse tier). It is served by a second endpoint, `GET /api/card`
-- [x] The page says how a syntax query was read, each condition in plain words (the first half
-      of U-1). Dropping a term that cannot be used, with a warning, waits for a decision
+- [x] The page says how a syntax query was read, each condition in plain words, and a term that
+      cannot be used is left out with a warning while the rest of the query runs (U-1)
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

@@ -6,10 +6,12 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { evaluate } from "../evaluate.ts";
 import type { Doc } from "../evaluate.ts";
-import { lower } from "../lower.ts";
+import { explain } from "../explain.ts";
+import { lower, usable } from "../lower.ts";
 import { extract } from "../nl.ts";
 import { fold, plain } from "../normalize.ts";
 import { parse, QueryError, Unsupported } from "../parser.ts";
+import type { Node } from "../parser.ts";
 import { isPlainWords, splitWords } from "../search.ts";
 
 const read = (name: string) => JSON.parse(readFileSync(new URL(`../../fixtures/${name}`, import.meta.url), "utf8"));
@@ -61,6 +63,42 @@ test("unsupported keywords are reported, never silently ignored", () => {
   for (const query of ["block:ice", "cube:vintage", "is:unicorn", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy"]) {
     assert.throws(() => compile(query), Unsupported, query);
   }
+});
+
+test("a term that cannot be used is taken out, with the reason, and the rest is kept", () => {
+  const kept = (query: string) => {
+    const { ast, ignored } = usable(parse(query));
+    return { left: ast === null ? null : explain(ast), ignored };
+  };
+  // an unsupported keyword, and one whose value makes no sense
+  assert.deepEqual(kept("lang:ja t:sphinx"), {
+    left: ["the type includes “sphinx”"],
+    ignored: [{ term: "lang:ja", reason: "'lang:' is not supported yet" }],
+  });
+  assert.deepEqual(kept("t:sphinx c:purple mv:abc"), {
+    left: ["the type includes “sphinx”"],
+    ignored: [
+      { term: "c:purple", reason: "unknown colour 'purple'" },
+      { term: "mv:abc", reason: "'mv' expects a number, got 'abc'" },
+    ],
+  });
+  // what is left compiles, to the same thing as the query without the term
+  const [withTerm] = lower(usable(parse("is:unicorn t:sphinx mv<=3")).ast as Node);
+  assert.deepEqual(withTerm, compile("t:sphinx mv<=3")[0]);
+  // negated, or inside a group: the term goes, and so does a group left with nothing
+  assert.deepEqual(kept("-lang:ja t:sphinx").left, ["the type includes “sphinx”"]);
+  assert.deepEqual(kept("t:elf or lang:ja").left, ["the type includes “elf”"]);
+  assert.deepEqual(kept("t:elf (lang:ja or new:art)").left, ["the type includes “elf”"]);
+  assert.deepEqual(kept("t:elf (lang:ja or mv=1)").left, ["the type includes “elf”", "the mana value is 1"]);
+  // a term is shown as it was typed
+  assert.deepEqual(kept('art:"two dragons" order:artist bolt').ignored.map((left) => left.term), ['art:"two dragons"', "order:artist"]);
+  assert.deepEqual(kept("bolt lang:ja").left, ["the name includes “bolt”"]);
+  // nothing left
+  assert.deepEqual(kept("lang:ja"), { left: null, ignored: [{ term: "lang:ja", reason: "'lang:' is not supported yet" }] });
+  assert.equal(kept("lang:ja -new:art").left, null);
+  // a query with nothing wrong is untouched
+  assert.deepEqual(kept("t:sphinx mv<=3 -c:u").ignored, []);
+  assert.deepEqual(usable(parse("t:sphinx or (c:u mv=2)")).ast, parse("t:sphinx or (c:u mv=2)"));
 });
 
 test("bare words match the name, forgiving case, diacritics and punctuation", () => {

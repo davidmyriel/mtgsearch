@@ -456,6 +456,51 @@ function lowerNode(node: Node, options: Working): IR {
   }
 }
 
+/** A term that was left out of a query, and why. */
+export type Ignored = { term: string; reason: string };
+
+/** A keyword term as it was typed: `lang:ja`, `o:"draw two"`, `name:/^the /`. */
+function typed(kw: Keyword): string {
+  const value = kw.regex ? `/${kw.value}/` : /\s/.test(kw.value) ? `"${kw.value}"` : kw.value;
+  return `${kw.key}${kw.op}${value}`;
+}
+
+/**
+ * The query without the terms that cannot be used, and what was taken out: a keyword that is
+ * not supported yet, or one whose value makes no sense (`c:purple`). The rest of the query
+ * still runs, and the reader is told what was left out. A group that loses all of its terms
+ * goes with them; `ast` is null when nothing is left.
+ */
+export function usable(ast: Node): { ast: Node | null; ignored: Ignored[] } {
+  const ignored: Ignored[] = [];
+  const keep = (node: Node): Node | null => {
+    switch (node.kind) {
+      case "name":
+        return node;
+      case "keyword":
+        try {
+          lower(node);
+          return node;
+        } catch (error) {
+          if (!(error instanceof QueryError)) throw error;
+          ignored.push({ term: typed(node), reason: error.message });
+          return null;
+        }
+      case "not": {
+        const child = keep(node.child);
+        return child === null ? null : { kind: "not", child };
+      }
+      case "and":
+      case "or": {
+        const children = node.children.map(keep).filter((child): child is Node => child !== null);
+        if (children.length === 0) return null;
+        return children.length === 1 ? children[0] : { kind: node.kind, children };
+      }
+    }
+  };
+  return { ast: keep(ast), ignored };
+}
+
 const isAll = (p: IR) => p[0] === "all";
 
 /** Flatten nested and/or and drop ["all"] from conjunctions. */

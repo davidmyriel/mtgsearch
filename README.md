@@ -151,8 +151,10 @@ Read these with care:
 | Results | `unique:cards`, `unique:prints`, `unique:art`, `prefer:` oldest, newest, usd-low, usd-high (and eur, tix), `include:extras` |
 | Sorting | `order:` name, cmc, power, toughness, edhrec, released, usd, eur, tix, rarity; `direction:` |
 
-Not yet, and reported as unsupported rather than silently ignored: `lang:` and non-English
-printings, `new:`, `block:`, `cube:`, art tags (`art:`), and `order:` by set or artist.
+Not yet: `lang:` and non-English printings, `new:`, `block:`, `cube:`, art tags (`art:`), and
+`order:` by set or artist. A term that cannot be used, one of these or a value that makes no
+sense (`c:purple`), is never silently ignored: it is left out, the page says which term and
+why, and the rest of the query runs. If nothing is left, the search is refused with the reasons.
 
 Known differences from Scryfall are listed with reasons in `conformance/known_gaps.txt`.
 
@@ -191,7 +193,8 @@ example `/card/ima/47/consecrated-sphinx`), which can be shared and opened direc
 
 The answer carries `understood`, a syntax query said back in words with one entry for each
 condition (`t:sphinx mv<=3` is "the type includes “sphinx”" and "the mana value is 3 or less"),
-which the page shows under the status line so that a wrong reading is easy to spot. It also
+which the page shows under the status line so that a wrong reading is easy to spot. `ignored`
+lists each term that was left out, with the reason. It also
 carries `total`, `unit` (what the total counts: cards, printings or illustrations),
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 pager and its three controls (show, sort, direction). The page asks for 60 results at a time.

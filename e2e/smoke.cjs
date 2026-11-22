@@ -276,12 +276,26 @@ async function run(name, contextOptions) {
   check((await firstCards(page, 1))[0] === "Lightning Bolt", `[${name}] Lightning Bolt is first`);
   check((await page.textContent("#understood")) === "the name includes “lightning” and “bolt”", `[${name}] a name search says where it looked`);
 
+  // A term that cannot be used is left out, the page says which and why, and the rest runs.
   await search(page, "lang:ja t:sphinx");
-  check((await page.textContent("#status")).startsWith("Not supported yet"), `[${name}] unsupported keyword is explained`);
+  check((await page.textContent("#status")).startsWith(`Scryfall syntax · ${total} cards`), `[${name}] the rest of a query runs without the unusable term`);
+  check((await page.textContent("#ignored")) === "lang:ja was left out: 'lang:' is not supported yet.", `[${name}] and the page says what was left out and why`);
+  check((await page.textContent("#understood")) === "the type includes “sphinx”", `[${name}] and how the rest was read`);
+  const warningTop = await page.$eval("#ignored", (el) => el.getBoundingClientRect().top);
+  check(warningTop < page.viewportSize().height, `[${name}] the warning is visible without scrolling`);
+  await shot("4-left-out");
+  await search(page, "t:sphinx");
+  check(!(await page.isVisible("#ignored")), `[${name}] the warning goes when the next search has nothing left out`);
+
+  // Nothing left to search for: refused, with the reason and the help in view.
+  await search(page, "lang:ja");
+  check((await page.textContent("#status")).startsWith("Nothing here could be used · 'lang:' is not supported yet"), `[${name}] a query with nothing usable is explained`);
+  check((await page.isVisible("#intro")) && (await page.$$("#results .tile")).length === 0, `[${name}] with the examples and no stale results`);
   const statusTop = await page.$eval("#status", (el) => el.getBoundingClientRect().top);
   check(statusTop < page.viewportSize().height, `[${name}] the explanation is visible without scrolling`);
-  await shot("4-unsupported");
 
+  await search(page, "lightning bolt");
+  await search(page, "lang:ja");
   await page.goBack();
   await page.waitForFunction(
     () =>

@@ -24,7 +24,7 @@ const HIT = {
   prints: 11,
   score: 4.25219,
 };
-const SEMANTIC: Result = { mode: "semantic", hits: [HIT], total: null, note: "sphinx", hasMore: true, sortedBy: null, unit: "cards", understood: [] };
+const SEMANTIC: Result = { mode: "semantic", hits: [HIT], total: null, note: "sphinx", hasMore: true, sortedBy: null, unit: "cards", understood: [], ignored: [] };
 
 function stub(result: Result = SEMANTIC) {
   const calls: [string, SearchOptions][] = [];
@@ -53,7 +53,7 @@ test("returns the documented shape", async () => {
     total: null,
     unit: "cards",
     note: "sphinx",
-    understood: [],
+    understood: [], ignored: [],
     hits: [
       {
         id: "abc",
@@ -113,7 +113,7 @@ test("page size and offset are clamped", async () => {
 });
 
 test("a page never reaches past what TopK will return, and says there is no more at that point", async () => {
-  const many: Result = { mode: "syntax", hits: [HIT], total: 19_000, note: "", hasMore: true, sortedBy: "name", unit: "cards", understood: [] };
+  const many: Result = { mode: "syntax", hits: [HIT], total: 19_000, note: "", hasMore: true, sortedBy: "name", unit: "cards", understood: [], ignored: [] };
   const { calls, search } = stub(many);
   const last = await (await get({ q: "t:creature", k: "60", offset: String(MAX_REACH - 60) }, search)).json();
   const before = await (await get({ q: "t:creature", k: "60", offset: String(MAX_REACH - 120) }, search)).json();
@@ -126,7 +126,7 @@ test("a page never reaches past what TopK will return, and says there is no more
 });
 
 test("paging and sort parameters reach the search and come back in the answer", async () => {
-  const sorted: Result = { mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "cmc", unit: "cards", understood: [] };
+  const sorted: Result = { mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "cmc", unit: "cards", understood: [], ignored: [] };
   const { calls, search } = stub(sorted);
   const body = await (await get({ q: "t:sphinx", offset: "24", order: "cmc", dir: "desc" }, search)).json();
   assert.deepEqual(calls[0][1], { k: 24, offset: 24, order: "cmc", descending: true, unique: null });
@@ -198,9 +198,21 @@ test("a setup problem is named, so it shows on the page and not only in the log"
   }
 });
 
+test("terms that were left out come back with their reasons, beside the results", async () => {
+  const partial: Result = {
+    mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "name", unit: "cards",
+    understood: ["the type includes “sphinx”"], ignored: [{ term: "lang:ja", reason: "'lang:' is not supported yet" }],
+  };
+  const response = await get({ q: "lang:ja t:sphinx" }, stub(partial).search);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.deepEqual(body.ignored, [{ term: "lang:ja", reason: "'lang:' is not supported yet" }]);
+  assert.deepEqual([body.mode, body.total, body.hits.length, body.understood], ["syntax", 91, 1, ["the type includes “sphinx”"]]);
+});
+
 test("unsupported syntax is passed through for the page to explain", async () => {
   const refused: Result = {
-    mode: "unsupported", hits: [], total: null, note: "'lang:' is not supported yet", hasMore: false, sortedBy: null, unit: "cards", understood: [],
+    mode: "unsupported", hits: [], total: null, note: "'lang:' is not supported yet", hasMore: false, sortedBy: null, unit: "cards", understood: [], ignored: [],
   };
   const body = await (await get({ q: "lang:ja" }, stub(refused).search)).json();
   assert.equal(body.mode, "unsupported");
@@ -210,7 +222,7 @@ test("unsupported syntax is passed through for the page to explain", async () =>
 
 test("a missing image is null, not absent", async () => {
   const { image: _unused, ...withoutImage } = HIT;
-  const named: Result = { mode: "name", hits: [withoutImage], total: 1, note: "", hasMore: false, sortedBy: "edhrec", unit: "cards", understood: [] };
+  const named: Result = { mode: "name", hits: [withoutImage], total: 1, note: "", hasMore: false, sortedBy: "edhrec", unit: "cards", understood: [], ignored: [] };
   const body = await (await get({ q: "sphinx" }, stub(named).search)).json();
   assert.equal(body.hits[0].image, null);
   assert.equal(body.total, 1);
@@ -218,7 +230,7 @@ test("a missing image is null, not absent", async () => {
 
 test("a printing search says what its total counts and returns the printing's details", async () => {
   const printing = { ...HIT, _id: "p1", oracle_id: "abc", flavor_text: "Blessed by the hands of Jin-Gitaxias.", usd: 34.97 };
-  const prints: Result = { mode: "syntax", hits: [printing], total: 11, note: "", hasMore: false, sortedBy: "released", unit: "printings", understood: [] };
+  const prints: Result = { mode: "syntax", hits: [printing], total: 11, note: "", hasMore: false, sortedBy: "released", unit: "printings", understood: [], ignored: [] };
   const body = await (await get({ q: '!"consecrated sphinx" unique:prints', order: "released", dir: "desc" }, stub(prints).search)).json();
   assert.deepEqual([body.unit, body.total, body.sorted_by], ["printings", 11, "released"]);
   assert.deepEqual(

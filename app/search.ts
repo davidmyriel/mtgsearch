@@ -7,8 +7,8 @@
 //                                                        colour and type read from the query.
 
 import { agg, all, any, field, filter, fn, not, select } from "topk-js/query";
-import { lower, ORDER_FIELDS, PREFER, PRINTING_FIELDS } from "./lower.ts";
-import type { IR, Op, Unique } from "./lower.ts";
+import { lower, ORDER_FIELDS, PREFER, PRINTING_FIELDS, usable } from "./lower.ts";
+import type { Ignored, IR, Op, Unique } from "./lower.ts";
 import { explain } from "./explain.ts";
 import { extract } from "./nl.ts";
 import { KEYWORDS, parse, QueryError, Unsupported } from "./parser.ts";
@@ -22,6 +22,7 @@ export type Result = {
   total: number | null; // exact for syntax and name modes; null when ranked by meaning
   note: string; // what was understood, or why the query was refused
   understood: string[]; // a syntax query said back in words, one entry for each condition
+  ignored: Ignored[]; // terms that could not be used and were left out, each with the reason
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
   unit: Unit; // what `total` counts and each hit is
@@ -339,17 +340,25 @@ const UNITS: Record<Unique, Unit> = { cards: "cards", prints: "printings", art: 
 
 export async function search(cols: Collections, query: string, options: SearchOptions = {}): Promise<Result> {
   const { k = 20, offset = 0, fields = SEMANTIC_FIELDS } = options;
-  const none = { hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit, understood: [] as string[] };
+  const none = {
+    hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit, understood: [] as string[], ignored: [] as Ignored[],
+  };
   let ast: Node | null = null;
   let predicate: IR = ["all"];
   let parsed: ReturnType<typeof lower>[1] | null = null;
   try {
-    ast = parse(query);
+    // A term that cannot be used is left out and reported; the rest of the query runs.
+    const kept = usable(parse(query));
+    none.ignored = kept.ignored;
+    if (kept.ast === null) {
+      return { ...none, mode: "unsupported", note: kept.ignored.map((left) => left.reason).join("; ") };
+    }
+    ast = kept.ast;
     [predicate, parsed] = lower(ast);
   } catch (error) {
-    if (error instanceof Unsupported) return { ...none, mode: "unsupported", note: error.message };
     if (!(error instanceof QueryError)) throw error;
     ast = null; // not Scryfall syntax: treat as plain English
+    none.ignored = [];
   }
 
   if (ast !== null && parsed !== null) {
@@ -369,7 +378,7 @@ export async function search(cols: Collections, query: string, options: SearchOp
       const hasMore = offset + page.hits.length < page.total;
       const mode = plainWords ? "name" : "syntax";
       const understood = explain(ast);
-      return { mode, hits: page.hits, total: page.total, note: "", hasMore, sortedBy: orderName(sortField), unit: UNITS[unique], understood };
+      return { ...none, mode, hits: page.hits, total: page.total, hasMore, note: "", sortedBy: orderName(sortField), unit: UNITS[unique], understood };
     }
     if (!plainWords) {
       const split = splitWords(ast);
@@ -391,13 +400,18 @@ export async function search(cols: Collections, query: string, options: SearchOp
     }
   }
 
-  const extracted = extract(query);
+  // Ranked by meaning: the query as typed, or only its words when a term was left out.
+  const text =
+    ast !== null && none.ignored.length
+      ? [...nodes(ast)].flatMap((n) => (n.kind === "name" ? [n.text] : [])).join(" ")
+      : query;
+  const extracted = extract(text);
   const wanted = Math.min(offset + k, MAX_RANKED);
-  let ranked = await semantic(cols.cards, query, and(extracted.predicate, VISIBLE), wanted, fields);
+  let ranked = await semantic(cols.cards, text, and(extracted.predicate, VISIBLE), wanted, fields);
   if (extracted.any && ranked.length < wanted) {
     // the filter was too strict: top up without it
     const seen = new Set(ranked.map((h) => h._id));
-    const more = await semantic(cols.cards, query, VISIBLE, wanted, fields);
+    const more = await semantic(cols.cards, text, VISIBLE, wanted, fields);
     ranked = ranked.concat(more.filter((h) => !seen.has(h._id))).slice(0, wanted);
   }
   const hits = ranked.slice(offset, offset + k);

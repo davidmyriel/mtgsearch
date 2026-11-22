@@ -184,6 +184,22 @@ code {
   border-radius: 8px;
 }
 
+/* Terms left out of the search. Said plainly and first, because the results are not what was typed. */
+.ignored {
+  margin: -4px 0 12px;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+}
+.ignored li {
+  padding: 6px 10px;
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.ignored li + li { margin-top: 4px; }
+.viewing-card .ignored { display: none; }
+
 /* How the query was read: each condition on its own, so a wrong reading is easy to spot. */
 .understood {
   display: flex;

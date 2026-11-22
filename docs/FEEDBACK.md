@@ -64,7 +64,7 @@ identity and are not copied.
 
 | Id | Item | Size | Slot | Status |
 |---|---|---|---|---|
-| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary | First half done. The second half waits: dropping a term reverses an earlier rule, asked of the owner |
+| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary | Done |
 | U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | L | Next boundary | Done |
 | U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary | Done |
 | U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Done |
@@ -108,7 +108,7 @@ are small and can ride along with U-1 to U-4.
   Last and they end at 120. No result can be paged past 10,000; the pager says to narrow the
   search there.
 
-### U-1. Saying how the query was read (first half)
+### U-1. Saying how the query was read, and leaving out what cannot be used
 
 - **Taken on 22 November 2026**, at the boundary after U-3 and U-4. Only the half that changes
   no earlier decision.
@@ -120,8 +120,14 @@ are small and can ride along with U-1 to U-4.
   this cost). Plain-English searches keep their own line ("filtered to ...").
 - **The wording is ours.** Scryfall's sentence was not copied; only the idea of saying the query
   back.
-- **Still waiting:** when a term cannot be used, running the rest and saying which term was
-  left out. Today such a query is refused with the reason, which was a decision made early on
-  ("reported as unsupported rather than silently ignored"). Recommended: adopt it, because the
-  warning keeps the honesty and the refusal costs the reader the whole search.
-
+- **Second half, decided and done on 22 November 2026.** Asked whether a term that cannot be
+  used should be dropped with a warning instead of refusing the search, the owner answered
+  "yes". This replaces the early rule that an unsupported keyword stops the search. What stays
+  from that rule: nothing is ignored silently.
+- **What was done:** a term is left out when its keyword is not supported yet (`lang:ja`) or its
+  value makes no sense (`c:purple`, `mv:abc`). The page shows a line for each, with the term as
+  typed and the reason, above the results, and the rest of the query runs: as syntax, as a card
+  name, or by meaning, whichever the remaining words call for. A group that loses all of its
+  terms goes with them. If nothing is left, the search is refused and every reason is given.
+- **Before, for comparison:** an unsupported keyword refused the whole search, and a value that
+  made no sense sent the whole query to plain-English search with no explanation.
