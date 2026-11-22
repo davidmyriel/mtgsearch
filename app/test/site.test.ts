@@ -22,6 +22,16 @@ test("netlify.toml sends the same security headers as the dev server", () => {
   assert.ok(toml.includes('publish = "public"'));
 });
 
+test("a card's address is served the page on Netlify, and the page uses absolute asset paths", () => {
+  const toml = root("netlify.toml");
+  assert.match(toml, /\[\[redirects\]\]\s+from = "\/card\/\*"\s+to = "\/index.html"\s+status = 200/);
+  // relative paths would resolve under /card/... and fail
+  const html = root("public/index.html");
+  for (const reference of html.match(/(?:src|href)="[^"]+"/g) ?? []) {
+    assert.match(reference, /="(?:\/|https:\/\/)/, reference);
+  }
+});
+
 test("the dev server serves the page, its assets and nothing else", async () => {
   const server = createDevServer().listen(0, "127.0.0.1");
   await new Promise((resolve) => server.once("listening", resolve));
@@ -33,6 +43,10 @@ test("the dev server serves the page, its assets and nothing else", async () => 
     assert.ok((await page.text()).includes('id="search"'));
     assert.equal(page.headers.get("x-content-type-options"), "nosniff");
     for (const asset of ["app.js", "app.css", "icon.svg"]) assert.equal((await fetch(`${base}/${asset}`)).status, 200, asset);
+    // a card's own address is the same page; its script reads the address
+    const card = await fetch(`${base}/card/ima/47/consecrated-sphinx`);
+    assert.equal(card.status, 200);
+    assert.ok((await card.text()).includes('id="card"'));
     assert.equal((await fetch(`${base}/../package.json`)).status, 404);
     assert.equal((await fetch(`${base}/missing.html`)).status, 404);
     const bad = await fetch(`${base}/api/search`);

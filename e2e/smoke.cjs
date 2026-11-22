@@ -40,7 +40,7 @@ async function run(name, contextOptions) {
     if (!shots) return;
     // Let every card image that is on screen finish loading (the rest are lazy).
     await page.waitForFunction(() =>
-      [...document.querySelectorAll("#results img, #card[open] img")]
+      [...document.querySelectorAll("#results img, #card img")]
         .filter((img) => {
           const box = img.getBoundingClientRect();
           return box.bottom > 0 && box.top < innerHeight;
@@ -67,16 +67,49 @@ async function run(name, contextOptions) {
   check(overflow <= 0, `[${name}] no horizontal scrolling (overflow ${overflow}px)`);
   await shot("2-results");
 
+  // A card has its own page, at an address that can be shared.
+  const resultsUrl = page.url();
+  const shownBefore = (await page.$$("#results .tile")).length;
   await page.click("#results .tile");
-  check(await page.isVisible("#card[open]"), `[${name}] tapping a card opens its details`);
-  check((await page.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] details show the card name`);
-  check((await page.getAttribute("#card-link", "href")).startsWith("https://scryfall.com/"), `[${name}] details link to Scryfall`);
-  check(/ \(\w+ #\S+\) · \w+ · \d{4}$/.test(await page.textContent("#card-printing")), `[${name}] details name the printing shown: set, number, rarity, year`);
-  check((await page.textContent("#card-artist")).startsWith("Illustrated by "), `[${name}] details credit the artist`);
+  check(await page.isVisible("#card"), `[${name}] tapping a card opens its page`);
+  check(!(await page.isVisible("#results")), `[${name}] the card's page replaces the results`);
+  const cardUrl = page.url();
+  check(/\/card\/[a-z0-9]+\/[^/]+\/consecrated-sphinx$/.test(new URL(cardUrl).pathname), `[${name}] the card has its own address (${new URL(cardUrl).pathname})`);
+  check((await page.title()).startsWith("Consecrated Sphinx"), `[${name}] the tab is titled with the card's name`);
+  check((await page.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] the page shows the card name`);
+  check((await page.getAttribute("#card-link", "href")).startsWith("https://scryfall.com/"), `[${name}] the page links to Scryfall`);
+  check(/ \(\w+ #\S+\) · \w+ · \d{4}$/.test(await page.textContent("#card-printing")), `[${name}] the page names the printing shown: set, number, rarity, year`);
+  check((await page.textContent("#card-artist")).startsWith("Illustrated by "), `[${name}] the page credits the artist`);
   await page.waitForFunction(() => document.getElementById("card-image").naturalWidth > 0);
+  const cardOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  check(cardOverflow <= 0, `[${name}] the card page does not scroll sideways (overflow ${cardOverflow}px)`);
   await shot("3-card");
-  await page.keyboard.press("Escape");
-  check(!(await page.isVisible("#card[open]")), `[${name}] Escape closes the details`);
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("card").hidden);
+  check(page.url() === resultsUrl && (await page.$$("#results .tile")).length === shownBefore, `[${name}] Back returns to the same results`);
+  await page.goForward();
+  await page.waitForFunction(() => !document.getElementById("card").hidden);
+  check((await page.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] Forward shows the card again`);
+
+  // The address works on its own: opened fresh, as someone following a shared link would.
+  const fresh = await context.newPage();
+  await fresh.goto(cardUrl);
+  await fresh.waitForFunction(() => !document.getElementById("card").hidden);
+  check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] a shared card address opens that card`);
+  check((await fresh.textContent("#card-printing")) === (await page.textContent("#card-printing")), `[${name}] and the same printing of it`);
+  check(!(await fresh.isVisible("#card-back")), `[${name}] with no "Back to results", as there are none`);
+  await fresh.fill("#q", "lightning bolt");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name"));
+  check(new URL(fresh.url()).pathname === "/" && new URL(fresh.url()).searchParams.get("q") === "lightning bolt", `[${name}] searching from a card's page goes to the results address`);
+  await fresh.goto(`${base}/card/nosuchset/999/nothing`);
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("No card at this address"));
+  check(await fresh.isVisible("#intro"), `[${name}] an address with no card says so and offers the examples`);
+  await fresh.close();
+
+  await page.click("#card-back");
+  await page.waitForFunction(() => document.getElementById("card").hidden);
+  check(page.url() === resultsUrl, `[${name}] "Back to results" returns to the results`);
 
   await search(page, 'c:u t:sphinx o:"draw two cards"');
   check((await page.textContent("#status")).startsWith("Scryfall syntax · 3 cards"), `[${name}] syntax query reports 3 cards`);
@@ -111,10 +144,11 @@ async function run(name, contextOptions) {
   check((await page.$$("#results .caption")).length === 0, `[${name}] card results carry no printing captions`);
   await page.click("#results .tile");
   check((await page.textContent("#card-printing")).startsWith("Iconic Masters (IMA #"), `[${name}] the card is shown by its printing in that set`);
-  check(/^All \d+ printings$/.test(await page.textContent("#card-prints")), `[${name}] details offer the card's other printings`);
+  check(new URL(page.url()).pathname.startsWith("/card/ima/"), `[${name}] and its address names that set`);
+  check(/^All \d+ printings$/.test(await page.textContent("#card-prints")), `[${name}] the page offers the card's other printings`);
   await page.click("#card-prints");
   await page.waitForFunction(() => /\d+ printings/.test(document.getElementById("status").textContent));
-  check(!(await page.isVisible("#card[open]")), `[${name}] choosing them closes the details`);
+  check(!(await page.isVisible("#card")), `[${name}] choosing them leaves the card's page`);
   check(new URL(page.url()).searchParams.get("q").endsWith("unique:prints order:released"), `[${name}] and runs a printings search`);
   const tiles = (await page.$$("#results .tile")).length;
   const captions = await page.$$eval("#results .caption", (nodes) => nodes.map((n) => n.textContent));
@@ -124,10 +158,12 @@ async function run(name, contextOptions) {
   check(years.every((y, i) => i === 0 || y <= years[i - 1]), `[${name}] printings are listed newest first`);
   await shot("5-printings");
   await page.click("#results .tile");
-  check(!(await page.isVisible("#card-prints")), `[${name}] a printing's details do not offer the list again`);
+  check(!(await page.isVisible("#card-prints")), `[${name}] a printing's page does not offer the list again`);
   await page.waitForFunction(() => document.getElementById("card-image").naturalWidth > 0);
   await shot("6-printing");
   await page.keyboard.press("Escape");
+  await page.waitForFunction(() => document.getElementById("card").hidden);
+  check((await page.$$("#results .tile")).length === tiles, `[${name}] Escape returns to the list of printings`);
 
   // Sorting cards by price shows the printing that decides the order, with its price.
   await search(page, "t:sphinx r:mythic");

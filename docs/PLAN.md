@@ -5,6 +5,9 @@ name and design, as a public demo of TopK.
 
 Last updated 22 November 2026. Time estimates are rough judgement for one engineer.
 
+Feedback from users is logged in [FEEDBACK.md](FEEDBACK.md), which also says when an item is
+picked up: at the boundary between plan steps unless something is broken.
+
 ## Decisions still open
 
 | Decision | Default being assumed |
@@ -86,6 +89,8 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
 - [x] Paging ("Show more") and a sort menu, including newest printing and price
 - [x] Printing details in the card view (set, number, rarity, artist, price, flavour text) and a
       link from a card to all of its printings
+- [x] A page for each card at `/card/<set>/<number>/<name>`, shareable, in place of the popup
+      (feedback F-1)
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

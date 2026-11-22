@@ -15,6 +15,12 @@
   # topk-js is a native Node add-on, so it is shipped as-is instead of being inlined.
   external_node_modules = ["topk-js"]
 
+# A card's own page, /card/<set>/<number>/<name>, is the same page: its script reads the address.
+[[redirects]]
+  from = "/card/*"
+  to = "/index.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

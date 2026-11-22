@@ -167,8 +167,10 @@ Put your key in `.env` and export it (`set -a; . ./.env; set +a`). Then:
 npm run dev
 ```
 
-Open http://127.0.0.1:8000. The page (`public/`) is one responsive view over one endpoint,
+Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over one endpoint,
 `GET /api/search`, and works the same on a phone and a laptop. The key stays on the server.
+A search lives at `/?q=...` and each card has its own address, `/card/<set>/<number>/<name>`
+(for example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
 
 | Parameter | Meaning |
 |---|---|
