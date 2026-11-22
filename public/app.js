@@ -10,24 +10,35 @@ const tools = document.getElementById("tools");
 const sort = document.getElementById("sort");
 const more = document.getElementById("more");
 const sheet = document.getElementById("card");
+const printsButton = document.getElementById("card-prints");
 
 const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
+// What a result is, as the endpoint names it, and the word for one of them.
+const UNITS = { cards: "card", printings: "printing", illustrations: "illustration" };
+// Sort orders decided by a printing rather than by the card.
+const PRINTING_ORDERS = new Set(["released", "usd", "eur", "tix", "rarity"]);
 let inFlight = null;
-let current = { query: "", sort: "" }; // what the grid is showing
+let current = { query: "", sort: "", unit: "cards" }; // what the grid is showing
 
 function plural(n, word) {
   return `${n.toLocaleString("en")} ${word}${n === 1 ? "" : "s"}`;
 }
 
+const price = (usd) => (typeof usd === "number" ? `$${usd.toFixed(2)}` : "");
+const year = (released) => (released ? released.slice(0, 4) : "");
+const capital = (word) => (word ? word[0].toUpperCase() + word.slice(1) : "");
+const setAndNumber = (hit) => (hit.set ? `${hit.set.toUpperCase()}${hit.collector_number ? ` #${hit.collector_number}` : ""}` : "");
+
 // What the status line says for each path a query can take.
 function describe(data, shown) {
   const partial = data.total > shown ? `, showing ${shown}` : "";
+  const total = () => `${plural(data.total, UNITS[data.unit] || "card")}${partial}`;
   switch (data.mode) {
     case "syntax":
-      return ["Scryfall syntax", `${plural(data.total, "card")}${partial}`];
+      return ["Scryfall syntax", total()];
     case "name":
-      return ["Card name", `${plural(data.total, "card")}${partial}`];
+      return ["Card name", total()];
     case "mixed":
       return ["Syntax and plain English", `${data.note}, top ${shown}`];
     case "semantic":
@@ -54,7 +65,9 @@ function setStatus(label, detail, isError = false, tookMs = null) {
   }
 }
 
-function tile(hit) {
+// `captioned` adds the printing under the image: set, number, year and price. It is used when
+// the printing is the point of the search (a list of printings, or a sort by price or date).
+function tile(hit, captioned) {
   const item = document.createElement("li");
   const button = document.createElement("button");
   button.type = "button";
@@ -80,24 +93,53 @@ function tile(hit) {
   }
   button.addEventListener("click", () => openCard(hit));
   item.append(button);
+  if (captioned) {
+    const caption = document.createElement("p");
+    caption.className = "caption";
+    caption.textContent = [setAndNumber(hit), year(hit.released), price(hit.usd)].filter(Boolean).join(" · ");
+    item.append(caption);
+  }
   return item;
 }
 
 function openCard(hit) {
+  const text = (id, value) => {
+    const element = document.getElementById(id);
+    element.textContent = value || "";
+    element.hidden = !value;
+  };
   const image = document.getElementById("card-image");
   const hasImage = Boolean(hit.image && hit.image.startsWith(IMAGE_HOST));
   image.hidden = !hasImage;
   image.src = hasImage ? hit.image : "";
   image.alt = hit.name;
   document.getElementById("card-name").textContent = hit.name;
-  document.getElementById("card-line").textContent = [hit.mana_cost, hit.type_line].filter(Boolean).join("  ·  ");
-  document.getElementById("card-rules").textContent = hit.oracle_text || "";
+  text("card-line", [hit.mana_cost, hit.type_line].filter(Boolean).join("  ·  "));
+  text("card-rules", hit.oracle_text);
+  text("card-flavor", hit.flavor_text);
+  // The printing shown: its set, number, rarity and year, then artist and price.
+  const set = hit.set_name ? `${hit.set_name}${setAndNumber(hit) ? ` (${setAndNumber(hit)})` : ""}` : setAndNumber(hit);
+  text("card-printing", [set, capital(hit.rarity), year(hit.released)].filter(Boolean).join(" · "));
+  text("card-artist", [hit.artist ? `Illustrated by ${hit.artist}` : "", price(hit.usd)].filter(Boolean).join(" · "));
+  // Offer the card's other printings, unless the grid already lists printings. A name holding
+  // a double quote cannot be written as an exact-name search.
+  const others = current.unit === "cards" && hit.prints > 1 && !hit.name.includes('"');
+  printsButton.hidden = !others;
+  if (others) {
+    printsButton.textContent = `All ${hit.prints} printings`;
+    printsButton.dataset.q = `!"${hit.name}" unique:prints order:released`;
+  }
   const link = document.getElementById("card-link");
   const hasLink = Boolean(hit.scryfall_uri && hit.scryfall_uri.startsWith(CARD_HOST));
   link.hidden = !hasLink;
   if (hasLink) link.href = hit.scryfall_uri;
   sheet.showModal();
 }
+
+printsButton.addEventListener("click", () => {
+  sheet.close();
+  run(printsButton.dataset.q);
+});
 
 // Clicking the dimmed area outside the sheet closes it.
 sheet.addEventListener("click", (event) => {
@@ -160,9 +202,11 @@ async function run(query, { push = true, append = false, sortValue = "" } = {}) 
       document.body.classList.remove("searched");
       return fail("Not supported yet", `${data.note}. See "What can I type?" below.`);
     }
-    if (append) results.append(...data.hits.map(tile));
-    else results.replaceChildren(...data.hits.map(tile));
-    current = { query, sort: sortValue };
+    const captioned = data.unit !== "cards" || PRINTING_ORDERS.has(data.sorted_by);
+    const tiles = data.hits.map((hit) => tile(hit, captioned));
+    if (append) results.append(...tiles);
+    else results.replaceChildren(...tiles);
+    current = { query, sort: sortValue, unit: data.unit };
     const shown = results.children.length;
     more.hidden = !data.has_more;
     // Results ranked by meaning have no other order to offer.

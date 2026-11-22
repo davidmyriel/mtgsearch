@@ -1,6 +1,6 @@
 name: Nightly refresh and regression
 
-# Refreshes the collection from Scryfall's bulk files, then checks that nothing regressed:
+# Refreshes the collections from Scryfall's bulk files, then checks that nothing regressed:
 # syntax conformance against Scryfall's API, and the relevance evaluation.
 on:
   schedule:
@@ -22,6 +22,7 @@ jobs:
       TOPK_API_KEY: ${{ secrets.TOPK_API_KEY }}
       TOPK_REGION: ${{ vars.TOPK_REGION }}
       MTGSEARCH_COLLECTION: ${{ vars.MTGSEARCH_COLLECTION }}
+      MTGSEARCH_PRINTINGS_COLLECTION: ${{ vars.MTGSEARCH_PRINTINGS_COLLECTION }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,10 +34,10 @@ jobs:
           node-version: 22
           cache: npm
 
-      # The job compares today's cards with what the collection already holds, so it needs
-      # no cached state: only new or changed cards are re-sent and re-embedded, and cards
-      # whose rank or price moved get a small field update.
-      - name: Ingest changed cards
+      # The job compares today's cards and printings with what the collections already hold,
+      # so it needs no cached state: only cards whose text changed are re-embedded, and
+      # everything else that moved (rank, prices, new printings) is a field update.
+      - name: Ingest changed cards and printings
         if: env.TOPK_API_KEY != ''
         run: |
           pip install -e .
@@ -47,6 +48,7 @@ jobs:
         run: |
           npm ci
           npm run conformance -- conformance/queries.txt --out conformance-results.json
+          npm run conformance -- conformance/printings.txt --out conformance-printings-results.json
 
       - name: Relevance evaluation
         if: env.TOPK_API_KEY != ''
@@ -58,6 +60,7 @@ jobs:
           name: nightly-results
           path: |
             conformance-results.json
+            conformance-printings-results.json
             eval-results.json
 
       - name: Skipped

@@ -299,11 +299,36 @@ code {
 .line { margin: 6px 0 0; color: var(--muted); }
 .rules { margin: 14px 0 0; white-space: pre-line; overflow-wrap: anywhere; }
 
-.out {
-  display: inline-block;
+.flavor { margin: 12px 0 0; font-style: italic; color: var(--muted); white-space: pre-line; overflow-wrap: anywhere; }
+.printing { margin: 12px 0 0; color: var(--muted); font-size: 0.95rem; overflow-wrap: anywhere; }
+.printing + .printing { margin-top: 2px; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
   margin-top: 18px;
-  color: var(--accent);
+}
+
+.out {
+  padding: 0;
+  font: inherit;
   font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Under a tile, when the printing is the point of the search: set, number, year, price. */
+.caption {
+  margin: 6px 2px 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 600px) {

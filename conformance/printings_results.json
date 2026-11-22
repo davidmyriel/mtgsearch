@@ -1,6 +1,6 @@
 {
  "summary": {
-  "pass": 79,
+  "pass": 75,
   "fail": 0,
   "unsupported": 0,
   "error": 0
@@ -641,42 +641,6 @@
    "status": "pass",
    "scryfall_total": 3,
    "ours_total": 3,
-   "missing": [],
-   "extra": [],
-   "note": ""
-  },
-  {
-   "query": "usd>=100 t:sphinx",
-   "status": "pass",
-   "scryfall_total": 5,
-   "ours_total": 5,
-   "missing": [],
-   "extra": [],
-   "note": ""
-  },
-  {
-   "query": "usd<0.10 t:sphinx set:ima",
-   "status": "pass",
-   "scryfall_total": 0,
-   "ours_total": 0,
-   "missing": [],
-   "extra": [],
-   "note": ""
-  },
-  {
-   "query": "eur>50 t:sphinx",
-   "status": "pass",
-   "scryfall_total": 7,
-   "ours_total": 7,
-   "missing": [],
-   "extra": [],
-   "note": ""
-  },
-  {
-   "query": "tix>5 t:sphinx",
-   "status": "pass",
-   "scryfall_total": 4,
-   "ours_total": 4,
    "missing": [],
    "extra": [],
    "note": ""

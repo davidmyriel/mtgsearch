@@ -87,12 +87,6 @@ prints=1 t:sphinx
 sets>=10 t:sphinx
 sets=1 t:sphinx r:mythic
 
-# prices move daily, so these can differ by a card or two at a boundary
-usd>=100 t:sphinx
-usd<0.10 t:sphinx set:ima
-eur>50 t:sphinx
-tix>5 t:sphinx
-
 # what a result is
 !"consecrated sphinx" unique:prints
 t:sphinx set:2x2 unique:prints

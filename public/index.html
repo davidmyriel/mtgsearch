@@ -35,6 +35,9 @@
         <option value="cmc:desc">Mana value, high to low</option>
         <option value="power:desc">Power, high to low</option>
         <option value="toughness:desc">Toughness, high to low</option>
+        <option value="released:desc">Newest printing first</option>
+        <option value="usd">Price, low to high</option>
+        <option value="usd:desc">Price, high to low</option>
       </select>
     </div>
   </div>
@@ -48,6 +51,8 @@
       <li><button type="button" data-q="one mana elf that taps for green mana">one mana elf that taps for green mana</button><span>cost and type are read from the words</span></li>
       <li><button type="button" data-q="dwarf destroys lands">dwarf destroys lands</button><span>plain English</span></li>
       <li><button type="button" data-q="lightning bolt">lightning bolt</button><span>a card name</span></li>
+      <li><button type="button" data-q="t:dragon r:mythic usd&lt;5">t:dragon r:mythic usd&lt;5</button><span>rarity and price</span></li>
+      <li><button type="button" data-q="!&quot;lightning bolt&quot; unique:prints order:released">!"lightning bolt" unique:prints order:released</button><span>every printing of a card</span></li>
     </ul>
     <details class="help">
       <summary>What can I type?</summary>
@@ -56,8 +61,12 @@
         (<code>o:</code>, <code>kw:</code>), mana value, power, toughness and loyalty (<code>mv</code>, <code>pow</code>,
         <code>tou</code>, <code>loy</code>), legality (<code>f:</code>, <code>banned:</code>), tags (<code>otag:</code>),
         <code>is:</code> flags, <code>-</code> to negate, <code>or</code>, parentheses and regular expressions.</p>
+      <p><strong>Printings.</strong> Set (<code>set:</code>), rarity (<code>r:</code>), artist (<code>a:</code>), flavour text
+        (<code>ft:</code>), frame, border and game, year and date, price (<code>usd&lt;1</code>), and whether a card was ever
+        printed somewhere (<code>in:</code>). A card is shown by a printing that matches. Add <code>unique:prints</code> to
+        list every printing, or <code>unique:art</code> for every illustration.</p>
       <p><strong>Plain English.</strong> Describe the card. An opening such as "two mana blue instant" is applied as a filter.</p>
-      <p><strong>Not yet:</strong> anything about a particular printing, such as set, rarity, artist or price, and mana cost symbols (<code>m:</code>).</p>
+      <p><strong>Not yet:</strong> mana cost symbols (<code>m:</code>), languages other than English, and art tags.</p>
     </details>
   </section>
 
@@ -73,7 +82,13 @@
       <h2 id="card-name"></h2>
       <p id="card-line" class="line"></p>
       <p id="card-rules" class="rules"></p>
-      <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
+      <p id="card-flavor" class="flavor"></p>
+      <p id="card-printing" class="printing"></p>
+      <p id="card-artist" class="printing"></p>
+      <div class="actions">
+        <button id="card-prints" class="out" type="button" hidden></button>
+        <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
+      </div>
     </div>
   </div>
 </dialog>

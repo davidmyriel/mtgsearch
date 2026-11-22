@@ -14046,6 +14046,149 @@
    }
   },
   {
+   "query": "!\"consecrated sphinx\" unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "names_lc",
+      "consecrated sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!consecrated sphinx",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "t:sphinx set:2x2 unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "2x2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t",
+     "set",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"consecrated sphinx\" unique:art",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "names_lc",
+      "consecrated sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "art",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!consecrated sphinx",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "t:sphinx unique:art r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "art",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t",
+     "unique",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
    "query": "usd>=100 t:sphinx",
    "ir": [
     "and",
@@ -14202,149 +14345,6 @@
     "keywords": [
      "tix",
      "t"
-    ],
-    "words": []
-   }
-  },
-  {
-   "query": "!\"consecrated sphinx\" unique:prints",
-   "ir": [
-    "and",
-    [
-     [
-      "in",
-      "names_lc",
-      "consecrated sphinx"
-     ],
-     [
-      "eq",
-      "extra",
-      false
-     ]
-    ]
-   ],
-   "options": {
-    "include_extras": false,
-    "order": null,
-    "descending": false,
-    "printings": true,
-    "unique": "prints",
-    "prefer": null
-   },
-   "plain": false,
-   "split": {
-    "keywords": [
-     "!consecrated sphinx",
-     "unique"
-    ],
-    "words": []
-   }
-  },
-  {
-   "query": "t:sphinx set:2x2 unique:prints",
-   "ir": [
-    "and",
-    [
-     [
-      "in",
-      "type_words",
-      "sphinx"
-     ],
-     [
-      "eq",
-      "set",
-      "2x2"
-     ]
-    ]
-   ],
-   "options": {
-    "include_extras": true,
-    "order": null,
-    "descending": false,
-    "printings": true,
-    "unique": "prints",
-    "prefer": null
-   },
-   "plain": false,
-   "split": {
-    "keywords": [
-     "t",
-     "set",
-     "unique"
-    ],
-    "words": []
-   }
-  },
-  {
-   "query": "!\"consecrated sphinx\" unique:art",
-   "ir": [
-    "and",
-    [
-     [
-      "in",
-      "names_lc",
-      "consecrated sphinx"
-     ],
-     [
-      "eq",
-      "extra",
-      false
-     ]
-    ]
-   ],
-   "options": {
-    "include_extras": false,
-    "order": null,
-    "descending": false,
-    "printings": true,
-    "unique": "art",
-    "prefer": null
-   },
-   "plain": false,
-   "split": {
-    "keywords": [
-     "!consecrated sphinx",
-     "unique"
-    ],
-    "words": []
-   }
-  },
-  {
-   "query": "t:sphinx unique:art r:mythic",
-   "ir": [
-    "and",
-    [
-     [
-      "in",
-      "type_words",
-      "sphinx"
-     ],
-     [
-      "eq",
-      "rarity",
-      "mythic"
-     ],
-     [
-      "eq",
-      "extra",
-      false
-     ]
-    ]
-   ],
-   "options": {
-    "include_extras": false,
-    "order": null,
-    "descending": false,
-    "printings": true,
-    "unique": "art",
-    "prefer": null
-   },
-   "plain": false,
-   "split": {
-    "keywords": [
-     "t",
-     "unique",
-     "r"
     ],
     "words": []
    }

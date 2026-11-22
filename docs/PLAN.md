@@ -35,18 +35,26 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
 ### 1. Card-level search parity: mostly done
 - [x] Ingest pipeline from Scryfall bulk files, incremental, versioned collections
 - [x] Syntax compiler for card-level keywords (see README for the list)
-- [x] Differential testing against Scryfall's API: 97/97 tuning, 74/77 held-out first run
+- [x] Differential testing against Scryfall's API: 97/97 tuning, 74/77 held-out first run (77/77 now)
 - [ ] Mana cost keywords: `m:`, `devotion:`, `produces:`
 - [ ] Remaining `is:` shortcuts (land cycles and the like) and Scryfall's regex shorthands
 - [ ] Grow the held-out conformance set to about 200 queries; run it nightly
 
-### 2. Printing-level parity: not started, the largest remaining gap (2–3 weeks)
-- [ ] Second collection with one document per printing (Scryfall's `default_cards` file, about three
-      times the size)
-- [ ] `set:`, `rarity:`, `artist:`, `flavor:`, prices, `frame:`, `border:`, `game:`, `year:`, `in:`, `new:`
-- [ ] `unique:cards|prints|art` and `prefer:`; check TopK's `group_by` can pick one printing per card
+### 2. Printing-level parity: mostly done
+- [x] Second collection with one document per printing (Scryfall's `default_cards` file: 120,275
+      printings, no embeddings), kept up to date by the same ingest job
+- [x] `set:`, `rarity:`, `cn:`, `artist:`, `flavor:`, `watermark:`, prices, `frame:`, `border:`,
+      `stamp:`, `game:`, `year:`, `date:`, `in:`, `prints`, `sets`, printing-level `is:` flags
+- [x] `unique:cards|prints|art`, `prefer:`, and sorting by release date, price and rarity. One
+      TopK `group_by` returns each matching card and the printing that shows it
+- [x] Differential testing: 79/79 tuning, 53/61 held-out first run, 59/61 after fixes
+- [ ] `new:`, `lang:` and non-English printings, `block:`, `cube:`
 - [ ] Name search over printed and flavour names
-- Exit: held-out conformance at 95% or better with printing keywords included
+- [ ] The cases in `conformance/known_gaps.txt`: Arena printings that only exist to be conjured,
+      Scryfall's loose match on two-letter artist fragments
+- Exit: held-out conformance at 95% or better with printing keywords included. Held-out is at
+  59 of 61 (97%) after fixes; the honest first-run figure was 87%, so a fresh held-out set is
+  needed before calling this met
 
 ### 3. Relevance (about a week)
 - [x] Frozen query set, evaluation harness, full-corpus baseline
@@ -70,8 +78,10 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
       Netlify serves the site; Netlify's own build exercised in CI
 - [ ] Connect the repository in Netlify, set `TOPK_API_KEY`, deploy; run the browser test against the
       live URL. Not verifiable from the repository: Netlify's CDN cache and its rate limit
+- [x] Paging ("Show more") and a sort menu, including newest printing and price
+- [x] Printing details in the card view (set, number, rarity, artist, price, flavour text) and a
+      link from a card to all of its printings
 - [ ] Anonymous query and click logging
-- [ ] Pagination past the first 60 results; sort controls
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms
 
@@ -91,7 +101,7 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
 | Layer | What it covers | Where |
 |---|---|---|
 | App unit tests | Parser, keyword semantics, plain-English filters, search routing, the HTTP contract, the page | `npm test`, no network |
-| Compiler snapshot | The compiled predicate for about 435 inputs is unchanged unless deliberately regenerated | `fixtures/reference.json`, `npm run golden` |
+| Compiler snapshot | The compiled predicate for about 550 inputs is unchanged unless deliberately regenerated | `fixtures/reference.json`, `npm run golden` |
 | Ingest unit tests | Document builder, what a daily run re-sends, the fixtures the app tests read | `pytest`, no network |
 | Live tests | Each search path against the real collection | `npm test` with `TOPK_API_KEY` |
 | Conformance | Our result set equals Scryfall's for the same query | `npm run conformance` |
@@ -104,7 +114,8 @@ Last updated 22 November 2026. Time estimates are rough judgement for one engine
   function bundle with Netlify's tool; lint and test the ingest job on Python 3.10 and 3.13.
 - Same-repository pushes and pull requests, when the TopK secret is configured: live tests, and the
   browser test on the local server and as Netlify serves the site.
-- Nightly: incremental ingest, conformance on the tuning set, relevance evaluation, results uploaded.
+- Nightly: incremental ingest of cards and printings, conformance on both tuning sets, relevance
+  evaluation, results uploaded.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.
 
