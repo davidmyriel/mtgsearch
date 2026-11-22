@@ -33,24 +33,32 @@ jobs:
       # The snapshot of what was last ingested lets the run re-send only changed cards.
       # Without it every card is re-embedded, which is slow and costs money.
       - uses: actions/cache@v4
+        if: env.TOPK_API_KEY != ''
         with:
           path: data/documents.*.jsonl
           key: ingest-snapshot-${{ vars.MTGSEARCH_COLLECTION }}-${{ github.run_id }}
           restore-keys: ingest-snapshot-${{ vars.MTGSEARCH_COLLECTION }}-
 
       - name: Ingest changed cards
+        if: env.TOPK_API_KEY != ''
         run: mtgsearch ingest
 
       - name: Syntax conformance against Scryfall
+        if: env.TOPK_API_KEY != ''
         run: mtgsearch conformance conformance/queries.txt --out conformance-results.json
 
       - name: Relevance evaluation
+        if: env.TOPK_API_KEY != ''
         run: mtgsearch eval --out eval-results.json
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && env.TOPK_API_KEY != ''
         with:
           name: nightly-results
           path: |
             conformance-results.json
             eval-results.json
+
+      - name: Skipped
+        if: env.TOPK_API_KEY == ''
+        run: echo "TOPK_API_KEY secret is not configured; nightly refresh skipped."
