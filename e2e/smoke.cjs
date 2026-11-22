@@ -353,7 +353,31 @@ async function run(name, contextOptions) {
   await browser.close();
 }
 
+/**
+ * The smallest phones, 320 pixels wide. Nothing may make the page wider than the screen,
+ * whatever fonts the device has: a header that fits at 390 with one set of fonts can overflow
+ * with another, and 320 leaves room for that difference.
+ */
+async function narrow() {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 320, height: 640 } });
+  const visits = [
+    ["the home page", "/", null],
+    ["results", "/?q=t%3Asphinx", () => document.querySelectorAll("#results .tile").length > 0],
+    ["a card's page", "/card/ima/47/consecrated-sphinx", () => !document.getElementById("card-printings").hidden],
+    ["the syntax guide", "/syntax", null],
+  ];
+  for (const [what, path, ready] of visits) {
+    await page.goto(base + path);
+    if (ready) await page.waitForFunction(ready);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    check(overflow <= 0, `[320 wide] ${what} does not scroll sideways (overflow ${overflow}px)`);
+  }
+  await browser.close();
+}
+
 async function main() {
+  await narrow();
   await run("phone", { ...devices["iPhone 13"] });
   await run("laptop", { viewport: { width: 1280, height: 800 }, deviceScaleFactor: shots ? 2 : 1 });
   await run("laptop-dark", { viewport: { width: 1280, height: 800 }, colorScheme: "dark", deviceScaleFactor: shots ? 2 : 1 });
