@@ -1,0 +1,82 @@
+# Printing-level syntax, held out: written after the rules were fixed and never used to tune them.
+# The first run of this file is the honest conformance number for printing-level syntax.
+# Run with: npm run conformance -- conformance/printings_heldout.txt
+
+# sets and rarity
+set:neo r:rare
+s:dom t:legendary r:uncommon
+e:mh2 c:r r>=rare
+set:lea t:creature c:g
+st:core r:mythic t:angel
+st:commander t:dragon r:mythic
+-st:expansion t:angel r:mythic
+
+# collector number
+cn:1 set:dom
+set:neo cn>300 cn<310
+set:war cn<=5
+
+# artist, flavour text, watermark
+a:"john avon" t:land
+a:"seb mckinnon" c:b
+a:rk t:angel
+artist:"terese nielsen" mv=3
+ft:urza t:artifact
+ft:"gerrard" c:w t:creature
+-ft:/./ set:dom r:mythic
+wm:mirran
+wm:selesnya t:creature
+
+# frame, border, game
+frame:1997 t:angel
+frame:2015 t:angel r:uncommon
+frame:extendedart t:dragon
+frame:etched t:dragon
+border:gold t:angel
+border:black t:angel r:special
+game:arena t:angel r:mythic
+game:paper -game:mtgo t:dragon r:mythic
+
+# dates
+year=1999 t:dragon
+year>=2025 t:angel r:rare
+date>=2020-01-01 date<2021-01-01 t:angel
+date<=lea
+date>=dom date<war t:angel
+
+# is: for printings
+is:foil -is:nonfoil t:angel
+is:etched t:dragon
+is:promo t:dragon r:mythic
+is:reprint set:dom
+not:reprint set:m19 r:mythic
+is:digital t:angel
+is:fullart t:land set:neo
+is:textless c:r
+is:spotlight set:dom
+is:prerelease t:angel
+is:boosterfun t:dragon set:neo
+is:showcase set:neo r:mythic
+is:borderless t:angel
+is:old t:dragon r:rare
+
+# the card across all its printings
+in:dom t:angel
+in:mtgo -in:arena t:angel r:mythic
+in:uncommon in:rare t:dragon
+in:common t:angel
+prints>=30 t:creature
+prints=2 t:angel r:mythic
+sets>=20 t:creature
+
+# prices move daily, so these can differ by a card or two at a boundary
+usd>=500 t:creature
+usd<=0.05 set:dom r:uncommon
+eur>=200 t:artifact
+tix>=20
+
+# what a result is
+!"lightning bolt" unique:prints
+!"serra angel" unique:art
+t:angel set:dom unique:prints
+set:dom unique:art r:mythic

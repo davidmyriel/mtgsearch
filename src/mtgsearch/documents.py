@@ -1,6 +1,7 @@
 """Turn a Scryfall card object into the document stored in TopK.
 
-One document per Oracle card. A document carries three kinds of field:
+One document per Oracle card (printings.py builds one per printing on top of this). A
+document carries three kinds of field:
 
 * semantic text (`rules`, `rules_tagged`) that TopK embeds for natural-language search;
 * normalised filter fields (`type_lc`, `c_sets`, `cmc`, ...) that the Scryfall-syntax compiler targets;
@@ -22,7 +23,11 @@ PERMANENT_TYPES = ("artifact", "creature", "enchantment", "land", "planeswalker"
 EXTRA_LAYOUTS = {"art_series", "token", "double_faced_token", "emblem", "planar", "scheme", "vanguard"}
 EXTRA_SET_TYPES = {"memorabilia", "token", "minigame", "vanguard"}
 UN_SETS = {"ugl", "unh", "ust", "und", "unf"}
-HIDDEN_SET = re.compile(r"hho|h17|unk|phtr|ph\d\d")
+HIDDEN_SET = re.compile(r"hho|h17|unk|phtr|ph\d\d|ulst")
+# Digital games other than Magic Online and Arena (a 1997 PC game and a Dreamcast game).
+OTHER_GAMES = {"astral", "sega"}
+# Type lines of game aids that are printed like cards but are not cards.
+GAME_AIDS = {"Card", "Stickers"}
 
 # What "~" stands for besides the card's own name: "this creature", "this artifact", ...
 SELF_NOUNS = (
@@ -56,6 +61,14 @@ def stat(value: str | None) -> float | None:
     return float(m.group()) if m else 0.0
 
 
+def price(prices: dict, *keys: str) -> float | None:
+    """The first listed price among `keys`: the regular price, else the foil one."""
+    for key in keys:
+        if prices.get(key):
+            return float(prices[key])
+    return None
+
+
 def color_key(colors) -> str:
     """Canonical name of a colour set: letters in WUBRG order, or "C" for colourless."""
     return "".join(c for c in COLORS if c in colors) or "C"
@@ -67,16 +80,34 @@ def type_words(type_line: str) -> list[str]:
 
 
 def is_extra(card: dict) -> bool:
-    if card["layout"] in EXTRA_LAYOUTS or card.get("set_type") in EXTRA_SET_TYPES:
+    type_line = card.get("type_line") or ""
+    # Dungeons are printed in token sets, some as double-faced tokens, but Scryfall shows them.
+    dungeon = type_line.startswith("Dungeon") and card.get("set_type") == "token"
+    if not dungeon and (
+        card["layout"] in EXTRA_LAYOUTS
+        or card.get("set_type") in EXTRA_SET_TYPES
+        or type_line.startswith("Token")
+    ):
         return True
-    if (card.get("type_line") or "").startswith("Token"):
+    # Cards Wizards removed for offensive content, and cards from other video games.
+    if card.get("content_warning") or (card.get("games") and set(card["games"]) <= OTHER_GAMES):
         return True
     if any(status != "not_legal" for status in card.get("legalities", {}).values()):
         return False
-    # Legal nowhere: hidden if it is a playtest card, a digital-only oddity, or from a promo set.
-    code = card.get("set", "")
-    playtest = "playtest" in (card.get("promo_types") or []) and code not in UN_SETS
-    return playtest or bool(card.get("digital")) or HIDDEN_SET.fullmatch(code) is not None
+    # Legal nowhere. Un-set cards in their own sets and brand-new cards are shown; hidden are
+    # playtest cards, digital-only oddities, a few promo sets, and outside the Un-sets: promo
+    # printings of Un-cards, posters and game aids.
+    code, promo_types = card.get("set", ""), card.get("promo_types") or []
+    if bool(card.get("digital")) or HIDDEN_SET.fullmatch(code) is not None:
+        return True
+    if code in UN_SETS:
+        return False
+    return (
+        "playtest" in promo_types
+        or "poster" in promo_types
+        or card.get("set_type") == "promo"
+        or type_line in GAME_AIDS
+    )
 
 
 def _faces(card: dict) -> list[dict]:
@@ -158,10 +189,11 @@ def rules_text(card: dict) -> str:
     return "\n".join(lines)
 
 
-def build_document(card: dict, tags: dict | None = None) -> dict:
+def build_document(card: dict, tags: dict | None = None, aggregate: dict | None = None) -> dict:
     """Build the TopK document for one Scryfall card object.
 
     `tags` is {"labels": [...], "slugs": [...]} for this card's Oracle tags (see tags.py).
+    `aggregate` holds what is true across all of the card's printings (see printings.py).
     """
     tags = tags or {"labels": [], "slugs": []}
     faces = _faces(card)
@@ -195,7 +227,6 @@ def build_document(card: dict, tags: dict | None = None) -> dict:
     legal = card.get("legalities", {})
     text = rules_text(card)
     image = (card.get("image_uris") or faces[0].get("image_uris") or {}).get("normal")
-    usd = (card.get("prices") or {}).get("usd")
 
     doc = {
         "_id": card["oracle_id"],
@@ -234,8 +265,12 @@ def build_document(card: dict, tags: dict | None = None) -> dict:
         "scryfall_uri": card["scryfall_uri"].split("?")[0],
         "artist": card.get("artist"),
         "set": card.get("set"),
+        "set_name": card.get("set_name"),
+        "cn": card.get("collector_number"),
+        "released": card.get("released_at"),
         "rarity": card.get("rarity"),
-        "usd": float(usd) if usd else None,
+        "usd": price(card.get("prices") or {}, "usd", "usd_foil", "usd_etched"),
+        **(aggregate or {}),
     }
     for key, prefix in (("power", "pow"), ("toughness", "tou"), ("loyalty", "loy")):
         values = _values(card, key)

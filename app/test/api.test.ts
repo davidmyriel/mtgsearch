@@ -13,9 +13,17 @@ const HIT = {
   image: "https://cards.scryfall.io/normal/front/x.jpg",
   scryfall_uri: "https://scryfall.com/card/2x2/43/consecrated-sphinx",
   edhrec_rank: 661,
+  set: "2x2",
+  set_name: "Double Masters 2022",
+  cn: "43",
+  rarity: "mythic",
+  artist: "Mark Zug",
+  released: "2022-07-08",
+  usd: 20.489999771118164, // decimals come back from TopK in single precision
+  prints: 11,
   score: 4.25219,
 };
-const SEMANTIC: Result = { mode: "semantic", hits: [HIT], total: null, note: "sphinx", hasMore: true, sortedBy: null };
+const SEMANTIC: Result = { mode: "semantic", hits: [HIT], total: null, note: "sphinx", hasMore: true, sortedBy: null, unit: "cards" };
 
 function stub(result: Result = SEMANTIC) {
   const calls: [string, SearchOptions][] = [];
@@ -42,6 +50,7 @@ test("returns the documented shape", async () => {
     query: "sphinx that draws two cards",
     mode: "semantic",
     total: null,
+    unit: "cards",
     note: "sphinx",
     hits: [
       {
@@ -52,6 +61,15 @@ test("returns the documented shape", async () => {
         oracle_text: "Flying\nWhenever an opponent draws a card, you may draw two cards.",
         image: "https://cards.scryfall.io/normal/front/x.jpg",
         scryfall_uri: "https://scryfall.com/card/2x2/43/consecrated-sphinx",
+        set: "2x2",
+        set_name: "Double Masters 2022",
+        collector_number: "43",
+        rarity: "mythic",
+        artist: "Mark Zug",
+        released: "2022-07-08",
+        usd: 20.49,
+        flavor_text: null,
+        prints: 11,
         score: 4.252,
       },
     ],
@@ -93,7 +111,7 @@ test("page size and offset are clamped", async () => {
 });
 
 test("paging and sort parameters reach the search and come back in the answer", async () => {
-  const sorted: Result = { mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "cmc" };
+  const sorted: Result = { mode: "syntax", hits: [HIT], total: 91, note: "", hasMore: true, sortedBy: "cmc", unit: "cards" };
   const { calls, search } = stub(sorted);
   const body = await (await get({ q: "t:sphinx", offset: "24", order: "cmc", dir: "desc" }, search)).json();
   assert.deepEqual(calls[0][1], { k: 24, offset: 24, order: "cmc", descending: true });
@@ -124,8 +142,10 @@ test("a backend failure is a 502 that leaks nothing and is not cached", async ()
 });
 
 test("unsupported syntax is passed through for the page to explain", async () => {
-  const refused: Result = { mode: "unsupported", hits: [], total: null, note: "'r:' is not supported yet", hasMore: false, sortedBy: null };
-  const body = await (await get({ q: "r:mythic" }, stub(refused).search)).json();
+  const refused: Result = {
+    mode: "unsupported", hits: [], total: null, note: "'lang:' is not supported yet", hasMore: false, sortedBy: null, unit: "cards",
+  };
+  const body = await (await get({ q: "lang:ja" }, stub(refused).search)).json();
   assert.equal(body.mode, "unsupported");
   assert.deepEqual(body.hits, []);
   assert.match(body.note, /not supported/);
@@ -133,8 +153,19 @@ test("unsupported syntax is passed through for the page to explain", async () =>
 
 test("a missing image is null, not absent", async () => {
   const { image: _unused, ...withoutImage } = HIT;
-  const named: Result = { mode: "name", hits: [withoutImage], total: 1, note: "", hasMore: false, sortedBy: "edhrec" };
+  const named: Result = { mode: "name", hits: [withoutImage], total: 1, note: "", hasMore: false, sortedBy: "edhrec", unit: "cards" };
   const body = await (await get({ q: "sphinx" }, stub(named).search)).json();
   assert.equal(body.hits[0].image, null);
   assert.equal(body.total, 1);
+});
+
+test("a printing search says what its total counts and returns the printing's details", async () => {
+  const printing = { ...HIT, _id: "p1", oracle_id: "abc", flavor_text: "Blessed by the hands of Jin-Gitaxias.", usd: 34.97 };
+  const prints: Result = { mode: "syntax", hits: [printing], total: 11, note: "", hasMore: false, sortedBy: "released", unit: "printings" };
+  const body = await (await get({ q: '!"consecrated sphinx" unique:prints', order: "released", dir: "desc" }, stub(prints).search)).json();
+  assert.deepEqual([body.unit, body.total, body.sorted_by], ["printings", 11, "released"]);
+  assert.deepEqual(
+    [body.hits[0].id, body.hits[0].flavor_text, body.hits[0].usd, body.hits[0].collector_number],
+    ["p1", "Blessed by the hands of Jin-Gitaxias.", 34.97, "43"],
+  );
 });

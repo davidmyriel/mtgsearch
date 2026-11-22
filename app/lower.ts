@@ -1,6 +1,7 @@
 // Lower a parsed Scryfall query to a small predicate IR over document fields.
 //
-// Port of src/mtgsearch/syntax/lower.py (the reference). All keyword semantics live here.
+// All keyword semantics live here. Field names are those of the documents the ingest job
+// builds: card fields exist in both collections, printing fields only in the printings one.
 //
 //   ["all"]                         every card
 //   ["and", [p...]] ["or", [p...]] ["not", p]
@@ -13,6 +14,8 @@
 import { fold, plain } from "./normalize.ts";
 import { KEYWORDS, QueryError, Unsupported } from "./parser.ts";
 import type { Keyword, Node } from "./parser.ts";
+import printingFlags from "./printing-flags.json" with { type: "json" };
+import setDates from "./sets.json" with { type: "json" };
 import typeWords from "./type-words.json" with { type: "json" };
 
 export type Op = "=" | "!=" | "<" | "<=" | ">" | ">=";
@@ -27,7 +30,15 @@ export type IR =
   | ["in", string, string]
   | ["re", string, string];
 
-export type Options = { includeExtras: boolean; order: string | null; descending: boolean };
+export type Unique = "cards" | "prints" | "art";
+export type Options = {
+  includeExtras: boolean;
+  order: string | null; // the document field to sort on
+  descending: boolean;
+  unique: Unique; // what a result is: a card, a printing, or a distinct illustration
+  prefer: string | null; // which printing shows a card: a PREFER key
+  printings: boolean; // the query can only be answered from the printings collection
+};
 
 const TYPE_WORDS = new Set<string>(typeWords);
 const COLORS = "WUBRG";
@@ -51,9 +62,40 @@ const FLAGS = new Set([
 ]);
 const FLAG_ALIASES: Record<string, string> = { tdfc: "transform" };
 const STATS: Record<string, string> = { power: "pow", toughness: "tou", loyalty: "loy" };
-const ORDER_FIELDS: Record<string, string> = {
+export const ORDER_FIELDS: Record<string, string> = {
   name: "name_lc", cmc: "cmc", mv: "cmc", power: "pow_max", toughness: "tou_max", edhrec: "edhrec_rank",
+  released: "date", usd: "usd_c", eur: "eur_c", tix: "tix_c", rarity: "rarity_rank",
 };
+/** Fields that only printing documents have. A predicate or sort that uses one needs that collection. */
+export const PRINTING_FIELDS = new Set([
+  "set", "set_type", "cn", "cn_num", "rarity", "rarity_rank", "artist_lc", "flavor_lc", "watermarks",
+  "border", "frame", "frame_effects", "stamp", "games", "year", "date", "usd_c", "eur_c", "tix_c", "pflags",
+]);
+/** `prefer:` values: the field that picks a card's printing, and whether the highest value wins. */
+export const PREFER: Record<string, [string, boolean]> = {
+  oldest: ["date", false], newest: ["date", true],
+  "usd-low": ["usd_c", false], "usd-high": ["usd_c", true],
+  "eur-low": ["eur_c", false], "eur-high": ["eur_c", true],
+  "tix-low": ["tix_c", false], "tix-high": ["tix_c", true],
+};
+const RARITIES = ["common", "uncommon", "rare", "special", "mythic", "bonus"]; // in rank order
+const RARITY_ALIASES: Record<string, string> = { c: "common", u: "uncommon", r: "rare", s: "special", m: "mythic", b: "bonus" };
+const GAMES = new Set(["paper", "mtgo", "arena", "astral", "sega"]);
+const FRAMES = new Set(["1993", "1997", "2003", "2015", "future"]);
+const PRINTING_FLAGS = new Set<string>(printingFlags);
+// `is:` words that are not stored under their own name.
+const PRINTING_FLAG_ALIASES: Record<string, IR> = {
+  full: ["in", "pflags", "fullart"],
+  ub: ["in", "pflags", "universesbeyond"],
+  showcase: ["in", "frame_effects", "showcase"],
+  extended: ["in", "frame_effects", "extendedart"],
+  extendedart: ["in", "frame_effects", "extendedart"],
+  borderless: ["eq", "border", "borderless"],
+  old: ["or", [["eq", "frame", "1993"], ["eq", "frame", "1997"]]],
+  new: ["eq", "frame", "2015"],
+};
+const SET_DATES: Record<string, string> = setDates;
+const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 // Card types whose mention reveals cards that are otherwise hidden as extras.
 const EXTRA_TYPES = /\b(vanguard|plane|scheme|phenomenon|token|emblem)\b/;
 const DECIMAL = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
@@ -203,12 +245,51 @@ function stat(kw: Keyword, canonical: string): IR {
   return ["or", [["cmp", low, op, n], ["cmp", high, op, n]]];
 }
 
-function keyword(kw: Keyword, options: Options): IR {
+function rarity(kw: Keyword): IR {
+  const value = kw.value.toLowerCase();
+  const name = RARITY_ALIASES[value] ?? value;
+  const rank = RARITIES.indexOf(name);
+  if (rank < 0) throw new QueryError(`unknown rarity '${kw.value}'`);
+  if (kw.op === ":" || kw.op === "=") return ["eq", "rarity", name];
+  return ["cmp", "rarity_rank", kw.op as Op, rank];
+}
+
+/** `date` takes a day (2015-08-18), a year, or a set code standing for that set's release date. */
+function date(kw: Keyword): IR {
+  const value = kw.value.toLowerCase();
+  const op = (kw.op === ":" ? "=" : kw.op) as Op;
+  if (/^\d{4}$/.test(value)) return ["cmp", "year", op, Number(value)];
+  const day = ISO_DATE.test(value) ? value : Object.hasOwn(SET_DATES, value) ? SET_DATES[value] : null;
+  if (day === null) throw new QueryError(`'${kw.key}' expects a date such as 2015-08-18, a year or a set code`);
+  return ["cmp", "date", op, Number(day.replaceAll("-", ""))];
+}
+
+/** `in:` asks about the card across all its printings: a game, a rarity, or a set. */
+function printedIn(kw: Keyword): IR {
+  const value = word(kw);
+  if (GAMES.has(value)) return ["in", "in_games", value];
+  const name = RARITY_ALIASES[value] ?? value;
+  if (RARITIES.includes(name) && !Object.hasOwn(SET_DATES, value)) return ["in", "in_rarities", name];
+  if (Object.hasOwn(SET_DATES, value)) return ["in", "in_sets", value];
+  throw new Unsupported(`'in:${kw.value}' is not supported yet (games, rarities and set codes are)`);
+}
+
+/** The lowercased value of a keyword that only takes ":" or "=". */
+function word(kw: Keyword): string {
+  if (kw.op !== ":" && kw.op !== "=") throw new QueryError(`'${kw.key}' does not take '${kw.op}'`);
+  return kw.value.toLowerCase();
+}
+
+const exact = (field: string, kw: Keyword): IR => ["eq", field, word(kw)];
+
+type Working = Options & { direction: string | null; negated: boolean };
+
+function keyword(kw: Keyword, options: Working): IR {
   const canonical = KEYWORDS.get(kw.key);
   if (canonical == null) throw new Unsupported(`'${kw.key}:' is not supported yet`);
   const { op, value } = kw;
   const numericOp = (op === ":" ? "=" : op) as Op;
-  if (kw.regex && !["type", "oracle", "fulloracle", "name"].includes(canonical)) {
+  if (kw.regex && !["type", "oracle", "fulloracle", "name", "flavor"].includes(canonical)) {
     throw new QueryError(`'${kw.key}' does not take a regular expression`);
   }
 
@@ -236,19 +317,59 @@ function keyword(kw: Keyword, options: Options): IR {
   if (Object.hasOwn(STATS, canonical)) return stat(kw, canonical);
   if (canonical === "powtou") return ["cmp", "pt_num", numericOp, number(kw.key, value)];
   if (canonical === "format" || canonical === "banned" || canonical === "restricted") {
+    // Observed on Scryfall: the seven cards removed for offensive content are hidden like
+    // extras, except from a search for banned cards.
+    if (canonical === "banned" && !options.negated) options.includeExtras = true;
     const format = FORMAT_ALIASES[value.toLowerCase()] ?? value.toLowerCase();
     return ["in", canonical === "format" ? "legal" : canonical, format];
   }
   if (canonical === "is" || canonical === "not") {
     const flag = FLAG_ALIASES[value.toLowerCase()] ?? value.toLowerCase();
-    if (!FLAGS.has(flag)) throw new Unsupported(`'${kw.key}:${value}' is not supported yet`);
+    let test: IR;
+    if (FLAGS.has(flag)) test = ["in", "flags", flag];
+    else if (Object.hasOwn(PRINTING_FLAG_ALIASES, flag)) test = PRINTING_FLAG_ALIASES[flag];
+    else if (PRINTING_FLAGS.has(flag)) test = ["in", "pflags", flag];
+    else throw new Unsupported(`'${kw.key}:${value}' is not supported yet`);
     // playtest and holiday cards are only findable this way
     if (canonical === "is" && flag === "funny") options.includeExtras = true;
-    const test: IR = ["in", "flags", flag];
     return canonical === "is" ? test : ["not", test];
   }
   if (canonical === "otag") return ["in", "otags", value.toLowerCase().replaceAll(" ", "-")];
   if (canonical === "edhrec") return ["cmp", "edhrec_rank", numericOp, number(kw.key, value)];
+
+  // printing-level keywords
+  if (canonical === "rarity") return rarity(kw);
+  // Observed on Scryfall: naming a set, an artist or a watermark also searches the hidden
+  // extras (tokens, memorabilia), so `set:tm19` lists that set's tokens.
+  // Excluding one (`-set:ima`) does not.
+  if (!options.negated && (canonical === "set" || canonical === "artist" || canonical === "watermark")) {
+    options.includeExtras = true;
+  }
+  if (canonical === "set") return exact("set", kw);
+  if (canonical === "settype") return exact("set_type", kw);
+  if (canonical === "border") return exact("border", kw);
+  if (canonical === "stamp") return exact("stamp", kw);
+  if (canonical === "number") {
+    if (op === ":" || op === "=") return ["eq", "cn", fold(value)];
+    return ["cmp", "cn_num", op as Op, number(kw.key, value)];
+  }
+  if (canonical === "artist") return text("artist_lc", kw);
+  if (canonical === "flavor") return text("flavor_lc", kw);
+  if (canonical === "watermark") return ["in", "watermarks", word(kw)];
+  if (canonical === "game") return ["in", "games", word(kw)];
+  if (canonical === "frame") {
+    const frame = word(kw);
+    return FRAMES.has(frame) ? ["eq", "frame", frame] : ["in", "frame_effects", frame];
+  }
+  if (canonical === "year") return ["cmp", "year", numericOp, number(kw.key, value)];
+  if (canonical === "date") return date(kw);
+  if (canonical === "usd" || canonical === "eur" || canonical === "tix") {
+    // Prices are stored in whole cents, so comparisons are exact.
+    return ["cmp", `${canonical}_c`, numericOp, Math.round(number(kw.key, value) * 100)];
+  }
+  // card-level facts about its printings
+  if (canonical === "in") return printedIn(kw);
+  if (canonical === "prints" || canonical === "sets") return ["cmp", canonical, numericOp, number(kw.key, value)];
 
   // display directives: they change options, not which cards match
   if (canonical === "include") {
@@ -260,21 +381,34 @@ function keyword(kw: Keyword, options: Options): IR {
     }
     options.order = ORDER_FIELDS[value.toLowerCase()];
   } else if (canonical === "direction") {
-    options.descending = value.toLowerCase().startsWith("desc");
-  } else if (canonical === "unique" && value.toLowerCase() !== "cards") {
-    throw new Unsupported(`'unique:${value}' is not supported yet`);
+    const direction = value.toLowerCase();
+    if (!["asc", "desc", "auto"].includes(direction)) throw new QueryError(`unknown direction '${value}'`);
+    options.direction = direction === "auto" ? null : direction;
+  } else if (canonical === "unique") {
+    const unique = value.toLowerCase();
+    if (unique !== "cards" && unique !== "prints" && unique !== "art") {
+      throw new QueryError(`'unique' takes cards, prints or art, got '${value}'`);
+    }
+    options.unique = unique;
+  } else if (canonical === "prefer") {
+    if (!Object.hasOwn(PREFER, value.toLowerCase())) throw new Unsupported(`'prefer:${value}' is not supported yet`);
+    options.prefer = value.toLowerCase();
   }
   return ["all"];
 }
 
-function lowerNode(node: Node, options: Options): IR {
+function lowerNode(node: Node, options: Working): IR {
   switch (node.kind) {
     case "and":
       return ["and", node.children.map((c) => lowerNode(c, options))];
     case "or":
       return ["or", node.children.map((c) => lowerNode(c, options))];
-    case "not":
-      return ["not", lowerNode(node.child, options)];
+    case "not": {
+      options.negated = !options.negated;
+      const child = lowerNode(node.child, options);
+      options.negated = !options.negated;
+      return ["not", child];
+    }
     case "name":
       return node.exact ? ["in", "names_lc", fold(node.text)] : name(node.text);
     case "keyword":
@@ -304,10 +438,30 @@ export function simplify(p: IR): IR {
   return p;
 }
 
+/** Whether a predicate mentions a field that only printing documents have. */
+export function usesPrintings(p: IR): boolean {
+  if (p[0] === "all") return false;
+  if (p[0] === "and" || p[0] === "or") return p[1].some(usesPrintings);
+  if (p[0] === "not") return usesPrintings(p[1]);
+  return PRINTING_FIELDS.has(p[1]);
+}
+
 /** AST -> [predicate IR, display options]. Extras are hidden unless the query reveals them. */
 export function lower(ast: Node): [IR, Options] {
-  const options: Options = { includeExtras: false, order: null, descending: false };
-  let predicate = lowerNode(ast, options);
-  if (!options.includeExtras) predicate = ["and", [predicate, ["eq", "extra", false]]];
-  return [simplify(predicate), options];
+  const working: Working = {
+    includeExtras: false, order: null, descending: false, unique: "cards", prefer: null, printings: false,
+    direction: null, negated: false,
+  };
+  let predicate = lowerNode(ast, working);
+  if (!working.includeExtras) predicate = ["and", [predicate, ["eq", "extra", false]]];
+  predicate = simplify(predicate);
+  const { direction, negated: _negated, ...options } = working;
+  // Unless a direction is given, newest printings come first and everything else ascends.
+  options.descending = direction === null ? options.order === "date" : direction === "desc";
+  options.printings =
+    usesPrintings(predicate) ||
+    options.unique !== "cards" ||
+    options.prefer !== null ||
+    (options.order !== null && PRINTING_FIELDS.has(options.order));
+  return [predicate, options];
 }

@@ -4109,22 +4109,12 @@
   {
    "query": "banned:legacy",
    "ir": [
-    "and",
-    [
-     [
-      "in",
-      "banned",
-      "legacy"
-     ],
-     [
-      "eq",
-      "extra",
-      false
-     ]
-    ]
+    "in",
+    "banned",
+    "legacy"
    ],
    "options": {
-    "include_extras": false,
+    "include_extras": true,
     "order": null,
     "descending": false
    },
@@ -4180,16 +4170,11 @@
       "in",
       "type_words",
       "creature"
-     ],
-     [
-      "eq",
-      "extra",
-      false
      ]
     ]
    ],
    "options": {
-    "include_extras": false,
+    "include_extras": true,
     "order": null,
     "descending": false
    },
@@ -9076,16 +9061,11 @@
       "in",
       "type_words",
       "land"
-     ],
-     [
-      "eq",
-      "extra",
-      false
      ]
     ]
    ],
    "options": {
-    "include_extras": false,
+    "include_extras": true,
     "order": null,
     "descending": false
    },
@@ -9101,22 +9081,12 @@
   {
    "query": "banned:pauper",
    "ir": [
-    "and",
-    [
-     [
-      "in",
-      "banned",
-      "pauper"
-     ],
-     [
-      "eq",
-      "extra",
-      false
-     ]
-    ]
+    "in",
+    "banned",
+    "pauper"
    ],
    "options": {
-    "include_extras": false,
+    "include_extras": true,
     "order": null,
     "descending": false
    },
@@ -11161,6 +11131,3225 @@
    }
   },
   {
+   "query": "set:ima",
+   "ir": [
+    "eq",
+    "set",
+    "ima"
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "set:ima r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set",
+      "ima"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "set",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "s:m12 r>=rare",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set",
+      "m12"
+     ],
+     [
+      "cmp",
+      "rarity_rank",
+      ">=",
+      2
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "s",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "e:lea r:common",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set",
+      "lea"
+     ],
+     [
+      "eq",
+      "rarity",
+      "common"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "e",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "st:masters t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set_type",
+      "masters"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "st",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-set:ima t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "eq",
+       "set",
+       "ima"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "t:sphinx (set:ima or set:2x2)",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "or",
+      [
+       [
+        "eq",
+        "set",
+        "ima"
+       ],
+       [
+        "eq",
+        "set",
+        "2x2"
+       ]
+      ]
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "r:special t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "rarity",
+      "special"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "r",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "r<uncommon t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "rarity_rank",
+      "<",
+      1
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "r",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "r!=common set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "rarity_rank",
+      "!=",
+      0
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "r",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "set:ima cn:47",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set",
+      "ima"
+     ],
+     [
+      "eq",
+      "cn",
+      "47"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "set",
+     "cn"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "set:ima cn>=250",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set",
+      "ima"
+     ],
+     [
+      "cmp",
+      "cn_num",
+      ">=",
+      250
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "set",
+     "cn"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "set:ima cn<10",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set",
+      "ima"
+     ],
+     [
+      "cmp",
+      "cn_num",
+      "<",
+      10
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "set",
+     "cn"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "a:\"mark zug\" t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "has",
+      "artist_lc",
+      "mark zug"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "a",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "a:zug",
+   "ir": [
+    "has",
+    "artist_lc",
+    "zug"
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "a"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "a:\"rebecca guay\" c:g",
+   "ir": [
+    "and",
+    [
+     [
+      "has",
+      "artist_lc",
+      "rebecca guay"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "a",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "ft:phyrexia t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "has",
+      "flavor_lc",
+      "phyrexia"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "ft",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "ft:/hands of jin-gitaxias/",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "flavor_lc",
+      "hands of jin-gitaxias"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "ft"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-ft:the set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "has",
+       "flavor_lc",
+       "the"
+      ]
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "wm:phyrexian t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "watermarks",
+      "phyrexian"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "wm",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "wm:orzhov",
+   "ir": [
+    "in",
+    "watermarks",
+    "orzhov"
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "wm"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "frame:future",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "frame",
+      "future"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "frame"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "frame:1993 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "frame",
+      "1993"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "frame",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "frame:2003 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "frame",
+      "2003"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "frame",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "frame:legendary t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "frame_effects",
+      "legendary"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "frame",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "frame:showcase t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "frame_effects",
+      "showcase"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "frame",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "border:white t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "border",
+      "white"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "border",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "border:borderless t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "border",
+      "borderless"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "border",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "border:silver t:creature mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "border",
+      "silver"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "border",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "stamp:acorn",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "stamp",
+      "acorn"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "stamp"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "stamp:triangle t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "stamp",
+      "triangle"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "stamp",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "game:arena t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "games",
+      "arena"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "game",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "game:mtgo t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "games",
+      "mtgo"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "game",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-game:paper t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "games",
+       "paper"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "year=2011 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "year",
+      "=",
+      2011
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "year",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "year<=1994 c:u t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "year",
+      "<=",
+      1994
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "U"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "year",
+     "c",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "date>=2026-01-01 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "date",
+      ">=",
+      20260101
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "date",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "date<mrd t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "date",
+      "<",
+      20031002
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "date",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "date>ima t:sphinx r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "date",
+      ">",
+      20171117
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "date",
+     "t",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:foil t:sphinx set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "foil"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:nonfoil set:sld t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "nonfoil"
+     ],
+     [
+      "eq",
+      "set",
+      "sld"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "set",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:etched t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "etched"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:promo t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "promo"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:reprint t:sphinx set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "reprint"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "not:reprint t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "pflags",
+       "reprint"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "not",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:digital t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "digital"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:fullart t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "fullart"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:full t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "fullart"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:textless t:creature",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "textless"
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:spotlight t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "spotlight"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:prerelease t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "prerelease"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:datestamped t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "datestamped"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:buyabox",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "buyabox"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:showcase t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "frame_effects",
+      "showcase"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:borderless t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "border",
+      "borderless"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:extended t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "frame_effects",
+      "extendedart"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:old t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "eq",
+        "frame",
+        "1993"
+       ],
+       [
+        "eq",
+        "frame",
+        "1997"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:new t:sphinx set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "frame",
+      "2015"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:ub t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "universesbeyond"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:booster t:sphinx set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "booster"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:hires t:sphinx set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "hires"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "in:ima t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_sets",
+      "ima"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "in",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-in:ima t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "in_sets",
+       "ima"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "in:arena t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_games",
+      "arena"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "in",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "in:mtgo -in:paper t:creature c:w mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_games",
+      "mtgo"
+     ],
+     [
+      "not",
+      [
+       "in",
+       "in_games",
+       "paper"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "W"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "in:rare t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_rarities",
+      "rare"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "in",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "in:mythic -in:rare t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_rarities",
+      "mythic"
+     ],
+     [
+      "not",
+      [
+       "in",
+       "in_rarities",
+       "rare"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "prints>=20 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "prints",
+      ">=",
+      20
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "prints",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "prints=1 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "prints",
+      "=",
+      1
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "prints",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "sets>=10 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "sets",
+      ">=",
+      10
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "sets",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "sets=1 t:sphinx r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "sets",
+      "=",
+      1
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "sets",
+     "t",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "usd>=100 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "usd_c",
+      ">=",
+      10000
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "usd",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "usd<0.10 t:sphinx set:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "usd_c",
+      "<",
+      10
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "usd",
+     "t",
+     "set"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "eur>50 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "eur_c",
+      ">",
+      5000
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "eur",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "tix>5 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "tix_c",
+      ">",
+      500
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "tix",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"consecrated sphinx\" unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "names_lc",
+      "consecrated sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!consecrated sphinx",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "t:sphinx set:2x2 unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "set",
+      "2x2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t",
+     "set",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"consecrated sphinx\" unique:art",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "names_lc",
+      "consecrated sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "art",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!consecrated sphinx",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "t:sphinx unique:art r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "art",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t",
+     "unique",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
    "query": "o:\"unterminated",
    "error": "QueryError"
   },
@@ -11213,21 +14402,6 @@
    "error": "QueryError"
   },
   {
-   "query": "r:mythic",
-   "error": "Unsupported",
-   "message": "'r:' is not supported yet"
-  },
-  {
-   "query": "s:2x2 t:sphinx",
-   "error": "Unsupported",
-   "message": "'s:' is not supported yet"
-  },
-  {
-   "query": "a:\"mark zug\"",
-   "error": "Unsupported",
-   "message": "'a:' is not supported yet"
-  },
-  {
    "query": "m:2WW",
    "error": "Unsupported",
    "message": "'m:' is not supported yet"
@@ -11236,21 +14410,6 @@
    "query": "is:fetchland",
    "error": "Unsupported",
    "message": "'is:fetchland' is not supported yet"
-  },
-  {
-   "query": "not:foil",
-   "error": "Unsupported",
-   "message": "'not:foil' is not supported yet"
-  },
-  {
-   "query": "unique:prints",
-   "error": "Unsupported",
-   "message": "'unique:prints' is not supported yet"
-  },
-  {
-   "query": "order:usd",
-   "error": "Unsupported",
-   "message": "'order:usd' is not supported yet"
   },
   {
    "query": "pow>loy",
@@ -11268,11 +14427,6 @@
    "message": "Scryfall's \\spp, \\smm and \\spt regex shorthands are not supported yet"
   },
   {
-   "query": "is:digital",
-   "error": "Unsupported",
-   "message": "'is:digital' is not supported yet"
-  },
-  {
    "query": "include:tokens",
    "error": "Unsupported",
    "message": "'include:tokens' is not supported yet"
@@ -11281,6 +14435,1220 @@
    "query": "devotion:uu",
    "error": "Unsupported",
    "message": "'devotion:' is not supported yet"
+  },
+  {
+   "query": "lang:ja",
+   "error": "Unsupported",
+   "message": "'lang:' is not supported yet"
+  },
+  {
+   "query": "new:art",
+   "error": "Unsupported",
+   "message": "'new:' is not supported yet"
+  },
+  {
+   "query": "in:japanese",
+   "error": "Unsupported",
+   "message": "'in:japanese' is not supported yet (games, rarities and set codes are)"
+  },
+  {
+   "query": "order:artist",
+   "error": "Unsupported",
+   "message": "'order:artist' is not supported yet"
+  },
+  {
+   "query": "prefer:promo",
+   "error": "Unsupported",
+   "message": "'prefer:promo' is not supported yet"
+  },
+  {
+   "query": "paperprints>3",
+   "error": "Unsupported",
+   "message": "'paperprints:' is not supported yet"
+  },
+  {
+   "query": "r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "r>=rare",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "rarity_rank",
+      ">=",
+      2
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "r:legendary",
+   "error": "QueryError"
+  },
+  {
+   "query": "s:2x2 t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set",
+      "2x2"
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "s",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "a:\"mark zug\"",
+   "ir": [
+    "has",
+    "artist_lc",
+    "mark zug"
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "a"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "ft:/blessed by/",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "flavor_lc",
+      "blessed by"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "ft"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "wm:phyrexian",
+   "ir": [
+    "in",
+    "watermarks",
+    "phyrexian"
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "wm"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "cn:47s",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "cn",
+      "47s"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "cn"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "cn>=250",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "cn_num",
+      ">=",
+      250
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "cn"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "frame:2003",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "frame",
+      "2003"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "frame"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "frame:showcase",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "frame_effects",
+      "showcase"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "frame"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "border:borderless",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "border",
+      "borderless"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "border"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "game:arena",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "games",
+      "arena"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "game"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "st:masters",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set_type",
+      "masters"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "st"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "year=2011",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "year",
+      "=",
+      2011
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "year"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "date>=2015-08-18",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "date",
+      ">=",
+      20150818
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "date"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "date>ima",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "date",
+      ">",
+      20171117
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "date"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "date>tomorrow",
+   "error": "QueryError"
+  },
+  {
+   "query": "usd>=0.5",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "usd_c",
+      ">=",
+      50
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "usd"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "eur<1",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "eur_c",
+      "<",
+      100
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "eur"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "tix>5",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "tix_c",
+      ">",
+      500
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "tix"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "usd>cheap",
+   "error": "QueryError"
+  },
+  {
+   "query": "is:foil",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "foil"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "not:foil",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "pflags",
+       "foil"
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "not"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:digital",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "digital"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:prerelease",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "prerelease"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:full",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "fullart"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:old",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "eq",
+        "frame",
+        "1993"
+       ],
+       [
+        "eq",
+        "frame",
+        "1997"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "in:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_sets",
+      "ima"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "in"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "in:arena",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_games",
+      "arena"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "in"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "in:rare",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "in_rarities",
+      "rare"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "in"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "prints>=20",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "prints",
+      ">=",
+      20
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "prints"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "sets=1",
+   "ir": [
+    "and",
+    [
+     [
+      "cmp",
+      "sets",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "sets"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "unique:prints",
+   "ir": [
+    "eq",
+    "extra",
+    false
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "unique:art t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "art",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "unique",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "unique:names",
+   "error": "QueryError"
+  },
+  {
+   "query": "prefer:oldest t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": "oldest"
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "prefer",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "order:usd",
+   "ir": [
+    "eq",
+    "extra",
+    false
+   ],
+   "options": {
+    "include_extras": false,
+    "order": "usd_c",
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "order"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "order:released",
+   "ir": [
+    "eq",
+    "extra",
+    false
+   ],
+   "options": {
+    "include_extras": false,
+    "order": "date",
+    "descending": true,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "order"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "order:released direction:asc",
+   "ir": [
+    "eq",
+    "extra",
+    false
+   ],
+   "options": {
+    "include_extras": false,
+    "order": "date",
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "order",
+     "direction"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "order:rarity dir:desc",
+   "ir": [
+    "eq",
+    "extra",
+    false
+   ],
+   "options": {
+    "include_extras": false,
+    "order": "rarity_rank",
+    "descending": true,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "order",
+     "dir"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "direction:sideways",
+   "error": "QueryError"
   },
   {
    "query": "c:m",
@@ -13644,16 +18012,11 @@
       "in",
       "restricted",
       "vintage"
-     ],
-     [
-      "eq",
-      "extra",
-      false
      ]
     ]
    ],
    "options": {
-    "include_extras": false,
+    "include_extras": true,
     "order": null,
     "descending": false
    },

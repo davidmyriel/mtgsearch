@@ -1,6 +1,5 @@
 // The HTTP contract of GET /api/search, independent of Netlify and of TopK so it can be
-// unit-tested with a stubbed search. It mirrors src/mtgsearch/web.py: the page works against
-// either server.
+// unit-tested with a stubbed search.
 
 import { ORDERS } from "./search.ts";
 import type { Hit, Result, SearchOptions } from "./search.ts";
@@ -11,7 +10,13 @@ export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
 export const MAX_RESULTS = 60;
 export const MAX_OFFSET = 10_000;
-const HIT_FIELDS = ["name", "mana_cost", "type_line", "oracle_text", "image", "scryfall_uri"];
+// Document field -> name in the response. The last block describes the printing shown.
+const HIT_FIELDS: Record<string, string> = {
+  name: "name", mana_cost: "mana_cost", type_line: "type_line", oracle_text: "oracle_text",
+  image: "image", scryfall_uri: "scryfall_uri",
+  set: "set", set_name: "set_name", cn: "collector_number", rarity: "rarity", artist: "artist",
+  released: "released", usd: "usd", flavor_text: "flavor_text", prints: "prints",
+};
 
 // Repeated queries are answered by Netlify's CDN without running the function or calling TopK.
 // Card data changes once a day, so ten minutes fresh and an hour stale-while-revalidate is safe.
@@ -39,7 +44,8 @@ function clamp(raw: string | null, fallback: number, low: number, high: number):
 
 function hit(row: Hit): Record<string, unknown> {
   const out: Record<string, unknown> = { id: row._id };
-  for (const name of HIT_FIELDS) out[name] = row[name] ?? null;
+  for (const [source, name] of Object.entries(HIT_FIELDS)) out[name] = row[source] ?? null;
+  if (typeof out.usd === "number") out.usd = Math.round(out.usd * 100) / 100; // stored in single precision
   if (typeof row.score === "number") out.score = Math.round(row.score * 1000) / 1000;
   return out;
 }
@@ -70,6 +76,7 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
       query,
       mode: result.mode,
       total: result.total,
+      unit: result.unit,
       note: result.note,
       hits: result.hits.map(hit),
       offset,

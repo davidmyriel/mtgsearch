@@ -9,7 +9,7 @@ import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { handleSearch } from "./api.ts";
 import { search } from "./search.ts";
-import { collectionFromEnv } from "./topk.ts";
+import { collectionsFromEnv } from "./topk.ts";
 
 const PUBLIC = fileURLToPath(new URL("../public/", import.meta.url));
 const TYPES: Record<string, string> = {
@@ -30,7 +30,7 @@ export function createDevServer() {
   return createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", "http://localhost");
     if (url.pathname === "/api/search") {
-      const answer = await handleSearch(url, (query, options) => search(collectionFromEnv(), query, options));
+      const answer = await handleSearch(url, (query, options) => search(collectionsFromEnv(), query, options));
       response.writeHead(answer.status, Object.fromEntries(answer.headers));
       response.end(await answer.text());
       return;

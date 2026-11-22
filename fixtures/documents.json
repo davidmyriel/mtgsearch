@@ -47,6 +47,21 @@
   "type_line": "Creature — Sphinx",
   "oracle_text": "Flying\nWhenever an opponent draws a card, you may draw two cards.",
   "scryfall_uri": "https://scryfall.com/card/x/1/consecrated-sphinx",
+  "in_sets": [
+   "ima",
+   "nph",
+   "pima"
+  ],
+  "in_rarities": [
+   "mythic",
+   "rare"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3,
   "pow_min": 4.0,
   "pow_max": 4.0,
   "tou_min": 6.0,
@@ -101,7 +116,21 @@
   "mana_cost": "{1}",
   "type_line": "Artifact",
   "oracle_text": "{T}: Add {C}{C}.",
-  "scryfall_uri": "https://scryfall.com/card/x/1/sol-ring"
+  "scryfall_uri": "https://scryfall.com/card/x/1/sol-ring",
+  "in_sets": [
+   "c21",
+   "lea",
+   "sld"
+  ],
+  "in_rarities": [
+   "uncommon"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 3
  },
  {
   "_id": "llanowar-elves",
@@ -148,6 +177,20 @@
   "type_line": "Creature — Elf Druid",
   "oracle_text": "{T}: Add {G}.",
   "scryfall_uri": "https://scryfall.com/card/x/1/llanowar-elves",
+  "in_sets": [
+   "anb",
+   "m19"
+  ],
+  "in_rarities": [
+   "common"
+  ],
+  "in_games": [
+   "arena",
+   "mtgo",
+   "paper"
+  ],
+  "prints": 2,
+  "sets": 2,
   "pow_min": 1.0,
   "pow_max": 1.0,
   "tou_min": 1.0,
@@ -199,6 +242,18 @@
   "type_line": "Creature — Bear",
   "oracle_text": "",
   "scryfall_uri": "https://scryfall.com/card/x/1/grizzly-bears",
+  "in_sets": [
+   "10e"
+  ],
+  "in_rarities": [
+   "common"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 1,
+  "sets": 1,
   "pow_min": 2.0,
   "pow_max": 2.0,
   "tou_min": 2.0,
@@ -447,6 +502,18 @@
   "type_line": "Legendary Creature — Angel // Legendary Creature — Angel",
   "oracle_text": "Flash\nFlying, vigilance\nWhen Archangel Avacyn enters, creatures you control gain indestructible until end of turn.\nFlying\nWhen this creature transforms into Avacyn, the Purifier, it deals 3 damage to each other creature and each opponent.",
   "scryfall_uri": "https://scryfall.com/card/x/1/archangel-avacyn-//-avacyn,-the-purifier",
+  "in_sets": [
+   "soi"
+  ],
+  "in_rarities": [
+   "mythic"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 1,
+  "sets": 1,
   "pow_min": 4.0,
   "pow_max": 6.0,
   "tou_min": 4.0,
@@ -539,6 +606,15 @@
   "type_line": "Token Creature — Goblin",
   "oracle_text": "",
   "scryfall_uri": "https://scryfall.com/card/x/1/goblin",
+  "in_sets": [
+   "tm19"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 1,
+  "sets": 1,
   "pow_min": 1.0,
   "pow_max": 1.0,
   "tou_min": 1.0,

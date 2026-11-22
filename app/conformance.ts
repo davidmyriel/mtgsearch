@@ -4,19 +4,19 @@
 //   npm run conformance -- conformance/heldout.txt --out results.json
 //
 // A query passes when the totals match and, where Scryfall's full result list was fetched,
-// the two sets of Oracle ids are identical. Scryfall's API is used only for this comparison:
+// the two sets of ids are identical: Oracle ids for cards, printing ids for `unique:prints`. Scryfall's API is used only for this comparison:
 // requests are paced below their published limit for the search endpoint, answers are cached
 // for a day, and the run stops if Scryfall says it is being rate-limited.
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { filter, select, field } from "topk-js/query";
+import { field, filter, select } from "topk-js/query";
 import { lower } from "./lower.ts";
-import type { IR } from "./lower.ts";
+import type { IR, Options } from "./lower.ts";
 import { parse, QueryError, Unsupported } from "./parser.ts";
-import { toTopk } from "./search.ts";
-import type { Collection } from "./search.ts";
-import { collectionFromEnv } from "./topk.ts";
+import { grouped, toTopk } from "./search.ts";
+import type { Collection, Collections } from "./search.ts";
+import { collectionsFromEnv } from "./topk.ts";
 
 const API = "https://api.scryfall.com";
 // Scryfall requires an accurate User-Agent that names the application.
@@ -73,31 +73,40 @@ async function scryfall(url: string): Promise<{ status: number; body: any }> {
   }
 }
 
-/** Run a query on Scryfall. Returns the total, the cards fetched, and whether that list is complete. */
-async function scryfallSearch(query: string) {
-  let url: string | null = `${API}/cards/search?${new URLSearchParams({ q: query, unique: "cards" })}`;
-  const cards = new Map<string, string>(); // oracle id -> name
+/** Run a query on Scryfall. Returns the total, the results fetched, and whether that list is complete. */
+async function scryfallSearch(query: string, printings: boolean) {
+  // Without a `unique:` in the query, Scryfall's API returns one result per card.
+  let url: string | null = `${API}/cards/search?${new URLSearchParams({ q: query })}`;
+  const found = new Map<string, string>(); // oracle id (or printing id) -> name
   let total = 0;
   for (let page = 0; page < MAX_PAGES && url; page++) {
     const { status, body } = await scryfall(url);
-    if (status === 404) return { total: 0, cards, complete: true }; // "no cards matched"
+    if (status === 404) return { total: 0, found, complete: true }; // "no cards matched"
     if (status !== 200) throw new Error(`Scryfall answered ${status} for ${query}`);
     total = body.total_cards ?? 0;
     for (const card of body.data) {
-      cards.set(card.oracle_id ?? card.card_faces?.[0]?.oracle_id ?? card.id, card.name);
+      found.set(printings ? card.id : (card.oracle_id ?? card.card_faces?.[0]?.oracle_id ?? card.id), card.name);
     }
     url = body.has_more ? body.next_page : null;
   }
-  return { total, cards, complete: url === null };
+  return { total, found, complete: url === null };
 }
 
-/** Run a predicate on TopK. Returns the total and up to MAX_IDS matches as oracle id -> name. */
-export async function topkMatches(col: Collection, predicate: IR) {
+/** Run a predicate on TopK. Returns the total and up to MAX_IDS matches as id -> name. */
+export async function topkMatches(cols: Collections, predicate: IR, options: Options) {
+  if (options.printings && options.unique !== "prints") {
+    // one result per card (or per illustration) that has a matching printing
+    const groups = await grouped(cols.printings, predicate, {
+      unique: options.unique, prefer: options.prefer, sortField: "name_lc", descending: false,
+    });
+    return { total: groups.length, found: new Map(groups.map((g) => [g.oracle_id, g.name_lc])) };
+  }
+  const col: Collection = options.printings ? cols.printings : cols.cards;
   const expr = toTopk(predicate);
-  if (expr === null) return { total: await col.count(), cards: new Map<string, string>() };
+  if (expr === null) return { total: await col.count(), found: new Map<string, string>() };
   const total = Number((await col.query(filter(expr).count()))[0]._count);
   const rows = total ? await col.query(select({ name: field("name") }).filter(expr).limit(MAX_IDS)) : [];
-  return { total, cards: new Map(rows.map((row) => [row._id, row.name])) };
+  return { total, found: new Map(rows.map((row) => [row._id, row.name])) };
 }
 
 export function readQueries(path: string): string[] {
@@ -107,34 +116,38 @@ export function readQueries(path: string): string[] {
     .filter((line) => line && !line.startsWith("#"));
 }
 
-export async function check(col: Collection, query: string): Promise<Outcome> {
+export async function check(cols: Collections, query: string): Promise<Outcome> {
   const outcome: Outcome = { query, status: "fail", scryfall_total: 0, ours_total: 0, missing: [], extra: [], note: "" };
   let predicate: IR;
+  let options: Options;
   try {
-    [predicate] = lower(parse(query));
+    [predicate, options] = lower(parse(query));
   } catch (error) {
     if (!(error instanceof QueryError)) throw error;
     return { ...outcome, status: error instanceof Unsupported ? "unsupported" : "error", note: error.message };
   }
-  const ours = await topkMatches(col, predicate);
-  const theirs = await scryfallSearch(query);
+  const ours = await topkMatches(cols, predicate, options);
+  const theirs = await scryfallSearch(query, options.unique === "prints");
   outcome.scryfall_total = theirs.total;
   outcome.ours_total = ours.total;
-  outcome.missing = [...theirs.cards].filter(([id]) => !ours.cards.has(id)).map(([, name]) => name).sort().slice(0, 8);
-  if (theirs.complete) {
-    outcome.extra = [...ours.cards].filter(([id]) => !theirs.cards.has(id)).map(([, name]) => name).sort().slice(0, 8);
+  const names = (ids: Map<string, string>, other: Map<string, string>) =>
+    [...ids].filter(([id]) => !other.has(id)).map(([, name]) => name).sort().slice(0, 8);
+  // `unique:art` results are compared by total and by card: an illustration has no id in common.
+  outcome.missing = names(theirs.found, ours.found);
+  if (theirs.complete && ours.found.size >= Math.min(ours.total, MAX_IDS)) {
+    outcome.extra = names(ours.found, theirs.found);
   } else {
-    outcome.note = `compared totals and the first ${theirs.cards.size} Scryfall results`;
+    outcome.note = `compared totals and the first ${theirs.found.size} Scryfall results`;
   }
   if (theirs.total === ours.total && !outcome.missing.length && !outcome.extra.length) outcome.status = "pass";
   return outcome;
 }
 
 export async function run(queriesPath: string, outPath: string | null, log = console.log): Promise<Outcome[]> {
-  const col = collectionFromEnv();
+  const cols = collectionsFromEnv();
   const outcomes: Outcome[] = [];
   for (const query of readQueries(queriesPath)) {
-    const o = await check(col, query);
+    const o = await check(cols, query);
     outcomes.push(o);
     const detail = o.status === "pass" || o.status === "fail" ? `scryfall ${o.scryfall_total}, ours ${o.ours_total}` : o.note;
     log(`${o.status.toUpperCase().padEnd(11)} ${query.padEnd(45)} ${detail}`);

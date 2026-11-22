@@ -117,3 +117,40 @@ def test_extras():
     assert is_extra({**base, **nowhere, "digital": True})
     assert is_extra({**base, **nowhere, "set": "ph19"}) and is_extra({**base, **nowhere, "set": "hho"})
     assert not is_extra({**base, "digital": True})  # digital but legal somewhere, e.g. Alchemy
+
+
+def test_hidden_extras_follow_what_scryfall_shows():
+    def card(**kw):
+        return {
+            "layout": "normal",
+            "set_type": "expansion",
+            "set": "xyz",
+            "legalities": {"vintage": "legal"},
+            **kw,
+        }
+
+    nowhere = {"vintage": "not_legal", "commander": "not_legal"}
+    assert not is_extra(card())
+    assert is_extra(card(layout="token")) and is_extra(card(set_type="memorabilia"))
+    # dungeons live in token sets, yet are shown
+    assert not is_extra(card(set_type="token", type_line="Dungeon", legalities=nowhere))
+    assert not is_extra(
+        card(set_type="token", layout="double_faced_token", type_line="Dungeon — Undercity // Card")
+    )
+    assert is_extra(card(set_type="memorabilia", type_line="Dungeon"))
+    # legal nowhere: Un-set cards in their own sets and brand-new cards are shown
+    assert not is_extra(card(set="unh", set_type="funny", legalities=nowhere))
+    assert not is_extra(card(set="unf", set_type="funny", promo_types=["playtest"], legalities=nowhere))
+    assert not is_extra(card(set="slc", set_type="box", legalities=nowhere))
+    # ... the rest is hidden
+    assert is_extra(card(set="pal04", set_type="promo", legalities=nowhere))  # promo printing of an Un-card
+    assert is_extra(card(set="sld", set_type="box", promo_types=["poster"], legalities=nowhere))
+    assert is_extra(card(set="sld", set_type="box", type_line="Stickers", legalities=nowhere))
+    assert is_extra(card(set="ulst", set_type="funny", legalities=nowhere))
+    assert is_extra(card(set="cmb1", set_type="masters", promo_types=["playtest"], legalities=nowhere))
+    assert is_extra(card(digital=True, legalities=nowhere))
+    assert not is_extra(card(set="pal04", set_type="promo"))  # a legal card's promo is an ordinary printing
+    # removed for offensive content; printed only in another video game
+    assert is_extra(card(content_warning=True))
+    assert is_extra(card(games=["sega"], digital=True)) and is_extra(card(games=["astral"]))
+    assert not is_extra(card(games=["arena"], digital=True)) and not is_extra(card(games=[]))

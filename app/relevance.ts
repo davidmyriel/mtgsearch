@@ -17,8 +17,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { field, fn, match, select } from "topk-js/query";
 import { search, semantic, toTopk, VISIBLE } from "./search.ts";
-import type { Collection, Hit } from "./search.ts";
-import { COLLECTION, collectionFromEnv } from "./topk.ts";
+import type { Collection, Collections, Hit } from "./search.ts";
+import { COLLECTION, collectionsFromEnv } from "./topk.ts";
 
 const STRATEGIES = ["bm25", "semantic", "semantic+tags", "both", "search"] as const;
 type Strategy = (typeof STRATEGIES)[number];
@@ -26,7 +26,8 @@ type Item = { q: string; accept?: string[]; tag?: string };
 
 const latency = new Map<Strategy, number[]>();
 
-async function rank(col: Collection, strategy: Strategy, query: string, k: number): Promise<Hit[]> {
+async function rank(cols: Collections, strategy: Strategy, query: string, k: number): Promise<Hit[]> {
+  const col = cols.cards;
   const started = performance.now();
   let rows: Hit[];
   if (strategy === "bm25") {
@@ -40,7 +41,7 @@ async function rank(col: Collection, strategy: Strategy, query: string, k: numbe
   } else if (strategy === "semantic") rows = await semantic(col, query, VISIBLE, k, ["rules"]);
   else if (strategy === "semantic+tags") rows = await semantic(col, query, VISIBLE, k, ["rules_tagged"]);
   else if (strategy === "both") rows = await semantic(col, query, VISIBLE, k, ["rules", "rules_tagged"]);
-  else rows = (await search(col, query, { k })).hits;
+  else rows = (await search(cols, query, { k })).hits;
   latency.set(strategy, [...(latency.get(strategy) ?? []), performance.now() - started]);
   return rows;
 }
@@ -61,7 +62,8 @@ const median = (values: number[]) => {
 };
 
 export async function run(queriesPath: string, outPath: string | null, classes: string[], log = console.log) {
-  const col = collectionFromEnv();
+  const cols = collectionsFromEnv();
+  const col = cols.cards;
   const queries = JSON.parse(readFileSync(queriesPath, "utf8")) as Record<string, Item[]>;
   const report: any = { collection: COLLECTION, classes: {} };
 
@@ -76,7 +78,7 @@ export async function run(queriesPath: string, outPath: string | null, classes: 
       const members = item.tag ? await tagMembers(col, item.tag) : null;
       for (const strategy of STRATEGIES) {
         let score: number | null;
-        const rows = await rank(col, strategy, item.q, members ? 5 : 10);
+        const rows = await rank(cols, strategy, item.q, members ? 5 : 10);
         if (members) {
           score = rows.filter((row) => members.has(row._id)).length;
           log(`  ${strategy.padEnd(14)} ${score}/5 | ${rows.map((r) => r.name).join("; ")}`);

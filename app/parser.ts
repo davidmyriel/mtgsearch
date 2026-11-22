@@ -1,8 +1,6 @@
 // Lexer and recursive-descent parser for Scryfall's search syntax.
 //
-// This is a port of src/mtgsearch/syntax/parser.py, which is the reference implementation.
-// fixtures/golden.json holds what the reference produces; netlify/test/golden.test.ts checks
-// that this file agrees. Change the Python first, regenerate the fixture, then change this.
+// fixtures/reference.json is a snapshot of what this and lower.ts produce (see golden.ts).
 
 export class QueryError extends Error {}
 
@@ -38,14 +36,26 @@ const SUPPORTED: Record<string, string> = {
   is: "is", not: "not",
   otag: "otag", oracletag: "otag", function: "otag",
   edhrec: "edhrec", edhrecrank: "edhrec",
-  include: "include", order: "order", sort: "order", direction: "direction",
-  unique: "unique", display: "display",
+  // printing-level: one printing of the card has to satisfy these
+  r: "rarity", rarity: "rarity",
+  s: "set", e: "set", set: "set", edition: "set",
+  st: "settype",
+  cn: "number", number: "number",
+  a: "artist", artist: "artist",
+  ft: "flavor", flavor: "flavor",
+  wm: "watermark", watermark: "watermark",
+  border: "border", frame: "frame", stamp: "stamp", game: "game",
+  year: "year", date: "date",
+  usd: "usd", eur: "eur", tix: "tix",
+  // true of the card across all its printings
+  in: "in", prints: "prints", sets: "sets",
+  include: "include", order: "order", sort: "order", direction: "direction", dir: "direction",
+  unique: "unique", prefer: "prefer", display: "display",
 };
 
 const NOT_YET =
-  "m mana devotion produces r rarity s e set edition b block cube a artist ft flavor wm watermark " +
-  "border frame stamp game in new lang language year date usd eur tix cn number st has art atag " +
-  "arttag cheapest prefer";
+  "m mana devotion produces b block cube new lang language has art atag arttag cheapest " +
+  "paperprints papersets illustrations artists";
 
 /** alias -> canonical keyword. A null value means recognised but not implemented yet. */
 export const KEYWORDS = new Map<string, string | null>(Object.entries(SUPPORTED));

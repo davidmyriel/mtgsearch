@@ -1,0 +1,231 @@
+// Printing-level keywords, checked without a network: queries are compiled and evaluated
+// against fixtures/printings.json, the documents the ingest job builds for a few hand-made
+// printings (a Python test keeps that file in step with the document builder).
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { test } from "node:test";
+import { evaluate } from "../evaluate.ts";
+import type { Doc } from "../evaluate.ts";
+import { lower, usesPrintings } from "../lower.ts";
+import { parse, QueryError, Unsupported } from "../parser.ts";
+import { grouped } from "../search.ts";
+import type { Collection, Hit } from "../search.ts";
+
+const read = (name: string) => JSON.parse(readFileSync(new URL(`../../fixtures/${name}`, import.meta.url), "utf8"));
+const printings: Doc[] = read("printings.json");
+const cards: Doc[] = read("documents.json");
+
+const compile = (query: string) => lower(parse(query));
+/** Ids of the printings a query matches, sorted. */
+const ids = (query: string) => {
+  const [predicate] = compile(query);
+  return printings.filter((doc) => evaluate(predicate, doc)).map((doc) => doc._id as string).sort();
+};
+const names = (query: string) => {
+  const [predicate] = compile(query);
+  return cards.filter((doc) => evaluate(predicate, doc)).map((doc) => doc.name as string).sort();
+};
+
+test("set and rarity", () => {
+  for (const query of ["set:ima", "s:ima", "e:IMA", "edition:ima"]) assert.deepEqual(ids(query), ["ima-47"], query);
+  assert.deepEqual(ids("r:mythic"), ["ima-47", "nph-30", "soi-5"]);
+  assert.deepEqual(ids("r:m"), ids("rarity:mythic"));
+  assert.deepEqual(ids("r>=rare"), ["ima-47", "nph-30", "pima-47s", "sld-1011", "soi-5"]);
+  assert.deepEqual(ids("r<uncommon"), ["10e-268", "anb-13", "m19-314"]);
+  assert.deepEqual(ids("r!=common t:elf"), []);
+  assert.deepEqual(ids("st:expansion r:rare"), ["pima-47s", "sld-1011"]);
+  assert.throws(() => compile("r:legendary"), (e) => e instanceof QueryError && !(e instanceof Unsupported));
+  assert.throws(() => compile("set>ima"), QueryError);
+});
+
+test("collector numbers match exactly as text and compare as numbers", () => {
+  assert.deepEqual(ids("cn:47"), ["ima-47"]); // not 47s
+  assert.deepEqual(ids("cn:47S"), ["pima-47s"]);
+  assert.deepEqual(ids("number>=263"), ["10e-268", "c21-263", "lea-270", "m19-314", "sld-1011"]);
+  assert.deepEqual(ids("cn<20"), ["anb-13", "soi-5"]);
+});
+
+test("artist, flavour text and watermark", () => {
+  assert.deepEqual(ids("a:zug"), ["ima-47", "nph-30", "pima-47s"]);
+  assert.deepEqual(ids('artist:"mike bierek"'), ["c21-263", "sld-1011"]);
+  assert.deepEqual(ids("ft:jin-gitaxias"), ["nph-30"]);
+  assert.deepEqual(ids("flavor:/golden helix/"), ["soi-5"]); // on a face of a double-faced card
+  assert.deepEqual(ids("wm:phyrexian"), ["nph-30"]);
+  assert.throws(() => compile("a:/zug/"), QueryError);
+});
+
+test("a negated test keeps printings that lack the field", () => {
+  assert.deepEqual(ids("-ft:blessed t:sphinx"), ["ima-47", "pima-47s"]); // neither has flavour text
+  assert.deepEqual(ids("-stamp:oval t:sphinx"), ["nph-30", "pima-47s"]);
+  assert.deepEqual(ids("-usd>40 t:sphinx"), ["ima-47"]);
+  assert.deepEqual(ids("-wm:phyrexian t:sphinx"), ["ima-47", "pima-47s"]);
+});
+
+test("frame, border, stamp and game", () => {
+  assert.deepEqual(ids("frame:2003"), ["10e-268", "nph-30"]);
+  assert.deepEqual(ids("frame:extendedart"), ["sld-1011"]);
+  assert.deepEqual(ids("frame:sunmoondfc"), ["soi-5"]);
+  assert.deepEqual(ids("border:borderless"), ["sld-1011"]);
+  assert.deepEqual(ids("border:white"), ["10e-268"]);
+  assert.deepEqual(ids("stamp:oval"), ["ima-47"]);
+  assert.deepEqual(ids("game:arena"), ["anb-13", "m19-314"]);
+  assert.deepEqual(ids("-game:paper"), ["anb-13"]);
+});
+
+test("dates: a year, a day, or a set's release date", () => {
+  assert.deepEqual(ids("year=2017"), ["ima-47", "pima-47s"]);
+  assert.deepEqual(ids("year<2000"), ["lea-270"]);
+  assert.deepEqual(ids("date>=2020-01-01"), ["anb-13", "c21-263", "sld-1011"]);
+  assert.deepEqual(ids("date:2017-11-17"), ["ima-47"]);
+  assert.deepEqual(ids("date>=2021"), ["c21-263", "sld-1011"]);
+  // Iconic Masters was released on 2017-11-17 (app/sets.json)
+  assert.deepEqual(compile("date>ima")[0], ["and", [["cmp", "date", ">", 20171117], ["eq", "extra", false]]]);
+  assert.deepEqual(ids("date>ima t:sphinx"), ["pima-47s"]);
+  assert.throws(() => compile("date>tomorrow"), (e) => e instanceof QueryError && !(e instanceof Unsupported));
+});
+
+test("prices compare exactly, in cents, and a printing without a price never matches", () => {
+  assert.deepEqual(ids("usd>=40"), ["lea-270", "nph-30", "pima-47s"]);
+  assert.deepEqual(ids("usd=34.97"), ["ima-47"]);
+  assert.deepEqual(ids("usd<1"), ["m19-314"]);
+  assert.deepEqual(ids("eur>30"), ["nph-30"]);
+  assert.deepEqual(ids("tix<0.1"), ["m19-314"]);
+  assert.deepEqual(compile("usd>=0.5")[0], ["and", [["cmp", "usd_c", ">=", 50], ["eq", "extra", false]]]);
+  // a foil-only printing is priced by its foil
+  assert.deepEqual(ids("usd=55 is:promo"), ["pima-47s"]);
+  assert.throws(() => compile("usd>cheap"), QueryError);
+});
+
+test("is: and not: for printings", () => {
+  assert.deepEqual(ids("is:etched"), ["sld-1011"]);
+  assert.deepEqual(ids("is:promo"), ["pima-47s"]);
+  assert.deepEqual(ids("is:digital"), ["anb-13"]);
+  assert.deepEqual(ids("not:reprint"), ["10e-268", "lea-270", "nph-30", "soi-5"]);
+  assert.deepEqual(ids("is:nonfoil -is:foil"), ["anb-13", "lea-270"]);
+  assert.deepEqual(ids("is:prerelease"), ["pima-47s"]);
+  for (const query of ["is:fullart", "is:full", "is:ub", "is:universesbeyond", "is:extended", "is:borderless"]) {
+    assert.deepEqual(ids(query), ["sld-1011"], query);
+  }
+  assert.deepEqual(ids("is:old"), ["lea-270"]);
+  assert.deepEqual(ids("is:new t:sphinx"), ["ima-47", "pima-47s"]);
+  // card-level flags still work on printings, and unknown ones are still refused
+  assert.deepEqual(ids("is:transform"), ["soi-5"]);
+  assert.throws(() => compile("is:fetchland"), Unsupported);
+});
+
+test("in:, prints and sets are facts about the card, true on every printing and on the card", () => {
+  assert.deepEqual(names("in:ima"), ["Consecrated Sphinx"]);
+  assert.deepEqual(names("in:arena"), ["Llanowar Elves"]);
+  // Sol Ring's only rare printing is a Secret Lair drop, which does not count
+  assert.deepEqual(names("in:rare"), ["Consecrated Sphinx"]);
+  assert.deepEqual(names("in:uncommon"), ["Sol Ring"]);
+  assert.deepEqual(names("in:mtgo -in:arena"), ["Archangel Avacyn // Avacyn, the Purifier", "Consecrated Sphinx", "Grizzly Bears", "Sol Ring"]);
+  assert.deepEqual(names("prints>=3"), ["Consecrated Sphinx", "Sol Ring"]);
+  assert.deepEqual(names("sets=1"), ["Archangel Avacyn // Avacyn, the Purifier", "Grizzly Bears"]);
+  assert.deepEqual(ids("in:lea"), ["c21-263", "lea-270", "sld-1011"]);
+  for (const query of ["in:ima", "prints>=3", "-in:paper"]) assert.equal(compile(query)[1].printings, false, query);
+  assert.throws(() => compile("in:japanese"), Unsupported);
+  assert.throws(() => compile("in>ima"), QueryError);
+});
+
+test("which collection a query needs", () => {
+  for (const query of ["t:sphinx", "c:u mv>=6 order:cmc", "in:ima f:modern", "unique:cards t:elf"]) {
+    assert.equal(compile(query)[1].printings, false, query);
+  }
+  for (const query of ["set:ima", "t:sphinx -r:common", "t:elf unique:prints", "t:elf unique:art", "t:elf order:usd", "t:elf order:released", "t:elf prefer:oldest", "(t:elf or a:zug)"]) {
+    assert.equal(compile(query)[1].printings, true, query);
+  }
+  assert.equal(usesPrintings(["and", [["has", "type_lc", "elf"], ["not", ["eq", "set", "ima"]]]]), true);
+  assert.equal(usesPrintings(["in", "in_sets", "ima"]), false);
+});
+
+test("unique, prefer, order and direction", () => {
+  const options = (query: string) => compile(query)[1];
+  assert.equal(options("t:elf unique:prints").unique, "prints");
+  assert.equal(options("t:elf unique:art").unique, "art");
+  assert.equal(options("t:elf").unique, "cards");
+  assert.equal(options("t:elf prefer:oldest").prefer, "oldest");
+  assert.deepEqual([options("order:usd").order, options("order:usd").descending], ["usd_c", false]);
+  // newest first unless a direction is given; everything else ascends
+  assert.deepEqual([options("order:released").order, options("order:released").descending], ["date", true]);
+  assert.equal(options("order:released direction:asc").descending, false);
+  assert.equal(options("order:name dir:desc").descending, true);
+  assert.equal(options("order:rarity direction:auto").descending, false);
+  assert.throws(() => compile("unique:names"), (e) => e instanceof QueryError && !(e instanceof Unsupported));
+  assert.throws(() => compile("direction:sideways"), QueryError);
+  assert.throws(() => compile("prefer:promo"), Unsupported);
+  assert.throws(() => compile("order:artist"), Unsupported);
+});
+
+test("naming a set, an artist or a watermark also searches the hidden extras", () => {
+  assert.deepEqual(ids("set:tm19"), ["tm19-8"]); // a token
+  assert.deepEqual(ids("a:kopinski"), ["tm19-8"]);
+  assert.deepEqual(ids("r:common t:goblin"), []); // the token stays hidden
+  assert.equal(compile("-set:ima t:goblin")[1].includeExtras, false); // excluding a set reveals nothing
+  assert.deepEqual(ids("-set:ima t:goblin"), []);
+  assert.deepEqual(ids("r:common t:goblin include:extras"), ["tm19-8"]);
+});
+
+/** A collection that answers every query with the same rows, as the group-by would. */
+const answering = (rows: Record<string, unknown>[]): Collection => ({
+  query: async () => rows as Hit[],
+  count: async () => rows.length,
+});
+
+test("grouping: cards in order, each with the printing that shows it", async () => {
+  const rows = [
+    { oracle_id: "b", name_lc: "sol ring", rank: 0, key: 1 },
+    { oracle_id: "a", name_lc: "consecrated sphinx", rank: 2, key: 6 },
+    { oracle_id: "c", name_lc: "black lotus", rank: 1, key: null },
+  ];
+  const by = (sortField: string, descending = false, prefer: string | null = null) =>
+    grouped(answering(rows), ["all"], { unique: "cards", prefer, sortField, descending });
+  assert.deepEqual((await by("name_lc")).map((g) => [g.oracle_id, g.rank]), [["c", 1], ["a", 2], ["b", 0]]);
+  assert.deepEqual((await by("name_lc", true)).map((g) => g.oracle_id), ["b", "a", "c"]);
+  // cards lacking the sort value go last in both directions
+  assert.deepEqual((await by("cmc")).map((g) => g.oracle_id), ["b", "a", "c"]);
+  assert.deepEqual((await by("cmc", true)).map((g) => g.oracle_id), ["a", "b", "c"]);
+});
+
+test("grouping: a packed value names both the sort key and the printing that holds it", async () => {
+  const SLOTS = 4096;
+  // sorting by price, ascending: the cheapest printing of each card, pref_rank in the low bits
+  const cheapest = [
+    { oracle_id: "a", name_lc: "a", rank: 0, choice: 3497 * SLOTS + 4 },
+    { oracle_id: "b", name_lc: "b", rank: 0, choice: 25 * SLOTS + 1 },
+    { oracle_id: "c", name_lc: "c", rank: 3, choice: null }, // no printing has a price
+  ];
+  const asc = await grouped(answering(cheapest), ["all"], { unique: "cards", prefer: null, sortField: "usd_c", descending: false });
+  assert.deepEqual(asc.map((g) => [g.oracle_id, g.key, g.rank]), [["b", 25, 1], ["a", 3497, 4], ["c", null, 3]]);
+  // descending: the dearest printing; the low bits hold SLOTS - 1 - pref_rank so the best rank wins ties
+  const dearest = [
+    { oracle_id: "a", name_lc: "a", rank: 0, choice: 49999 * SLOTS + (SLOTS - 1 - 7) },
+    { oracle_id: "b", name_lc: "b", rank: 0, choice: 129 * SLOTS + (SLOTS - 1 - 0) },
+  ];
+  const desc = await grouped(answering(dearest), ["all"], { unique: "cards", prefer: null, sortField: "usd_c", descending: true });
+  assert.deepEqual(desc.map((g) => [g.oracle_id, g.key, g.rank]), [["a", 49999, 7], ["b", 129, 0]]);
+  // prefer:oldest with a card-level sort: the choice picks the printing, the key sorts
+  const oldest = [{ oracle_id: "a", name_lc: "a", rank: 0, key: 6, choice: 20110513 * SLOTS + 5 }];
+  const preferred = await grouped(answering(oldest), ["all"], { unique: "cards", prefer: "oldest", sortField: "cmc", descending: false });
+  assert.deepEqual(preferred.map((g) => [g.key, g.rank]), [[6, 5]]);
+});
+
+test("grouping: a card whose printings have different names is one result", async () => {
+  // A reversible printing is named "X // X"; the group-by returns one row per (card, name).
+  const rows = [
+    { oracle_id: "a", name_lc: "captain howler // captain howler", rank: 3 },
+    { oracle_id: "a", name_lc: "captain howler", rank: 0 },
+    { oracle_id: "b", name_lc: "sol ring", rank: 1 },
+  ];
+  const groups = await grouped(answering(rows), ["all"], { unique: "cards", prefer: null, sortField: "name_lc", descending: false });
+  assert.deepEqual(groups.map((g) => [g.oracle_id, g.name_lc, g.rank]), [["a", "captain howler", 0], ["b", "sol ring", 1]]);
+  // when a printing field decides, the row with the winning value is kept
+  const SLOTS = 4096;
+  const priced = [
+    { oracle_id: "a", name_lc: "x // x", rank: 3, choice: 500 * SLOTS + 3 },
+    { oracle_id: "a", name_lc: "x", rank: 0, choice: 900 * SLOTS + 0 },
+    { oracle_id: "a", name_lc: "x (no price)", rank: 1, choice: null },
+  ];
+  const cheapest = await grouped(answering(priced), ["all"], { unique: "cards", prefer: null, sortField: "usd_c", descending: false });
+  assert.deepEqual(cheapest.map((g) => [g.key, g.rank]), [[500, 3]]);
+});

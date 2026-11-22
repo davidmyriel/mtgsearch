@@ -3,6 +3,7 @@
 import pytest
 
 from mtgsearch.documents import build_document
+from mtgsearch.printings import aggregates, build_printing, oracle_id, preference_ranks
 
 LEGAL = {"commander": "legal", "modern": "legal", "vintage": "legal", "standard": "not_legal"}
 
@@ -110,7 +111,116 @@ for _c in CARDS:
 
 TAGS = {"sol-ring": {"labels": ["mana rock"], "slugs": ["mana-rock", "ramp"]}}
 
+_BY_NAME = {c["name"]: c for c in CARDS}
+
+
+def printing(name, set_code, number, rarity, released, **kw):
+    """One printing of a card in CARDS, shaped like an object from Scryfall's default_cards file."""
+    base = {
+        **_BY_NAME[name],
+        "id": f"{set_code}-{number}",
+        "set": set_code,
+        "set_name": set_code.upper(),
+        "set_type": "expansion",
+        "collector_number": number,
+        "rarity": rarity,
+        "released_at": released,
+        "lang": "en",
+        "artist": "Mark Zug",
+        "frame": "2015",
+        "border_color": "black",
+        "games": ["paper", "mtgo"],
+        "finishes": ["nonfoil", "foil"],
+        "prices": {
+            "usd": None,
+            "usd_foil": None,
+            "usd_etched": None,
+            "eur": None,
+            "eur_foil": None,
+            "tix": None,
+        },
+        "scryfall_uri": f"https://scryfall.com/card/{set_code}/{number}/x?utm_source=api",
+    }
+    base.update(kw)
+    return base
+
+
+_AVACYN = _BY_NAME["Archangel Avacyn // Avacyn, the Purifier"]
+PRINTINGS = [
+    printing(
+        "Consecrated Sphinx", "nph", "30", "mythic", "2011-05-13", frame="2003", artist="Mark Zug",
+        flavor_text="Blessed by the hands of Jin-Gitaxias.", watermark="phyrexian",
+        prices={"usd": "41.50", "usd_foil": "90.00", "eur": "30.10", "tix": "0.50"},
+    ),
+    printing(
+        "Consecrated Sphinx", "ima", "47", "mythic", "2017-11-17", reprint=True, security_stamp="oval",
+        highres_image=True, booster=True, prices={"usd": "34.97", "usd_foil": "37.56", "eur": "26.21", "tix": "0.23"},
+    ),
+    printing(
+        "Consecrated Sphinx", "pima", "47s", "rare", "2017-11-18", reprint=True, promo=True,
+        promo_types=["prerelease", "datestamped"], finishes=["foil"], games=["paper"],
+        prices={"usd": None, "usd_foil": "55.00"},
+    ),
+    printing(
+        "Sol Ring", "lea", "270", "uncommon", "1993-08-05", frame="1993", artist="Mark Tedin",
+        games=["paper"], finishes=["nonfoil"], prices={"usd": "1500.00"},
+    ),
+    printing(
+        "Sol Ring", "c21", "263", "uncommon", "2021-04-23", reprint=True, artist="Mike Bierek",
+        flavor_text="Lost to time is the artificer's art of trapping light from a distant star.",
+        prices={"usd": "1.29", "eur": "1.10"},
+    ),
+    printing(
+        "Sol Ring", "sld", "1011", "rare", "2022-02-18", reprint=True, artist="Mike Bierek",
+        border_color="borderless", full_art=True, frame_effects=["extendedart"],
+        promo_types=["universesbeyond"], finishes=["foil", "etched"], games=["paper"],
+        prices={"usd_etched": "20.00"},
+    ),
+    printing(
+        "Llanowar Elves", "m19", "314", "common", "2018-07-13", reprint=True, artist="Chris Rahn",
+        games=["paper", "mtgo", "arena"], prices={"usd": "0.25", "tix": "0.03"},
+    ),
+    printing(
+        "Llanowar Elves", "anb", "13", "common", "2020-08-13", reprint=True, digital=True,
+        artist="Chris Rahn", games=["arena"], finishes=["nonfoil"],
+    ),
+    printing("Grizzly Bears", "10e", "268", "common", "2007-07-13", frame="2003", artist="D. J. Cleland-Hura",
+             border_color="white", flavor_text="Don't try to outrun one of Dominia's grizzlies."),
+    {  # double-faced: flavour text and artist sit on the faces
+        **printing("Archangel Avacyn // Avacyn, the Purifier", "soi", "5", "mythic", "2016-04-08",
+                   artist="James Ryman", frame_effects=["sunmoondfc"], prices={"usd": "12.00"}),
+        "card_faces": [
+            {**_AVACYN["card_faces"][0], "artist": "James Ryman", "illustration_id": "art-avacyn",
+             "flavor_text": "A golden helix streaked skyward."},
+            {**_AVACYN["card_faces"][1], "artist": "James Ryman", "illustration_id": "art-purifier"},
+        ],
+    },
+    printing("Goblin", "tm19", "8", "common", "2018-07-13", layout="token", set_type="token", artist="Karl Kopinski"),
+]  # fmt: skip
+PRINTINGS[0]["illustration_id"] = PRINTINGS[1]["illustration_id"] = PRINTINGS[2]["illustration_id"] = (
+    "art-sphinx"
+)
+# Scryfall's bulk file of Oracle cards holds one printing per card: its pick to represent the card.
+REPRESENTATIVES = {"ima-47", "c21-263", "m19-314", "10e-268", "soi-5", "tm19-8"}
+AGGREGATES = aggregates(PRINTINGS)
+
+
+def card_documents() -> list[dict]:
+    return [build_document(c, TAGS.get(c["oracle_id"]), AGGREGATES.get(c["oracle_id"])) for c in CARDS]
+
+
+def printing_documents() -> list[dict]:
+    ranks = preference_ranks(PRINTINGS, REPRESENTATIVES)
+    return [
+        build_printing(p, TAGS.get(oracle_id(p)), AGGREGATES[oracle_id(p)], ranks[p["id"]]) for p in PRINTINGS
+    ]
+
 
 @pytest.fixture(scope="session")
 def docs():
-    return {c["name"]: build_document(c, TAGS.get(c["oracle_id"])) for c in CARDS}
+    return {d["name"]: d for d in card_documents()}
+
+
+@pytest.fixture(scope="session")
+def prints():
+    return {d["_id"]: d for d in printing_documents()}

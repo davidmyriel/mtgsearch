@@ -1,33 +1,33 @@
 """Fixtures shared with the TypeScript app must match what the ingest job produces.
 
-The app's unit tests run queries against fixtures/documents.json, so they exercise the real
-document shape. If the document builder changes, this fails until the fixture is regenerated
+The app's unit tests run queries against fixtures/documents.json (cards) and
+fixtures/printings.json (printings), so they exercise the real document shapes. If the document builder changes, this fails until the fixture is regenerated
 (see `write_fixtures` below), and the app's tests then run against the new documents.
 """
 
 import json
 from pathlib import Path
 
-from conftest import CARDS, TAGS
+import pytest
+from conftest import card_documents, printing_documents
 
-from mtgsearch.documents import build_document, fold, plain
+from mtgsearch.documents import fold, plain
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
-
-
-def documents() -> list[dict]:
-    return [build_document(card, TAGS.get(card["oracle_id"])) for card in CARDS]
+BUILDERS = {"documents.json": card_documents, "printings.json": printing_documents}
 
 
 def write_fixtures() -> None:
     """Run with: python -c "import sys; sys.path.insert(0, 'tests'); import test_fixtures as t; t.write_fixtures()" """
-    text = json.dumps(documents(), indent=1, ensure_ascii=False) + "\n"
-    (FIXTURES / "documents.json").write_text(text, encoding="utf-8")
+    for name, build in BUILDERS.items():
+        text = json.dumps(build(), indent=1, ensure_ascii=False) + "\n"
+        (FIXTURES / name).write_text(text, encoding="utf-8")
 
 
-def test_document_fixture_is_current():
-    committed = json.loads((FIXTURES / "documents.json").read_text(encoding="utf-8"))
-    assert committed == documents(), "regenerate fixtures/documents.json (see write_fixtures)"
+@pytest.mark.parametrize("name", BUILDERS)
+def test_document_fixture_is_current(name):
+    committed = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
+    assert committed == BUILDERS[name](), f"regenerate fixtures/{name} (see write_fixtures)"
 
 
 def test_normalisation_matches_the_shared_cases():

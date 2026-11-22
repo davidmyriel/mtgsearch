@@ -1,0 +1,703 @@
+{
+ "summary": {
+  "pass": 77,
+  "fail": 0,
+  "unsupported": 0,
+  "error": 0
+ },
+ "results": [
+  {
+   "query": "counterspell",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "\"sol ring\"",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "jace mind",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"Jace, the Mind Sculptor\"",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-dragon t:dragon c:r mv=4",
+   "status": "pass",
+   "scryfall_total": 30,
+   "ours_total": 30,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "name:/^the \\w+$/",
+   "status": "pass",
+   "scryfall_total": 93,
+   "ours_total": 93,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c:wubrg",
+   "status": "pass",
+   "scryfall_total": 62,
+   "ours_total": 62,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c>=3 t:angel",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c<2 t:dragon mv>=8",
+   "status": "pass",
+   "scryfall_total": 24,
+   "ours_total": 24,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c:g c:u t:elf",
+   "status": "pass",
+   "scryfall_total": 44,
+   "ours_total": 44,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "color=gruul t:werewolf",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c>rg t:dragon",
+   "status": "pass",
+   "scryfall_total": 34,
+   "ours_total": 34,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "id=wu t:legendary t:bird",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "id:abzan t:planeswalker",
+   "status": "pass",
+   "scryfall_total": 143,
+   "ours_total": 143,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "identity>=wubrg",
+   "status": "pass",
+   "scryfall_total": 134,
+   "ours_total": 134,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "id:1 t:land o:\"any color\"",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:equipment t:legendary mv<=1",
+   "status": "pass",
+   "scryfall_total": 6,
+   "ours_total": 6,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:aura -t:enchantment",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:\"artifact creature\" t:golem pow>=6",
+   "status": "pass",
+   "scryfall_total": 25,
+   "ours_total": 25,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:human t:wizard c=u mv=1",
+   "status": "pass",
+   "scryfall_total": 19,
+   "ours_total": 19,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:land t:artifact",
+   "status": "pass",
+   "scryfall_total": 35,
+   "ours_total": 35,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:god t:creature c:r",
+   "status": "pass",
+   "scryfall_total": 37,
+   "ours_total": 37,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:battle",
+   "status": "pass",
+   "scryfall_total": 36,
+   "ours_total": 36,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:dinosaur t:legendary c:g",
+   "status": "pass",
+   "scryfall_total": 28,
+   "ours_total": 28,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:\"destroy all creatures\" c:w mv<=4",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:\"extra turn\" c:u t:sorcery",
+   "status": "pass",
+   "scryfall_total": 20,
+   "ours_total": 20,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:\"can't be countered\" t:creature c:g mv<=3",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "fo:\"can block only creatures with flying\"",
+   "status": "pass",
+   "scryfall_total": 42,
+   "ours_total": 42,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:\"~ can't be blocked\" t:creature c:u mv=2",
+   "status": "pass",
+   "scryfall_total": 37,
+   "ours_total": 37,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "kw:trample kw:haste t:dragon",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "keyword:deathtouch c:g t:snake",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "o:/sacrifice a creature:/ c:b mv<=2",
+   "status": "pass",
+   "scryfall_total": 24,
+   "ours_total": 24,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:/^legendary artifact$/",
+   "status": "pass",
+   "scryfall_total": 117,
+   "ours_total": 117,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "mv=7 t:angel",
+   "status": "pass",
+   "scryfall_total": 32,
+   "ours_total": 32,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "mv<=1 t:dragon",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "mv>=10 c:g",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "cmc:3 t:planeswalker c:w",
+   "status": "pass",
+   "scryfall_total": 18,
+   "ours_total": 18,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pow=0 tou>=7",
+   "status": "pass",
+   "scryfall_total": 23,
+   "ours_total": 23,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pow>=7 tou<=3",
+   "status": "pass",
+   "scryfall_total": 22,
+   "ours_total": 22,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "tou=1 pow>=5 c:r",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pow<tou t:dragon mv<=4",
+   "status": "pass",
+   "scryfall_total": 27,
+   "ours_total": 27,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pow>=tou t:wall",
+   "status": "pass",
+   "scryfall_total": 14,
+   "ours_total": 14,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "loy<=2 t:planeswalker",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pt<=1 t:creature c:w mv>=3",
+   "status": "pass",
+   "scryfall_total": 36,
+   "ours_total": 36,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "pt=7 t:angel",
+   "status": "pass",
+   "scryfall_total": 40,
+   "ours_total": 40,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "f:modern t:planeswalker c:g mv=3",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "f:legacy -f:modern t:elf mv=1",
+   "status": "pass",
+   "scryfall_total": 19,
+   "ours_total": 19,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "banned:modern t:land",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "banned:pauper",
+   "status": "pass",
+   "scryfall_total": 76,
+   "ours_total": 76,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "restricted:vintage t:artifact",
+   "status": "pass",
+   "scryfall_total": 20,
+   "ours_total": 20,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "f:premodern t:sliver",
+   "status": "pass",
+   "scryfall_total": 33,
+   "ours_total": 33,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:dfc t:werewolf c:g mv=2",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:split c:m mv>=7",
+   "status": "pass",
+   "scryfall_total": 36,
+   "ours_total": 36,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:vanilla t:dragon",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:bear t:elf",
+   "status": "pass",
+   "scryfall_total": 56,
+   "ours_total": 56,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:reserved c:r t:creature mv=3",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:commander t:angel c=w mv<=3",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "not:spell t:creature",
+   "status": "pass",
+   "scryfall_total": 3,
+   "ours_total": 3,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:historic -t:legendary -t:artifact",
+   "status": "pass",
+   "scryfall_total": 222,
+   "ours_total": 222,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:hybrid t:elf",
+   "status": "pass",
+   "scryfall_total": 27,
+   "ours_total": 27,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:phyrexian t:instant",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:leveler c:w",
+   "status": "pass",
+   "scryfall_total": 7,
+   "ours_total": 7,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "otag:sweeper mv<=2",
+   "status": "pass",
+   "scryfall_total": 145,
+   "ours_total": 145,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "otag:tutor t:artifact mv=2",
+   "status": "pass",
+   "scryfall_total": 30,
+   "ours_total": 30,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "function:removal t:land",
+   "status": "pass",
+   "scryfall_total": 62,
+   "ours_total": 62,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "otag:mana-dork c:u",
+   "status": "pass",
+   "scryfall_total": 85,
+   "ours_total": 85,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "edhrec<=100 t:creature",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "edhrec>=20000 t:angel",
+   "status": "pass",
+   "scryfall_total": 75,
+   "ours_total": 75,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "(t:elf or t:goblin) t:wizard mv=1",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:angel (c:b or c:r) -c:w",
+   "status": "pass",
+   "scryfall_total": 16,
+   "ours_total": 16,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "c:u (o:\"draw a card\" or o:\"draw two cards\") t:instant mv=1",
+   "status": "pass",
+   "scryfall_total": 29,
+   "ours_total": 29,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-(t:creature or t:land) c:g mv=0",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:conspiracy",
+   "status": "pass",
+   "scryfall_total": 25,
+   "ours_total": 25,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:token t:angel",
+   "status": "pass",
+   "scryfall_total": 14,
+   "ours_total": 14,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "t:emblem o:draw",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "angel include:extras mv>=7",
+   "status": "pass",
+   "scryfall_total": 30,
+   "ours_total": 30,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:funny t:goblin c:r mv=1",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  }
+ ]
+}

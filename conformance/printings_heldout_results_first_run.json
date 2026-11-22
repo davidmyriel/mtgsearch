@@ -1,0 +1,579 @@
+{
+ "summary": {
+  "pass": 53,
+  "fail": 8,
+  "unsupported": 0,
+  "error": 0
+ },
+ "results": [
+  {
+   "query": "set:neo r:rare",
+   "status": "pass",
+   "scryfall_total": 59,
+   "ours_total": 59,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "s:dom t:legendary r:uncommon",
+   "status": "pass",
+   "scryfall_total": 22,
+   "ours_total": 22,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "e:mh2 c:r r>=rare",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:lea t:creature c:g",
+   "status": "pass",
+   "scryfall_total": 21,
+   "ours_total": 21,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "st:core r:mythic t:angel",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "st:commander t:dragon r:mythic",
+   "status": "pass",
+   "scryfall_total": 46,
+   "ours_total": 46,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-st:expansion t:angel r:mythic",
+   "status": "pass",
+   "scryfall_total": 71,
+   "ours_total": 71,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "cn:1 set:dom",
+   "status": "pass",
+   "scryfall_total": 1,
+   "ours_total": 1,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:neo cn>300 cn<310",
+   "status": "pass",
+   "scryfall_total": 7,
+   "ours_total": 7,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:war cn<=5",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "a:\"john avon\" t:land",
+   "status": "pass",
+   "scryfall_total": 79,
+   "ours_total": 79,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "a:\"seb mckinnon\" c:b",
+   "status": "pass",
+   "scryfall_total": 56,
+   "ours_total": 56,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "a:rk t:angel",
+   "status": "fail",
+   "scryfall_total": 30,
+   "ours_total": 25,
+   "missing": [
+    "Atraxa, Praetors' Voice",
+    "Linvala, Keeper of Silence",
+    "Shattered Angel",
+    "Sword-Swallowing Seraph",
+    "Voice of the Provinces"
+   ],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "artist:\"terese nielsen\" mv=3",
+   "status": "pass",
+   "scryfall_total": 49,
+   "ours_total": 49,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "ft:urza t:artifact",
+   "status": "pass",
+   "scryfall_total": 48,
+   "ours_total": 48,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "ft:\"gerrard\" c:w t:creature",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-ft:/./ set:dom r:mythic",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "wm:mirran",
+   "status": "pass",
+   "scryfall_total": 303,
+   "ours_total": 303,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "wm:selesnya t:creature",
+   "status": "pass",
+   "scryfall_total": 58,
+   "ours_total": 58,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:1997 t:angel",
+   "status": "fail",
+   "scryfall_total": 57,
+   "ours_total": 58,
+   "missing": [],
+   "extra": [
+    "arden angel"
+   ],
+   "note": ""
+  },
+  {
+   "query": "frame:2015 t:angel r:uncommon",
+   "status": "pass",
+   "scryfall_total": 64,
+   "ours_total": 64,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:extendedart t:dragon",
+   "status": "pass",
+   "scryfall_total": 75,
+   "ours_total": 75,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "frame:etched t:dragon",
+   "status": "pass",
+   "scryfall_total": 30,
+   "ours_total": 30,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "border:gold t:angel",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "border:black t:angel r:special",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "game:arena t:angel r:mythic",
+   "status": "pass",
+   "scryfall_total": 40,
+   "ours_total": 40,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "game:paper -game:mtgo t:dragon r:mythic",
+   "status": "fail",
+   "scryfall_total": 92,
+   "ours_total": 97,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 92 Scryfall results"
+  },
+  {
+   "query": "year=1999 t:dragon",
+   "status": "pass",
+   "scryfall_total": 9,
+   "ours_total": 9,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "year>=2025 t:angel r:rare",
+   "status": "pass",
+   "scryfall_total": 39,
+   "ours_total": 39,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "date>=2020-01-01 date<2021-01-01 t:angel",
+   "status": "pass",
+   "scryfall_total": 40,
+   "ours_total": 40,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "date<=lea",
+   "status": "fail",
+   "scryfall_total": 289,
+   "ours_total": 290,
+   "missing": [],
+   "extra": [
+    "crusade"
+   ],
+   "note": ""
+  },
+  {
+   "query": "date>=dom date<war t:angel",
+   "status": "pass",
+   "scryfall_total": 38,
+   "ours_total": 38,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:foil -is:nonfoil t:angel",
+   "status": "pass",
+   "scryfall_total": 124,
+   "ours_total": 124,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:etched t:dragon",
+   "status": "pass",
+   "scryfall_total": 33,
+   "ours_total": 33,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:promo t:dragon r:mythic",
+   "status": "pass",
+   "scryfall_total": 80,
+   "ours_total": 80,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:reprint set:dom",
+   "status": "pass",
+   "scryfall_total": 34,
+   "ours_total": 34,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "not:reprint set:m19 r:mythic",
+   "status": "pass",
+   "scryfall_total": 19,
+   "ours_total": 19,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:digital t:angel",
+   "status": "fail",
+   "scryfall_total": 94,
+   "ours_total": 95,
+   "missing": [],
+   "extra": [
+    "arden angel"
+   ],
+   "note": ""
+  },
+  {
+   "query": "is:fullart t:land set:neo",
+   "status": "pass",
+   "scryfall_total": 5,
+   "ours_total": 5,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:textless c:r",
+   "status": "pass",
+   "scryfall_total": 24,
+   "ours_total": 24,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:spotlight set:dom",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:prerelease t:angel",
+   "status": "pass",
+   "scryfall_total": 62,
+   "ours_total": 62,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:boosterfun t:dragon set:neo",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:showcase set:neo r:mythic",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:borderless t:angel",
+   "status": "pass",
+   "scryfall_total": 37,
+   "ours_total": 37,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:old t:dragon r:rare",
+   "status": "fail",
+   "scryfall_total": 61,
+   "ours_total": 62,
+   "missing": [],
+   "extra": [
+    "velukan dragon"
+   ],
+   "note": ""
+  },
+  {
+   "query": "in:dom t:angel",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:mtgo -in:arena t:angel r:mythic",
+   "status": "pass",
+   "scryfall_total": 27,
+   "ours_total": 27,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "in:uncommon in:rare t:dragon",
+   "status": "fail",
+   "scryfall_total": 11,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [
+    "Dragon Whelp",
+    "Sprite Dragon"
+   ],
+   "note": ""
+  },
+  {
+   "query": "in:common t:angel",
+   "status": "pass",
+   "scryfall_total": 27,
+   "ours_total": 27,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "prints>=30 t:creature",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "prints=2 t:angel r:mythic",
+   "status": "pass",
+   "scryfall_total": 8,
+   "ours_total": 8,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "sets>=20 t:creature",
+   "status": "pass",
+   "scryfall_total": 45,
+   "ours_total": 45,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "usd>=500 t:creature",
+   "status": "pass",
+   "scryfall_total": 87,
+   "ours_total": 87,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "usd<=0.05 set:dom r:uncommon",
+   "status": "pass",
+   "scryfall_total": 2,
+   "ours_total": 2,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "eur>=200 t:artifact",
+   "status": "pass",
+   "scryfall_total": 126,
+   "ours_total": 126,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "tix>=20",
+   "status": "pass",
+   "scryfall_total": 67,
+   "ours_total": 67,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "!\"lightning bolt\" unique:prints",
+   "status": "fail",
+   "scryfall_total": 72,
+   "ours_total": 74,
+   "missing": [],
+   "extra": [
+    "Lightning Bolt",
+    "Lightning Bolt"
+   ],
+   "note": ""
+  },
+  {
+   "query": "!\"serra angel\" unique:art",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 1 Scryfall results"
+  },
+  {
+   "query": "t:angel set:dom unique:prints",
+   "status": "pass",
+   "scryfall_total": 4,
+   "ours_total": 4,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "set:dom unique:art r:mythic",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  }
+ ]
+}

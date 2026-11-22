@@ -58,7 +58,7 @@ test("malformed queries are QueryErrors", () => {
 });
 
 test("unsupported keywords are reported, never silently ignored", () => {
-  for (const query of ["r:mythic", "s:2x2", "a:zug", "m:2WW", "is:fetchland", "unique:prints", "order:usd", "pow>loy", String.raw`o:/\spp/`, "is:digital"]) {
+  for (const query of ["m:2WW", "devotion:u", "is:fetchland", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy", String.raw`o:/\spp/`]) {
     assert.throws(() => compile(query), Unsupported, query);
   }
 });
@@ -178,7 +178,7 @@ test("extras are hidden unless the query reveals them", () => {
 
 test("display options change options, not which cards match", () => {
   const [, options] = compile("t:elf order:cmc direction:desc");
-  assert.deepEqual(options, { includeExtras: false, order: "cmc", descending: true });
+  assert.deepEqual(options, { includeExtras: false, order: "cmc", descending: true, unique: "cards", prefer: null, printings: false });
   assert.deepEqual(compile("unique:cards display:grid include:extras")[0], ["all"]);
 });
 

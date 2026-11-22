@@ -1,4 +1,4 @@
-from mtgsearch.ingest import content_hash, plan, text_hash
+from mtgsearch.ingest import PRINTINGS, content_hash, plan, text_hash
 
 STORED = ("_id", "content_hash", "text_hash", "edhrec_rank", "usd")
 
@@ -114,3 +114,20 @@ def test_a_card_stored_without_hashes_is_updated_not_resent_when_its_text_is_unc
 def test_new_and_removed_cards():
     new = doc(_id="b", name="B")
     assert plan([new], stored(doc())) == ([new], [], ["a"])
+
+
+def test_printings_have_no_embedded_text_so_every_change_is_a_field_update():
+    def printing(**changes):
+        base = {"_id": "p", "name": "A", "set": "ima", "usd_c": 150, "eur_c": 100, **changes}
+        out = {k: v for k, v in base.items() if v is not None}
+        out["content_hash"] = content_hash(out, PRINTINGS)
+        out["text_hash"] = text_hash(out, PRINTINGS)
+        return out
+
+    state = {"p": {k: v for k, v in printing().items() if k not in ("name", "set")}}
+    assert plan([printing()], state, PRINTINGS) == ([], [], [])
+    assert plan([printing(eur_c=120)], state, PRINTINGS) == ([], [{"_id": "p", "eur_c": 120}], [])
+    assert plan([printing(eur_c=None)], state, PRINTINGS) == ([], [{"_id": "p", "eur_c": None}], [])
+    moved = printing(set="2xm")
+    assert plan([moved], state, PRINTINGS) == ([], [moved], [])
+    assert plan([printing()], {}, PRINTINGS) == ([printing()], [], [])

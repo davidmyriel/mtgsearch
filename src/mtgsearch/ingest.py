@@ -1,24 +1,33 @@
-"""Ingest: Scryfall bulk files -> documents -> a versioned TopK collection.
+"""Ingest: Scryfall bulk files -> documents -> versioned TopK collections.
+
+Two collections are maintained: one document per Oracle card (embedded, for plain-English
+search and card-level syntax) and one per printing (filter fields only, for set, rarity,
+artist, price and the other printing-level syntax).
 
 Collections are never deleted and recreated under the same name (writes to a same-name
-recreate can be lost for about a minute). To re-index with a new schema, bump
-MTGSEARCH_COLLECTION to the next version and point the app at it once it is verified.
+recreate can be lost for about a minute). To re-index with a new schema, bump the collection
+name to the next version and point the app at it once it is verified.
 """
 
 import hashlib
 import json
 import time
-from collections.abc import Iterable
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 from . import config, scryfall
 from .documents import build_document
+from .printings import aggregates, build_printing, oracle_id, preference_ranks
 from .tags import card_tags
 
 BATCH = 250
+HASHES = ("content_hash", "text_hash")
+ID_PREFIXES = "0123456789abcdef"  # document ids are UUIDs
+BUCKET_LIMIT = 5000
 
 
-def schema() -> dict:
+def cards_schema() -> dict:
     from topk_sdk.schema import bool as bool_
     from topk_sdk.schema import float as float_
     from topk_sdk.schema import image, keyword_index, semantic_index, text
@@ -60,48 +69,73 @@ def schema() -> dict:
     return fields
 
 
-def build_documents(data_dir: Path) -> list[dict]:
-    """Download the bulk files if needed and build one document per Oracle card."""
-    cards_path = scryfall.download_bulk("oracle_cards", data_dir)
-    tags_path = scryfall.download_bulk("oracle_tags", data_dir)
-    tags = card_tags(scryfall.read_jsonl_gz(tags_path))
-    docs = [build_document(c, tags.get(c["oracle_id"])) for c in scryfall.read_jsonl_gz(cards_path)]
-    for doc in docs:
-        doc["content_hash"] = content_hash(doc)
-        doc["text_hash"] = text_hash(doc)
-    return docs
+def printings_schema() -> dict:
+    """Filter fields only: nothing in the printings collection is embedded or keyword-indexed."""
+    from topk_sdk.schema import bool as bool_
+    from topk_sdk.schema import float as float_
+    from topk_sdk.schema import int as int_
+    from topk_sdk.schema import list as list_
+    from topk_sdk.schema import text
+
+    fields = {
+        name: spec
+        for name, spec in cards_schema().items()
+        if name not in ("name", "rules", "rules_tagged", "art", "usd")
+    }
+    fields |= {
+        "name": text().required(),
+        "oracle_id": text().required(),
+        "set": text().required(),
+        "set_type": text().required(),
+        "cn": text().required(),
+        "cn_num": float_(),
+        "rarity": text().required(),
+        "rarity_rank": int_().required(),
+        "artist_lc": text(),
+        "flavor_lc": text(),
+        "watermarks": list_("text"),
+        "frame": text().required(),
+        "frame_effects": list_("text"),
+        "border": text().required(),
+        "games": list_("text"),
+        "lang": text().required(),
+        "date": int_().required(),
+        "year": int_().required(),
+        "usd_c": int_(),
+        "eur_c": int_(),
+        "tix_c": int_(),
+        "pflags": list_("text"),
+        "in_sets": list_("text"),
+        "in_rarities": list_("text"),
+        "in_games": list_("text"),
+        "prints": int_(),
+        "sets": int_(),
+        "art": text().required(),
+        "pref_rank": int_().required(),
+        "extra": bool_().required(),
+    }
+    return fields
 
 
-def upsert(docs: Iterable[dict], log=print, expected: int | None = None) -> str | None:
-    from topk_sdk.error import CollectionAlreadyExistsError
+@dataclass(frozen=True)
+class Target:
+    """One collection the job keeps up to date."""
 
-    client = config.client()
-    try:
-        client.collections().create(config.COLLECTION, schema=schema())
-        log(f"created collection {config.COLLECTION}")
-    except CollectionAlreadyExistsError:
-        log(f"collection {config.COLLECTION} exists; upserting into it")
-    col, docs, lsn, t0 = client.collection(config.COLLECTION), list(docs), None, time.time()
-    for i in range(0, len(docs), BATCH):
-        lsn = col.upsert(docs[i : i + BATCH])
-        if (i // BATCH) % 20 == 0 or i + BATCH >= len(docs):
-            log(f"  {min(i + BATCH, len(docs))}/{len(docs)} documents, {time.time() - t0:.0f}s")
-    count = col.count(lsn=lsn)
-    log(f"collection count {count}")
-    if count < (expected or len(docs)):
-        raise SystemExit(f"expected at least {expected or len(docs)} documents, collection has {count}")
-    return lsn
+    label: str
+    collection: str
+    schema: Callable[[], dict]
+    # Fields TopK embeds. Writing them costs an inference call per document, so they are only
+    # re-sent when their text changes; every other field can be written with a field update.
+    embedded: tuple[str, ...]
+    # Fields that move daily for most documents.
+    volatile: tuple[str, ...]
 
 
-# The fields TopK embeds. Writing them costs an inference call per card, so they are only
-# re-sent when their text changes; every other field can be written with a cheap field update.
-EMBEDDED = ("rules", "rules_tagged")
-# Fields that move daily for most cards.
-VOLATILE = ("edhrec_rank", "usd")
-HASHES = ("content_hash", "text_hash")
-UPDATE_BATCH = 250
-ID_PREFIXES = "0123456789abcdef"  # document ids are UUIDs
-BUCKET_LIMIT = 5000
+CARDS = Target("cards", config.COLLECTION, cards_schema, ("rules", "rules_tagged"), ("edhrec_rank", "usd"))
+PRINTINGS = Target(
+    "printings", config.PRINTINGS_COLLECTION, printings_schema, (), ("edhrec_rank", "usd_c", "eur_c", "tix_c")
+)
+TARGETS = {t.label: t for t in (CARDS, PRINTINGS)}
 
 
 def _digest(value) -> str:
@@ -109,34 +143,69 @@ def _digest(value) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:20]
 
 
-def content_hash(doc: dict) -> str:
+def content_hash(doc: dict, target: Target = CARDS) -> str:
     """Fingerprint of everything in a document except the volatile fields."""
-    return _digest({k: v for k, v in doc.items() if k not in VOLATILE and k not in HASHES})
+    return _digest({k: v for k, v in doc.items() if k not in target.volatile and k not in HASHES})
 
 
-def text_hash(doc: dict) -> str:
+def text_hash(doc: dict, target: Target = CARDS) -> str:
     """Fingerprint of the embedded text alone."""
-    return _digest([doc.get(k) for k in EMBEDDED])
+    return _digest([doc.get(k) for k in target.embedded])
 
 
-def stored_state(col) -> dict[str, dict]:
+def _hashed(docs: list[dict], target: Target) -> list[dict]:
+    for doc in docs:
+        doc["content_hash"] = content_hash(doc, target)
+        doc["text_hash"] = text_hash(doc, target)
+    return docs
+
+
+def build_documents(data_dir: Path, labels=tuple(TARGETS)) -> dict[str, list[dict]]:
+    """Download the bulk files if needed and build the documents for each collection."""
+    cards_path = scryfall.download_bulk("oracle_cards", data_dir)
+    tags_path = scryfall.download_bulk("oracle_tags", data_dir)
+    printings_path = scryfall.download_bulk("default_cards", data_dir)
+    tags = card_tags(scryfall.read_jsonl_gz(tags_path))
+    # The printings file is large; it is read as a stream each time rather than held in memory.
+    totals = aggregates(scryfall.read_jsonl_gz(printings_path))
+
+    built = {}
+    cards = list(scryfall.read_jsonl_gz(cards_path))
+    if CARDS.label in labels:
+        docs = [build_document(c, tags.get(c["oracle_id"]), totals.get(c["oracle_id"])) for c in cards]
+        built[CARDS.label] = _hashed(docs, CARDS)
+    if PRINTINGS.label in labels:
+        ranks = preference_ranks(scryfall.read_jsonl_gz(printings_path), {c["id"] for c in cards})
+        docs = [
+            build_printing(p, tags.get(oracle_id(p)), totals[oracle_id(p)], ranks[p["id"]])
+            for p in scryfall.read_jsonl_gz(printings_path)
+        ]
+        built[PRINTINGS.label] = _hashed(docs, PRINTINGS)
+    return built
+
+
+def stored_state(col, target: Target = CARDS) -> dict[str, dict]:
     """What the collection holds now: id -> its hashes and volatile fields.
 
     The collection itself is the record of what has been ingested, so a run needs no local
-    snapshot and behaves the same from any machine. Read in one query per id prefix.
+    snapshot and behaves the same from any machine. Read in buckets by id prefix; a bucket
+    that comes back full is split into sixteen narrower ones.
     """
     from topk_sdk.query import field, select
 
     state: dict[str, dict] = {}
+
+    def read(prefix: str, fields: tuple[str, ...], only_unhashed: bool = False) -> list[dict]:
+        query = select(*fields).filter(field("_id").starts_with(prefix))
+        if only_unhashed:
+            query = query.filter(field("text_hash").is_null())
+        rows = col.query(query.limit(BUCKET_LIMIT))
+        if len(rows) < BUCKET_LIMIT:
+            return rows
+        return [row for digit in ID_PREFIXES for row in read(prefix + digit, fields, only_unhashed)]
+
     for prefix in ID_PREFIXES:
-        rows = col.query(
-            select(*HASHES, *VOLATILE).filter(field("_id").starts_with(prefix)).limit(BUCKET_LIMIT)
-        )
-        if len(rows) >= BUCKET_LIMIT:
-            raise SystemExit(
-                f"id prefix {prefix!r} holds {BUCKET_LIMIT} or more documents; read it in smaller buckets"
-            )
-        state.update({row["_id"]: row for row in rows})
+        state.update({row["_id"]: row for row in read(prefix, (*HASHES, *target.volatile))})
     if len(state) != col.count():
         raise SystemExit("could not read every document's state by id prefix; refusing to guess what changed")
 
@@ -144,14 +213,8 @@ def stored_state(col) -> dict[str, dict]:
     # job): derive it from the stored text, so they are not re-embedded just to record it.
     if any(row.get("text_hash") is None for row in state.values()):
         for prefix in (a + b for a in ID_PREFIXES for b in ID_PREFIXES):
-            rows = col.query(
-                select(*EMBEDDED)
-                .filter(field("_id").starts_with(prefix))
-                .filter(field("text_hash").is_null())
-                .limit(BUCKET_LIMIT)
-            )
-            for row in rows:
-                state[row["_id"]].update(text_hash=text_hash(row), backfill=True)
+            for row in read(prefix, target.embedded or ("_id",), only_unhashed=True):
+                state[row["_id"]].update(text_hash=text_hash(row, target), backfill=True)
     return state
 
 
@@ -162,13 +225,16 @@ def _same(new, old) -> bool:
     return new == old
 
 
-def plan(docs: list[dict], state: dict[str, dict]) -> tuple[list[dict], list[dict], list[str]]:
+def plan(
+    docs: list[dict], state: dict[str, dict], target: Target = CARDS
+) -> tuple[list[dict], list[dict], list[str]]:
     """Decide what to write. Returns (documents to send in full, field updates, ids to delete).
 
     A field update merges into the stored document and a null removes a field, so an update
-    of every field except the embedded text brings a card fully up to date without embedding it.
+    of every field except the embedded text brings a document fully up to date without
+    embedding it again.
     """
-    fields = sorted(set().union(*docs) - set(EMBEDDED))
+    fields = sorted(set().union(*docs) - set(target.embedded))
     upserts, updates = [], []
     for doc in docs:
         old = state.get(doc["_id"])
@@ -177,44 +243,69 @@ def plan(docs: list[dict], state: dict[str, dict]) -> tuple[list[dict], list[dic
         elif old.get("content_hash") != doc["content_hash"] or old.get("backfill"):
             updates.append({k: doc.get(k) for k in fields})
         else:
-            moved = {k: doc.get(k) for k in VOLATILE if not _same(doc.get(k), old.get(k))}
+            moved = {k: doc.get(k) for k in target.volatile if not _same(doc.get(k), old.get(k))}
             if moved:
                 updates.append({"_id": doc["_id"], **moved})
     removed = sorted(set(state) - {d["_id"] for d in docs})
     return upserts, updates, removed
 
 
-def update_fields(updates: list[dict], log=print) -> None:
-    col, t0 = config.collection(), time.time()
-    for i in range(0, len(updates), UPDATE_BATCH):
-        col.update(updates[i : i + UPDATE_BATCH], False)  # False: do not fail on a missing id
-    log(f"  {len(updates)} field updates, {time.time() - t0:.0f}s")
+def _write(col, method: str, docs: list[dict], what: str, log=print) -> None:
+    t0 = time.time()
+    for i in range(0, len(docs), BATCH):
+        batch = docs[i : i + BATCH]
+        if method == "upsert":
+            col.upsert(batch)
+        else:
+            col.update(batch, False)  # False: do not fail on an id that is missing
+        if (i // BATCH) % 40 == 0 or i + BATCH >= len(docs):
+            log(f"  {min(i + BATCH, len(docs))}/{len(docs)} {what}, {time.time() - t0:.0f}s")
 
 
-def run(data_dir: Path = config.DATA_DIR, dry_run: bool = False, full: bool = False) -> None:
-    """Refresh the collection from today's bulk files.
+def sync(target: Target, docs: list[dict], dry_run: bool = False, full: bool = False, log=print) -> None:
+    """Bring one collection up to date with `docs`."""
+    from topk_sdk.error import CollectionAlreadyExistsError
 
-    Unless `full` is set, the run compares against what the collection already holds. Only
-    cards that are new or whose embedded text changed are sent in full; any other change,
-    including a field this job has only just started to produce, is a field update. A daily
-    run therefore embeds a few dozen cards rather than the whole set.
-    """
-    docs = build_documents(data_dir)
-    exists = any(c.name == config.COLLECTION for c in config.client().collections().list())
-    state = {} if full or not exists else stored_state(config.collection())
-    upserts, updates, removed = plan(docs, state)
-    print(
-        f"built {len(docs)} documents: {len(upserts)} to send in full (embedded), "
+    client = config.client()
+    exists = any(c.name == target.collection for c in client.collections().list())
+    col = client.collection(target.collection)
+    state = {} if full or not exists else stored_state(col, target)
+    upserts, updates, removed = plan(docs, state, target)
+    log(
+        f"{target.label} ({target.collection}): {len(docs)} documents, {len(upserts)} to send in full, "
         f"{len(updates)} field updates, {len(removed)} to delete"
     )
     if dry_run:
         return
+    if not exists:
+        try:
+            client.collections().create(target.collection, schema=target.schema())
+            log(f"  created collection {target.collection}")
+        except CollectionAlreadyExistsError:
+            pass
     if upserts:
-        upsert(upserts, expected=len(upserts) if not state else None)
+        _write(col, "upsert", upserts, "documents sent in full", log)
     if updates:
-        update_fields(updates)
-    if removed:
-        config.collection().delete(removed)
-    count = config.collection().count()
-    if count != len(docs) and not full:
-        raise SystemExit(f"collection has {count} documents, expected {len(docs)}")
+        _write(col, "update", updates, "field updates", log)
+    for i in range(0, len(removed), BATCH):
+        col.delete(removed[i : i + BATCH])
+    # A strongly consistent count, so it includes the writes above.
+    count = col.count(consistency="strong")
+    if count != len(docs):
+        raise SystemExit(f"{target.collection} has {count} documents, expected {len(docs)}")
+
+
+def run(
+    data_dir: Path = config.DATA_DIR, dry_run: bool = False, full: bool = False, only: str | None = None
+) -> None:
+    """Refresh the collections from today's bulk files.
+
+    Unless `full` is set, each collection is compared with what it already holds. Only
+    documents that are new or whose embedded text changed are sent in full; any other change,
+    including a field this job has only just started to produce, is a field update. A daily
+    run therefore embeds a few dozen cards rather than the whole set.
+    """
+    labels = (only,) if only else tuple(TARGETS)
+    built = build_documents(data_dir, labels)
+    for label in labels:
+        sync(TARGETS[label], built[label], dry_run=dry_run, full=full)

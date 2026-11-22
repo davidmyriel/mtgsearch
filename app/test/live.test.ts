@@ -4,14 +4,17 @@ import { test } from "node:test";
 import { Client } from "topk-js";
 import { handleSearch } from "../api.ts";
 import { search } from "../search.ts";
-import type { Collection } from "../search.ts";
+import type { Collection, Collections } from "../search.ts";
 
 const key = (process.env.TOPK_API_KEY ?? "").trim();
 const skip = key ? false : "TOPK_API_KEY is not set";
-const collection = () =>
-  new Client({ apiKey: key, region: process.env.TOPK_REGION || "aws-us-east-1-elastica" }).collection(
-    process.env.MTGSEARCH_COLLECTION || "mtg-cards-v2",
-  ) as unknown as Collection;
+const collection = (): Collections => {
+  const client = new Client({ apiKey: key, region: process.env.TOPK_REGION || "aws-us-east-1-elastica" });
+  return {
+    cards: client.collection(process.env.MTGSEARCH_COLLECTION || "mtg-cards-v2") as unknown as Collection,
+    printings: client.collection(process.env.MTGSEARCH_PRINTINGS_COLLECTION || "mtg-printings-v1") as unknown as Collection,
+  };
+};
 const names = (result: { hits: { name: string }[] }) => result.hits.map((h) => h.name);
 
 test("syntax query returns exactly the matching cards", { skip }, async () => {
@@ -94,4 +97,74 @@ test("the page's sort order applies unless the query has its own", { skip }, asy
   assert.equal(ranked.sortedBy, null);
   const page2 = await search(col, "sphinx that draws two cards", { k: 5, offset: 5 });
   assert.equal(new Set([...names(ranked), ...names(page2)]).size, 10);
+});
+
+test("printing keywords: one result per card, shown by a matching printing", { skip }, async () => {
+  const cols = collection();
+  const inSet = await search(cols, "t:sphinx set:ima");
+  assert.deepEqual([inSet.mode, inSet.unit, inSet.total], ["syntax", "cards", 3]);
+  assert.deepEqual(names(inSet), ["Consecrated Sphinx", "Sandstone Oracle", "Sphinx of Uthuun"]);
+  assert.ok(inSet.hits.every((hit) => hit.set === "ima" && String(hit.scryfall_uri).includes("/ima/")));
+  assert.deepEqual([inSet.hits[0].cn, inSet.hits[0].rarity, inSet.hits[0].artist], ["47", "mythic", "Mark Zug"]);
+  // the same card found without a printing keyword shows Scryfall's pick for it, not this one
+  const plain = await search(cols, '!"consecrated sphinx"');
+  assert.equal(plain.total, 1);
+  assert.notEqual(plain.hits[0].set, "ima");
+});
+
+test("unique:prints lists printings, newest first when ordered by release", { skip }, async () => {
+  const cols = collection();
+  const prints = await search(cols, '!"consecrated sphinx" unique:prints order:released', { k: 60 });
+  assert.equal(prints.unit, "printings");
+  assert.equal(prints.sortedBy, "released");
+  assert.ok(prints.total !== null && prints.total >= 11 && prints.total === prints.hits.length);
+  const dates = prints.hits.map((hit) => String(hit.released));
+  assert.deepEqual(dates, [...dates].sort().reverse());
+  assert.equal(new Set(prints.hits.map((hit) => hit._id)).size, prints.hits.length);
+  // each printing counts once; the card total is the number of distinct illustrations at most
+  const art = await search(cols, '!"consecrated sphinx" unique:art', { k: 60 });
+  assert.equal(art.unit, "illustrations");
+  assert.ok(art.total !== null && art.total > 1 && art.total < prints.total);
+});
+
+test("sorting cards by price shows the printing that decides the order", { skip }, async () => {
+  const cols = collection();
+  const cheap = await search(cols, "t:sphinx r:mythic order:usd", { k: 60 });
+  const dear = await search(cols, "t:sphinx r:mythic order:usd direction:desc", { k: 60 });
+  const prices = (result: typeof cheap) => result.hits.map((hit) => hit.usd).filter((usd): usd is number => typeof usd === "number");
+  assert.equal(cheap.total, dear.total);
+  assert.deepEqual(prices(cheap), [...prices(cheap)].sort((a, b) => a - b));
+  assert.deepEqual(prices(dear), [...prices(dear)].sort((a, b) => b - a));
+  assert.ok(prices(dear)[0] > prices(cheap)[0]);
+  // the page's menu can ask for the same thing on a card-level query
+  const menu = await search(cols, "t:sphinx", { k: 5, order: "usd", descending: true });
+  assert.equal(menu.sortedBy, "usd");
+  assert.equal(menu.total, (await search(cols, "t:sphinx", { k: 1 })).total);
+  assert.equal(menu.hits[0].usd, Math.max(...prices(menu)));
+});
+
+test("grouped results page without gaps or repeats", { skip }, async () => {
+  const cols = collection();
+  const all = await search(cols, "t:sphinx game:arena", { k: 60 });
+  const first = await search(cols, "t:sphinx game:arena", { k: 10 });
+  const second = await search(cols, "t:sphinx game:arena", { k: 10, offset: 10 });
+  assert.ok(all.total !== null && all.total > 20 && first.hasMore);
+  assert.deepEqual([...names(first), ...names(second)], names(all).slice(0, 20));
+  assert.equal(new Set(names(all)).size, all.hits.length);
+});
+
+test("printing keywords mixed with plain words rank by meaning within the matching cards", { skip }, async () => {
+  const result = await search(collection(), "set:ima draws when opponents draw");
+  assert.equal(result.mode, "mixed");
+  assert.equal(names(result)[0], "Consecrated Sphinx");
+  assert.equal(result.hits[0].set, "ima");
+  assert.equal(typeof result.hits[0].score, "number");
+});
+
+test("in: and prints are answered from the cards collection", { skip }, async () => {
+  const cols = collection();
+  const never = await search(cols, "t:sphinx -in:ima", { k: 1 });
+  const all = await search(cols, "t:sphinx", { k: 1 });
+  assert.equal(never.total, (all.total ?? 0) - 3);
+  assert.equal((await search(cols, "t:sphinx prints=1", { k: 60 })).hits.every((hit) => hit.prints === 1), true);
 });

@@ -16,7 +16,12 @@ import { isPlainWords, splitWords } from "./search.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 export const REFERENCE = `${ROOT}fixtures/reference.json`;
-const QUERY_FILES = ["conformance/queries.txt", "conformance/heldout.txt", "fixtures/extra_queries.txt"];
+const QUERY_FILES = [
+  "conformance/queries.txt",
+  "conformance/heldout.txt",
+  "conformance/printings.txt",
+  "fixtures/extra_queries.txt",
+];
 
 function lines(path: string): string[] {
   return readFileSync(ROOT + path, "utf8")
@@ -33,7 +38,13 @@ export function compile(query: string) {
     return {
       query,
       ir,
-      options: { include_extras: options.includeExtras, order: options.order, descending: options.descending },
+      options: {
+        include_extras: options.includeExtras,
+        order: options.order,
+        descending: options.descending,
+        // only present for queries answered from the printings collection
+        ...(options.printings ? { printings: true, unique: options.unique, prefer: options.prefer } : {}),
+      },
       plain: isPlainWords(ast),
       split: split && {
         keywords: split.keywords.map((k) => (k.kind === "keyword" ? k.key : `!${k.text}`)),
