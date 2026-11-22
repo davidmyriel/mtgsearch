@@ -11,6 +11,7 @@ import { lower, ORDER_FIELDS, PREFER, PRINTING_FIELDS, usable } from "./lower.ts
 import type { Ignored, IR, Op, Unique } from "./lower.ts";
 import { explain } from "./explain.ts";
 import { extract } from "./nl.ts";
+import { plain } from "./normalize.ts";
 import { KEYWORDS, parse, QueryError, Unsupported } from "./parser.ts";
 import type { Keyword, Name, Node } from "./parser.ts";
 
@@ -23,6 +24,7 @@ export type Result = {
   note: string; // what was understood, or why the query was refused
   understood: string[]; // a syntax query said back in words, one entry for each condition
   ignored: Ignored[]; // terms that could not be used and were left out, each with the reason
+  exact: Hit | null; // the card whose name is exactly what was typed, if the query is a name
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
   unit: Unit; // what `total` counts and each hit is
@@ -334,6 +336,21 @@ export function splitWords(ast: Node): { keywords: (Keyword | Name)[]; words: Na
 const given = (ast: Node, canonical: string) =>
   [...nodes(ast)].some((n) => n.kind === "keyword" && KEYWORDS.get(n.key.toLowerCase()) === canonical);
 
+/**
+ * The card whose whole name is what was typed, ignoring case, accents and punctuation
+ * ("urzas saga" is Urza's Saga). Only for words on their own: no `or`, no negation. The page
+ * opens this card instead of listing every card with those words in its name.
+ */
+async function exactName(col: Collection, ast: Node): Promise<Hit | null> {
+  const names = ast.kind === "name" ? [ast] : ast.kind === "and" ? ast.children : [];
+  if (!names.length || !names.every((n): n is Name => n.kind === "name" && !n.exact)) return null;
+  const wanted = plain(names.map((n) => n.text).join(" "));
+  if (!wanted) return null;
+  const whole = toTopk(["and", [["eq", "name_plain", wanted], VISIBLE]]);
+  const rows = await col.query(select(pick(CARD_DISPLAY)).filter(whole!).limit(1));
+  return rows[0] ?? null;
+}
+
 const fieldName = (order: string | null | undefined) => (order && Object.hasOwn(ORDERS, order) ? ORDERS[order] : null);
 const orderName = (sortField: string) => Object.keys(ORDERS).find((name) => ORDERS[name] === sortField) ?? null;
 const UNITS: Record<Unique, Unit> = { cards: "cards", prints: "printings", art: "illustrations" };
@@ -342,6 +359,7 @@ export async function search(cols: Collections, query: string, options: SearchOp
   const { k = 20, offset = 0, fields = SEMANTIC_FIELDS } = options;
   const none = {
     hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit, understood: [] as string[], ignored: [] as Ignored[],
+    exact: null as Hit | null,
   };
   let ast: Node | null = null;
   let predicate: IR = ["all"];
@@ -371,14 +389,17 @@ export async function search(cols: Collections, query: string, options: SearchOp
     const unique: Unique = given(ast, "unique") ? parsed.unique : (options.unique ?? "cards");
     // Anything about a printing, including sorting by price or date, is answered from the printings.
     const printings = parsed.printings || PRINTING_FIELDS.has(sortField) || unique !== "cards";
-    const page = printings
-      ? await printingPage(cols.printings, predicate, k, offset, { unique, prefer: parsed.prefer, sortField, descending })
-      : await cardPage(cols.cards, predicate, k, offset, sortField, descending);
+    const [page, exact] = await Promise.all([
+      printings
+        ? printingPage(cols.printings, predicate, k, offset, { unique, prefer: parsed.prefer, sortField, descending })
+        : cardPage(cols.cards, predicate, k, offset, sortField, descending),
+      plainWords && offset === 0 ? exactName(cols.cards, ast) : null,
+    ]);
     if (page.total) {
       const hasMore = offset + page.hits.length < page.total;
       const mode = plainWords ? "name" : "syntax";
       const understood = explain(ast);
-      return { ...none, mode, hits: page.hits, total: page.total, hasMore, note: "", sortedBy: orderName(sortField), unit: UNITS[unique], understood };
+      return { ...none, mode, hits: page.hits, total: page.total, hasMore, note: "", sortedBy: orderName(sortField), unit: UNITS[unique], understood, exact };
     }
     if (!plainWords) {
       const split = splitWords(ast);

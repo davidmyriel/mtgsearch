@@ -48,7 +48,9 @@ const MAX_LISTED = 60;
 // Sort orders decided by a printing rather than by the card.
 const PRINTING_ORDERS = new Set(["released", "usd", "eur", "tix", "rarity"]);
 // A search as its address names it. Empty strings are the defaults and are left out of the address.
-const EMPTY = { query: "", order: "", dir: "", unique: "", page: 1 };
+// `list` asks for the list of results even when the query is a card's exact name, which
+// otherwise opens that card.
+const EMPTY = { query: "", order: "", dir: "", unique: "", list: "", page: 1 };
 let inFlight = null;
 let current = { ...EMPTY, unit: "cards" }; // what the grid is showing
 let resultsScroll = 0; // where the results were scrolled to when a card was opened
@@ -100,6 +102,7 @@ function readAddress() {
     order: params.get("order") || "",
     dir: dir === "asc" || dir === "desc" ? dir : "",
     unique: unique === "prints" || unique === "art" ? unique : "",
+    list: params.get("list") === "1" ? "1" : "",
     page: page > 1 ? Math.min(page, LAST_PAGE) : 1,
   };
 }
@@ -108,13 +111,13 @@ function readAddress() {
 function searchPath(view) {
   const params = new URLSearchParams();
   if (view.query) params.set("q", view.query);
-  for (const key of ["order", "dir", "unique"]) if (view[key]) params.set(key, view[key]);
+  for (const key of ["order", "dir", "unique", "list"]) if (view[key]) params.set(key, view[key]);
   if (view.page > 1) params.set("page", String(view.page));
   const text = params.toString();
   return text ? `/?${text}` : "/";
 }
 
-const sameSearch = (a, b) => ["query", "order", "dir", "unique", "page"].every((key) => a[key] === b[key]);
+const sameSearch = (a, b) => ["query", "order", "dir", "unique", "list", "page"].every((key) => a[key] === b[key]);
 
 // --- results view ----------------------------------------------------------------------
 
@@ -318,6 +321,26 @@ async function run(search, { push = true } = {}) {
       // Every term was one that cannot be used, so there is nothing left to search for.
       return fail("Nothing here could be used", `${data.note}. The syntax guide lists what can be typed.`);
     }
+    // A card's exact name, or a search that finds one card and nothing else, goes straight to
+    // that card's page. Not when the list was asked for, a control was changed, or a term was
+    // left out: then the reader is looking at the list on purpose, or needs to see the warning.
+    const only = data.unit === "cards" && data.total === 1 && data.hits.length === 1 ? data.hits[0] : null;
+    const target = data.exact || only;
+    const asTyped = view.page === 1 && !view.list && !view.order && !view.dir && !view.unique;
+    if (target && asTyped && cardPath(target) && !(data.ignored && data.ignored.length)) {
+      results.replaceChildren();
+      tools.hidden = pager.hidden = true;
+      showUnderstood([]);
+      showIgnored([]);
+      showEmpty();
+      current = { ...EMPTY, unit: "cards" };
+      setStatus("", "");
+      const others = (data.total || 1) - 1;
+      // The card takes the search's place in the history, as a redirect would: Back leaves both.
+      history.replaceState({ card: target, also: others > 0 ? { query: view.query, others } : null }, "", cardPath(target));
+      showCard(target);
+      return;
+    }
     const captioned = data.unit !== "cards" || PRINTING_ORDERS.has(data.sorted_by);
     results.replaceChildren(...data.hits.map((hit) => tile(hit, captioned)));
     current = { ...view, unit: data.unit };
@@ -516,6 +539,7 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
   copyButton.textContent = "Copy link";
   // "Back to results" only when there are results to go back to.
   backButton.hidden = results.children.length === 0;
+  showAlso(history.state && history.state.also);
   document.title = `${hit.name} · mtgsearch`;
   document.body.classList.add("viewing-card", "searched");
   intro.hidden = true;
@@ -529,6 +553,26 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
     legalitySection.hidden = printingsSection.hidden = true;
     loadDetails(hit);
   }
+}
+
+/**
+ * When a search for an exact name came straight to this card and other cards matched as well:
+ * say so, with a link to the list. `also` is { query, others }, kept with the history entry.
+ */
+function showAlso(also) {
+  const note = document.getElementById("card-also");
+  note.hidden = !also;
+  if (!also) return note.replaceChildren();
+  const link = document.createElement("a");
+  link.href = searchPath({ ...EMPTY, query: also.query, list: "1" });
+  link.textContent = `See all ${also.others + 1}`;
+  link.addEventListener("click", (event) => {
+    if (modified(event)) return;
+    event.preventDefault();
+    run({ query: also.query, list: "1" });
+  });
+  const cards = also.others === 1 ? "1 other card" : `${also.others.toLocaleString("en")} other cards`;
+  note.replaceChildren(`“${also.query}” is also part of the name of ${cards}. `, link);
 }
 
 /** Fetch what the card's page shows beyond a search result, for the card now on screen. */
@@ -546,7 +590,7 @@ async function loadDetails(hit) {
     return;
   }
   // Kept with the history entry, so Back and Forward show the whole page without asking again.
-  history.replaceState({ card: data.card, printings: data.printings }, "");
+  history.replaceState({ ...(history.state || {}), card: data.card, printings: data.printings }, "");
   showCard(data.card, data.printings, { keepScroll: true });
 }
 
@@ -682,7 +726,7 @@ intro.addEventListener("click", (event) => {
 // Changing what is shown or how it is sorted keeps the query and goes back to the first page.
 for (const select of [sortSelect, dirSelect, uniqueSelect]) {
   select.addEventListener("change", () =>
-    run({ query: current.query, order: sortSelect.value, dir: dirSelect.value, unique: uniqueSelect.value }),
+    run({ query: current.query, order: sortSelect.value, dir: dirSelect.value, unique: uniqueSelect.value, list: current.list }),
   );
 }
 

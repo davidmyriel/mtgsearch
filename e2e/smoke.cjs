@@ -138,10 +138,41 @@ async function run(name, contextOptions) {
   await fresh.goBack();
   await fresh.waitForFunction(marked, new URL(cardUrl).pathname);
   check((await fresh.textContent("#card-printing")) === (await page.textContent("#card-printing")), `[${name}] Back returns to the first printing`);
-  await fresh.fill("#q", "lightning bolt");
+  await fresh.fill("#q", "bolt");
   await fresh.press("#q", "Enter");
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name"));
-  check(new URL(fresh.url()).pathname === "/" && new URL(fresh.url()).searchParams.get("q") === "lightning bolt", `[${name}] searching from a card's page goes to the results address`);
+  check(new URL(fresh.url()).pathname === "/" && new URL(fresh.url()).searchParams.get("q") === "bolt", `[${name}] searching from a card's page goes to the results address`);
+
+  // A card's exact name opens that card's page instead of a list.
+  const before = fresh.url();
+  await fresh.fill("#q", "Consecrated Sphinx");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] typing a card's exact name opens its page (${new URL(fresh.url()).pathname})`);
+  check(!(await fresh.isVisible("#card-also")) && !(await fresh.isVisible("#card-back")), `[${name}] with nothing else to offer when no other card matches`);
+  check((await fresh.inputValue("#q")) === "Consecrated Sphinx", `[${name}] and what was typed stays in the box`);
+  await fresh.goBack();
+  await fresh.waitForFunction(() => document.getElementById("card").hidden);
+  check(fresh.url() === before, `[${name}] Back goes to where the search was made from, not to a list of one`);
+  // The name is exact but other cards contain it too: still the card, with a way to the list.
+  await fresh.fill("#q", "lightning bolt");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check((await fresh.textContent("#card-name")) === "Lightning Bolt", `[${name}] an exact name opens its card even when other cards contain it`);
+  check(/also part of the name of \d+ other cards?\. See all \d+$/.test(await fresh.textContent("#card-also")), `[${name}] and says the other cards exist (${await fresh.textContent("#card-also")})`);
+  await fresh.waitForFunction(() => !document.getElementById("card-printings").hidden);
+  check(await fresh.isVisible("#card-also"), `[${name}] which is still there once the card's details arrive`);
+  await fresh.click("#card-also a");
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name"));
+  check(new URL(fresh.url()).searchParams.get("list") === "1" && (await fresh.$$("#results .tile")).length >= 2, `[${name}] the link lists every card with the name in it`);
+  check((await firstCards(fresh, 1))[0] === "Lightning Bolt", `[${name}] the exact card first`);
+  await choose(fresh, "#sort", "name");
+  check(!(await fresh.isVisible("#card")) && new URL(fresh.url()).searchParams.get("list") === "1", `[${name}] and sorting the list keeps it a list`);
+  // Punctuation and case do not matter; a name that is only part of a card's does not jump.
+  await fresh.fill("#q", "urzas saga");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check((await fresh.textContent("#card-name")) === "Urza's Saga", `[${name}] "urzas saga" opens Urza's Saga`);
   await fresh.goto(`${base}/card/nosuchset/999/nothing`);
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("No card at this address"));
   check(await fresh.isVisible("#intro"), `[${name}] an address with no card says so and offers the examples`);
@@ -200,18 +231,23 @@ async function run(name, contextOptions) {
   check((await page.$$("#results .tile")).length === 60 && (await page.textContent("#page-now")) === "Page 1 of 2", `[${name}] changing the sort starts again from the first page`);
 
   // Cards, printings or illustrations: the "Show" control, or `unique:` in the query.
-  await search(page, '!"consecrated sphinx"');
-  check((await page.textContent("#status")).startsWith("Scryfall syntax · 1 card"), `[${name}] an exact name is one card`);
+  await search(page, "t:sphinx c:w mv<=4");
+  const cardCount = Number(((await page.textContent("#status")).match(/(\d+) cards/) || [])[1]);
+  check(cardCount > 1 && cardCount < 60, `[${name}] a search with a handful of cards (${cardCount})`);
   check(!(await page.isVisible("#pager")), `[${name}] one page of results needs no pager`);
   await choose(page, "#unique", "prints");
   const printCount = Number(((await page.textContent("#status")).match(/(\d+) printings/) || [])[1]);
-  check(printCount >= 8 && new URL(page.url()).searchParams.get("unique") === "prints", `[${name}] choosing printings lists them (${printCount}), and the address says so`);
-  check((await page.$$("#results .caption")).length === printCount, `[${name}] each with its caption`);
+  check(printCount > cardCount && new URL(page.url()).searchParams.get("unique") === "prints", `[${name}] choosing printings lists them (${printCount}), and the address says so`);
+  check((await page.$$("#results .caption")).length === Math.min(printCount, 60), `[${name}] each with its caption`);
   await choose(page, "#unique", "art");
   const artCount = Number(((await page.textContent("#status")).match(/(\d+) illustrations/) || [])[1]);
-  check(artCount > 1 && artCount <= printCount, `[${name}] choosing illustrations lists those (${artCount})`);
+  check(artCount >= cardCount && artCount <= printCount, `[${name}] choosing illustrations lists those (${artCount})`);
   await search(page, '!"consecrated sphinx" unique:prints');
   check((await page.inputValue("#unique")) === "prints", `[${name}] the control shows what the query itself asked for`);
+  // A search that finds one card and nothing else goes to that card, as an exact name does.
+  await search(page, '!"consecrated sphinx"');
+  await page.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check((await page.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] a search that finds exactly one card opens it`);
 
   // Results ranked by meaning have no total: no sort controls, and a next page while there is one.
   await search(page, "sphinx that draws two cards");
@@ -237,9 +273,10 @@ async function run(name, contextOptions) {
   check((await page.getAttribute("#printings-list a[aria-current]", "href")).startsWith("/card/ima/"), `[${name}] and that printing is the one marked in its list`);
 
   // A card with more printings than the page lists links to a search for all of them.
+  // (An exact name finds one card, so the search goes straight to its page.)
   await search(page, "!forest");
-  await page.click("#results .tile");
-  await page.waitForFunction(() => !document.getElementById("card-prints").hidden);
+  await page.waitForFunction(() => !document.getElementById("card").hidden && !document.getElementById("card-prints").hidden);
+  check((await page.textContent("#card-name")) === "Forest", `[${name}] !forest opens Forest`);
   check((await page.$$("#printings-list a")).length === 60, `[${name}] a basic land lists its newest 60 printings`);
   check(/^All \d+ printings$/.test(await page.textContent("#card-prints")), `[${name}] and offers all of them`);
   check(!(await page.isVisible("#card-stats")), `[${name}] a land has no power and toughness line`);
@@ -278,10 +315,11 @@ async function run(name, contextOptions) {
   check((await page.textContent("#status")).startsWith("Scryfall syntax"), `[${name}] a mana cost is read as syntax`);
   check((await firstCards(page, 24)).includes("Consecrated Sphinx"), `[${name}] a mana cost search finds Consecrated Sphinx`);
 
-  await search(page, "lightning bolt");
-  check((await page.textContent("#status")).startsWith("Card name"), `[${name}] a card name takes the name path`);
+  // Words that are part of names, not a whole one, list the cards, most played first.
+  await search(page, "lightning bol");
+  check((await page.textContent("#status")).startsWith("Card name"), `[${name}] part of a name takes the name path and lists the cards`);
   check((await firstCards(page, 1))[0] === "Lightning Bolt", `[${name}] Lightning Bolt is first`);
-  check((await page.textContent("#understood")) === "the name includes “lightning” and “bolt”", `[${name}] a name search says where it looked`);
+  check((await page.textContent("#understood")) === "the name includes “lightning” and “bol”", `[${name}] a name search says where it looked`);
 
   // A term that cannot be used is left out, the page says which and why, and the rest runs.
   await search(page, "lang:ja t:sphinx");
@@ -329,25 +367,26 @@ async function run(name, contextOptions) {
   check((await lucky.textContent("h1")) === "Syntax guide" && (await lucky.$$("a.example")).length >= 40, `[${name}] the syntax guide lists its examples`);
   const guideOverflow = await lucky.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(guideOverflow <= 0, `[${name}] the guide does not scroll sideways (overflow ${guideOverflow}px)`);
-  await lucky.click('a.example[href="/?q=lightning+bolt"]');
-  await lucky.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name"));
-  check((await firstCards(lucky, 1))[0] === "Lightning Bolt", `[${name}] an example in the guide runs the search`);
+  await lucky.click('a.example[href="/?q=t%3Asphinx"]');
+  await lucky.waitForFunction(() => document.getElementById("status").textContent.startsWith("Scryfall syntax"));
+  check((await lucky.$$("#results .tile")).length === 60, `[${name}] an example in the guide runs the search`);
   await lucky.goto(`${base}/syntax`);
-  await lucky.fill("#q", "consecrated sphinx");
+  await lucky.fill("#q", "sphinx");
   await lucky.press("#q", "Enter");
   await lucky.waitForFunction(() => document.getElementById("status") && document.getElementById("status").textContent.startsWith("Card name"));
-  check(new URL(lucky.url()).searchParams.get("q") === "consecrated sphinx", `[${name}] the guide's own search box searches`);
+  check(new URL(lucky.url()).searchParams.get("q") === "sphinx", `[${name}] the guide's own search box searches`);
   await lucky.close();
 
-  await search(page, "lightning bolt");
+  await search(page, "t:sphinx mv=6");
+  const sixes = await firstCards(page, 1);
   await search(page, "lang:ja");
   await page.goBack();
   await page.waitForFunction(
     () =>
-      document.getElementById("q").value === "lightning bolt" &&
-      document.getElementById("status").textContent.startsWith("Card name")
+      document.getElementById("q").value === "t:sphinx mv=6" &&
+      document.getElementById("status").textContent.startsWith("Scryfall syntax")
   );
-  check((await firstCards(page, 1))[0] === "Lightning Bolt", `[${name}] back button restores the previous search`);
+  check((await firstCards(page, 1))[0] === sixes[0], `[${name}] back button restores the previous search`);
 
   check(problems.length === 0, `[${name}] no console errors or failed requests${problems.length ? ": " + problems.join(" | ") : ""}`);
   await browser.close();

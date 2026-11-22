@@ -100,8 +100,8 @@
         </article>
         <article class="way">
           <h2>Or both at once</h2>
-          <p>Keywords narrow the cards down and the remaining words rank them. A card's name, or part of one,
-            works too.</p>
+          <p>Keywords narrow the cards down and the remaining words rank them. A card's whole name opens that
+            card; part of a name lists the cards that have it.</p>
           <ul class="examples">
             <li><button type="button" data-q="c:u t:sphinx draws when opponents draw">c:u t:sphinx draws when opponents draw</button></li>
             <li><button type="button" data-q="t:goblin mv&lt;=2 makes treasure">t:goblin mv&lt;=2 makes treasure</button></li>
@@ -131,6 +131,8 @@
     <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
     <article id="card" class="card" aria-labelledby="card-name" hidden>
       <button id="card-back" class="out back" type="button" hidden>Back to results</button>
+      <!-- Shown when a search for an exact name came straight here and other cards matched too. -->
+      <p id="card-also" class="also" hidden></p>
       <div class="card-body">
         <div class="card-picture">
           <img id="card-image" alt="" width="488" height="680">

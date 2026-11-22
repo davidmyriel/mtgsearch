@@ -175,6 +175,30 @@ test("in: and prints are answered from the cards collection", { skip }, async ()
   assert.equal((await search(cols, "t:sphinx prints=1", { k: 60 })).hits.every((hit) => hit.prints === 1), true);
 });
 
+test("a query that is exactly a card's name names that card, beside the list", { skip }, async () => {
+  const cols = collection();
+  const only = await search(cols, "consecrated sphinx", { k: 5 });
+  assert.deepEqual([only.mode, only.total, only.exact?.name], ["name", 1, "Consecrated Sphinx"]);
+  // other cards contain the words too: the exact one is still named, and can be opened
+  const bolt = await search(cols, "Lightning Bolt", { k: 5 });
+  assert.equal(bolt.exact?.name, "Lightning Bolt");
+  assert.ok(bolt.total !== null && bolt.total >= 2);
+  assert.ok(bolt.exact?.set && bolt.exact?.cn, "the exact card says which printing shows it");
+  // case, accents and punctuation do not matter
+  assert.equal((await search(cols, "urzas saga")).exact?.name, "Urza's Saga");
+  assert.equal((await search(cols, "LIM-DUL'S VAULT")).exact?.name, "Lim-Dûl's Vault");
+  // part of a name is not a name; nor is syntax, a negated word or an "or"
+  assert.equal((await search(cols, "bolt")).exact, null);
+  assert.equal((await search(cols, "lightning bol")).exact, null);
+  assert.equal((await search(cols, "t:sphinx")).exact, null);
+  assert.equal((await search(cols, "lightning -bolt")).exact, null);
+  assert.equal((await search(cols, "opt or shock")).exact, null);
+  // only on the first page, where the page decides whether to open it
+  assert.equal((await search(cols, "lightning bolt", { k: 1, offset: 1 })).exact, null);
+  // a description is not mistaken for a name
+  assert.equal((await search(cols, "sphinx that draws two cards")).exact, null);
+});
+
 test("a term that cannot be used is left out and the rest of the query runs", { skip }, async () => {
   const cols = collection();
   const plain = await search(cols, "t:sphinx", { k: 5 });
