@@ -21,7 +21,9 @@ USER_AGENT = "mtgsearch/0.0.1 (development build)"
 def client():
     from topk_sdk import Client
 
-    key = os.environ.get("TOPK_API_KEY")
+    # Strip whitespace: a secret pasted with a trailing line break is otherwise rejected
+    # by the client as an invalid header value, which does not point at the real cause.
+    key = (os.environ.get("TOPK_API_KEY") or "").strip()
     if not key:
         raise SystemExit("TOPK_API_KEY is not set; see .env.example")
     return Client(api_key=key, region=REGION)
