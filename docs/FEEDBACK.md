@@ -53,3 +53,26 @@ and the Scryfall comparison where results could move.
   because the page is static and the preview tags would have to be written on the server per
   card. That is a suggestion from the developer, not feedback; it would be size M and belongs
   with the browse tier unless asked for sooner.
+
+## From the interface study
+
+On 22 November 2026 the project owner asked for a study of how Scryfall's interface is built
+and behaves ([SCRYFALL_UI.md](SCRYFALL_UI.md)). It lists eighteen things their interface offers
+that ours does not. These are the ones worth adopting, scheduled by the same slots. They are
+structure and behaviour only: their name, logo, palette, typefaces, icons and wording are their
+identity and are not copied.
+
+| Id | Item | Size | Slot |
+|---|---|---|---|
+| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary |
+| U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | M | Next boundary, after U-1 |
+| U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary |
+| U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 |
+| U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) |
+| U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner |
+| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it |
+| U-8 | Rulings on the card page | L | With the browse tier: needs Scryfall's rulings file in the ingest |
+| U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier |
+
+Larger tiles, a fuller empty state and a runnable syntax reference are in the study too; they
+are small and can ride along with U-1 to U-4.
