@@ -32,6 +32,7 @@ and the Scryfall comparison where results could move.
 |---|---|---|---|---|---|
 | F-1 | 22 Nov 2026 | A page for each card, in place of the popup | M | Next boundary | Done |
 | F-2 | 22 Nov 2026 | The site has to look polished enough for the public; layout closer to Scryfall's first | L | Now, on the owner's word | Done (first pass) |
+| F-3 | 22 Nov 2026 | Typing a card's exact name opens the card's page, not a list of results | M | Next boundary | Done |
 
 ### F-1. A page for each card
 
@@ -90,6 +91,33 @@ and the Scryfall comparison where results could move.
     to try, and an address with nothing at it has a page of its own.
 - **Not in this pass:** a table view of results, an advanced search form, set pages, rulings,
   both faces of a two-faced card set out separately, and a preview when a link is shared.
+
+### F-3. A card's exact name opens its page
+
+- **From:** the project owner, 22 November 2026, after the redesign went live.
+- **In their words:** "when you type in the name of the card "consecrated sphinx", if its an
+  exact result, the card page will open instead of the search result".
+- **How it was read:** a query that is a card's whole name should go to that card. "Exact" was
+  taken to mean the name, not the number of results, because the two differ more often than
+  expected: "consecrated sphinx" finds one card, but "lightning bolt" finds two (a second card
+  has a face of that name) and "sol ring" three (Solemn Offering contains both words). Opening
+  the card only when one card is found would have worked for the owner's example and failed
+  for those. This reading is the developer's.
+- **Slot and why:** next boundary, taken at once: nothing was in progress, and it is confined to
+  the search, the endpoint and the page.
+- **What was done:**
+  - A query of plain words that is exactly a card's name, ignoring case, accents and
+    punctuation ("urzas saga"), opens that card's page. The search returns the card as `exact`.
+  - If other cards have those words in their names too, the card's page says so and links to
+    the list ("See all 3"), which is the same search with `list=1` in the address.
+  - A search of any kind that finds exactly one card also opens it, as on Scryfall.
+  - The card takes the search's place in the browser's history, as a redirect would, so Back
+    goes to where the search was made from and not to a list that would open the card again.
+  - It does not happen when a term was left out with a warning, when a sort or "Show" control
+    is set, or on a later page: then the list is what the reader asked for.
+- **A consequence to know about:** a short name that is also part of many other names now opens
+  the card: "shock" goes to Shock, "opt" to Opt, "forest" to Forest, each with the link to the
+  others. Part of a name ("bolt", "lightning bol") still lists the cards.
 
 ## From the interface study
 

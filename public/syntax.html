@@ -62,10 +62,11 @@
       </section>
       <section id="names">
         <h2>Names</h2>
-        <p>Words on their own look in the card's name, ignoring case, accents and punctuation. The most played cards come first.</p>
+        <p>Words on their own look in the card's name, ignoring case, accents and punctuation. A card's whole name opens that card's page; part of a name lists the cards that have it, the most played first.</p>
         <dl>
-          <div><dt><a class="example" href="/?q=lightning+bolt">lightning bolt</a></dt><dd>Cards with both words in the name.</dd></div>
-          <div><dt><a class="example" href="/?q=%21%22lightning+bolt%22">!&quot;lightning bolt&quot;</a></dt><dd>An exclamation mark asks for that exact name.</dd></div>
+          <div><dt><a class="example" href="/?q=lightning+bolt">lightning bolt</a></dt><dd>A card&#x27;s whole name: its page opens.</dd></div>
+          <div><dt><a class="example" href="/?q=bolt">bolt</a></dt><dd>Part of a name: every card with it in the name.</dd></div>
+          <div><dt><a class="example" href="/?q=%21%22lightning+bolt%22+unique%3Aprints">!&quot;lightning bolt&quot; unique:prints</a></dt><dd>An exclamation mark asks for that exact name, here for all of its printings.</dd></div>
           <div><dt><a class="example" href="/?q=name%3A%2F%5Ethe+%2F">name:/^the /</a></dt><dd>A regular expression on the name.</dd></div>
         </dl>
       </section>

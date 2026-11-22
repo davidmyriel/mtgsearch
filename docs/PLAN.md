@@ -117,6 +117,7 @@ picked up: at the boundary between plan steps unless something is broken.
       the three ways to search, four larger tiles to a row, a three-column card page, a footer,
       a syntax guide whose examples run, a random card, and symbols drawn as lettered discs
       (feedback F-2, U-7)
+- [x] A card's exact name, or a search that finds one card, opens that card's page (feedback F-3)
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

@@ -194,7 +194,10 @@ example `/card/ima/47/consecrated-sphinx`), which can be shared and opened direc
 The answer carries `understood`, a syntax query said back in words with one entry for each
 condition (`t:sphinx mv<=3` is "the type includes “sphinx”" and "the mana value is 3 or less"),
 which the page shows under the status line so that a wrong reading is easy to spot. `ignored`
-lists each term that was left out, with the reason. It also
+lists each term that was left out, with the reason. `exact` is the card whose whole name is
+what was typed, if there is one: the page opens that card instead of listing every card with
+those words in its name (as it does when a search finds exactly one card), unless the address
+asks for the list with `list=1`. It also
 carries `total`, `unit` (what the total counts: cards, printings or illustrations),
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 pager and its three controls (show, sort, direction). The page asks for 60 results at a time.
