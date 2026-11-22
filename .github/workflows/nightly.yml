@@ -17,7 +17,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     env:
       TOPK_API_KEY: ${{ secrets.TOPK_API_KEY }}
       TOPK_REGION: ${{ vars.TOPK_REGION }}
@@ -28,28 +28,29 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-      - run: pip install -e ".[dev]"
-
-      # The snapshot of what was last ingested lets the run re-send only changed cards.
-      # Without it every card is re-embedded, which is slow and costs money.
-      - uses: actions/cache@v4
-        if: env.TOPK_API_KEY != ''
+      - uses: actions/setup-node@v4
         with:
-          path: data/documents.*.jsonl
-          key: ingest-snapshot-${{ vars.MTGSEARCH_COLLECTION }}-${{ github.run_id }}
-          restore-keys: ingest-snapshot-${{ vars.MTGSEARCH_COLLECTION }}-
+          node-version: 22
+          cache: npm
 
+      # The job compares today's cards with what the collection already holds, so it needs
+      # no cached state: only new or changed cards are re-sent and re-embedded, and cards
+      # whose rank or price moved get a small field update.
       - name: Ingest changed cards
         if: env.TOPK_API_KEY != ''
-        run: mtgsearch ingest
+        run: |
+          pip install -e .
+          mtgsearch ingest
 
       - name: Syntax conformance against Scryfall
         if: env.TOPK_API_KEY != ''
-        run: mtgsearch conformance conformance/queries.txt --out conformance-results.json
+        run: |
+          npm ci
+          npm run conformance -- conformance/queries.txt --out conformance-results.json
 
       - name: Relevance evaluation
         if: env.TOPK_API_KEY != ''
-        run: mtgsearch eval --out eval-results.json
+        run: npm run eval -- --out eval-results.json
 
       - uses: actions/upload-artifact@v4
         if: always() && env.TOPK_API_KEY != ''

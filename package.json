@@ -1,14 +1,19 @@
 {
   "name": "mtgsearch-web",
   "private": true,
-  "description": "The Netlify function that serves search. The Python package is the reference implementation.",
+  "description": "Scryfall-compatible card search with plain-English search, on TopK. TypeScript serves search; a Python job builds the index.",
   "type": "module",
   "engines": {
     "node": ">=22.18"
   },
   "scripts": {
-    "test": "node --test \"netlify/test/*.test.ts\"",
-    "typecheck": "tsc --noEmit"
+    "dev": "node app/dev-server.ts",
+    "test": "node --test \"app/test/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "golden": "node app/golden.ts",
+    "conformance": "node app/conformance.ts",
+    "eval": "node app/relevance.ts",
+    "search": "node app/search-cli.ts"
   },
   "dependencies": {
     "topk-js": "^0.16.1"

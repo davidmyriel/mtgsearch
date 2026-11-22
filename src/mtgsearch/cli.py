@@ -1,8 +1,11 @@
-"""Command line: mtgsearch ingest | catalog | golden | search | serve | conformance | eval."""
+"""Command line for the ingest job: mtgsearch ingest | catalog.
+
+Searching, the Scryfall comparison and the relevance evaluation live in the TypeScript app
+(see package.json scripts).
+"""
 
 import argparse
 import json
-from pathlib import Path
 
 from . import config
 
@@ -15,25 +18,7 @@ def main(argv: list[str] | None = None) -> None:
     ingest.add_argument("--dry-run", action="store_true", help="build documents and report, send nothing")
     ingest.add_argument("--full", action="store_true", help="re-send every card, not just changed ones")
 
-    sub.add_parser("catalog", help="regenerate the type-word catalogue from the bulk data")
-    sub.add_parser("golden", help="rewrite the fixture the TypeScript port is tested against")
-
-    search = sub.add_parser("search", help="run one query")
-    search.add_argument("query")
-    search.add_argument("-k", type=int, default=10)
-
-    conformance = sub.add_parser("conformance", help="compare syntax queries with Scryfall's API")
-    conformance.add_argument("queries", nargs="?", default="conformance/queries.txt")
-    conformance.add_argument("--out", default=None)
-
-    evaluate = sub.add_parser("eval", help="score ranking strategies on the frozen query set")
-    evaluate.add_argument("queries", nargs="?", default="eval/queries.json")
-    evaluate.add_argument("--out", default=None)
-    evaluate.add_argument("--classes", nargs="*", default=None)
-
-    serve = sub.add_parser("serve", help="run the web app (needs the 'web' extra)")
-    serve.add_argument("--host", default="127.0.0.1")
-    serve.add_argument("--port", type=int, default=8000)
+    sub.add_parser("catalog", help="regenerate app/type-words.json from the bulk data")
 
     args = parser.parse_args(argv)
 
@@ -46,39 +31,8 @@ def main(argv: list[str] | None = None) -> None:
 
         cards = scryfall.read_jsonl_gz(scryfall.download_bulk("oracle_cards", config.DATA_DIR))
         words = catalog.build(cards)
-        target = Path(catalog.__file__).with_name(catalog.FILE)
-        target.write_text("\n".join(words) + "\n", encoding="utf-8")
-        # The Netlify function bundles the same list as JSON.
-        copy = Path(catalog.__file__).resolve().parents[2] / "netlify" / "lib" / "type-words.json"
-        copy.write_text(json.dumps(words, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"wrote {len(words)} type words to {target} and {copy}")
-    elif args.command == "golden":
-        from . import golden
-
-        print(f"wrote {golden.write()} cases to {golden.FIXTURE}")
-    elif args.command == "search":
-        from .search import search as run_search
-
-        result = run_search(args.query, args.k)
-        total = f", {result.total} total" if result.total is not None else ""
-        print(f"[{result.mode}{total}] {result.note}")
-        for hit in result.hits:
-            score = f"{hit['score']:.3f}  " if "score" in hit else ""
-            print(f"  {score}{hit['name']}  {hit.get('mana_cost', '')}  {hit.get('type_line', '')}")
-    elif args.command == "conformance":
-        from . import conformance as conformance_module
-
-        results = conformance_module.run(Path(args.queries), Path(args.out) if args.out else None)
-        if any(r.status != "pass" for r in results):
-            raise SystemExit(1)
-    elif args.command == "serve":
-        import uvicorn
-
-        uvicorn.run("mtgsearch.web:app", host=args.host, port=args.port)
-    elif args.command == "eval":
-        from . import evaluate as evaluate_module
-
-        evaluate_module.run(Path(args.queries), Path(args.out) if args.out else None, args.classes)
+        catalog.OUTPUT.write_text(json.dumps(words, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"wrote {len(words)} type words to {catalog.OUTPUT}")
 
 
 if __name__ == "__main__":

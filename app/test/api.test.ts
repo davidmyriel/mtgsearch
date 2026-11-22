@@ -1,8 +1,8 @@
 // The HTTP contract, with a stubbed search: no network and no TopK key.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { handleSearch, MAX_QUERY_CHARS, MAX_RESULTS } from "../lib/api.ts";
-import type { Result } from "../lib/search.ts";
+import { handleSearch, MAX_QUERY_CHARS, MAX_RESULTS } from "../api.ts";
+import type { Result } from "../search.ts";
 
 const HIT = {
   _id: "abc",

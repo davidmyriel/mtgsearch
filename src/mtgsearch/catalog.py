@@ -2,19 +2,14 @@
 
 Scryfall matches `t:fish` against whole type words (so it does not find Jellyfish) but matches
 an unknown fragment such as `t:jelly` as a substring. Telling the two apart needs the list of
-real type words. It is generated from the bulk data by `mtgsearch catalog` and committed.
+real type words. `mtgsearch catalog` writes it to app/type-words.json, which the search app
+bundles; run it after new sets add types.
 """
 
 from collections.abc import Iterable
-from functools import lru_cache
-from importlib import resources
+from pathlib import Path
 
-FILE = "type_words.txt"
-
-
-@lru_cache
-def type_word_set() -> frozenset[str]:
-    return frozenset(resources.files("mtgsearch").joinpath(FILE).read_text(encoding="utf-8").split())
+OUTPUT = Path(__file__).resolve().parents[2] / "app" / "type-words.json"
 
 
 def build(cards: Iterable[dict]) -> list[str]:

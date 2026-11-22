@@ -3,7 +3,7 @@
 Goal: everything Scryfall's search does, plus natural-language and art search, under our own
 name and design, as a public demo of TopK.
 
-Last updated 21 November 2026. Time estimates are rough judgement for one engineer.
+Last updated 22 November 2026. Time estimates are rough judgement for one engineer.
 
 ## Decisions still open
 
@@ -11,8 +11,7 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 |---|---|
 | What "a copy of Scryfall" means | Same capabilities, own name and visual design. Their look, name and logo are not copied. |
 | Where v0.1 stops | Tier 1: search parity plus the better search |
-| App stack | Decided: a static page plus one TypeScript function on Netlify, with `topk-js`. Python stays the reference implementation and runs ingest, evaluation and the Scryfall comparison |
-| Keep the Python web server | Kept for local development and container hosts; drop it if nothing uses it |
+| App stack | Decided: a static page plus one TypeScript function on Netlify, with `topk-js`. TypeScript is the only implementation of search; a Python job builds the collection |
 | Name and branding | Working name only; nothing using "Scryfall" or official-looking Magic branding |
 | Policy sign-off | A person reads Wizards' Fan Content Policy and Scryfall's terms, and tells Scryfall before launch |
 | Indexing art for all 39,356 cards | Not done: roughly 3 GB of images to send and embed, cost not yet known |
@@ -66,9 +65,9 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 - [x] Search endpoint: key server-side, rate limiting, query length cap, caching
 - [x] One responsive page for phone and laptop: results grid with full card images from Scryfall,
       link back, which path the query took, example searches, what can be typed
-- [x] Netlify Function in TypeScript, held to the Python reference by a shared fixture
-- [x] End-to-end browser test at phone and laptop sizes, run in CI against both servers
-- [x] Netlify's own build and local server exercised in CI; container image built and started in CI
+- [x] One implementation of search, in TypeScript, running as a Netlify Function
+- [x] End-to-end browser test at phone and laptop sizes, run in CI on the local server and as
+      Netlify serves the site; Netlify's own build exercised in CI
 - [ ] Connect the repository in Netlify, set `TOPK_API_KEY`, deploy; run the browser test against the
       live URL. Not verifiable from the repository: Netlify's CDN cache and its rate limit
 - [ ] Anonymous query and click logging
@@ -91,20 +90,20 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 
 | Layer | What it covers | Where |
 |---|---|---|
-| Unit | Document builder, syntax parser and semantics, plain-English filters | `tests/`, no network |
-| Integration | TopK returns what the Python evaluator predicts; each search path end to end | `pytest -m integration` |
-| Conformance | Our result set equals Scryfall's for the same query | `mtgsearch conformance` |
-| Relevance regression | Ranking quality per query class against a stored baseline | `mtgsearch eval` |
-| Parity | The TypeScript port produces the same filters as the Python reference for about 460 inputs | `npm test`, `fixtures/golden.json` |
+| App unit tests | Parser, keyword semantics, plain-English filters, search routing, the HTTP contract, the page | `npm test`, no network |
+| Compiler snapshot | The compiled predicate for about 435 inputs is unchanged unless deliberately regenerated | `fixtures/reference.json`, `npm run golden` |
+| Ingest unit tests | Document builder, what a daily run re-sends, the fixtures the app tests read | `pytest`, no network |
+| Live tests | Each search path against the real collection | `npm test` with `TOPK_API_KEY` |
+| Conformance | Our result set equals Scryfall's for the same query | `npm run conformance` |
+| Relevance regression | Ranking quality per query class against a stored baseline | `npm run eval` |
 | End to end | The real page in Chromium at phone and laptop sizes | `node e2e/smoke.cjs <url>` |
 
 ## CI
 
-- Every push and pull request: lint, format check, unit tests on Python 3.10 and 3.13.
-- Every run also type-checks and tests the TypeScript port, builds the function bundle with
-  Netlify's tool, and builds and starts the container image.
-- Same-repository pushes and pull requests: integration tests and the browser test against both
-  servers, when the TopK secret is configured.
+- Every push and pull request: type-check and test the app, check the compiler snapshot, build the
+  function bundle with Netlify's tool; lint and test the ingest job on Python 3.10 and 3.13.
+- Same-repository pushes and pull requests, when the TopK secret is configured: live tests, and the
+  browser test on the local server and as Netlify serves the site.
 - Nightly: incremental ingest, conformance on the tuning set, relevance evaluation, results uploaded.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.
@@ -119,8 +118,9 @@ Last updated 21 November 2026. Time estimates are rough judgement for one engine
 
 ## Risks
 
-- **Two implementations of search.** The shared fixture catches drift on the inputs it holds, not on
-  inputs nobody wrote down. New keyword work has to land in both.
+- **Two languages.** Search is TypeScript and ingest is Python, because TopK's JavaScript SDK cannot
+  write whole numbers into decimal fields. If that changes, the ingest job (about 550 lines) can move
+  to TypeScript and the repository becomes single-language.
 
 - **Scryfall's terms** forbid repackaging their data. The plain-English and art search have to be
   the visible point of the product, and Scryfall should hear about it before launch.

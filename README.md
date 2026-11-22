@@ -1,4 +1,4 @@
-# mtg-search (working name)
+# mtgsearch (working name)
 
 Card search for Magic: The Gathering that accepts Scryfall's query syntax and also plain
 English, built on [TopK](https://topk.io).
@@ -10,11 +10,23 @@ c:u t:sphinx draws when opponents draw   both at once: keywords filter, words ra
 lightning bolt                           a card name: name matches, most-played first
 ```
 
-Status: working search with a thin web app. See [docs/PLAN.md](docs/PLAN.md) for stages and what is next.
+Status: working search with a thin web app, ready to deploy on Netlify. See
+[docs/PLAN.md](docs/PLAN.md) for stages and what is next.
 
-## How it works
+## How it is put together
 
-One TopK collection holds one document per Oracle card (39,356 cards). Each document has:
+| Part | Language | Where | What it does |
+|---|---|---|---|
+| Search app | TypeScript | `app/`, `netlify/functions/`, `public/` | Everything that answers a search: the query compiler, plain-English filters, ranking, the HTTP endpoint and the page |
+| Ingest job | Python | `src/mtgsearch/` | Builds the TopK collection from Scryfall's bulk files, once a day |
+
+Each piece of logic exists once. The ingest job is Python because TopK's JavaScript SDK sends
+whole numbers as integers, which the collection's decimal fields (mana value, power) reject.
+The two halves meet at the collection: `fixtures/documents.json` holds documents the ingest
+job builds for a small card set, the app's tests run against that file, and a Python test
+fails if the file no longer matches the document builder.
+
+One TopK collection holds one document per Oracle card (39,412 cards). Each document has:
 
 - **semantic text**, embedded by TopK's `semantic_index()`: the card's name, cost, type and rules
   (`rules`), and the same with Scryfall's community tags appended (`rules_tagged`);
@@ -22,7 +34,7 @@ One TopK collection holds one document per Oracle card (39,356 cards). Each docu
   power and toughness ranges, legalities, flags;
 - **display fields**: type line, rules text, image URL, Scryfall link.
 
-A query takes one of four paths (`src/mtgsearch/search.py`):
+A query takes one of four paths (`app/search.ts`):
 
 | The query is | What happens |
 |---|---|
@@ -31,13 +43,14 @@ A query takes one of four paths (`src/mtgsearch/search.py`):
 | Keywords plus words that match no name | Keywords become the filter; the words rank by meaning |
 | Anything else | Semantic search; mana value, colour and type are read from the opening words and applied as filters |
 
-The syntax compiler (`src/mtgsearch/syntax/`) parses a query to an AST and lowers it to a small
-predicate IR. Two backends interpret the IR: TopK filter expressions, and a pure-Python
-evaluator that the unit tests use, so keyword semantics are tested without a network.
+The compiler (`app/parser.ts`, `app/lower.ts`) parses a query to an AST and lowers it to a
+small predicate IR. TopK runs the predicates in production (`toTopk` in `app/search.ts`);
+`app/evaluate.ts` runs the same predicates in plain TypeScript, so keyword semantics are
+unit-tested without a network.
 
 ## Results so far
 
-Measured on 21 November 2026 against the full card set. Raw output is in `conformance/` and `eval/`.
+Measured on 22 November 2026 against the full card set. Raw output is in `conformance/` and `eval/`.
 
 **Syntax conformance** (same query on Scryfall's API and on ours; pass means identical card sets):
 
@@ -56,7 +69,7 @@ Measured on 21 November 2026 against the full card set. Raw output is in `confor
 | Sum of both semantic scores | 8 / 10 / 11 | 2 / 6 / 8 | 29 |
 | Full pipeline (`search`) | 9 / 13 / 14 | 5 / 7 / 8 | 29 |
 
-Median client-side latency per query, network included: 35 ms keyword, 89 ms semantic, 179 ms full pipeline.
+Median client-side latency per query, network included: 39 ms keyword, 123 ms semantic, 245 ms full pipeline.
 
 Read these with care:
 
@@ -83,44 +96,33 @@ Read these with care:
 
 Known differences from Scryfall are listed with reasons in `conformance/known_gaps.txt`.
 
-## Setup
+## Running the app
+
+Needs Node 22.18 or later and a TopK API key for a project that holds the collection.
 
 ```bash
-pip install -e ".[dev]"
+npm ci
 ```
 
 ```bash
 cp .env.example .env
 ```
 
-Put your TopK API key in `.env` and export it (`set -a; . ./.env; set +a`). Then:
+Put your key in `.env` and export it (`set -a; . ./.env; set +a`). Then:
 
 ```bash
-mtgsearch ingest
+npm run dev
 ```
 
-That downloads Scryfall's bulk files into `data/` and indexes every card (about three minutes
-the first time; later runs only re-send cards that changed).
+Open http://127.0.0.1:8000. The page (`public/`) is one responsive view over one endpoint,
+`GET /api/search?q=...`, and works the same on a phone and a laptop. The key stays on the
+server. To run a single query from the terminal:
 
 ```bash
-mtgsearch search "sphinx that draws two cards"
+npm run search -- "sphinx that draws two cards"
 ```
 
-## Web app
-
-One responsive page (`src/mtgsearch/static/`) over one endpoint, `GET /api/search?q=...`. It
-works the same on a phone and a laptop, and the TopK key never leaves the server. The endpoint
-is public and plain-English queries cost an inference call, so it caps queries at 200
-characters, caches repeated queries and rate-limits each client to 30 searches a minute.
-
-There are two servers for that endpoint. The page works against either.
-
-| Server | Where | Use it for |
-|---|---|---|
-| Netlify Function, TypeScript | `netlify/functions/search.mts`, `netlify/lib/` | The deployed site |
-| Starlette app, Python | `src/mtgsearch/web.py` | Local development, or any host that runs a container |
-
-### Deploying on Netlify
+## Deploying on Netlify
 
 1. In Netlify, add a new project from this Git repository. `netlify.toml` already sets the
    publish directory, the function and the headers; leave the build command empty.
@@ -128,9 +130,9 @@ There are two servers for that endpoint. The page works against either.
    for a scope, include Functions. `TOPK_REGION` and `MTGSEARCH_COLLECTION` are optional.
 3. Deploy. Changing a variable needs a new deploy to take effect.
 
-Caching and the rate limit are Netlify's: successful answers are cached at the CDN for ten
-minutes, and the function declares a limit of 30 requests a minute per client. To check a
-deployment from your machine:
+The endpoint is public and plain-English queries cost an inference call, so queries are capped
+at 200 characters, successful answers are cached at Netlify's CDN for ten minutes, and the
+function declares a limit of 30 requests a minute per client. To check a deployment:
 
 ```bash
 node e2e/smoke.cjs https://your-site.netlify.app
@@ -139,63 +141,46 @@ node e2e/smoke.cjs https://your-site.netlify.app
 To run the site locally the way Netlify serves it:
 
 ```bash
-npm ci
-```
-
-```bash
 npx netlify-cli dev --offline
 ```
 
-### Running the Python server
+## Building the collection
+
+Needs Python 3.10 or later. This is only required to create the collection or refresh it;
+the nightly workflow does the refresh.
 
 ```bash
-pip install -e ".[web]"
+pip install -e ".[dev]"
 ```
 
 ```bash
-mtgsearch serve
+mtgsearch ingest
 ```
 
-Open http://127.0.0.1:8000. Its cache and rate limit (`MTGSEARCH_RATE_LIMIT`) live in the
-process, so they are per server instance. The `Dockerfile` packages this server for hosts that
-take a container: set `TOPK_API_KEY` as a secret, use `/healthz` as the health check, and run
-it behind the host's load balancer, because it trusts forwarded client addresses.
+That downloads Scryfall's bulk files into `data/` and brings the collection up to date. It
+compares today's cards with what the collection already holds: new or changed cards are sent
+in full, cards whose popularity rank or price moved get a small field update, and everything
+else is left alone. A first run takes about three minutes; a daily run takes under a minute
+and re-embeds a few dozen cards.
 
-## Two implementations, one behaviour
-
-Netlify Functions run JavaScript, so the code that answers a search exists twice: the Python
-package is the reference, checked against Scryfall's API, and `netlify/lib/` is a TypeScript
-port of the parser, the keyword rules, the plain-English filters and the search routing.
-
-`fixtures/golden.json` keeps them identical. It holds what the Python code produces for about
-460 inputs (every conformance query, the evaluation queries and a file of edge cases), and the
-TypeScript tests must reproduce every one. To change search behaviour:
-
-1. Change the Python and its tests.
-2. Run `mtgsearch golden` to rewrite the fixture. A Python test fails if you forget.
-3. Change `netlify/lib/` until `npm test` passes.
-
-Ingest, evaluation and the Scryfall comparison stay Python-only.
+Collections are versioned (`mtg-cards-v2`). To change the schema, set `MTGSEARCH_COLLECTION`
+to the next version and ingest; never delete and recreate a collection under the same name.
 
 ## Commands
 
 | Command | Purpose |
 |---|---|
-| `mtgsearch ingest [--dry-run] [--full]` | Refresh the collection from Scryfall's bulk data |
-| `mtgsearch catalog` | Regenerate the type-word catalogue after new sets add types |
-| `mtgsearch search "<query>"` | Run one query |
-| `mtgsearch serve` | Run the Python web server locally |
-| `mtgsearch golden` | Rewrite the fixture the TypeScript port is tested against |
-| `mtgsearch conformance [file]` | Compare syntax queries with Scryfall's API |
-| `mtgsearch eval` | Score the ranking strategies on `eval/queries.json` |
-| `pytest` | Unit tests, no network |
-| `pytest -m integration` | Tests against the live collection (needs `TOPK_API_KEY`) |
-| `npm test` | TypeScript tests: parity with Python, the HTTP contract, and live tests when `TOPK_API_KEY` is set |
+| `npm run dev` | Serve the page and the search endpoint locally |
+| `npm run search -- "<query>"` | Run one query |
+| `npm test` | App tests: keyword semantics, the compiler snapshot, the HTTP contract, the page; live tests when `TOPK_API_KEY` is set |
 | `npm run typecheck` | Type-check the TypeScript |
+| `npm run golden` | Rewrite the compiler snapshot, `fixtures/reference.json`, after an intended change in behaviour |
+| `npm run conformance [-- <file>]` | Compare syntax queries with Scryfall's API |
+| `npm run eval` | Score the ranking strategies on `eval/queries.json` |
 | `node e2e/smoke.cjs <url>` | Drive the running app in a browser at phone and laptop sizes (needs Playwright) |
-
-Collections are versioned (`mtg-cards-v2`). To change the schema, set `MTGSEARCH_COLLECTION`
-to the next version and ingest; never delete and recreate a collection under the same name.
+| `mtgsearch ingest [--dry-run] [--full]` | Refresh the collection from Scryfall's bulk data |
+| `mtgsearch catalog` | Regenerate `app/type-words.json` after new sets add card types |
+| `pytest` | Ingest job tests, no network |
 
 ## Data and attribution
 

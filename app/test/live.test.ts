@@ -2,9 +2,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Client } from "topk-js";
-import { handleSearch } from "../lib/api.ts";
-import { search } from "../lib/search.ts";
-import type { Collection } from "../lib/search.ts";
+import { handleSearch } from "../api.ts";
+import { search } from "../search.ts";
+import type { Collection } from "../search.ts";
 
 const key = (process.env.TOPK_API_KEY ?? "").trim();
 const skip = key ? false : "TOPK_API_KEY is not set";

@@ -1,13 +1,12 @@
 [project]
 name = "mtgsearch"
 version = "0.0.1"
-description = "Scryfall-compatible card search with natural-language and art search, built on TopK"
+description = "Ingest job for mtgsearch: builds the TopK card collection from Scryfall bulk data"
 requires-python = ">=3.10"
 dependencies = ["topk-sdk>=0.16.1"]
 
 [project.optional-dependencies]
-web = ["starlette>=0.37", "uvicorn>=0.30"]
-dev = ["pytest>=8", "ruff>=0.6", "starlette>=0.37", "httpx>=0.27"]
+dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]
 mtgsearch = "mtgsearch.cli:main"
@@ -19,17 +18,13 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.setuptools.package-data]
-mtgsearch = ["*.txt", "static/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["integration: needs TOPK_API_KEY and network access"]
-addopts = "-m 'not integration'"
 
 [tool.ruff]
 line-length = 110
-extend-exclude = ["experiments"]
+extend-exclude = ["experiments", "node_modules"]
 target-version = "py310"
 
 [tool.ruff.lint]

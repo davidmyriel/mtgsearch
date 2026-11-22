@@ -1,0 +1,547 @@
+[
+ {
+  "_id": "consecrated-sphinx",
+  "name": "Consecrated Sphinx",
+  "rules": "Consecrated Sphinx\nMana cost {4}{U}{U} (mana value 6), blue.\nCreature — Sphinx 4/6\nFlying\nWhenever an opponent draws a card, you may draw two cards.",
+  "rules_tagged": "Consecrated Sphinx\nMana cost {4}{U}{U} (mana value 6), blue.\nCreature — Sphinx 4/6\nFlying\nWhenever an opponent draws a card, you may draw two cards.",
+  "name_lc": "consecrated sphinx",
+  "name_plain": "consecrated sphinx",
+  "names_lc": [
+   "consecrated sphinx"
+  ],
+  "type_lc": "creature — sphinx",
+  "type_words": [
+   "creature",
+   "sphinx"
+  ],
+  "oracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "oracle_tilde_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "fulloracle_lc": "flying\nwhenever an opponent draws a card, you may draw two cards.",
+  "keywords_lc": [
+   "flying"
+  ],
+  "cmc": 6.0,
+  "cmc_even": true,
+  "c_sets": [
+   "U"
+  ],
+  "id_sets": [
+   "U"
+  ],
+  "stat_rel": [
+   "pow<tou"
+  ],
+  "pt_num": 10.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "extra": false,
+  "edhrec_rank": 661,
+  "mana_cost": "{4}{U}{U}",
+  "type_line": "Creature — Sphinx",
+  "oracle_text": "Flying\nWhenever an opponent draws a card, you may draw two cards.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/consecrated-sphinx",
+  "pow_min": 4.0,
+  "pow_max": 4.0,
+  "tou_min": 6.0,
+  "tou_max": 6.0
+ },
+ {
+  "_id": "sol-ring",
+  "name": "Sol Ring",
+  "rules": "Sol Ring\nMana cost {1} (mana value 1), colorless.\nArtifact\n{T}: Add {C}{C}.",
+  "rules_tagged": "Sol Ring\nMana cost {1} (mana value 1), colorless.\nArtifact\n{T}: Add {C}{C}.\nTags: mana rock",
+  "name_lc": "sol ring",
+  "name_plain": "sol ring",
+  "names_lc": [
+   "sol ring"
+  ],
+  "type_lc": "artifact",
+  "type_words": [
+   "artifact"
+  ],
+  "oracle_lc": "{t}: add {c}{c}.",
+  "oracle_tilde_lc": "{t}: add {c}{c}.",
+  "fulloracle_lc": "{t}: add {c}{c}.",
+  "cmc": 1.0,
+  "cmc_even": false,
+  "c_sets": [
+   "C"
+  ],
+  "id_sets": [
+   "C"
+  ],
+  "legal": [
+   "commander",
+   "vintage"
+  ],
+  "banned": [
+   "legacy"
+  ],
+  "restricted": [
+   "vintage"
+  ],
+  "flags": [
+   "historic",
+   "permanent",
+   "spell"
+  ],
+  "otags": [
+   "mana-rock",
+   "ramp"
+  ],
+  "extra": false,
+  "edhrec_rank": 1,
+  "mana_cost": "{1}",
+  "type_line": "Artifact",
+  "oracle_text": "{T}: Add {C}{C}.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/sol-ring"
+ },
+ {
+  "_id": "llanowar-elves",
+  "name": "Llanowar Elves",
+  "rules": "Llanowar Elves\nMana cost {G} (mana value 1), green.\nCreature — Elf Druid 1/1\n{T}: Add {G}.",
+  "rules_tagged": "Llanowar Elves\nMana cost {G} (mana value 1), green.\nCreature — Elf Druid 1/1\n{T}: Add {G}.",
+  "name_lc": "llanowar elves",
+  "name_plain": "llanowar elves",
+  "names_lc": [
+   "llanowar elves"
+  ],
+  "type_lc": "creature — elf druid",
+  "type_words": [
+   "creature",
+   "druid",
+   "elf"
+  ],
+  "oracle_lc": "{t}: add {g}.",
+  "oracle_tilde_lc": "{t}: add {g}.",
+  "fulloracle_lc": "{t}: add {g}.",
+  "cmc": 1.0,
+  "cmc_even": false,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 2.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "extra": false,
+  "mana_cost": "{G}",
+  "type_line": "Creature — Elf Druid",
+  "oracle_text": "{T}: Add {G}.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/llanowar-elves",
+  "pow_min": 1.0,
+  "pow_max": 1.0,
+  "tou_min": 1.0,
+  "tou_max": 1.0
+ },
+ {
+  "_id": "grizzly-bears",
+  "name": "Grizzly Bears",
+  "rules": "Grizzly Bears\nMana cost {1}{G} (mana value 2), green.\nCreature — Bear 2/2",
+  "rules_tagged": "Grizzly Bears\nMana cost {1}{G} (mana value 2), green.\nCreature — Bear 2/2",
+  "name_lc": "grizzly bears",
+  "name_plain": "grizzly bears",
+  "names_lc": [
+   "grizzly bears"
+  ],
+  "type_lc": "creature — bear",
+  "type_words": [
+   "bear",
+   "creature"
+  ],
+  "oracle_lc": "",
+  "oracle_tilde_lc": "",
+  "fulloracle_lc": "",
+  "cmc": 2.0,
+  "cmc_even": true,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 4.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "bear",
+   "permanent",
+   "spell",
+   "vanilla"
+  ],
+  "extra": false,
+  "mana_cost": "{1}{G}",
+  "type_line": "Creature — Bear",
+  "oracle_text": "",
+  "scryfall_uri": "https://scryfall.com/card/x/1/grizzly-bears",
+  "pow_min": 2.0,
+  "pow_max": 2.0,
+  "tou_min": 2.0,
+  "tou_max": 2.0
+ },
+ {
+  "_id": "tarmogoyf",
+  "name": "Tarmogoyf",
+  "rules": "Tarmogoyf\nMana cost {1}{G} (mana value 2), green.\nCreature — Lhurgoyf */1+*\nTarmogoyf's power is equal to the number of card types among cards in all graveyards and its toughness is equal to that number plus 1.",
+  "rules_tagged": "Tarmogoyf\nMana cost {1}{G} (mana value 2), green.\nCreature — Lhurgoyf */1+*\nTarmogoyf's power is equal to the number of card types among cards in all graveyards and its toughness is equal to that number plus 1.",
+  "name_lc": "tarmogoyf",
+  "name_plain": "tarmogoyf",
+  "names_lc": [
+   "tarmogoyf"
+  ],
+  "type_lc": "creature — lhurgoyf",
+  "type_words": [
+   "creature",
+   "lhurgoyf"
+  ],
+  "oracle_lc": "tarmogoyf's power is equal to the number of card types among cards in all graveyards and its toughness is equal to that number plus 1.",
+  "oracle_tilde_lc": "~'s power is equal to the number of card types among cards in all graveyards and its toughness is equal to that number plus 1.",
+  "fulloracle_lc": "tarmogoyf's power is equal to the number of card types among cards in all graveyards and its toughness is equal to that number plus 1.",
+  "cmc": 2.0,
+  "cmc_even": true,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow<tou"
+  ],
+  "pt_num": 1.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "spell"
+  ],
+  "extra": false,
+  "mana_cost": "{1}{G}",
+  "type_line": "Creature — Lhurgoyf",
+  "oracle_text": "Tarmogoyf's power is equal to the number of card types among cards in all graveyards and its toughness is equal to that number plus 1.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/tarmogoyf",
+  "pow_min": 0.0,
+  "pow_max": 0.0,
+  "tou_min": 1.0,
+  "tou_max": 1.0
+ },
+ {
+  "_id": "jace,-the-mind-sculptor",
+  "name": "Jace, the Mind Sculptor",
+  "rules": "Jace, the Mind Sculptor\nMana cost {2}{U}{U} (mana value 4), blue.\nLegendary Planeswalker — Jace (loyalty 3)\n+2: Look at the top card of target player's library.\n0: Draw three cards, then put two cards from your hand on top of your library in any order.",
+  "rules_tagged": "Jace, the Mind Sculptor\nMana cost {2}{U}{U} (mana value 4), blue.\nLegendary Planeswalker — Jace (loyalty 3)\n+2: Look at the top card of target player's library.\n0: Draw three cards, then put two cards from your hand on top of your library in any order.",
+  "name_lc": "jace, the mind sculptor",
+  "name_plain": "jace the mind sculptor",
+  "names_lc": [
+   "jace, the mind sculptor"
+  ],
+  "type_lc": "legendary planeswalker — jace",
+  "type_words": [
+   "jace",
+   "legendary",
+   "planeswalker"
+  ],
+  "oracle_lc": "+2: look at the top card of target player's library.\n0: draw three cards, then put two cards from your hand on top of your library in any order.",
+  "oracle_tilde_lc": "+2: look at the top card of target player's library.\n0: draw three cards, then put two cards from your hand on top of your library in any order.",
+  "fulloracle_lc": "+2: look at the top card of target player's library.\n0: draw three cards, then put two cards from your hand on top of your library in any order.",
+  "cmc": 4.0,
+  "cmc_even": true,
+  "c_sets": [
+   "U"
+  ],
+  "id_sets": [
+   "U"
+  ],
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "historic",
+   "permanent",
+   "spell"
+  ],
+  "extra": false,
+  "mana_cost": "{2}{U}{U}",
+  "type_line": "Legendary Planeswalker — Jace",
+  "oracle_text": "+2: Look at the top card of target player's library.\n0: Draw three cards, then put two cards from your hand on top of your library in any order.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/jace,-the-mind-sculptor",
+  "loy_min": 3.0,
+  "loy_max": 3.0
+ },
+ {
+  "_id": "lim-dûl's-vault",
+  "name": "Lim-Dûl's Vault",
+  "rules": "Lim-Dûl's Vault\nMana cost {U}{B} (mana value 2), black, blue.\nInstant\nLook at the top five cards of your library. (Then shuffle.)",
+  "rules_tagged": "Lim-Dûl's Vault\nMana cost {U}{B} (mana value 2), black, blue.\nInstant\nLook at the top five cards of your library. (Then shuffle.)",
+  "name_lc": "lim-dul's vault",
+  "name_plain": "limduls vault",
+  "names_lc": [
+   "lim-dul's vault"
+  ],
+  "type_lc": "instant",
+  "type_words": [
+   "instant"
+  ],
+  "oracle_lc": "look at the top five cards of your library.",
+  "oracle_tilde_lc": "look at the top five cards of your library.",
+  "fulloracle_lc": "look at the top five cards of your library. (then shuffle.)",
+  "cmc": 2.0,
+  "cmc_even": true,
+  "c_sets": [
+   "UB"
+  ],
+  "id_sets": [
+   "UB"
+  ],
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "spell"
+  ],
+  "extra": false,
+  "mana_cost": "{U}{B}",
+  "type_line": "Instant",
+  "oracle_text": "Look at the top five cards of your library. (Then shuffle.)",
+  "scryfall_uri": "https://scryfall.com/card/x/1/lim-dûl's-vault"
+ },
+ {
+  "_id": "boros-reckoner",
+  "name": "Boros Reckoner",
+  "rules": "Boros Reckoner\nMana cost {R/W}{R/W}{R/W} (mana value 3), red, white.\nCreature — Minotaur Wizard 3/3\nWhenever Boros Reckoner is dealt damage, it deals that much damage to any target.",
+  "rules_tagged": "Boros Reckoner\nMana cost {R/W}{R/W}{R/W} (mana value 3), red, white.\nCreature — Minotaur Wizard 3/3\nWhenever Boros Reckoner is dealt damage, it deals that much damage to any target.",
+  "name_lc": "boros reckoner",
+  "name_plain": "boros reckoner",
+  "names_lc": [
+   "boros reckoner"
+  ],
+  "type_lc": "creature — minotaur wizard",
+  "type_words": [
+   "creature",
+   "minotaur",
+   "wizard"
+  ],
+  "oracle_lc": "whenever boros reckoner is dealt damage, it deals that much damage to any target.",
+  "oracle_tilde_lc": "whenever ~ is dealt damage, it deals that much damage to any target.",
+  "fulloracle_lc": "whenever boros reckoner is dealt damage, it deals that much damage to any target.",
+  "cmc": 3.0,
+  "cmc_even": false,
+  "c_sets": [
+   "WR"
+  ],
+  "id_sets": [
+   "WR"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 6.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "hybrid",
+   "permanent",
+   "spell"
+  ],
+  "extra": false,
+  "mana_cost": "{R/W}{R/W}{R/W}",
+  "type_line": "Creature — Minotaur Wizard",
+  "oracle_text": "Whenever Boros Reckoner is dealt damage, it deals that much damage to any target.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/boros-reckoner",
+  "pow_min": 3.0,
+  "pow_max": 3.0,
+  "tou_min": 3.0,
+  "tou_max": 3.0
+ },
+ {
+  "_id": "archangel-avacyn-//-avacyn,-the-purifier",
+  "name": "Archangel Avacyn // Avacyn, the Purifier",
+  "rules": "Archangel Avacyn // Avacyn, the Purifier\nMana cost {3}{W}{W} (mana value 5), white, red.\nLegendary Creature — Angel 4/4\nFlash\nFlying, vigilance\nWhen Archangel Avacyn enters, creatures you control gain indestructible until end of turn.\nLegendary Creature — Angel 6/5\nFlying\nWhen this creature transforms into Avacyn, the Purifier, it deals 3 damage to each other creature and each opponent.",
+  "rules_tagged": "Archangel Avacyn // Avacyn, the Purifier\nMana cost {3}{W}{W} (mana value 5), white, red.\nLegendary Creature — Angel 4/4\nFlash\nFlying, vigilance\nWhen Archangel Avacyn enters, creatures you control gain indestructible until end of turn.\nLegendary Creature — Angel 6/5\nFlying\nWhen this creature transforms into Avacyn, the Purifier, it deals 3 damage to each other creature and each opponent.",
+  "name_lc": "archangel avacyn // avacyn, the purifier",
+  "name_plain": "archangel avacyn avacyn the purifier",
+  "names_lc": [
+   "archangel avacyn",
+   "archangel avacyn // avacyn, the purifier",
+   "avacyn, the purifier"
+  ],
+  "type_lc": "legendary creature — angel // legendary creature — angel",
+  "type_words": [
+   "angel",
+   "creature",
+   "legendary"
+  ],
+  "oracle_lc": "flash\nflying, vigilance\nwhen archangel avacyn enters, creatures you control gain indestructible until end of turn.\nflying\nwhen this creature transforms into avacyn, the purifier, it deals 3 damage to each other creature and each opponent.",
+  "oracle_tilde_lc": "flash\nflying, vigilance\nwhen ~ enters, creatures you control gain indestructible until end of turn.\nflying\nwhen ~ transforms into ~, it deals 3 damage to each other creature and each opponent.",
+  "fulloracle_lc": "flash\nflying, vigilance\nwhen archangel avacyn enters, creatures you control gain indestructible until end of turn.\nflying\nwhen this creature transforms into avacyn, the purifier, it deals 3 damage to each other creature and each opponent.",
+  "keywords_lc": [
+   "flying",
+   "vigilance",
+   "flash"
+  ],
+  "cmc": 5.0,
+  "cmc_even": false,
+  "c_sets": [
+   "R",
+   "W"
+  ],
+  "id_sets": [
+   "WR"
+  ],
+  "stat_rel": [
+   "pow<tou",
+   "pow=tou",
+   "pow>tou"
+  ],
+  "pt_num": 8.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "commander",
+   "dfc",
+   "historic",
+   "permanent",
+   "spell",
+   "transform"
+  ],
+  "extra": false,
+  "mana_cost": "{3}{W}{W}",
+  "type_line": "Legendary Creature — Angel // Legendary Creature — Angel",
+  "oracle_text": "Flash\nFlying, vigilance\nWhen Archangel Avacyn enters, creatures you control gain indestructible until end of turn.\nFlying\nWhen this creature transforms into Avacyn, the Purifier, it deals 3 damage to each other creature and each opponent.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/archangel-avacyn-//-avacyn,-the-purifier",
+  "pow_min": 4.0,
+  "pow_max": 6.0,
+  "tou_min": 4.0,
+  "tou_max": 5.0
+ },
+ {
+  "_id": "fire-//-ice",
+  "name": "Fire // Ice",
+  "rules": "Fire // Ice\nMana cost {1}{R} // {1}{U} (mana value 4), red, blue.\nInstant\nFire deals 2 damage divided as you choose among one or two targets.\nInstant\nTap target permanent.\nDraw a card.",
+  "rules_tagged": "Fire // Ice\nMana cost {1}{R} // {1}{U} (mana value 4), red, blue.\nInstant\nFire deals 2 damage divided as you choose among one or two targets.\nInstant\nTap target permanent.\nDraw a card.",
+  "name_lc": "fire // ice",
+  "name_plain": "fire ice",
+  "names_lc": [
+   "fire",
+   "fire // ice",
+   "ice"
+  ],
+  "type_lc": "instant // instant",
+  "type_words": [
+   "instant"
+  ],
+  "oracle_lc": "fire deals 2 damage divided as you choose among one or two targets.\ntap target permanent.\ndraw a card.",
+  "oracle_tilde_lc": "~ deals 2 damage divided as you choose among one or two targets.\ntap target permanent.\ndraw a card.",
+  "fulloracle_lc": "fire deals 2 damage divided as you choose among one or two targets.\ntap target permanent.\ndraw a card.",
+  "cmc": 4.0,
+  "cmc_even": true,
+  "c_sets": [
+   "UR"
+  ],
+  "id_sets": [
+   "UR"
+  ],
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "spell",
+   "split"
+  ],
+  "extra": false,
+  "mana_cost": "{1}{R} // {1}{U}",
+  "type_line": "Instant // Instant",
+  "oracle_text": "Fire deals 2 damage divided as you choose among one or two targets.\nTap target permanent.\nDraw a card.",
+  "scryfall_uri": "https://scryfall.com/card/x/1/fire-//-ice"
+ },
+ {
+  "_id": "goblin",
+  "name": "Goblin",
+  "rules": "Goblin\nMana cost none (mana value 0), red.\nToken Creature — Goblin 1/1",
+  "rules_tagged": "Goblin\nMana cost none (mana value 0), red.\nToken Creature — Goblin 1/1",
+  "name_lc": "goblin",
+  "name_plain": "goblin",
+  "names_lc": [
+   "goblin"
+  ],
+  "type_lc": "token creature — goblin",
+  "type_words": [
+   "creature",
+   "goblin",
+   "token"
+  ],
+  "oracle_lc": "",
+  "oracle_tilde_lc": "",
+  "fulloracle_lc": "",
+  "cmc": 0.0,
+  "cmc_even": true,
+  "c_sets": [
+   "R"
+  ],
+  "id_sets": [
+   "R"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 2.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "permanent",
+   "vanilla"
+  ],
+  "extra": true,
+  "mana_cost": "",
+  "type_line": "Token Creature — Goblin",
+  "oracle_text": "",
+  "scryfall_uri": "https://scryfall.com/card/x/1/goblin",
+  "pow_min": 1.0,
+  "pow_max": 1.0,
+  "tou_min": 1.0,
+  "tou_max": 1.0
+ }
+]
