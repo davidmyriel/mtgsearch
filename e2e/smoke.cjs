@@ -100,6 +100,11 @@ async function run(name, contextOptions) {
   check((listed.find((p) => p.current) || {}).href === new URL(cardUrl).pathname, `[${name}] the marked printing is this page`);
   check(listed.some((p) => /\$\d+\.\d\d$/.test(p.text)), `[${name}] printings carry their prices`);
   check(!(await page.isVisible("#card-prints")), `[${name}] a complete list needs no link to a search`);
+  // The cost is drawn as symbols; the brace codes stay in the text for copying and for screen readers' names.
+  const cost = await page.$$eval("#card-cost .pip", (pips) => pips.map((p) => p.getAttribute("aria-label")));
+  check(cost.join(", ") === "4 generic mana, blue mana, blue mana", `[${name}] the mana cost is drawn as symbols (${cost.join(", ")})`);
+  check((await page.textContent("#card-cost")) === "{4}{U}{U}", `[${name}] with the codes still in the text`);
+  check((await page.textContent("#card-line")) === "Creature — Sphinx", `[${name}] and the type line on its own`);
   await page.waitForFunction(() => document.getElementById("card-image").naturalWidth > 0);
   const cardOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(cardOverflow <= 0, `[${name}] the card page does not scroll sideways (overflow ${cardOverflow}px)`);
@@ -238,6 +243,8 @@ async function run(name, contextOptions) {
   check((await page.$$("#printings-list a")).length === 60, `[${name}] a basic land lists its newest 60 printings`);
   check(/^All \d+ printings$/.test(await page.textContent("#card-prints")), `[${name}] and offers all of them`);
   check(!(await page.isVisible("#card-stats")), `[${name}] a land has no power and toughness line`);
+  const inRules = await page.$$eval("#card-rules .pip", (pips) => pips.map((p) => p.getAttribute("aria-label")));
+  check(inRules.join(", ") === "tap, green mana", `[${name}] symbols in the rules text are drawn too (${inRules.join(", ")})`);
   await page.click("#card-prints");
   await page.waitForFunction(() => /\d+ printings/.test(document.getElementById("status").textContent));
   check(!(await page.isVisible("#card")), `[${name}] choosing them leaves the card's page`);
@@ -276,12 +283,64 @@ async function run(name, contextOptions) {
   check((await firstCards(page, 1))[0] === "Lightning Bolt", `[${name}] Lightning Bolt is first`);
   check((await page.textContent("#understood")) === "the name includes “lightning” and “bolt”", `[${name}] a name search says where it looked`);
 
+  // A term that cannot be used is left out, the page says which and why, and the rest runs.
   await search(page, "lang:ja t:sphinx");
-  check((await page.textContent("#status")).startsWith("Not supported yet"), `[${name}] unsupported keyword is explained`);
+  check((await page.textContent("#status")).startsWith(`Scryfall syntax · ${total} cards`), `[${name}] the rest of a query runs without the unusable term`);
+  check((await page.textContent("#ignored")) === "lang:ja was left out: 'lang:' is not supported yet.", `[${name}] and the page says what was left out and why`);
+  check((await page.textContent("#understood")) === "the type includes “sphinx”", `[${name}] and how the rest was read`);
+  const warningTop = await page.$eval("#ignored", (el) => el.getBoundingClientRect().top);
+  check(warningTop < page.viewportSize().height, `[${name}] the warning is visible without scrolling`);
+  await shot("4-left-out");
+  await search(page, "t:sphinx");
+  check(!(await page.isVisible("#ignored")), `[${name}] the warning goes when the next search has nothing left out`);
+
+  // A search that finds nothing says so in the page, with how it was read and what to try.
+  await search(page, "t:sphinx c:r mv=1 pow>=9");
+  check((await page.textContent("#status")).startsWith("No cards matched"), `[${name}] a search with no results says so`);
+  check((await page.isVisible("#empty")) && (await page.textContent("#empty-detail")).includes("every condition"), `[${name}] and suggests what to change`);
+  check((await page.$$("#understood li")).length === 4 && (await page.$$("#results .tile")).length === 0, `[${name}] with the conditions it looked for and no stale cards`);
+  await search(page, "t:sphinx");
+  check(!(await page.isVisible("#empty")), `[${name}] the message goes when the next search finds cards`);
+
+  // Nothing left to search for: refused, with the reason and the help in view.
+  await search(page, "lang:ja");
+  check((await page.textContent("#status")).startsWith("Nothing here could be used · 'lang:' is not supported yet"), `[${name}] a query with nothing usable is explained`);
+  check((await page.isVisible("#intro")) && (await page.$$("#results .tile")).length === 0, `[${name}] with the examples and no stale results`);
   const statusTop = await page.$eval("#status", (el) => el.getBoundingClientRect().top);
   check(statusTop < page.viewportSize().height, `[${name}] the explanation is visible without scrolling`);
-  await shot("4-unsupported");
 
+  // The header is on every view: a random card from the results, and Back to them.
+  await search(page, "t:sphinx");
+  const beforeRandom = page.url();
+  await page.click("#nav-random");
+  await page.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check((await page.textContent("#card-name")).length > 0, `[${name}] "Random card" opens a card at its own address (${new URL(page.url()).pathname})`);
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("card").hidden);
+  check(page.url() === beforeRandom && (await page.$$("#results .tile")).length === 60, `[${name}] and Back returns to the results`);
+  // /random opened directly lands on a card too, and the address it leaves can be shared.
+  const lucky = await context.newPage();
+  await lucky.goto(`${base}/random`);
+  await lucky.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check(await lucky.isVisible("#card-image"), `[${name}] /random opened directly shows a card`);
+
+  // The syntax guide is a page of its own; its examples run.
+  await lucky.goto(`${base}/syntax`);
+  check((await lucky.textContent("h1")) === "Syntax guide" && (await lucky.$$("a.example")).length >= 40, `[${name}] the syntax guide lists its examples`);
+  const guideOverflow = await lucky.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  check(guideOverflow <= 0, `[${name}] the guide does not scroll sideways (overflow ${guideOverflow}px)`);
+  await lucky.click('a.example[href="/?q=lightning+bolt"]');
+  await lucky.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name"));
+  check((await firstCards(lucky, 1))[0] === "Lightning Bolt", `[${name}] an example in the guide runs the search`);
+  await lucky.goto(`${base}/syntax`);
+  await lucky.fill("#q", "consecrated sphinx");
+  await lucky.press("#q", "Enter");
+  await lucky.waitForFunction(() => document.getElementById("status") && document.getElementById("status").textContent.startsWith("Card name"));
+  check(new URL(lucky.url()).searchParams.get("q") === "consecrated sphinx", `[${name}] the guide's own search box searches`);
+  await lucky.close();
+
+  await search(page, "lightning bolt");
+  await search(page, "lang:ja");
   await page.goBack();
   await page.waitForFunction(
     () =>
@@ -294,7 +353,31 @@ async function run(name, contextOptions) {
   await browser.close();
 }
 
+/**
+ * The smallest phones, 320 pixels wide. Nothing may make the page wider than the screen,
+ * whatever fonts the device has: a header that fits at 390 with one set of fonts can overflow
+ * with another, and 320 leaves room for that difference.
+ */
+async function narrow() {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 320, height: 640 } });
+  const visits = [
+    ["the home page", "/", null],
+    ["results", "/?q=t%3Asphinx", () => document.querySelectorAll("#results .tile").length > 0],
+    ["a card's page", "/card/ima/47/consecrated-sphinx", () => !document.getElementById("card-printings").hidden],
+    ["the syntax guide", "/syntax", null],
+  ];
+  for (const [what, path, ready] of visits) {
+    await page.goto(base + path);
+    if (ready) await page.waitForFunction(ready);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    check(overflow <= 0, `[320 wide] ${what} does not scroll sideways (overflow ${overflow}px)`);
+  }
+  await browser.close();
+}
+
 async function main() {
+  await narrow();
   await run("phone", { ...devices["iPhone 13"] });
   await run("laptop", { viewport: { width: 1280, height: 800 }, deviceScaleFactor: shots ? 2 : 1 });
   await run("laptop-dark", { viewport: { width: 1280, height: 800 }, colorScheme: "dark", deviceScaleFactor: shots ? 2 : 1 });

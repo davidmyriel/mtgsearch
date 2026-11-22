@@ -22,6 +22,18 @@
   to = "/index.html"
   status = 200
 
+# /random is the same page as well: its script asks for a card and goes to that card's address.
+[[redirects]]
+  from = "/random"
+  to = "/index.html"
+  status = 200
+
+# The syntax guide is a page of its own, public/syntax.html.
+[[redirects]]
+  from = "/syntax"
+  to = "/syntax.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

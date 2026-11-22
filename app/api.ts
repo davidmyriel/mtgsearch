@@ -7,6 +7,7 @@ import type { Hit, Result, SearchOptions } from "./search.ts";
 
 export type SearchFn = (query: string, options: SearchOptions) => Promise<Result>;
 export type CardFn = (set: string, number: string) => Promise<CardPage | null>;
+export type RandomFn = () => Promise<CardPage | null>;
 
 export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
@@ -81,22 +82,25 @@ export function setupProblem(cause: unknown): string | null {
  * GET /api/card?set=<code>&cn=<collector number>: one printing, with its printed power and
  * toughness and its legality, and the card's printings newest first.
  */
-export async function handleCard(url: URL, card: CardFn): Promise<Response> {
+export async function handleCard(url: URL, card: CardFn, random?: RandomFn): Promise<Response> {
+  // ?random=1 answers with a card chosen at random, in the same shape, and is never cached.
+  const atRandom = random !== undefined && url.searchParams.has("random");
   const set = (url.searchParams.get("set") ?? "").trim().toLowerCase();
   const number = (url.searchParams.get("cn") ?? "").trim();
-  if (!/^[a-z0-9]{2,10}$/.test(set) || !number || number.length > 20) {
+  if (!atRandom && (!/^[a-z0-9]{2,10}$/.test(set) || !number || number.length > 20)) {
     return error(400, "A card is named by its set code and collector number: /api/card?set=mh2&cn=45.");
   }
   const started = performance.now();
   let page: CardPage | null;
   try {
-    page = await card(set, number);
+    page = atRandom ? await random() : await card(set, number);
   } catch (cause) {
-    console.error(`card lookup failed for ${set}/${JSON.stringify(number)}:`, cause);
+    console.error(atRandom ? "random card failed:" : `card lookup failed for ${set}/${JSON.stringify(number)}:`, cause);
     const setup = setupProblem(cause);
     if (setup) return error(503, setup);
     return error(502, "The search backend is unavailable. Try again shortly.");
   }
+  if (!page && atRandom) return error(502, "Could not pick a card. Try again.");
   if (!page) return json({ error: `Nothing is numbered ${number} in the set "${set}".` }, 404, CACHED);
   const detail = hit(page.card);
   detail.stats = page.card.stats ?? null;
@@ -105,7 +109,7 @@ export async function handleCard(url: URL, card: CardFn): Promise<Response> {
     const full = hit(row);
     return { id: full.id, ...Object.fromEntries(PRINTING_ROW.map((name) => [name, full[name]])) };
   });
-  return json({ card: detail, printings, took_ms: Math.round(performance.now() - started) }, 200, CACHED);
+  return json({ card: detail, printings, took_ms: Math.round(performance.now() - started) }, 200, atRandom ? NOT_CACHED : CACHED);
 }
 
 export async function handleSearch(url: URL, search: SearchFn): Promise<Response> {
@@ -143,6 +147,7 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
       unit: result.unit,
       note: result.note,
       understood: result.understood,
+      ignored: result.ignored,
       hits: result.hits.map(hit),
       offset,
       // false when the next page of this size would pass the reach: it could not be served

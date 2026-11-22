@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syntax guide · mtgsearch</title>
+<meta name="description" content="What you can type into mtgsearch: Scryfall syntax and plain English, with examples you can run.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body class="searched">
+<a class="skip" href="#main">Skip to the guide</a>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="wordmark" href="/">mtgsearch</a>
+    <form class="search" role="search" action="/" method="get">
+      <label class="sr-only" for="q">Search cards</label>
+      <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="nav" aria-label="Site">
+      <a href="/syntax" aria-current="page">Syntax guide</a>
+      <a href="/random">Random card</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="page guide">
+    <h1>Syntax guide</h1>
+    <p class="lede">One box takes Scryfall's search syntax, a card's name, or a description in plain English.
+      Every example below is a link that runs the search.</p>
+    <ul class="guide-index" aria-label="Sections">
+      <li><a href="#plain">Plain English</a></li>
+      <li><a href="#names">Names</a></li>
+      <li><a href="#colours">Colours and colour identity</a></li>
+      <li><a href="#types">Types</a></li>
+      <li><a href="#text">Rules text and keywords</a></li>
+      <li><a href="#mana">Mana cost and mana value</a></li>
+      <li><a href="#stats">Power, toughness and loyalty</a></li>
+      <li><a href="#printings">Sets, rarity and printings</a></li>
+      <li><a href="#prices">Prices</a></li>
+      <li><a href="#formats">Formats</a></li>
+      <li><a href="#tags">Shortcuts and tags</a></li>
+      <li><a href="#regex">Regular expressions</a></li>
+      <li><a href="#combining">Combining terms</a></li>
+      <li><a href="#display">What a result is, and its order</a></li>
+    </ul>
+
+    <div class="guide-sections">
+      <section id="plain">
+        <h2>Plain English</h2>
+        <p>Describe the card the way you remember it. Words about cost, colour and type at the start are applied as a filter, and the rest is matched by meaning, so the wording does not have to be the card's.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=sphinx+that+draws+two+cards">sphinx that draws two cards</a></dt><dd>A description of what the card does.</dd></div>
+          <div><dt><a class="example" href="/?q=two+mana+blue+instant+that+counters+any+spell">two mana blue instant that counters any spell</a></dt><dd>Cost, colour and type are read from the opening words.</dd></div>
+          <div><dt><a class="example" href="/?q=dwarf+destroys+lands">dwarf destroys lands</a></dt><dd>A few words are enough.</dd></div>
+        </dl>
+      </section>
+      <section id="names">
+        <h2>Names</h2>
+        <p>Words on their own look in the card's name, ignoring case, accents and punctuation. The most played cards come first.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=lightning+bolt">lightning bolt</a></dt><dd>Cards with both words in the name.</dd></div>
+          <div><dt><a class="example" href="/?q=%21%22lightning+bolt%22">!&quot;lightning bolt&quot;</a></dt><dd>An exclamation mark asks for that exact name.</dd></div>
+          <div><dt><a class="example" href="/?q=name%3A%2F%5Ethe+%2F">name:/^the /</a></dt><dd>A regular expression on the name.</dd></div>
+        </dl>
+      </section>
+      <section id="colours">
+        <h2>Colours and colour identity</h2>
+        <p><code>c:</code> is a card's colours and <code>id:</code> its colour identity. Use letters (<code>w u b r g</code>), words, or the name of a guild, shard or wedge. A bare <code>c:</code> means at least these colours; a bare <code>id:</code> means within them, as for a Commander deck.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=c%3Auw+t%3Ainstant">c:uw t:instant</a></dt><dd>Instants that are at least white and blue.</dd></div>
+          <div><dt><a class="example" href="/?q=c%3Drg+t%3Adragon">c=rg t:dragon</a></dt><dd>Dragons that are exactly red and green.</dd></div>
+          <div><dt><a class="example" href="/?q=id%3Aesper+is%3Acommander">id:esper is:commander</a></dt><dd>Commanders that fit in a white, blue and black deck.</dd></div>
+          <div><dt><a class="example" href="/?q=c%3Am+t%3Aangel">c:m t:angel</a></dt><dd>Multicoloured Angels. c:c is colourless, c=2 is exactly two colours.</dd></div>
+        </dl>
+      </section>
+      <section id="types">
+        <h2>Types</h2>
+        <p><code>t:</code> looks in the type line: card types, supertypes and subtypes.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=t%3Asphinx">t:sphinx</a></dt><dd>Every Sphinx.</dd></div>
+          <div><dt><a class="example" href="/?q=t%3A%22legendary+creature%22+t%3Aelf">t:&quot;legendary creature&quot; t:elf</a></dt><dd>A phrase in quotes, and more than one type.</dd></div>
+          <div><dt><a class="example" href="/?q=kw%3Aflash+-t%3Acreature+-t%3Aland">kw:flash -t:creature -t:land</a></dt><dd>A minus sign in front of a term means not.</dd></div>
+        </dl>
+      </section>
+      <section id="text">
+        <h2>Rules text and keywords</h2>
+        <p><code>o:</code> looks in the rules text without reminder text; <code>fo:</code> includes it. <code>~</code> stands for the card's own name. <code>kw:</code> is a keyword ability.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=o%3A%22draw+two+cards%22+c%3Au">o:&quot;draw two cards&quot; c:u</a></dt><dd>A phrase in the rules text.</dd></div>
+          <div><dt><a class="example" href="/?q=o%3A%22~+deals%22+t%3Ainstant+mv%3D1">o:&quot;~ deals&quot; t:instant mv=1</a></dt><dd>A card that names itself.</dd></div>
+          <div><dt><a class="example" href="/?q=kw%3Adeathtouch+c%3Ag+mv%3C%3D2">kw:deathtouch c:g mv&lt;=2</a></dt><dd>A keyword ability.</dd></div>
+        </dl>
+      </section>
+      <section id="mana">
+        <h2>Mana cost and mana value</h2>
+        <p><code>mv</code> is the mana value, with <code>= &lt; &gt; &lt;= &gt;= !=</code>. <code>m:</code> is the cost itself: a bare colon means at least these symbols. <code>devotion:</code> and <code>produces:</code> ask what a card adds to devotion and what mana it makes.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=mv%3C%3D2+t%3Acreature+pow%3E%3D3">mv&lt;=2 t:creature pow&gt;=3</a></dt><dd>Cheap creatures that hit hard.</dd></div>
+          <div><dt><a class="example" href="/?q=m%3A2WW">m:2WW</a></dt><dd>A cost with at least two generic and two white.</dd></div>
+          <div><dt><a class="example" href="/?q=m%3D%7BR%2FW%7D%7BR%2FW%7D">m={R/W}{R/W}</a></dt><dd>Exactly this cost, hybrid symbols included.</dd></div>
+          <div><dt><a class="example" href="/?q=devotion%3Abb+t%3Azombie">devotion:bb t:zombie</a></dt><dd>Zombies that add two to devotion to black.</dd></div>
+          <div><dt><a class="example" href="/?q=produces%3Ag+t%3Acreature+mv%3D1">produces:g t:creature mv=1</a></dt><dd>One-mana creatures that make green mana.</dd></div>
+        </dl>
+      </section>
+      <section id="stats">
+        <h2>Power, toughness and loyalty</h2>
+        <p><code>pow</code>, <code>tou</code> and <code>loy</code> compare with a number, and power and toughness with each other.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=pow%3E%3D7+mv%3C%3D4">pow&gt;=7 mv&lt;=4</a></dt><dd>Big for the cost.</dd></div>
+          <div><dt><a class="example" href="/?q=pow%3Etou+t%3Agoblin+mv%3D1">pow&gt;tou t:goblin mv=1</a></dt><dd>More power than toughness.</dd></div>
+          <div><dt><a class="example" href="/?q=loy%3E%3D6+t%3Aplaneswalker">loy&gt;=6 t:planeswalker</a></dt><dd>Planeswalkers that start high.</dd></div>
+        </dl>
+      </section>
+      <section id="printings">
+        <h2>Sets, rarity and printings</h2>
+        <p>These are about a printing of a card: its set, rarity, artist, flavour text, frame, border and date. A card is shown by a printing that matches. <code>in:</code> asks whether a card was ever printed in a set, at a rarity or in a game.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=set%3Amh2+r%3Amythic">set:mh2 r:mythic</a></dt><dd>Mythic rares of Modern Horizons 2.</dd></div>
+          <div><dt><a class="example" href="/?q=a%3A%22mark+zug%22">a:&quot;mark zug&quot;</a></dt><dd>Illustrated by an artist.</dd></div>
+          <div><dt><a class="example" href="/?q=ft%3Adragon+t%3Agoblin">ft:dragon t:goblin</a></dt><dd>Words in the flavour text.</dd></div>
+          <div><dt><a class="example" href="/?q=year%3D2015+t%3Aplaneswalker+r%3E%3Drare">year=2015 t:planeswalker r&gt;=rare</a></dt><dd>Released in a year; rarity has an order.</dd></div>
+          <div><dt><a class="example" href="/?q=in%3Apaper+-in%3Amtgo+t%3Aelf+r%3Arare">in:paper -in:mtgo t:elf r:rare</a></dt><dd>Printed on paper but never on Magic Online.</dd></div>
+          <div><dt><a class="example" href="/?q=is%3Afoil+frame%3A1997+t%3Agoblin">is:foil frame:1997 t:goblin</a></dt><dd>Printing flags, such as foil, promo, reprint and borderless.</dd></div>
+        </dl>
+      </section>
+      <section id="prices">
+        <h2>Prices</h2>
+        <p><code>usd</code>, <code>eur</code> and <code>tix</code> compare a printing's price. Prices come from Scryfall's daily data.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=t%3Adragon+r%3Amythic+usd%3C5">t:dragon r:mythic usd&lt;5</a></dt><dd>Mythic Dragons under five dollars.</dd></div>
+          <div><dt><a class="example" href="/?q=usd%3E%3D50+t%3Aland">usd&gt;=50 t:land</a></dt><dd>Lands at fifty dollars or more.</dd></div>
+          <div><dt><a class="example" href="/?q=t%3Asphinx+order%3Ausd+direction%3Adesc">t:sphinx order:usd direction:desc</a></dt><dd>The dearest first.</dd></div>
+        </dl>
+      </section>
+      <section id="formats">
+        <h2>Formats</h2>
+        <p><code>f:</code> is legality in a format; <code>banned:</code> and <code>restricted:</code> are the lists.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=f%3Apauper+t%3Aelf+mv%3D1">f:pauper t:elf mv=1</a></dt><dd>Legal in Pauper.</dd></div>
+          <div><dt><a class="example" href="/?q=banned%3Amodern+t%3Aartifact">banned:modern t:artifact</a></dt><dd>Banned in Modern.</dd></div>
+          <div><dt><a class="example" href="/?q=restricted%3Avintage">restricted:vintage</a></dt><dd>Restricted in Vintage.</dd></div>
+        </dl>
+      </section>
+      <section id="tags">
+        <h2>Shortcuts and tags</h2>
+        <p><code>is:</code> covers well-known groups: land cycles, kinds of commander, vanilla creatures, modal spells and more. <code>otag:</code> uses Scryfall's community tags for what a card does.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=is%3Afetchland">is:fetchland</a></dt><dd>A land cycle by its nickname. Also shockland, checkland, triome and twenty more.</dd></div>
+          <div><dt><a class="example" href="/?q=is%3Acommander+t%3Aangel+mv%3C%3D4">is:commander t:angel mv&lt;=4</a></dt><dd>Cards that can be a commander.</dd></div>
+          <div><dt><a class="example" href="/?q=otag%3Aremoval+c%3Aw+mv%3D1+t%3Ainstant">otag:removal c:w mv=1 t:instant</a></dt><dd>A community tag.</dd></div>
+          <div><dt><a class="example" href="/?q=is%3Amodal+t%3Ainstant+c%3Ab+mv%3D2">is:modal t:instant c:b mv=2</a></dt><dd>Spells that offer a choice of modes.</dd></div>
+        </dl>
+      </section>
+      <section id="regex">
+        <h2>Regular expressions</h2>
+        <p>Put a pattern between slashes after <code>o:</code>, <code>fo:</code>, <code>t:</code>, <code>name:</code> or <code>ft:</code>. Scryfall's shorthands work: <code>\spp</code> is +X/+X, <code>\smm</code> is -X/-X, <code>\spt</code> is X/X, <code>\sm</code> is any mana symbol.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=o%3A%2Fdraw+%28two%7Cthree%29+cards%2F+t%3Asorcery+mv%3C%3D3">o:/draw (two|three) cards/ t:sorcery mv&lt;=3</a></dt><dd>Either wording.</dd></div>
+          <div><dt><a class="example" href="/?q=t%3Ainstant+o%3A%2F%5Cspp%2F+mv%3D1+c%3Ag">t:instant o:/\spp/ mv=1 c:g</a></dt><dd>Green one-mana instants that give +X/+X.</dd></div>
+          <div><dt><a class="example" href="/?q=o%3A%2F%5E%5Css%3A+draw+a+card%5C.%24%2F+t%3Aartifact">o:/^\ss: draw a card\.$/ t:artifact</a></dt><dd>An ability that is one symbol and nothing else.</dd></div>
+        </dl>
+      </section>
+      <section id="combining">
+        <h2>Combining terms</h2>
+        <p>Terms side by side must all hold. <code>or</code> means either, brackets group, and a minus sign in front of a term or a group means not.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=t%3Aelf+or+t%3Agoblin">t:elf or t:goblin</a></dt><dd>Either type.</dd></div>
+          <div><dt><a class="example" href="/?q=%28t%3Aelf+or+t%3Agoblin%29+mv%3D1+-c%3Ar">(t:elf or t:goblin) mv=1 -c:r</a></dt><dd>A group, another condition, and not red.</dd></div>
+          <div><dt><a class="example" href="/?q=c%3Au+t%3Asphinx+draws+when+opponents+draw">c:u t:sphinx draws when opponents draw</a></dt><dd>Keywords and plain words together: the words rank what the keywords find.</dd></div>
+        </dl>
+      </section>
+      <section id="display">
+        <h2>What a result is, and its order</h2>
+        <p>A result is a card unless you say otherwise. These can also be chosen with the controls above the results; what is typed in the query wins.</p>
+        <dl>
+          <div><dt><a class="example" href="/?q=%21%22lightning+bolt%22+unique%3Aprints+order%3Areleased">!&quot;lightning bolt&quot; unique:prints order:released</a></dt><dd>Every printing of a card, newest first.</dd></div>
+          <div><dt><a class="example" href="/?q=%21%22serra+angel%22+unique%3Aart">!&quot;serra angel&quot; unique:art</a></dt><dd>Every illustration.</dd></div>
+          <div><dt><a class="example" href="/?q=t%3Asphinx+order%3Acmc+direction%3Adesc">t:sphinx order:cmc direction:desc</a></dt><dd>Sorted by mana value, highest first.</dd></div>
+          <div><dt><a class="example" href="/?q=t%3Asphinx+prefer%3Aoldest">t:sphinx prefer:oldest</a></dt><dd>Each card shown by its oldest printing.</dd></div>
+        </dl>
+      </section>
+    </div>
+
+    <p class="lede" id="not-yet">Not supported yet: other languages (<code>lang:</code>), <code>new:</code>, <code>block:</code>, <code>cube:</code> and art tags (<code>art:</code>). A term that cannot be used is left out, the page says which term and why, and the rest of the search runs.</p>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div class="foot-cols">
+      <div>
+        <h2>Search</h2>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/syntax">Syntax guide</a></li>
+          <li><a href="/random">Random card</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>About</h2>
+        <p>One search box that reads Scryfall syntax and plain English. Every card and every English printing,
+          refreshed each day.</p>
+      </div>
+      <div>
+        <h2>Data</h2>
+        <p>Card data and images come from <a href="https://scryfall.com" rel="noopener">Scryfall</a>. This site is
+          not produced or endorsed by Scryfall.</p>
+      </div>
+    </div>
+    <p class="foot-legal">Unofficial fan content permitted under the Wizards of the Coast Fan Content Policy. Card text and
+      images are copyright Wizards of the Coast LLC. Not approved or endorsed by Wizards of the Coast.</p>
+  </div>
+</footer>
+</body>
+</html>

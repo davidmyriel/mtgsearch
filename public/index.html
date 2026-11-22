@@ -10,133 +10,188 @@
 <link rel="stylesheet" href="/app.css">
 </head>
 <body>
-<header class="top">
-  <a class="wordmark" href="/">mtgsearch</a>
-  <p class="tagline">Find a card by its syntax, its name, or what you remember about it.</p>
+<a class="skip" href="#main">Skip to the results</a>
+
+<!-- One masthead for every view. With no search showing it is the home page's centrepiece;
+     once there is one it becomes a bar across the top (see .searched in app.css). -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="wordmark" href="/">mtgsearch</a>
+    <p class="tagline">Find a Magic card by its Scryfall syntax, by its name, or by what you remember about it.</p>
+    <form id="search" class="search" role="search" action="/" method="get">
+      <label class="sr-only" for="q">Search cards</label>
+      <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="nav" aria-label="Site">
+      <a href="/syntax">Syntax guide</a>
+      <a id="nav-random" href="/random">Random card</a>
+    </nav>
+  </div>
 </header>
 
-<main>
-  <form id="search" class="search" role="search" action="/" method="get">
-    <label class="sr-only" for="q">Search cards</label>
-    <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
-           autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
-    <button type="submit">Search</button>
-  </form>
-
-  <div class="bar">
-    <p id="status" class="status" role="status" aria-live="polite"></p>
-    <div id="tools" class="tools" hidden>
-      <label>Show
-        <select id="unique">
-          <option value="">Cards</option>
-          <option value="prints">Printings</option>
-          <option value="art">Illustrations</option>
-        </select>
-      </label>
-      <label>Sort
-        <select id="sort">
-          <option value="">Default</option>
-          <option value="name">Name</option>
-          <option value="cmc">Mana value</option>
-          <option value="power">Power</option>
-          <option value="toughness">Toughness</option>
-          <option value="edhrec">Most played</option>
-          <option value="released">Release date</option>
-          <option value="rarity">Rarity</option>
-          <option value="usd">Price (USD)</option>
-          <option value="eur">Price (EUR)</option>
-          <option value="tix">Price (TIX)</option>
-        </select>
-      </label>
-      <label>Direction
-        <select id="dir">
-          <option value="">Auto</option>
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </label>
-    </div>
-  </div>
-  <!-- A syntax query said back in words, one entry for each condition that has to hold. -->
-  <ul id="understood" class="understood" aria-label="How the query was read" hidden></ul>
-
-  <section id="intro" class="intro" aria-label="Example searches">
-    <h2>Try one</h2>
-    <ul class="examples">
-      <li><button type="button" data-q="sphinx that draws two cards">sphinx that draws two cards</button><span>plain English</span></li>
-      <li><button type="button" data-q="c:u t:sphinx o:&quot;draw two cards&quot;">c:u t:sphinx o:"draw two cards"</button><span>Scryfall syntax</span></li>
-      <li><button type="button" data-q="c:u t:sphinx draws when opponents draw">c:u t:sphinx draws when opponents draw</button><span>both at once</span></li>
-      <li><button type="button" data-q="one mana elf that taps for green mana">one mana elf that taps for green mana</button><span>cost and type are read from the words</span></li>
-      <li><button type="button" data-q="dwarf destroys lands">dwarf destroys lands</button><span>plain English</span></li>
-      <li><button type="button" data-q="lightning bolt">lightning bolt</button><span>a card name</span></li>
-      <li><button type="button" data-q="t:dragon r:mythic usd&lt;5">t:dragon r:mythic usd&lt;5</button><span>rarity and price</span></li>
-      <li><button type="button" data-q="!&quot;lightning bolt&quot; unique:prints order:released">!"lightning bolt" unique:prints order:released</button><span>every printing of a card</span></li>
-    </ul>
-    <details class="help">
-      <summary>What can I type?</summary>
-      <p><strong>A card name</strong>, or part of one. Matching cards come back most-played first.</p>
-      <p><strong>Scryfall syntax.</strong> Colour (<code>c:</code>, <code>id:</code>), type (<code>t:</code>), rules text
-        (<code>o:</code>, <code>kw:</code>), mana value, power, toughness and loyalty (<code>mv</code>, <code>pow</code>,
-        <code>tou</code>, <code>loy</code>), mana cost (<code>m:2WW</code>), devotion and the mana a card makes
-        (<code>produces:g</code>), legality (<code>f:</code>, <code>banned:</code>), tags (<code>otag:</code>),
-        <code>is:</code> flags and shortcuts (<code>is:fetchland</code>, <code>is:commander</code>, <code>is:modal</code>),
-        <code>-</code> to negate, <code>or</code>, parentheses and regular expressions (<code>o:/gets \spp/</code> finds
-        "gets +2/+2").</p>
-      <p><strong>Printings.</strong> Set (<code>set:</code>), rarity (<code>r:</code>), artist (<code>a:</code>), flavour text
-        (<code>ft:</code>), frame, border and game, year and date, price (<code>usd&lt;1</code>), and whether a card was ever
-        printed somewhere (<code>in:</code>). A card is shown by a printing that matches. Add <code>unique:prints</code> to
-        list every printing, or <code>unique:art</code> for every illustration.</p>
-      <p><strong>Plain English.</strong> Describe the card. An opening such as "two mana blue instant" is applied as a filter.</p>
-      <p><strong>Not yet:</strong> languages other than English, art tags, blocks and cubes.</p>
-    </details>
-  </section>
-
-  <ol id="results" class="grid"></ol>
-  <!-- The page of results is in the address (?page=2), so these are links. -->
-  <nav id="pager" class="pager" aria-label="Pages of results" hidden>
-    <a id="page-first">First</a>
-    <a id="page-prev" rel="prev">Previous</a>
-    <span id="page-now"></span>
-    <a id="page-next" rel="next">Next</a>
-    <a id="page-last">Last</a>
-  </nav>
-
-  <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
-  <article id="card" class="card" aria-labelledby="card-name" hidden>
-    <button id="card-back" class="out back" type="button" hidden>Back to results</button>
-    <div class="card-body">
-      <img id="card-image" alt="" width="488" height="680">
-      <div class="card-text">
-        <h1 id="card-name"></h1>
-        <p id="card-line" class="line"></p>
-        <p id="card-rules" class="rules"></p>
-        <p id="card-stats" class="stats"></p>
-        <p id="card-flavor" class="flavor"></p>
-        <p id="card-printing" class="printing"></p>
-        <p id="card-artist" class="printing"></p>
-        <div class="actions">
-          <button id="card-copy" class="out" type="button">Copy link</button>
-          <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
-        </div>
-        <section id="card-legality" class="detail" aria-labelledby="legality-title" hidden>
-          <h2 id="legality-title">Legality</h2>
-          <dl id="legality-list" class="legality"></dl>
-        </section>
+<main id="main">
+  <!-- What the search found, and how to show it. -->
+  <div class="controls">
+    <div class="bar">
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div id="tools" class="tools" hidden>
+        <label>Show
+          <select id="unique">
+            <option value="">Cards</option>
+            <option value="prints">Printings</option>
+            <option value="art">Illustrations</option>
+          </select>
+        </label>
+        <label>Sort
+          <select id="sort">
+            <option value="">Default</option>
+            <option value="name">Name</option>
+            <option value="cmc">Mana value</option>
+            <option value="power">Power</option>
+            <option value="toughness">Toughness</option>
+            <option value="edhrec">Most played</option>
+            <option value="released">Release date</option>
+            <option value="rarity">Rarity</option>
+            <option value="usd">Price (USD)</option>
+            <option value="eur">Price (EUR)</option>
+            <option value="tix">Price (TIX)</option>
+          </select>
+        </label>
+        <label>Direction
+          <select id="dir">
+            <option value="">Auto</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </label>
       </div>
     </div>
-    <section id="card-printings" class="detail" aria-labelledby="printings-title" hidden>
-      <h2 id="printings-title">Printings</h2>
-      <ul id="printings-list" class="prints"></ul>
-      <button id="card-prints" class="out" type="button" hidden></button>
+  </div>
+
+  <div class="page">
+    <!-- Terms that could not be used and were left out of the search, each with the reason. -->
+    <ul id="ignored" class="ignored" aria-label="Left out of the search" hidden></ul>
+    <!-- A syntax query said back in words, one entry for each condition that has to hold. -->
+    <ul id="understood" class="understood" aria-label="How the query was read" hidden></ul>
+
+    <section id="intro" class="intro" aria-label="Ways to search">
+      <div class="ways">
+        <article class="way">
+          <h2>Describe the card</h2>
+          <p>Say what it does in plain English. An opening such as "two mana blue instant" is applied as a filter,
+            and the rest is matched by meaning.</p>
+          <ul class="examples">
+            <li><button type="button" data-q="sphinx that draws two cards">sphinx that draws two cards</button></li>
+            <li><button type="button" data-q="one mana elf that taps for green mana">one mana elf that taps for green mana</button></li>
+            <li><button type="button" data-q="dwarf destroys lands">dwarf destroys lands</button></li>
+          </ul>
+        </article>
+        <article class="way">
+          <h2>Use Scryfall syntax</h2>
+          <p>The keywords you already know return exactly the cards that match, by colour, type, text, cost, set,
+            rarity or price. <a href="/syntax">See the syntax guide</a>.</p>
+          <ul class="examples">
+            <li><button type="button" data-q="c:u t:sphinx o:&quot;draw two cards&quot;">c:u t:sphinx o:"draw two cards"</button></li>
+            <li><button type="button" data-q="t:dragon r:mythic usd&lt;5">t:dragon r:mythic usd&lt;5</button></li>
+            <li><button type="button" data-q="!&quot;lightning bolt&quot; unique:prints order:released">!"lightning bolt" unique:prints order:released</button></li>
+          </ul>
+        </article>
+        <article class="way">
+          <h2>Or both at once</h2>
+          <p>Keywords narrow the cards down and the remaining words rank them. A card's name, or part of one,
+            works too.</p>
+          <ul class="examples">
+            <li><button type="button" data-q="c:u t:sphinx draws when opponents draw">c:u t:sphinx draws when opponents draw</button></li>
+            <li><button type="button" data-q="t:goblin mv&lt;=2 makes treasure">t:goblin mv&lt;=2 makes treasure</button></li>
+            <li><button type="button" data-q="lightning bolt">lightning bolt</button></li>
+          </ul>
+        </article>
+      </div>
     </section>
-  </article>
+
+    <!-- A search that found nothing: what to try next. -->
+    <section id="empty" class="empty" aria-labelledby="empty-title" hidden>
+      <h2 id="empty-title">No cards matched</h2>
+      <p id="empty-detail"></p>
+      <p class="empty-links"><a href="/syntax">Open the syntax guide</a> <a id="empty-random" href="/random">See a random card</a></p>
+    </section>
+
+    <ol id="results" class="grid"></ol>
+    <!-- The page of results is in the address (?page=2), so these are links. -->
+    <nav id="pager" class="pager" aria-label="Pages of results" hidden>
+      <a id="page-first">First</a>
+      <a id="page-prev" rel="prev">Previous</a>
+      <span id="page-now"></span>
+      <a id="page-next" rel="next">Next</a>
+      <a id="page-last">Last</a>
+    </nav>
+
+    <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
+    <article id="card" class="card" aria-labelledby="card-name" hidden>
+      <button id="card-back" class="out back" type="button" hidden>Back to results</button>
+      <div class="card-body">
+        <div class="card-picture">
+          <img id="card-image" alt="" width="488" height="680">
+        </div>
+        <div class="card-text">
+          <div class="card-head">
+            <h1 id="card-name"></h1>
+            <p id="card-cost" class="cost"></p>
+          </div>
+          <p id="card-line" class="line"></p>
+          <p id="card-rules" class="rules"></p>
+          <p id="card-flavor" class="flavor"></p>
+          <p id="card-stats" class="stats"></p>
+          <div class="card-foot">
+            <p id="card-printing" class="printing"></p>
+            <p id="card-artist" class="printing"></p>
+          </div>
+          <section id="card-legality" class="detail" aria-labelledby="legality-title" hidden>
+            <h2 id="legality-title">Legality</h2>
+            <dl id="legality-list" class="legality"></dl>
+          </section>
+          <div class="actions">
+            <button id="card-copy" class="out" type="button">Copy link</button>
+            <a id="card-link" class="out" target="_blank" rel="noopener">View on Scryfall</a>
+          </div>
+        </div>
+        <section id="card-printings" class="detail card-prints" aria-labelledby="printings-title" hidden>
+          <h2 id="printings-title">Printings</h2>
+          <ul id="printings-list" class="prints"></ul>
+          <button id="card-prints" class="out" type="button" hidden></button>
+        </section>
+      </div>
+    </article>
+  </div>
 </main>
 
 <footer class="foot">
-  <p>Card data and images come from <a href="https://scryfall.com" rel="noopener">Scryfall</a>. This site is not
-    produced or endorsed by Scryfall.</p>
-  <p>Unofficial fan content permitted under the Wizards of the Coast Fan Content Policy. Card text and images are
-    copyright Wizards of the Coast LLC. Not approved or endorsed by Wizards of the Coast.</p>
+  <div class="foot-inner">
+    <div class="foot-cols">
+      <div>
+        <h2>Search</h2>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/syntax">Syntax guide</a></li>
+          <li><a href="/random">Random card</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>About</h2>
+        <p>One search box that reads Scryfall syntax and plain English. Every card and every English printing,
+          refreshed each day.</p>
+      </div>
+      <div>
+        <h2>Data</h2>
+        <p>Card data and images come from <a href="https://scryfall.com" rel="noopener">Scryfall</a>. This site is
+          not produced or endorsed by Scryfall.</p>
+      </div>
+    </div>
+    <p class="foot-legal">Unofficial fan content permitted under the Wizards of the Coast Fan Content Policy. Card text and
+      images are copyright Wizards of the Coast LLC. Not approved or endorsed by Wizards of the Coast.</p>
+  </div>
 </footer>
 
 <script src="/app.js" defer></script>

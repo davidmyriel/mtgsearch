@@ -15,6 +15,26 @@ const ROW = ["name", "set", "set_name", "cn", "rarity", "released", "usd_c"];
 
 export type CardPage = { card: Hit; printings: Hit[] };
 
+/**
+ * A card chosen at random, as its usual printing. A card's id is a random identifier, so the
+ * cards whose id starts with two random characters are a random handful (about 150 of them),
+ * and one of those is picked. Null only if three handfuls in a row are empty.
+ */
+export async function randomCard(cols: Collections, random: () => number = Math.random): Promise<CardPage | null> {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const prefix = Math.floor(random() * 256).toString(16).padStart(2, "0");
+    const rows = await cols.cards.query(
+      select(pick(["set", "cn"])).filter(field("_id").startsWith(prefix).and(field("extra").eq(false))).limit(500),
+    );
+    const known = rows.filter((row) => row.set && row.cn);
+    if (known.length) {
+      const chosen = known[Math.floor(random() * known.length)];
+      return card(cols, String(chosen.set), String(chosen.cn));
+    }
+  }
+  return null;
+}
+
 /** The printing with this set code and collector number, or null when there is none. */
 export async function card(cols: Collections, set: string, number: string): Promise<CardPage | null> {
   const which = toTopk(["and", [["eq", "set", set.toLowerCase()], ["eq", "cn", fold(number)]]]);

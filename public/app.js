@@ -16,6 +16,8 @@ const dirSelect = document.getElementById("dir");
 const uniqueSelect = document.getElementById("unique");
 const pager = document.getElementById("pager");
 const understood = document.getElementById("understood");
+const ignored = document.getElementById("ignored");
+const emptyState = document.getElementById("empty");
 const cardView = document.getElementById("card");
 const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
@@ -195,6 +197,27 @@ function tile(hit, captioned) {
   return item;
 }
 
+/** A search that found nothing: say so in the page, with what to try. No arguments hides it. */
+function showEmpty(title = "", detail = "") {
+  document.getElementById("empty-title").textContent = title;
+  document.getElementById("empty-detail").textContent = detail;
+  emptyState.hidden = !title;
+}
+
+/** Terms that could not be used: the search ran without them, and this says which and why. */
+function showIgnored(terms) {
+  ignored.replaceChildren(
+    ...(terms || []).map(({ term, reason }) => {
+      const item = document.createElement("li");
+      const typed = document.createElement("strong");
+      typed.textContent = term;
+      item.append(typed, ` was left out: ${reason}.`);
+      return item;
+    }),
+  );
+  ignored.hidden = ignored.children.length === 0;
+}
+
 /** How a syntax query was read: each condition in words. Nothing for plain English. */
 function showUnderstood(conditions) {
   understood.replaceChildren(
@@ -262,6 +285,8 @@ async function run(search, { push = true } = {}) {
     intro.hidden = false;
     tools.hidden = pager.hidden = true;
     showUnderstood([]);
+    showIgnored([]);
+    showEmpty();
     results.replaceChildren();
     current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
@@ -276,6 +301,8 @@ async function run(search, { push = true } = {}) {
     results.replaceChildren();
     tools.hidden = pager.hidden = true;
     showUnderstood([]);
+    showIgnored([]);
+    showEmpty();
     current = { ...EMPTY, unit: "cards" };
     setStatus(label, detail, true);
   };
@@ -288,7 +315,8 @@ async function run(search, { push = true } = {}) {
     if (data.mode === "unsupported") {
       intro.hidden = false;
       document.body.classList.remove("searched");
-      return fail("Not supported yet", `${data.note}. See "What can I type?" below.`);
+      // Every term was one that cannot be used, so there is nothing left to search for.
+      return fail("Nothing here could be used", `${data.note}. The syntax guide lists what can be typed.`);
     }
     const captioned = data.unit !== "cards" || PRINTING_ORDERS.has(data.sorted_by);
     results.replaceChildren(...data.hits.map((hit) => tile(hit, captioned)));
@@ -299,10 +327,20 @@ async function run(search, { push = true } = {}) {
     tools.hidden = data.sorted_by === null || data.hits.length === 0;
     showPager(view, data);
     showUnderstood(data.understood);
+    showIgnored(data.ignored);
+    showEmpty();
     if (push) window.scrollTo(0, 0);
     if (!data.hits.length) {
       const beyond = view.page > 1 && (data.total === null || data.total > 0);
-      setStatus(beyond ? "Nothing on this page" : "No cards matched", beyond ? "The results end before it." : "Check the syntax, or describe the card in plain words.");
+      setStatus(beyond ? "Nothing on this page" : "No cards matched", "", false, data.took_ms);
+      showEmpty(
+        beyond ? "Nothing on this page" : "No cards matched",
+        beyond
+          ? "The results end before this page. Go back to an earlier one."
+          : data.understood && data.understood.length > 1
+            ? "No card meets every condition above at once. Take one out, or describe the card in plain words instead."
+            : "Check the spelling and the syntax, or describe the card in plain words instead.",
+      );
       return;
     }
     const [label, detail] = describe(data, view);
@@ -315,12 +353,70 @@ async function run(search, { push = true } = {}) {
   }
 }
 
+// --- symbols ---------------------------------------------------------------------------
+
+const COLOUR_NAMES = { W: "white", U: "blue", B: "black", R: "red", G: "green" };
+const SYMBOL_NAMES = { T: "tap", Q: "untap", E: "energy", C: "colourless mana", S: "snow mana", X: "X generic mana" };
+
+/** What one part of a symbol pays with, in words: "white", "2 generic", "colourless". */
+function partName(part) {
+  if (COLOUR_NAMES[part]) return COLOUR_NAMES[part];
+  if (/^\d+$/.test(part)) return `${part} generic`;
+  return part === "C" ? "colourless" : part;
+}
+
+/**
+ * A symbol such as {W}, {2}, {T} or {G/U/P} as a small lettered disc of this site's own
+ * drawing. The brace code stays inside it, out of sight, so that copying the card's text or
+ * finding "{T}" in the page still works; a screen reader is given the symbol's name instead.
+ */
+function pip(code) {
+  const parts = code.toUpperCase().split("/");
+  const phyrexian = parts.length > 1 && parts[parts.length - 1] === "P";
+  const paid = phyrexian ? parts.slice(0, -1) : parts;
+  let name;
+  if (parts.length === 1) {
+    name = SYMBOL_NAMES[parts[0]] || (COLOUR_NAMES[parts[0]] ? `${COLOUR_NAMES[parts[0]]} mana` : /^\d+$/.test(parts[0]) ? `${parts[0]} generic mana` : `{${code}}`);
+  } else {
+    name = `${paid.map(partName).join(" or ")} mana${phyrexian ? ", or 2 life" : ""}`;
+  }
+  const element = document.createElement("span");
+  element.className = "pip";
+  // One colour fills the disc; two split it corner to corner.
+  const [first, second] = paid;
+  if (COLOUR_NAMES[first]) element.classList.add(`a-${first.toLowerCase()}`);
+  if (second !== undefined && COLOUR_NAMES[second]) element.classList.add(`b-${second.toLowerCase()}`);
+  else if (second !== undefined) element.classList.add("b-n");
+  element.dataset.label = parts.join("/");
+  element.setAttribute("role", "img");
+  element.setAttribute("aria-label", name);
+  const hidden = document.createElement("span");
+  hidden.className = "code";
+  hidden.textContent = `{${code}}`;
+  element.append(hidden);
+  return element;
+}
+
+/** Text with its {symbols} drawn: the pieces to put in an element, in order. */
+function withSymbols(value) {
+  const pieces = [];
+  let last = 0;
+  for (const match of value.matchAll(/\{([^{}\s]{1,12})\}/g)) {
+    if (match.index > last) pieces.push(value.slice(last, match.index));
+    pieces.push(pip(match[1]));
+    last = match.index + match[0].length;
+  }
+  if (last < value.length) pieces.push(value.slice(last));
+  return pieces;
+}
+
 // --- card view -------------------------------------------------------------------------
 
-/** Set an element's text, and hide it when there is none. */
-function text(id, value) {
+/** Set an element's text, and hide it when there is none. With `symbols`, {W} and the like are drawn. */
+function text(id, value, symbols = false) {
   const element = document.getElementById(id);
-  element.textContent = value || "";
+  if (symbols && value) element.replaceChildren(...withSymbols(value));
+  else element.textContent = value || "";
   element.hidden = !value;
 }
 
@@ -404,8 +500,9 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
   if (image.getAttribute("src") !== (hasImage ? hit.image : "")) image.src = hasImage ? hit.image : "";
   image.alt = hit.name;
   document.getElementById("card-name").textContent = hit.name;
-  text("card-line", [hit.mana_cost, hit.type_line].filter(Boolean).join("  ·  "));
-  text("card-rules", hit.oracle_text);
+  text("card-cost", hit.mana_cost, true);
+  text("card-line", hit.type_line);
+  text("card-rules", hit.oracle_text, true);
   text("card-stats", hit.stats);
   text("card-flavor", hit.flavor_text);
   // The printing shown: its set, number, rarity and year, then artist and price.
@@ -499,6 +596,45 @@ async function loadCard({ set, number }) {
   showCard(data.card, data.printings);
 }
 
+/** /random: ask for a card chosen at random, then make its own address the current one. */
+async function loadRandom() {
+  if (inFlight) inFlight.abort();
+  inFlight = null;
+  if (cardView.hidden) {
+    showResults();
+    intro.hidden = true;
+    document.body.classList.add("searched");
+    setStatus("", "Picking a card…");
+  }
+  let data = null;
+  try {
+    const response = await fetch("/api/card?random=1", { cache: "no-store" });
+    data = await response.json();
+    if (!response.ok) data = { error: data.error || "Something went wrong." };
+  } catch {
+    data = null;
+  }
+  if (location.pathname !== "/random") return; // the reader has moved on
+  if (!data || data.error) {
+    showResults();
+    return setStatus("", data ? data.error : "Could not reach the server. Check your connection and try again.", true);
+  }
+  setStatus("", "");
+  // The card's own address replaces /random, so Back does not pick again and the link can be shared.
+  history.replaceState({ card: data.card, printings: data.printings }, "", cardPath(data.card) || "/random");
+  showCard(data.card, data.printings);
+}
+
+for (const id of ["nav-random", "empty-random"]) {
+  document.getElementById(id).addEventListener("click", (event) => {
+    if (modified(event)) return;
+    event.preventDefault();
+    resultsScroll = window.scrollY;
+    history.pushState(null, "", "/random");
+    loadRandom();
+  });
+}
+
 backButton.addEventListener("click", () => history.back());
 
 printsButton.addEventListener("click", () => run({ query: printsButton.dataset.q }));
@@ -519,6 +655,7 @@ function route(state) {
   const card = parseCardPath(location.pathname);
   if (state && state.card) return showCard(state.card, state.printings || null);
   if (card) return loadCard(card);
+  if (location.pathname === "/random") return loadRandom();
   const view = readAddress();
   // Coming back from a card to the search that is still on screen: no need to ask again.
   if (view.query && sameSearch(view, current) && results.children.length) {

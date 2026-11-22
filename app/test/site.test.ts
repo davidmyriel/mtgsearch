@@ -25,10 +25,13 @@ test("netlify.toml sends the same security headers as the dev server", () => {
 test("a card's address is served the page on Netlify, and the page uses absolute asset paths", () => {
   const toml = root("netlify.toml");
   assert.match(toml, /\[\[redirects\]\]\s+from = "\/card\/\*"\s+to = "\/index.html"\s+status = 200/);
-  // relative paths would resolve under /card/... and fail
-  const html = root("public/index.html");
-  for (const reference of html.match(/(?:src|href)="[^"]+"/g) ?? []) {
-    assert.match(reference, /="(?:\/|https:\/\/)/, reference);
+  assert.match(toml, /\[\[redirects\]\]\s+from = "\/random"\s+to = "\/index.html"\s+status = 200/);
+  assert.match(toml, /\[\[redirects\]\]\s+from = "\/syntax"\s+to = "\/syntax.html"\s+status = 200/);
+  // relative paths would resolve under /card/... and fail; a link within the page (#main) is fine
+  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
+    for (const reference of root(page).match(/(?:src|href)="[^"]+"/g) ?? []) {
+      assert.match(reference, /="(?:\/|https:\/\/|#)/, `${page}: ${reference}`);
+    }
   }
 });
 
@@ -47,6 +50,11 @@ test("the dev server serves the page, its assets and nothing else", async () => 
     const card = await fetch(`${base}/card/ima/47/consecrated-sphinx`);
     assert.equal(card.status, 200);
     assert.ok((await card.text()).includes('id="card"'));
+    // so is /random, and the syntax guide is a page of its own
+    assert.ok((await (await fetch(`${base}/random`)).text()).includes('id="card"'));
+    const guide = await fetch(`${base}/syntax`);
+    assert.equal(guide.status, 200);
+    assert.ok((await guide.text()).includes("<h1>Syntax guide</h1>"));
     assert.equal((await fetch(`${base}/../package.json`)).status, 404);
     assert.equal((await fetch(`${base}/missing.html`)).status, 404);
     const bad = await fetch(`${base}/api/search`);
@@ -61,6 +69,26 @@ test("the Scryfall comparison stays inside Scryfall's published rate limit", asy
   // /cards/search allows 2 requests a second: https://scryfall.com/docs/api/rate-limits
   const { MIN_INTERVAL_MS } = await import("../conformance.ts");
   assert.ok(MIN_INTERVAL_MS >= 500, `one request every ${MIN_INTERVAL_MS} ms is faster than 2 a second`);
+});
+
+test("every example in the syntax guide and on the home page is a search that can be run", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { lower } = await import("../lower.ts");
+  const { parse } = await import("../parser.ts");
+  const read = (name: string) => readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8");
+  const unescape = (text: string) => text.replaceAll("&quot;", '"').replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
+  // the guide's examples are links to /?q=..., and the link's words are the query itself
+  const guide = [...read("syntax.html").matchAll(/<a class="example" href="\/\?q=([^"]+)">([^<]+)<\/a>/g)];
+  assert.ok(guide.length >= 40, `only ${guide.length} examples found in the guide`);
+  for (const [, href, label] of guide) {
+    const query = new URLSearchParams(`q=${unescape(href)}`).get("q") ?? "";
+    assert.equal(query, unescape(label), "the link runs the query it shows");
+    assert.doesNotThrow(() => lower(parse(query)), query);
+  }
+  // the home page's examples are buttons carrying the query
+  const home = [...read("index.html").matchAll(/data-q="([^"]+)"/g)].map(([, q]) => unescape(q));
+  assert.equal(home.length, 9);
+  for (const query of home) assert.doesNotThrow(() => lower(parse(query)), query);
 });
 
 test("the page asks for pages the endpoint will serve", async () => {
