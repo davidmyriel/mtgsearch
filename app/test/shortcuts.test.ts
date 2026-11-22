@@ -46,6 +46,9 @@ test("lands that turn themselves into creatures", () => {
   assert.ok(matches("is:creatureland", land("{6}: ~ becomes a 3/3 elemental artifact creature that's still a land.")));
   assert.ok(matches("is:creatureland", land("{5}: if ~ isn't a creature, it becomes a 2/4 wizard creature with flying. it's still a land.")));
   // becoming a copy, or animating some other land, does not count; nor does a non-land
+  assert.ok(matches("is:creatureland", land("{2}: ~ becomes a 3/3 elemental creature until end of turn. it's still a cave land.")));
+  assert.ok(matches("is:creatureland", land("max speed — at the beginning of combat on your turn, ~ becomes a 2/2 construct creature in addition to its other types until end of turn.")));
+  assert.ok(matches("is:creatureland", land("{5}: ~ becomes a copy of target creature you control until end of turn.")));
   assert.ok(!matches("is:creatureland", land("{2}{g}{g}: ~ becomes a copy of target permanent card in your graveyard until end of turn.")));
   assert.ok(!matches("is:creatureland", land("{t}: target land becomes a 3/3 creature until end of turn. it's still a land.")));
   assert.ok(!matches("is:creatureland", { type_words: ["artifact"], oracle_tilde_lc: "{1}: ~ becomes a 2/2 creature. it's still a land." }));
@@ -69,6 +72,12 @@ test("party and outlaw are creature types, which a changeling has all of", () =>
   assert.ok(matches("is:outlaw", { type_words: ["creature", "human", "pirate"] }));
   assert.ok(matches("is:outlaw", { type_words: ["creature", "human", "rogue"] }) && matches("is:party", { type_words: ["creature", "human", "rogue"] }));
   assert.ok(!matches("is:outlaw", { type_words: ["creature", "human", "wizard"] }));
+  // party is creatures only; an outlaw can be any card of the type
+  const equipment = { type_words: ["artifact", "equipment", "kindred", "rogue"] };
+  assert.ok(!matches("is:party", equipment) && matches("is:outlaw", equipment));
+  // a card that says it is all four party types
+  const burakos = { type_words: ["creature", "legendary", "orc"], oracle_lc: "~ is also a cleric, rogue, warrior, and wizard." };
+  assert.ok(matches("is:party", { ...burakos, oracle_lc: "burakos is also a cleric, rogue, warrior, and wizard." }) && matches("is:outlaw", { ...burakos, oracle_lc: "burakos is also a cleric, rogue, warrior, and wizard." }));
 });
 
 test("partner means a legendary partner or a Background", () => {
@@ -82,7 +91,11 @@ test("partner means a legendary partner or a Background", () => {
 test("modal cards list their modes with bullets, or as Spree costs", () => {
   assert.ok(matches("is:modal", { fulloracle_lc: "choose one —\n• draw a card.\n• you gain 3 life." }));
   assert.ok(matches("is:modal", { fulloracle_lc: "choose three. you may choose the same mode more than once.\n• ~ deals 2 damage." }));
+  assert.ok(matches("is:modal", { fulloracle_lc: "an opponent chooses one —\n• you draw three cards.\n• you destroy up to five target permanents." }));
   assert.ok(matches("is:modal", { fulloracle_lc: "spree\n+ {2} — draw a card.", keywords_lc: ["spree"] }));
+  assert.ok(matches("is:modal", { fulloracle_lc: "choose up to five {p} worth of modes. you may choose the same mode more than once.\n{p} — draw a card." }));
+  // bullets under a named choice are not modes
+  assert.ok(!matches("is:modal", { fulloracle_lc: "as ~ enters, choose khans or dragons.\n• khans — draw a card.\n• dragons — gain 2 life." }));
   assert.ok(!matches("is:modal", { fulloracle_lc: "draw two cards." }));
   assert.ok(matches("not:modal", { fulloracle_lc: "draw two cards." }));
 });
@@ -94,8 +107,18 @@ test("commanders by format, and layouts", () => {
   const back = { type_lc: "legendary creature — cat warrior // legendary planeswalker — ajani", type_words: ["ajani", "planeswalker"], legal: ["oathbreaker"] };
   assert.ok(!matches("is:oathbreaker", back));
   assert.ok(matches("is:duelcommander", { flags: ["commander"], legal: ["duel"] }) && !matches("is:duelcommander", { flags: ["commander"], legal: ["commander"] }));
+  // Duel Commander lists cards banned as commander as "restricted"; a Background cannot lead alone
+  assert.ok(!matches("is:duelcommander", { flags: ["commander"], legal: ["duel"], restricted: ["duel"] }));
+  assert.ok(!matches("is:duelcommander", { flags: ["commander"], legal: ["duel"], type_words: ["background", "enchantment", "legendary"] }));
+  // the melded side of a meld pair has no cost and cannot be cast
+  assert.ok(!matches("is:duelcommander", { flags: ["commander", "meld"], legal: ["duel"], m0_key: "none" }));
+  assert.ok(!matches("is:oathbreaker", { ...front, flags: ["meld"], m0_key: "none" }));
+  // ... but an ordinary card with no mana cost can lead, and so can a creature that is a Background
+  assert.ok(matches("is:duelcommander", { flags: ["commander"], legal: ["duel"], m0_key: "none" }));
+  assert.ok(matches("is:duelcommander", { flags: ["commander"], legal: ["duel"], type_words: ["background", "creature", "legendary"] }));
   assert.ok(matches("is:brawler", { flags: ["commander"], legal: ["brawl"] }));
-  assert.ok(matches("is:brawler", { type_words: ["legendary", "planeswalker"], legal: ["brawl"] }));
+  assert.ok(matches("is:brawler", { type_lc: "legendary planeswalker — jace", legal: ["brawl"] }));
+  assert.ok(!matches("is:brawler", { type_lc: "battle — siege // legendary planeswalker — teferi", legal: ["brawl"] }));
   assert.ok(matches("is:adventure", { layout: "adventure" }) && !matches("is:adventure", { layout: "normal" }));
   assert.ok(matches("is:augmentation", { layout: "host" }) && matches("is:augmentation", { layout: "augment" }));
   assert.ok(matches("is:frenchvanilla", { flags: ["frenchvanilla", "permanent"] }));

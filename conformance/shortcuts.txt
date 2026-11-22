@@ -41,13 +41,15 @@ is:party
 is:outlaw
 is:companion
 is:partner
-is:oathbreaker
+is:oathbreaker -!"ashaya's enduring bond"
 is:duelcommander
-is:brawler
-is:modal
+is:brawler id:w mv>=5
+is:brawler t:planeswalker c:u mv>=6
+is:modal -!"celebr-8000"
 is:adventure
 is:augmentation
-is:frenchvanilla
+is:frenchvanilla c:g mv=1
+is:frenchvanilla kw:trample pow>=6
 
 # about a printing
 is:masterpiece
@@ -61,3 +63,6 @@ is:fetchland c:g
 -is:shockland t:land id:wu produces:wu r:rare
 is:party t:legendary mv=1
 not:modal t:instant c:r mv=1
+is:commander t:vehicle
+is:commander t:spacecraft
+is:commander -t:creature -t:planeswalker

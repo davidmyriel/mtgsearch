@@ -219,5 +219,44 @@ def test_french_vanilla_is_text_made_only_of_keywords(docs):
     assert not _only_keywords("", ["Flying"])  # no text at all is plain vanilla
     assert not _only_keywords("Flying\nWhen this creature dies, draw a card.", ["Flying"])
     assert not _only_keywords("Flying, vigilance", ["Flying"])  # vigilance is not among its keywords
+    # a cost may follow a keyword, and a cost after a dash may contain commas
+    assert _only_keywords(
+        "Cascade\nHaste\nEscape—{3}{R}{G}, Exile three other cards from your graveyard.",
+        ["Haste", "Escape", "Cascade"],
+    )
+    assert _only_keywords("Flying\nSlivercycling {3}", ["Flying", "Typecycling", "Cycling"])
+    assert _only_keywords("Prototype {2}{R} — 3/2\nHaste", ["Prototype", "Haste"])
+    # a number, other words, or an ability with its own text is not a bare keyword
+    assert not _only_keywords("Bushido 1", ["Bushido"])
+    assert not _only_keywords("Affinity for artifacts", ["Affinity"])
+    assert not _only_keywords(
+        "Trample\nPower-up — {5}{R}: Put a +1/+1 counter on it.", ["Trample", "Power-up"]
+    )
+    assert not _only_keywords("Suspend 3—{2}{G}", ["Suspend"])
     assert "frenchvanilla" not in docs["Consecrated Sphinx"]["flags"]
     assert docs["Consecrated Sphinx"]["layout"] == "normal" and docs["Fire // Ice"]["layout"] == "split"
+
+
+def test_who_can_be_a_commander():
+    from mtgsearch.documents import _flags
+
+    def flags(type_line, text="", **kw):
+        card = {
+            "layout": "normal",
+            "type_line": type_line,
+            "oracle_text": text,
+            "mana_cost": "{2}",
+            "cmc": 2.0,
+            **kw,
+        }
+        return _flags(card, type_line.lower(), text, text)
+
+    assert "commander" in flags("Legendary Creature — Elf Druid", power="1", toughness="1")
+    assert "commander" not in flags("Creature — Elf Druid", power="1", toughness="1")
+    assert "commander" in flags("Legendary Enchantment — Background")
+    assert "commander" in flags("Legendary Artifact — Vehicle", power="4", toughness="4")
+    assert "commander" not in flags("Legendary Artifact — Spacecraft")  # no power and toughness box
+    assert "commander" in flags("Legendary Planeswalker — Teferi", "Teferi can be your commander.")
+    grist = "As long as Grist isn't on the battlefield, it's a 1/1 Insect creature in addition to its other types."
+    assert "commander" in flags("Legendary Planeswalker — Grist", grist)
+    assert "commander" not in flags("Legendary Planeswalker — Jace")

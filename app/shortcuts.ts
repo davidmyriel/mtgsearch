@@ -17,6 +17,13 @@ const legal = (format: string): IR => ["in", "legal", format];
 /** A land whose rules text (name written as ~, reminder text removed) matches a pattern. */
 const land = (pattern: string): IR => both(typeWord("land"), ["re", "oracle_tilde_lc", pattern]);
 
+// "... is also a Cleric, Rogue, Warrior, and Wizard."
+const ALL_FOUR: IR = ["has", "oracle_lc", "is also a cleric, rogue, warrior, and wizard"];
+// The melded side of a meld pair has no mana cost and cannot be cast, so it leads nothing.
+const CASTABLE: IR = ["not", ["and", [["in", "flags", "meld"], ["eq", "m0_key", "none"]]]];
+// A Background that is not also a creature cannot lead a deck on its own.
+const NOT_ONLY_BACKGROUND: IR = ["not", ["and", [["in", "type_words", "background"], ["not", ["in", "type_words", "creature"]]]]];
+
 const ALIASES: Record<string, string> = {
   karoo: "bounceland",
   cycleland: "bikeland",
@@ -55,24 +62,41 @@ const SHORTCUTS: Record<string, IR> = {
   filterland: land(String.raw`\{[^}]+\}, \{t\}: add (\{[wubrg]\}\{[wubrg]\}[,.]|five mana in any combination of colors|\{w\}\{u\}\{b\}\{r\}\{g\})`),
   // lands that bank storage counters: Fallen Empires, Time Spiral and two later ones
   storageland: land(String.raw`if ~ is tapped, put a storage counter on it|\{1\}, \{t\}: put a storage counter on ~`),
-  // lands that turn themselves into creatures
-  creatureland: land(String.raw`(~|it) becomes? an? [^\n]*creature[^\n]*still a land`),
+  // lands that turn themselves into creatures, or into a copy of one
+  creatureland: land(
+    String.raw`(~|it) becomes? an? [^\n]*creature[^\n]*still an? [a-z ]*land|~ becomes an? [^\n.]*creature in addition to its other types|~ becomes a copy of target creature`,
+  ),
 
   // groups defined by a rule
-  party: either(typeWord("cleric"), typeWord("rogue"), typeWord("warrior"), typeWord("wizard"), keyword("changeling")),
-  outlaw: either(typeWord("assassin"), typeWord("mercenary"), typeWord("pirate"), typeWord("rogue"), typeWord("warlock"), keyword("changeling")),
+  // creatures of a party type; a changeling is every type, and a few cards say they are all four
+  party: both(typeWord("creature"), either(typeWord("cleric"), typeWord("rogue"), typeWord("warrior"), typeWord("wizard"), keyword("changeling"), ALL_FOUR)),
+  outlaw: either(typeWord("assassin"), typeWord("mercenary"), typeWord("pirate"), typeWord("rogue"), typeWord("warlock"), keyword("changeling"), ALL_FOUR),
   companion: keyword("companion"),
-  // cards that share the command zone: legendary partners of every kind, and Backgrounds
+  // cards that share the command zone: legendary partners of every kind, Backgrounds, and the
+  // Doctors, who pair with a Doctor's companion
   partner: either(
     both(flag("commander"), either(keyword("partner"), keyword("partner with"), keyword("friends forever"), keyword("choose a background"), keyword("doctor's companion"))),
     typeWord("background"),
+    both(typeWord("time"), typeWord("lord"), typeWord("doctor")),
   ),
   // a planeswalker on the front face
-  oathbreaker: both(["re", "type_lc", String.raw`^[^/]*planeswalker`], legal("oathbreaker")),
-  duelcommander: both(flag("commander"), legal("duel")),
-  brawler: both(either(flag("commander"), both(typeWord("legendary"), typeWord("planeswalker"))), legal("brawl")),
-  // modes are listed with bullets; Spree lists them as extra costs
-  modal: either(["has", "fulloracle_lc", "•"], keyword("spree")),
+  oathbreaker: both(["re", "type_lc", String.raw`^[^/]*planeswalker`], legal("oathbreaker"), CASTABLE),
+  // Duel Commander marks cards banned as commander as "restricted". Scryfall also lets any
+  // legendary Spacecraft lead there, with or without a power and toughness.
+  duelcommander: both(
+    either(flag("commander"), both(typeWord("legendary"), typeWord("spacecraft"))),
+    legal("duel"),
+    ["not", ["in", "restricted", "duel"]],
+    NOT_ONLY_BACKGROUND,
+    CASTABLE,
+  ),
+  brawler: both(either(flag("commander"), ["re", "type_lc", String.raw`^[^/]*legendary[^/]*planeswalker`]), legal("brawl"), NOT_ONLY_BACKGROUND, CASTABLE),
+  // a number of modes to choose, listed with bullets; Spree and the Seasons list them as costs
+  modal: either(
+    both(["has", "fulloracle_lc", "•"], ["re", "fulloracle_lc", String.raw`chooses? (one|two|three|four|five|six|seven|any number|up to|x\b)`]),
+    keyword("spree"),
+    ["has", "fulloracle_lc", "worth of modes"],
+  ),
   adventure: ["eq", "layout", "adventure"],
   augmentation: either(["eq", "layout", "augment"], ["eq", "layout", "host"]),
   frenchvanilla: flag("frenchvanilla"),

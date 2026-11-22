@@ -19491,7 +19491,7 @@
      [
       "re",
       "oracle_tilde_lc",
-      "(~|it) becomes? an? [^\\n]*creature[^\\n]*still a land"
+      "(~|it) becomes? an? [^\\n]*creature[^\\n]*still an? [a-z ]*land|~ becomes an? [^\\n.]*creature in addition to its other types|~ becomes a copy of target creature"
      ],
      [
       "eq",
@@ -19886,7 +19886,7 @@
      [
       "re",
       "oracle_tilde_lc",
-      "(~|it) becomes? an? [^\\n]*creature[^\\n]*still a land"
+      "(~|it) becomes? an? [^\\n]*creature[^\\n]*still an? [a-z ]*land|~ becomes an? [^\\n.]*creature in addition to its other types|~ becomes a copy of target creature"
      ],
      [
       "eq",
@@ -19944,6 +19944,11 @@
     "and",
     [
      [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
       "or",
       [
        [
@@ -19970,6 +19975,11 @@
         "in",
         "keywords_lc",
         "changeling"
+       ],
+       [
+        "has",
+        "oracle_lc",
+        "is also a cleric, rogue, warrior, and wizard"
        ]
       ]
      ],
@@ -20030,6 +20040,11 @@
         "in",
         "keywords_lc",
         "changeling"
+       ],
+       [
+        "has",
+        "oracle_lc",
+        "is also a cleric, rogue, warrior, and wizard"
        ]
       ]
      ],
@@ -20135,6 +20150,26 @@
         "in",
         "type_words",
         "background"
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "type_words",
+          "time"
+         ],
+         [
+          "in",
+          "type_words",
+          "lord"
+         ],
+         [
+          "in",
+          "type_words",
+          "doctor"
+         ]
+        ]
        ]
       ]
      ],
@@ -20159,7 +20194,7 @@
    }
   },
   {
-   "query": "is:oathbreaker",
+   "query": "is:oathbreaker -!\"ashaya's enduring bond\"",
    "ir": [
     "and",
     [
@@ -20174,6 +20209,32 @@
       "oathbreaker"
      ],
      [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "flags",
+         "meld"
+        ],
+        [
+         "eq",
+         "m0_key",
+         "none"
+        ]
+       ]
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "names_lc",
+       "ashaya's enduring bond"
+      ]
+     ],
+     [
       "eq",
       "extra",
       false
@@ -20186,50 +20247,10 @@
     "descending": false
    },
    "plain": false,
-   "split": {
-    "keywords": [
-     "is"
-    ],
-    "words": []
-   }
+   "split": null
   },
   {
    "query": "is:duelcommander",
-   "ir": [
-    "and",
-    [
-     [
-      "in",
-      "flags",
-      "commander"
-     ],
-     [
-      "in",
-      "legal",
-      "duel"
-     ],
-     [
-      "eq",
-      "extra",
-      false
-     ]
-    ]
-   ],
-   "options": {
-    "include_extras": false,
-    "order": null,
-    "descending": false
-   },
-   "plain": false,
-   "split": {
-    "keywords": [
-     "is"
-    ],
-    "words": []
-   }
-  },
-  {
-   "query": "is:brawler",
    "ir": [
     "and",
     [
@@ -20252,7 +20273,7 @@
          [
           "in",
           "type_words",
-          "planeswalker"
+          "spacecraft"
          ]
         ]
        ]
@@ -20261,7 +20282,54 @@
      [
       "in",
       "legal",
-      "brawl"
+      "duel"
+     ],
+     [
+      "not",
+      [
+       "in",
+       "restricted",
+       "duel"
+      ]
+     ],
+     [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "type_words",
+         "background"
+        ],
+        [
+         "not",
+         [
+          "in",
+          "type_words",
+          "creature"
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "flags",
+         "meld"
+        ],
+        [
+         "eq",
+         "m0_key",
+         "none"
+        ]
+       ]
+      ]
      ],
      [
       "eq",
@@ -20284,7 +20352,7 @@
    }
   },
   {
-   "query": "is:modal",
+   "query": "is:brawler id:w mv>=5",
    "ir": [
     "and",
     [
@@ -20292,16 +20360,81 @@
       "or",
       [
        [
-        "has",
-        "fulloracle_lc",
-        "•"
+        "in",
+        "flags",
+        "commander"
+       ],
+       [
+        "re",
+        "type_lc",
+        "^[^/]*legendary[^/]*planeswalker"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "legal",
+      "brawl"
+     ],
+     [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "type_words",
+         "background"
+        ],
+        [
+         "not",
+         [
+          "in",
+          "type_words",
+          "creature"
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "flags",
+         "meld"
+        ],
+        [
+         "eq",
+         "m0_key",
+         "none"
+        ]
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "id_sets",
+        "C"
        ],
        [
         "in",
-        "keywords_lc",
-        "spree"
+        "id_sets",
+        "W"
        ]
       ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      ">=",
+      5
      ],
      [
       "eq",
@@ -20318,10 +20451,253 @@
    "plain": false,
    "split": {
     "keywords": [
-     "is"
+     "is",
+     "id",
+     "mv"
     ],
     "words": []
    }
+  },
+  {
+   "query": "is:brawler t:planeswalker c:u mv>=6",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "flags",
+        "commander"
+       ],
+       [
+        "re",
+        "type_lc",
+        "^[^/]*legendary[^/]*planeswalker"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "legal",
+      "brawl"
+     ],
+     [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "type_words",
+         "background"
+        ],
+        [
+         "not",
+         [
+          "in",
+          "type_words",
+          "creature"
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "not",
+      [
+       "and",
+       [
+        [
+         "in",
+         "flags",
+         "meld"
+        ],
+        [
+         "eq",
+         "m0_key",
+         "none"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "planeswalker"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "U"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WU"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUB"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      ">=",
+      6
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:modal -!\"celebr-8000\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "has",
+          "fulloracle_lc",
+          "•"
+         ],
+         [
+          "re",
+          "fulloracle_lc",
+          "chooses? (one|two|three|four|five|six|seven|any number|up to|x\\b)"
+         ]
+        ]
+       ],
+       [
+        "in",
+        "keywords_lc",
+        "spree"
+       ],
+       [
+        "has",
+        "fulloracle_lc",
+        "worth of modes"
+       ]
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "names_lc",
+       "celebr-8000"
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
   },
   {
    "query": "is:adventure",
@@ -20394,7 +20770,7 @@
    }
   },
   {
-   "query": "is:frenchvanilla",
+   "query": "is:frenchvanilla c:g mv=1",
    "ir": [
     "and",
     [
@@ -20402,6 +20778,97 @@
       "in",
       "flags",
       "frenchvanilla"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
      ],
      [
       "eq",
@@ -20418,7 +20885,52 @@
    "plain": false,
    "split": {
     "keywords": [
-     "is"
+     "is",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:frenchvanilla kw:trample pow>=6",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "flags",
+      "frenchvanilla"
+     ],
+     [
+      "in",
+      "keywords_lc",
+      "trample"
+     ],
+     [
+      "cmp",
+      "pow_max",
+      ">=",
+      6
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "kw",
+     "pow"
     ],
     "words": []
    }
@@ -20789,6 +21301,11 @@
     "and",
     [
      [
+      "in",
+      "type_words",
+      "creature"
+     ],
+     [
       "or",
       [
        [
@@ -20815,6 +21332,11 @@
         "in",
         "keywords_lc",
         "changeling"
+       ],
+       [
+        "has",
+        "oracle_lc",
+        "is also a cleric, rogue, warrior, and wizard"
        ]
       ]
      ],
@@ -20862,14 +21384,29 @@
        "or",
        [
         [
-         "has",
-         "fulloracle_lc",
-         "•"
+         "and",
+         [
+          [
+           "has",
+           "fulloracle_lc",
+           "•"
+          ],
+          [
+           "re",
+           "fulloracle_lc",
+           "chooses? (one|two|three|four|five|six|seven|any number|up to|x\\b)"
+          ]
+         ]
         ],
         [
          "in",
          "keywords_lc",
          "spree"
+        ],
+        [
+         "has",
+         "fulloracle_lc",
+         "worth of modes"
         ]
        ]
       ]
@@ -20992,6 +21529,119 @@
     ],
     "words": []
    }
+  },
+  {
+   "query": "is:commander t:vehicle",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "flags",
+      "commander"
+     ],
+     [
+      "in",
+      "type_words",
+      "vehicle"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:commander t:spacecraft",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "flags",
+      "commander"
+     ],
+     [
+      "in",
+      "type_words",
+      "spacecraft"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:commander -t:creature -t:planeswalker",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "flags",
+      "commander"
+     ],
+     [
+      "not",
+      [
+       "in",
+       "type_words",
+       "creature"
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "type_words",
+       "planeswalker"
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
   },
   {
    "query": "o:\"unterminated",

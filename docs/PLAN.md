@@ -40,7 +40,12 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] Syntax compiler for card-level keywords (see README for the list)
 - [x] Differential testing against Scryfall's API: 97/97 tuning, 74/77 held-out first run (77/77 now)
 - [x] Mana cost keywords: `m:`, `devotion:`, `produces:` (58/58 tuning, 18/22 held-out first run)
-- [ ] Remaining `is:` shortcuts (land cycles and the like) and Scryfall's regex shorthands
+- [x] `is:` shortcuts: 23 land cycles with their other names, and party, outlaw, companion,
+      partner, oathbreaker, duelcommander, brawler, modal, adventure, augmentation, frenchvanilla,
+      masterpiece, firstprint (54/54 on the tuning set; four differences kept on purpose are in
+      `conformance/known_gaps.txt`). `is:commander` now includes legendary Vehicles, Spacecraft
+      and Backgrounds, as Scryfall's does
+- [ ] Scryfall's regex shorthands (`\spp`, `\smm`, `\spt`)
 - [ ] Grow the held-out conformance set to about 200 queries; run it nightly
 
 ### 2. Printing-level parity: mostly done
@@ -124,8 +129,9 @@ picked up: at the boundary between plan steps unless something is broken.
   function bundle with Netlify's tool; lint and test the ingest job on Python 3.10 and 3.13.
 - Same-repository pushes and pull requests, when the TopK secret is configured: live tests, and the
   browser test on the local server and as Netlify serves the site.
-- Nightly: incremental ingest of cards and printings, conformance on both tuning sets, relevance
-  evaluation, results uploaded.
+- Nightly: incremental ingest of cards and printings, conformance on the four tuning sets
+  (cards, printings, mana, shortcuts), relevance evaluation, results uploaded. The shortcut set
+  matters most there: twenty land cycles rest on community tags, which anyone can edit.
 - Not yet wired: failing the nightly when relevance drops below the baseline, and a staging
   collection that is promoted to production only after the checks pass.
 

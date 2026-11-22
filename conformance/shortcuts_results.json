@@ -1,0 +1,496 @@
+{
+ "summary": {
+  "pass": 54,
+  "fail": 0,
+  "unsupported": 0,
+  "error": 0
+ },
+ "results": [
+  {
+   "query": "is:fetchland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:shockland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:dual",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:checkland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:fastland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:painland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:filterland",
+   "status": "pass",
+   "scryfall_total": 22,
+   "ours_total": 22,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:bounceland",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:bikeland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:canopyland",
+   "status": "pass",
+   "scryfall_total": 6,
+   "ours_total": 6,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:gainland",
+   "status": "pass",
+   "scryfall_total": 15,
+   "ours_total": 15,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:scryland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:shadowland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:storageland",
+   "status": "pass",
+   "scryfall_total": 12,
+   "ours_total": 12,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:creatureland",
+   "status": "pass",
+   "scryfall_total": 51,
+   "ours_total": 51,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:triland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:tangoland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:triome",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:slowland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:bondland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:pathway",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:surveilland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:vergeland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:karoo",
+   "status": "pass",
+   "scryfall_total": 17,
+   "ours_total": 17,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:cycleland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:canland",
+   "status": "pass",
+   "scryfall_total": 6,
+   "ours_total": 6,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:snarl",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:manland",
+   "status": "pass",
+   "scryfall_total": 51,
+   "ours_total": 51,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:battleland",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:party",
+   "status": "pass",
+   "scryfall_total": 3905,
+   "ours_total": 3905,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 700 Scryfall results"
+  },
+  {
+   "query": "is:outlaw",
+   "status": "pass",
+   "scryfall_total": 1359,
+   "ours_total": 1359,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 700 Scryfall results"
+  },
+  {
+   "query": "is:companion",
+   "status": "pass",
+   "scryfall_total": 10,
+   "ours_total": 10,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:partner",
+   "status": "pass",
+   "scryfall_total": 228,
+   "ours_total": 228,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:oathbreaker -!\"ashaya's enduring bond\"",
+   "status": "pass",
+   "scryfall_total": 304,
+   "ours_total": 304,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:duelcommander",
+   "status": "pass",
+   "scryfall_total": 3698,
+   "ours_total": 3698,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 700 Scryfall results"
+  },
+  {
+   "query": "is:brawler id:w mv>=5",
+   "status": "pass",
+   "scryfall_total": 95,
+   "ours_total": 95,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:brawler t:planeswalker c:u mv>=6",
+   "status": "pass",
+   "scryfall_total": 13,
+   "ours_total": 13,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:modal -!\"celebr-8000\"",
+   "status": "pass",
+   "scryfall_total": 823,
+   "ours_total": 823,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 700 Scryfall results"
+  },
+  {
+   "query": "is:adventure",
+   "status": "pass",
+   "scryfall_total": 161,
+   "ours_total": 161,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:augmentation",
+   "status": "pass",
+   "scryfall_total": 34,
+   "ours_total": 34,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:frenchvanilla c:g mv=1",
+   "status": "pass",
+   "scryfall_total": 27,
+   "ours_total": 27,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:frenchvanilla kw:trample pow>=6",
+   "status": "pass",
+   "scryfall_total": 40,
+   "ours_total": 40,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:masterpiece",
+   "status": "pass",
+   "scryfall_total": 901,
+   "ours_total": 901,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 700 Scryfall results"
+  },
+  {
+   "query": "is:colorshifted",
+   "status": "pass",
+   "scryfall_total": 45,
+   "ours_total": 45,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:tombstone",
+   "status": "pass",
+   "scryfall_total": 113,
+   "ours_total": 113,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:firstprint",
+   "status": "pass",
+   "scryfall_total": 34060,
+   "ours_total": 34060,
+   "missing": [],
+   "extra": [],
+   "note": "compared totals and the first 700 Scryfall results"
+  },
+  {
+   "query": "is:glossy",
+   "status": "pass",
+   "scryfall_total": 7,
+   "ours_total": 7,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:fetchland c:g",
+   "status": "pass",
+   "scryfall_total": 0,
+   "ours_total": 0,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "-is:shockland t:land id:wu produces:wu r:rare",
+   "status": "pass",
+   "scryfall_total": 105,
+   "ours_total": 105,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:party t:legendary mv=1",
+   "status": "pass",
+   "scryfall_total": 11,
+   "ours_total": 11,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "not:modal t:instant c:r mv=1",
+   "status": "pass",
+   "scryfall_total": 144,
+   "ours_total": 144,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:commander t:vehicle",
+   "status": "pass",
+   "scryfall_total": 41,
+   "ours_total": 41,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:commander t:spacecraft",
+   "status": "pass",
+   "scryfall_total": 28,
+   "ours_total": 28,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  },
+  {
+   "query": "is:commander -t:creature -t:planeswalker",
+   "status": "pass",
+   "scryfall_total": 86,
+   "ours_total": 86,
+   "missing": [],
+   "extra": [],
+   "note": ""
+  }
+ ]
+}

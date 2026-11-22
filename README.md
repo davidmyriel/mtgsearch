@@ -85,6 +85,7 @@ Measured on 22 November 2026 against the full card set. Raw output is in `confor
 | Printing held-out set, 61 queries | 53 match | 59 match |
 | Mana tuning set, 58 queries | | 58 match |
 | Mana held-out set, 22 queries | 18 match | 19 match |
+| `is:` shortcuts, 54 queries (land cycles, party, modal and so on) | 35 of 49 | 54 match |
 
 The first-run column is the honest measure of how well the rules generalise; the held-out
 sets have since been used to fix rules, so they are no longer untouched. Differences that
