@@ -225,7 +225,12 @@ def _flags(card: dict, type_lc: str, oracle: str, full_oracle: str) -> list[str]
         flags.add("vanilla")
     if "creature" in front_type and (power, toughness, card.get("cmc")) == (2.0, 2.0, 2.0):
         flags.add("bear")
-    if ("legendary" in front_type and "creature" in front_type) or "can be your commander" in oracle.lower():
+    # Legendary creatures, and since the 2025 rules change legendary Vehicles and Spacecraft;
+    # Scryfall also counts Backgrounds, which share the command zone.
+    leads = ("creature", "vehicle", "spacecraft", "background")
+    if ("legendary" in front_type and any(t in front_type for t in leads)) or (
+        "can be your commander" in oracle.lower()
+    ):
         flags.add("commander")
     if re.search(r"\{[^}/]+/[^}P/]+\}", cost):
         flags.add("hybrid")
@@ -236,7 +241,22 @@ def _flags(card: dict, type_lc: str, oracle: str, full_oracle: str) -> list[str]
             flags.add(name)
     if card.get("set_type") == "funny" or "playtest" in (card.get("promo_types") or []):
         flags.add("funny")
+    if "creature" in front_type and _only_keywords(oracle, card.get("keywords", [])):
+        flags.add("frenchvanilla")
     return sorted(flags)
+
+
+def _only_keywords(oracle: str, keywords: list[str]) -> bool:
+    """Whether a card's rules text (reminder text removed) is nothing but keyword abilities.
+
+    "Flying, vigilance" and "Protection from black\nCycling {2}" are; a card with no text at
+    all is plain vanilla, not French vanilla.
+    """
+    names = [fold(k) for k in keywords]
+    items = [item.strip() for item in re.split(r"[\n,;]", fold(oracle)) if item.strip()]
+    if not items:
+        return False
+    return all(any(item == k or item.startswith((k + " ", k + "—")) for k in names) for item in items)
 
 
 def rules_text(card: dict) -> str:
@@ -325,6 +345,7 @@ def build_document(card: dict, tags: dict | None = None, aggregate: dict | None 
         "banned": sorted(f for f, s in legal.items() if s == "banned"),
         "restricted": sorted(f for f, s in legal.items() if s == "restricted"),
         "flags": _flags(card, fold(type_line), oracle, full_oracle),
+        "layout": card["layout"],
         "otags": tags["slugs"],
         **mana_fields(card),
         "extra": is_extra(card),

@@ -19039,6 +19039,1961 @@
    }
   },
   {
+   "query": "is:fetchland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-fetchland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:shockland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-shockland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:dual",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-abu-dual-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:checkland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-checkland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:fastland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-fastland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:painland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-painland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:filterland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "re",
+      "oracle_tilde_lc",
+      "\\{[^}]+\\}, \\{t\\}: add (\\{[wubrg]\\}\\{[wubrg]\\}[,.]|five mana in any combination of colors|\\{w\\}\\{u\\}\\{b\\}\\{r\\}\\{g\\})"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:bounceland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "karoo-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:bikeland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-dual-cycling-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:canopyland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-horizon-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:gainland",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "otags",
+        "cycle-gainland"
+       ],
+       [
+        "in",
+        "otags",
+        "cycle-zen-refugeland"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:scryland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-temple-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:shadowland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-reveal-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:storageland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "re",
+      "oracle_tilde_lc",
+      "if ~ is tapped, put a storage counter on it|\\{1\\}, \\{t\\}: put a storage counter on ~"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:creatureland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "re",
+      "oracle_tilde_lc",
+      "(~|it) becomes? an? [^\\n]*creature[^\\n]*still a land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:triland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-triple-tapland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:tangoland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-tangoland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:triome",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "tricycle-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:slowland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-slowland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:bondland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-crowdland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:pathway",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-pathway"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:surveilland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-dual-surveil-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:vergeland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-verge"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:karoo",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "karoo-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:cycleland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-dual-cycling-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:canland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-horizon-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:snarl",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-reveal-land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:manland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "re",
+      "oracle_tilde_lc",
+      "(~|it) becomes? an? [^\\n]*creature[^\\n]*still a land"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:battleland",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-tangoland"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:party",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "type_words",
+        "cleric"
+       ],
+       [
+        "in",
+        "type_words",
+        "rogue"
+       ],
+       [
+        "in",
+        "type_words",
+        "warrior"
+       ],
+       [
+        "in",
+        "type_words",
+        "wizard"
+       ],
+       [
+        "in",
+        "keywords_lc",
+        "changeling"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:outlaw",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "type_words",
+        "assassin"
+       ],
+       [
+        "in",
+        "type_words",
+        "mercenary"
+       ],
+       [
+        "in",
+        "type_words",
+        "pirate"
+       ],
+       [
+        "in",
+        "type_words",
+        "rogue"
+       ],
+       [
+        "in",
+        "type_words",
+        "warlock"
+       ],
+       [
+        "in",
+        "keywords_lc",
+        "changeling"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:companion",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "keywords_lc",
+      "companion"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:partner",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "and",
+        [
+         [
+          "in",
+          "flags",
+          "commander"
+         ],
+         [
+          "or",
+          [
+           [
+            "in",
+            "keywords_lc",
+            "partner"
+           ],
+           [
+            "in",
+            "keywords_lc",
+            "partner with"
+           ],
+           [
+            "in",
+            "keywords_lc",
+            "friends forever"
+           ],
+           [
+            "in",
+            "keywords_lc",
+            "choose a background"
+           ],
+           [
+            "in",
+            "keywords_lc",
+            "doctor's companion"
+           ]
+          ]
+         ]
+        ]
+       ],
+       [
+        "in",
+        "type_words",
+        "background"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:oathbreaker",
+   "ir": [
+    "and",
+    [
+     [
+      "re",
+      "type_lc",
+      "^[^/]*planeswalker"
+     ],
+     [
+      "in",
+      "legal",
+      "oathbreaker"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:duelcommander",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "flags",
+      "commander"
+     ],
+     [
+      "in",
+      "legal",
+      "duel"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:brawler",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "flags",
+        "commander"
+       ],
+       [
+        "and",
+        [
+         [
+          "in",
+          "type_words",
+          "legendary"
+         ],
+         [
+          "in",
+          "type_words",
+          "planeswalker"
+         ]
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "legal",
+      "brawl"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:modal",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "fulloracle_lc",
+        "•"
+       ],
+       [
+        "in",
+        "keywords_lc",
+        "spree"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:adventure",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "layout",
+      "adventure"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:augmentation",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "eq",
+        "layout",
+        "augment"
+       ],
+       [
+        "eq",
+        "layout",
+        "host"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:frenchvanilla",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "flags",
+      "frenchvanilla"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:masterpiece",
+   "ir": [
+    "and",
+    [
+     [
+      "eq",
+      "set_type",
+      "masterpiece"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:colorshifted",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "frame_effects",
+      "colorshifted"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:tombstone",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "frame_effects",
+      "tombstone"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:firstprint",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "pflags",
+       "reprint"
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:glossy",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "pflags",
+      "glossy"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "is:fetchland c:g",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "otags",
+      "cycle-fetchland"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-is:shockland t:land id:wu produces:wu r:rare",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "otags",
+       "cycle-shockland"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "id_sets",
+        "C"
+       ],
+       [
+        "in",
+        "id_sets",
+        "W"
+       ],
+       [
+        "in",
+        "id_sets",
+        "U"
+       ],
+       [
+        "in",
+        "id_sets",
+        "WU"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "produces",
+      "W"
+     ],
+     [
+      "in",
+      "produces",
+      "U"
+     ],
+     [
+      "eq",
+      "rarity",
+      "rare"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "is:party t:legendary mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "type_words",
+        "cleric"
+       ],
+       [
+        "in",
+        "type_words",
+        "rogue"
+       ],
+       [
+        "in",
+        "type_words",
+        "warrior"
+       ],
+       [
+        "in",
+        "type_words",
+        "wizard"
+       ],
+       [
+        "in",
+        "keywords_lc",
+        "changeling"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "legendary"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "is",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "not:modal t:instant c:r mv=1",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "or",
+       [
+        [
+         "has",
+         "fulloracle_lc",
+         "•"
+        ],
+        [
+         "in",
+         "keywords_lc",
+         "spree"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "R"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBR"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      1
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "not",
+     "t",
+     "c",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
    "query": "o:\"unterminated",
    "error": "QueryError"
   },
@@ -19091,9 +21046,9 @@
    "error": "QueryError"
   },
   {
-   "query": "is:fetchland",
+   "query": "is:unicorn",
    "error": "Unsupported",
-   "message": "'is:fetchland' is not supported yet"
+   "message": "'is:unicorn' is not supported yet"
   },
   {
    "query": "pow>loy",

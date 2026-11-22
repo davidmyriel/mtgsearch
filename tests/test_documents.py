@@ -1,5 +1,6 @@
 from mtgsearch.documents import (
     INFINITY,
+    _only_keywords,
     color_key,
     cost_parts,
     fold,
@@ -209,3 +210,14 @@ def test_devotion_to_two_colours_counts_each_symbol_once():
     # {R}{R/W}{W}: two red, two white, and three symbols that are red or white
     scrollsmith = mana_fields({"mana_cost": "{R}{R/W}{W}", "type_line": "Creature — Dwarf Cleric"})
     assert (scrollsmith["dev_R"], scrollsmith["dev_W"], scrollsmith["dev_WR"]) == (2, 2, 3)
+
+
+def test_french_vanilla_is_text_made_only_of_keywords(docs):
+    assert _only_keywords("Flying, vigilance", ["Flying", "Vigilance"])
+    assert _only_keywords("Protection from black\nCycling {2}", ["Cycling", "Protection"])
+    assert _only_keywords("Flash\nFlying; trample", ["Flash", "Flying", "Trample"])
+    assert not _only_keywords("", ["Flying"])  # no text at all is plain vanilla
+    assert not _only_keywords("Flying\nWhen this creature dies, draw a card.", ["Flying"])
+    assert not _only_keywords("Flying, vigilance", ["Flying"])  # vigilance is not among its keywords
+    assert "frenchvanilla" not in docs["Consecrated Sphinx"]["flags"]
+    assert docs["Consecrated Sphinx"]["layout"] == "normal" and docs["Fire // Ice"]["layout"] == "split"

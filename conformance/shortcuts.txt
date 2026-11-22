@@ -1,0 +1,63 @@
+# `is:` shortcuts for well-known groups of cards (app/shortcuts.ts).
+# Tuning set: each rule was matched against Scryfall's answer to these. Most land cycles rest
+# on community tags, which people can edit, so this file runs nightly to catch drift.
+# Run with: npm run conformance -- conformance/shortcuts.txt
+
+# land cycles
+is:fetchland
+is:shockland
+is:dual
+is:checkland
+is:fastland
+is:painland
+is:filterland
+is:bounceland
+is:bikeland
+is:canopyland
+is:gainland
+is:scryland
+is:shadowland
+is:storageland
+is:creatureland
+is:triland
+is:tangoland
+is:triome
+is:slowland
+is:bondland
+is:pathway
+is:surveilland
+is:vergeland
+
+# other names for the same cycles
+is:karoo
+is:cycleland
+is:canland
+is:snarl
+is:manland
+is:battleland
+
+# groups defined by a rule
+is:party
+is:outlaw
+is:companion
+is:partner
+is:oathbreaker
+is:duelcommander
+is:brawler
+is:modal
+is:adventure
+is:augmentation
+is:frenchvanilla
+
+# about a printing
+is:masterpiece
+is:colorshifted
+is:tombstone
+is:firstprint
+is:glossy
+
+# combined with other terms
+is:fetchland c:g
+-is:shockland t:land id:wu produces:wu r:rare
+is:party t:legendary mv=1
+not:modal t:instant c:r mv=1

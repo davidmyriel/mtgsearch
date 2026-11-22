@@ -41,6 +41,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:U:1",
    "0:U:2"
@@ -118,6 +119,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "otags": [
    "mana-rock",
    "ramp"
@@ -189,6 +191,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:G:1"
   ],
@@ -268,6 +271,7 @@
    "spell",
    "vanilla"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:G:1"
   ],
@@ -339,6 +343,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:G:1"
   ],
@@ -396,6 +401,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:U:1",
    "0:U:2"
@@ -448,6 +454,7 @@
   "flags": [
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:B:1",
    "0:U:1"
@@ -501,6 +508,7 @@
    "permanent",
    "spell"
   ],
+  "layout": "normal",
   "m_syms": [
    "0:R/W:1",
    "0:R/W:2",
@@ -581,6 +589,7 @@
    "spell",
    "transform"
   ],
+  "layout": "transform",
   "m_syms": [
    "0:W:1",
    "0:W:2"
@@ -650,6 +659,7 @@
    "spell",
    "split"
   ],
+  "layout": "split",
   "m_syms": [
    "0:R:1",
    "1:U:1"
@@ -704,6 +714,7 @@
    "permanent",
    "vanilla"
   ],
+  "layout": "token",
   "m0_key": "none",
   "extra": true,
   "mana_cost": "",

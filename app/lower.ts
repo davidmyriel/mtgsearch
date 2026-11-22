@@ -15,6 +15,7 @@
 import { devotion, mana, produces } from "./mana.ts";
 import { fold, plain } from "./normalize.ts";
 import { KEYWORDS, QueryError, Unsupported } from "./parser.ts";
+import { shortcut } from "./shortcuts.ts";
 import type { Keyword, Node } from "./parser.ts";
 import printingFlags from "./printing-flags.json" with { type: "json" };
 import setDates from "./sets.json" with { type: "json" };
@@ -332,6 +333,7 @@ function keyword(kw: Keyword, options: Working): IR {
     if (FLAGS.has(flag)) test = ["in", "flags", flag];
     else if (Object.hasOwn(PRINTING_FLAG_ALIASES, flag)) test = PRINTING_FLAG_ALIASES[flag];
     else if (PRINTING_FLAGS.has(flag)) test = ["in", "pflags", flag];
+    else if (shortcut(flag)) test = shortcut(flag) as IR;
     else throw new Unsupported(`'${kw.key}:${value}' is not supported yet`);
     // playtest and holiday cards are only findable this way
     if (canonical === "is" && flag === "funny") options.includeExtras = true;

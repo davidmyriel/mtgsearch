@@ -27,8 +27,10 @@ export const MIN_INTERVAL_MS = 600;
 // They also ask clients to cache what they download for at least 24 hours.
 const CACHE_DIR = fileURLToPath(new URL("../data/scryfall-cache/", import.meta.url));
 const CACHE_MS = 24 * 60 * 60 * 1000;
-const MAX_PAGES = 4;
-const MAX_IDS = 5000;
+// Pages of 175 results fetched per query; beyond that only totals are compared. Raise it with
+// CONFORMANCE_MAX_PAGES to see every difference in a large result while working out a rule.
+const MAX_PAGES = Number(process.env.CONFORMANCE_MAX_PAGES) || 4;
+const MAX_IDS = 10_000;
 
 export type Outcome = {
   query: string;

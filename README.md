@@ -135,7 +135,8 @@ Read these with care:
 | Numbers | `mv` `pow` `tou` `pt` `loy`, `pow>tou`, `mv:even` |
 | Mana | `m:` with every comparison (`m:2WW`, `m={R/W}{R/W}`, `m<=1G`), `devotion:`, `produces:` as a set of colours or a count |
 | Legality and tags | `f:` `banned:` `restricted:`, `edhrec`, `otag:` / `function:` |
-| Card flags | `is:` split, flip, transform, meld, leveler, mdfc, dfc, permanent, spell, historic, vanilla, bear, commander, hybrid, phyrexian, reserved, gamechanger, funny |
+| Card flags | `is:` split, flip, transform, meld, leveler, mdfc, dfc, permanent, spell, historic, vanilla, frenchvanilla, bear, commander, hybrid, phyrexian, reserved, gamechanger, funny |
+| Shortcuts | Land cycles: `is:` fetchland, shockland, dual, checkland, fastland, painland, filterland, bounceland, bikeland, canopyland, gainland, scryland, shadowland, storageland, creatureland, triland, tangoland, triome, slowland, bondland, pathway, surveilland, vergeland (and their other names, such as `is:manland`). Groups: `is:` party, outlaw, companion, partner, oathbreaker, duelcommander, brawler, modal, adventure, augmentation, masterpiece, firstprint |
 | Printings | `set:` `st:` `cn:` `r:` (with comparisons) `a:` `ft:` `wm:` `frame:` `border:` `stamp:` `game:` `year` `date` (a day, a year or a set code) `usd` `eur` `tix` |
 | Printing flags | `is:` foil, nonfoil, etched, promo, reprint, digital, fullart, textless, spotlight, booster, hires, showcase, extended, borderless, old, new, ub, and every promo type (`is:prerelease`, `is:buyabox`, ...) |
 | Across printings | `in:` a set, rarity or game; `prints`, `sets` |
@@ -143,9 +144,8 @@ Read these with care:
 | Sorting | `order:` name, cmc, power, toughness, edhrec, released, usd, eur, tix, rarity; `direction:` |
 
 Not yet, and reported as unsupported rather than silently ignored: `lang:` and non-English
-printings, `new:`, `block:`, `cube:`, art tags (`art:`), land-cycle shortcuts such as
-`is:fetchland`, `order:` by set or artist, and Scryfall's `\spp`, `\smm`, `\spt` regex
-shorthands.
+printings, `new:`, `block:`, `cube:`, art tags (`art:`), `order:` by set or artist, and
+Scryfall's `\spp`, `\smm`, `\spt` regex shorthands.
 
 Known differences from Scryfall are listed with reasons in `conformance/known_gaps.txt`.
 
