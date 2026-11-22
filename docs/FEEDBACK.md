@@ -31,6 +31,7 @@ and the Scryfall comparison where results could move.
 | Id | Received | Item | Size | Slot | Status |
 |---|---|---|---|---|---|
 | F-1 | 22 Nov 2026 | A page for each card, in place of the popup | M | Next boundary | Done |
+| F-2 | 22 Nov 2026 | The site has to look polished enough for the public; layout closer to Scryfall's first | L | Now, on the owner's word | Done (first pass) |
 
 ### F-1. A page for each card
 
@@ -54,6 +55,40 @@ and the Scryfall comparison where results could move.
   card. That is a suggestion from the developer, not feedback; it would be size M and belongs
   with the browse tier unless asked for sooner.
 
+### F-2. A site polished enough for the public
+
+- **From:** the project owner, 22 November 2026, after asking whether the study of Scryfall's
+  interface had been done and hearing that its look had been recorded but not applied.
+- **In their words:** asked "the remaining features in the order above, or the layout brought
+  closer to theirs first?", the answer was "the layout brought closer to theirs first" and
+  "needs to look like a polished site for the public".
+- **How it was read:** the structure of the pages should follow Scryfall's, which people who
+  search for cards already know: a header with the search box and navigation on every page, a
+  home page built around the search box, large tiles, a card page in columns, a proper footer.
+  The colours, typefaces, wordmark and drawings stay this site's own, because theirs are their
+  brand. That last part is the developer's reading, not something the owner said.
+- **Slot and why:** taken at once. The owner set the order, and no plan step was in progress.
+- **What was done:**
+  - One masthead on every view. With no search showing it is the home page's centrepiece: the
+    name, one sentence, the search box, and links to the syntax guide and a random card. Once
+    there is a search it is a bar across the top with the same three things.
+  - The home page shows the three ways to search (describe the card, Scryfall syntax, both at
+    once), each with examples that run.
+  - Results: four tiles to a row on a laptop, three on a tablet, two on a phone, large enough
+    to read the card. What was found and the three controls sit in a band under the header.
+  - The card page is three columns on a wide screen: the picture, which stays in view while the
+    page scrolls; the card's text with cost, type, rules, stats, printing, legality in two
+    columns and the actions; and the printings with prices. Narrower, the printings go
+    underneath; on a phone everything is one column.
+  - A syntax guide at `/syntax`: fourteen sections and fifty examples, each a link that runs
+    the search. A test compiles every example, so the guide cannot describe something that
+    does not work.
+  - A random card at `/random`, also in the header.
+  - A footer with the same links, what the site is, where the data comes from, and the
+    fan-content notice.
+- **Not in this pass:** a table view of results, an advanced search form, set pages, rulings,
+  both faces of a two-faced card set out separately, and a preview when a link is shared.
+
 ## From the interface study
 
 On 22 November 2026 the project owner asked for a study of how Scryfall's interface is built
@@ -70,12 +105,13 @@ identity and are not copied.
 | U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Done |
 | U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) | Open |
 | U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner | Open |
-| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Waiting |
+| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Done with our own discs. Wizards' own symbols wait for the owner |
 | U-8 | Rulings on the card page | L | With the browse tier: needs Scryfall's rulings file in the ingest | Open |
-| U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier | Open |
+| U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier | Random card done with F-2; the rest open |
 
 Larger tiles, a fuller empty state and a runnable syntax reference are in the study too; they
-are small and can ride along with U-1 to U-4.
+are small and can ride along with U-1 to U-4. (Larger tiles and the syntax reference were done
+with F-2.)
 
 ### U-2. What the card's page shows
 
@@ -131,3 +167,31 @@ are small and can ride along with U-1 to U-4.
   terms goes with them. If nothing is left, the search is refused and every reason is given.
 - **Before, for comparison:** an unsupported keyword refused the whole search, and a value that
   made no sense sent the whole query to plain-English search with no explanation.
+
+### U-7. Symbols drawn instead of `{W}`
+
+- **Decided on 22 November 2026:** asked whether to look for a symbol set with a licence the
+  site can use, the owner answered "yes".
+- **What the search found** (primary sources read on that day; this is a reading of the texts,
+  not legal advice):
+  - The Mana font by Andrew Gioia (github.com/andrewgioia/mana, version 1.18.0) covers every
+    symbol the cards use. Its README licenses the font under SIL OFL 1.1 and the CSS under MIT,
+    and says the symbol images themselves are copyright Wizards of the Coast.
+  - Wizards' Fan Content Policy (last updated 15 November 2017) allows free fan content to use
+    Wizards' material, but its FAQ lists the mana symbols among the "trademarks and logos that
+    you may not include in your Fan Content" without prior written permission. Symbols inside a
+    card image that is shown unchanged are allowed; that covers the card pictures this site
+    already shows, not symbols drawn on their own.
+  - Scryfall publishes symbol images, but its documentation refused to be read by a program
+    and no licence for re-hosting those files was found.
+  - So an open licence exists for a drawing of the symbols, but none of the candidates comes
+    with Wizards' permission to use the symbols themselves. Most fan sites show them anyway;
+    on the policy's wording that is tolerance, not permission.
+- **What was done:** symbols are drawn as small discs of this site's own design, with the letter
+  or number inside and a tint for each colour; a hybrid symbol is split corner to corner. They
+  use no Wizards artwork. The brace code stays in the text, out of sight, so copying a card's
+  text still gives `{T}: Add {G}`, and a screen reader hears "tap" and "green mana".
+- **Still the owner's to decide:** switching to Wizards' actual symbols through the Mana font.
+  It is a small change (the same hook draws either), but it rests on the policy question above:
+  accept that it is tolerated rather than permitted, or ask Wizards for written permission.
+

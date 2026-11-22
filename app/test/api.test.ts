@@ -280,6 +280,26 @@ test("a card without a size has null stats", async () => {
   assert.deepEqual(body.printings, []);
 });
 
+test("?random=1 answers with a card chosen at random, in the same shape, and is never cached", async () => {
+  let looked = false;
+  const lookup = async () => {
+    looked = true;
+    return PAGE;
+  };
+  const response = await handleCard(new URL("https://example.test/api/card?random=1"), lookup, async () => PAGE);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("Cache-Control"), "no-store");
+  assert.equal(response.headers.get("Netlify-CDN-Cache-Control"), null);
+  const body = await response.json();
+  assert.deepEqual([body.card.name, body.card.set, body.printings.length], ["Consecrated Sphinx", "2x2", 2]);
+  assert.equal(looked, false); // no set or number is needed, and none is looked up
+  // nothing could be picked: an error, not a 404 that would be cached
+  const none = await handleCard(new URL("https://example.test/api/card?random=1"), lookup, async () => null);
+  assert.equal(none.status, 502);
+  // without a way to pick one, random is not on offer and the address rules apply
+  assert.equal((await handleCard(new URL("https://example.test/api/card?random=1"), lookup)).status, 400);
+});
+
 test("an address with no card is a 404 that says so", async () => {
   const response = await getCard({ set: "nosuchset", cn: "999" }, async () => null);
   assert.equal(response.status, 404);

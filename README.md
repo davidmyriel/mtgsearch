@@ -206,7 +206,14 @@ a result, so `k` plus `offset` is held to that and `has_more` is false there.
 printing with its printed power and toughness (`stats`, also loyalty or defense) and three
 lists of formats (`legal`, `banned`, `restricted`); and `printings`, the card's printings
 newest first with set, number, rarity, date and price, at most 60. An address with no card
-is a 404.
+is a 404. `GET /api/card?random=1` answers in the same shape with a card chosen at random,
+and is never cached.
+
+The site has three addresses besides a search: `/card/<set>/<number>/<name>`, `/syntax` (the
+syntax guide, a static page whose examples are links that run the search) and `/random`.
+Mana and other symbols in a card's cost and text are drawn as small lettered discs of the
+site's own design. They are not Wizards of the Coast's symbols: see U-7 in
+[docs/FEEDBACK.md](docs/FEEDBACK.md) for why.
 
 To run a single query from the terminal:
 

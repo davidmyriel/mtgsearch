@@ -100,6 +100,11 @@ async function run(name, contextOptions) {
   check((listed.find((p) => p.current) || {}).href === new URL(cardUrl).pathname, `[${name}] the marked printing is this page`);
   check(listed.some((p) => /\$\d+\.\d\d$/.test(p.text)), `[${name}] printings carry their prices`);
   check(!(await page.isVisible("#card-prints")), `[${name}] a complete list needs no link to a search`);
+  // The cost is drawn as symbols; the brace codes stay in the text for copying and for screen readers' names.
+  const cost = await page.$$eval("#card-cost .pip", (pips) => pips.map((p) => p.getAttribute("aria-label")));
+  check(cost.join(", ") === "4 generic mana, blue mana, blue mana", `[${name}] the mana cost is drawn as symbols (${cost.join(", ")})`);
+  check((await page.textContent("#card-cost")) === "{4}{U}{U}", `[${name}] with the codes still in the text`);
+  check((await page.textContent("#card-line")) === "Creature — Sphinx", `[${name}] and the type line on its own`);
   await page.waitForFunction(() => document.getElementById("card-image").naturalWidth > 0);
   const cardOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(cardOverflow <= 0, `[${name}] the card page does not scroll sideways (overflow ${cardOverflow}px)`);
@@ -238,6 +243,8 @@ async function run(name, contextOptions) {
   check((await page.$$("#printings-list a")).length === 60, `[${name}] a basic land lists its newest 60 printings`);
   check(/^All \d+ printings$/.test(await page.textContent("#card-prints")), `[${name}] and offers all of them`);
   check(!(await page.isVisible("#card-stats")), `[${name}] a land has no power and toughness line`);
+  const inRules = await page.$$eval("#card-rules .pip", (pips) => pips.map((p) => p.getAttribute("aria-label")));
+  check(inRules.join(", ") === "tap, green mana", `[${name}] symbols in the rules text are drawn too (${inRules.join(", ")})`);
   await page.click("#card-prints");
   await page.waitForFunction(() => /\d+ printings/.test(document.getElementById("status").textContent));
   check(!(await page.isVisible("#card")), `[${name}] choosing them leaves the card's page`);
@@ -293,6 +300,36 @@ async function run(name, contextOptions) {
   check((await page.isVisible("#intro")) && (await page.$$("#results .tile")).length === 0, `[${name}] with the examples and no stale results`);
   const statusTop = await page.$eval("#status", (el) => el.getBoundingClientRect().top);
   check(statusTop < page.viewportSize().height, `[${name}] the explanation is visible without scrolling`);
+
+  // The header is on every view: a random card from the results, and Back to them.
+  await search(page, "t:sphinx");
+  const beforeRandom = page.url();
+  await page.click("#nav-random");
+  await page.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check((await page.textContent("#card-name")).length > 0, `[${name}] "Random card" opens a card at its own address (${new URL(page.url()).pathname})`);
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("card").hidden);
+  check(page.url() === beforeRandom && (await page.$$("#results .tile")).length === 60, `[${name}] and Back returns to the results`);
+  // /random opened directly lands on a card too, and the address it leaves can be shared.
+  const lucky = await context.newPage();
+  await lucky.goto(`${base}/random`);
+  await lucky.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
+  check(await lucky.isVisible("#card-image"), `[${name}] /random opened directly shows a card`);
+
+  // The syntax guide is a page of its own; its examples run.
+  await lucky.goto(`${base}/syntax`);
+  check((await lucky.textContent("h1")) === "Syntax guide" && (await lucky.$$("a.example")).length >= 40, `[${name}] the syntax guide lists its examples`);
+  const guideOverflow = await lucky.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  check(guideOverflow <= 0, `[${name}] the guide does not scroll sideways (overflow ${guideOverflow}px)`);
+  await lucky.click('a.example[href="/?q=lightning+bolt"]');
+  await lucky.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name"));
+  check((await firstCards(lucky, 1))[0] === "Lightning Bolt", `[${name}] an example in the guide runs the search`);
+  await lucky.goto(`${base}/syntax`);
+  await lucky.fill("#q", "consecrated sphinx");
+  await lucky.press("#q", "Enter");
+  await lucky.waitForFunction(() => document.getElementById("status") && document.getElementById("status").textContent.startsWith("Card name"));
+  check(new URL(lucky.url()).searchParams.get("q") === "consecrated sphinx", `[${name}] the guide's own search box searches`);
+  await lucky.close();
 
   await search(page, "lightning bolt");
   await search(page, "lang:ja");

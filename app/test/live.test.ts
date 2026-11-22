@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Client } from "topk-js";
 import { handleCard, handleSearch, MAX_REACH, MAX_RESULTS } from "../api.ts";
-import { card, MAX_PRINTINGS } from "../card.ts";
+import { card, MAX_PRINTINGS, randomCard } from "../card.ts";
 import { search } from "../search.ts";
 import type { Collection, Collections } from "../search.ts";
 
@@ -254,6 +254,18 @@ test("a card's page: one printing with stats and legality, and its printings new
   const body = await (await handleCard(new URL("https://x.test/api/card?set=ima&cn=47"), (set, number) => card(collection(), set, number))).json();
   assert.deepEqual([body.card.name, body.card.stats, body.card.set], ["Consecrated Sphinx", "4/6", "ima"]);
   assert.equal(body.printings.length, page.printings.length);
+});
+
+test("a random card is a real card with its printings, and differs from pick to pick", { skip }, async () => {
+  const cols = collection();
+  // fixed "dice" make the test repeatable: two different handfuls of cards
+  const first = await randomCard(cols, () => 0.1);
+  const second = await randomCard(cols, () => 0.7);
+  assert.ok(first && second);
+  assert.ok(first.card.name && first.card.set && first.card.cn && first.card.image);
+  assert.ok(first.printings.length >= 1);
+  assert.notEqual(first.card.name, second.card.name);
+  assert.equal(first.card.name, (await randomCard(cols, () => 0.1))?.card.name);
 });
 
 test("a card with more printings than the page lists stops at the limit; a wrong address finds nothing", { skip }, async () => {

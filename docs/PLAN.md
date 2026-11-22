@@ -112,6 +112,10 @@ picked up: at the boundary between plan steps unless something is broken.
       brought forward from the browse tier). It is served by a second endpoint, `GET /api/card`
 - [x] The page says how a syntax query was read, each condition in plain words, and a term that
       cannot be used is left out with a warning while the rest of the query runs (U-1)
+- [x] A public-facing design: a header with navigation on every view, a home page that shows
+      the three ways to search, four larger tiles to a row, a three-column card page, a footer,
+      a syntax guide whose examples run, a random card, and symbols drawn as lettered discs
+      (feedback F-2, U-7)
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

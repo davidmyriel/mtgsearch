@@ -9,7 +9,7 @@ import { readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { handleCard, handleSearch } from "./api.ts";
-import { card } from "./card.ts";
+import { card, randomCard } from "./card.ts";
 import { search } from "./search.ts";
 import { collectionsFromEnv } from "./topk.ts";
 
@@ -34,15 +34,16 @@ export function createDevServer() {
     if (url.pathname === "/api/search" || url.pathname === "/api/card") {
       const answer =
         url.pathname === "/api/card"
-          ? await handleCard(url, (set, number) => card(collectionsFromEnv(), set, number))
+          ? await handleCard(url, (set, number) => card(collectionsFromEnv(), set, number), () => randomCard(collectionsFromEnv()))
           : await handleSearch(url, (query, options) => search(collectionsFromEnv(), query, options));
       response.writeHead(answer.status, Object.fromEntries(answer.headers));
       response.end(await answer.text());
       return;
     }
     // A card's page, /card/<set>/<number>/<name>, is the same page (see [[redirects]] in netlify.toml).
-    const isPage = url.pathname === "/" || url.pathname.startsWith("/card/");
-    const name = isPage ? "index.html" : url.pathname.slice(1);
+    // /random is the same page too: its script asks for a card and goes to that card's address.
+    const isPage = url.pathname === "/" || url.pathname === "/random" || url.pathname.startsWith("/card/");
+    const name = isPage ? "index.html" : url.pathname === "/syntax" ? "syntax.html" : url.pathname.slice(1);
     const type = TYPES[name.split(".").pop() ?? ""];
     try {
       if (!type || !/^[\w.-]+$/.test(name)) throw new Error("not a public file");
