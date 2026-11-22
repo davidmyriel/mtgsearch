@@ -46,7 +46,9 @@ picked up: at the boundary between plan steps unless something is broken.
       `conformance/known_gaps.txt`). `is:commander` now includes legendary Vehicles, Spacecraft
       and Backgrounds, as Scryfall's does
 - [ ] Scryfall's regex shorthands (`\spp`, `\smm`, `\spt`)
-- [ ] Grow the held-out conformance set to about 200 queries; run it nightly
+- [x] Held-out conformance: 214 queries in four sets. The newest, 54 queries across cards,
+      printings, mana and shortcuts, matched 52 on its first run (96%)
+- [ ] Run the held-out sets nightly as well as the tuning sets
 
 ### 2. Printing-level parity: mostly done
 - [x] Second collection with one document per printing (Scryfall's `default_cards` file: 120,275
@@ -60,9 +62,8 @@ picked up: at the boundary between plan steps unless something is broken.
 - [ ] Name search over printed and flavour names
 - [ ] The cases in `conformance/known_gaps.txt`: Arena printings that only exist to be conjured,
       Scryfall's loose match on two-letter artist fragments
-- Exit: held-out conformance at 95% or better with printing keywords included. Held-out is at
-  59 of 61 (97%) after fixes; the honest first-run figure was 87%, so a fresh held-out set is
-  needed before calling this met
+- Exit: held-out conformance at 95% or better with printing keywords included. Met: a fresh
+  held-out set across everything matched 52 of 54 on its first run (`conformance/heldout2.txt`)
 
 ### 3. Relevance (about a week)
 - [x] Frozen query set, evaluation harness, full-corpus baseline

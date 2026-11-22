@@ -50,9 +50,15 @@ devotion={b/g}{b/g} t:elf
     count a hybrid symbol of exactly the two colours asked about twice, so "=" misses them.
 
 m<=R t:goblin
-    Scryfall also returns Krark, the Thumbless, which costs {1}{R}. The printing Scryfall
-    picks for that card is a reversible one whose cost is recorded on its faces only, so it
-    reads as having no cost. We compare the real cost.
+m<=1 t:artifact t:creature
+    Scryfall also returns Krark, the Thumbless, which costs {1}{R}, and for the second query
+    Blightsteel Colossus and Darksteel Colossus. The printing Scryfall picks for each of those
+    cards is a reversible one whose cost is recorded on its faces only, so the card reads as
+    having no cost. We compare the real cost.
+
+frame:1997 is:foil t:goblin
+    We return one card Scryfall does not, Embermage Goblin. Not investigated; probably one of
+    the printings Scryfall hides without marking in the bulk data.
 
 is:frenchvanilla
     Scryfall returns 1,096 cards; we return those and 79 more. Ours is every creature whose

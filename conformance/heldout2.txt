@@ -1,0 +1,65 @@
+# Second held-out set, across cards, printings, mana and shortcuts. Written after all of
+# those rules were fixed and never used to tune them; the first run is the honest number.
+# Run with: npm run conformance -- conformance/heldout2.txt
+
+# cards
+t:wizard c:u mv=2 pow>=2
+o:"each opponent" t:enchantment c:b
+kw:deathtouch c:g t:creature mv<=2
+id:rg t:dragon -c:g
+c>=wub t:creature
+f:pauper t:elf mv=1
+banned:modern t:artifact
+o:/draw (two|three) cards/ t:sorcery mv<=3
+t:"legendary land" id:c
+pow>tou t:goblin mv=1
+loy>=6 t:planeswalker c:r
+is:vanilla t:beast
+is:hybrid t:creature mv=2 c:gw
+otag:removal c:w mv=1 t:instant
+-t:creature -t:land kw:flash c:g mv=2
+name:/^the / t:artifact mv=3
+!"sol ring"
+"swords to"
+is:commander t:angel mv=3
+is:historic t:saga c:r
+
+# printings
+set:mh2 a:"chris rahn"
+year=2015 r:mythic t:planeswalker
+border:borderless t:land r:rare year=2023
+frame:1997 is:foil t:goblin
+is:promo t:planeswalker c:w
+game:mtgo -game:paper t:goblin
+date>=2024-01-01 t:wizard r:mythic c:u
+in:paper -in:mtgo t:elf r:rare
+prints>=40 t:instant
+!"counterspell" unique:prints frame:1993
+st:core r:common t:wall
+wm:izzet r:uncommon
+ft:dragon t:goblin
+cn:100 set:dom
+mv:odd t:angel r:mythic
+!"serra angel" unique:art
+
+# mana
+m:{U/B} t:creature mv=3
+m=UU t:wizard
+m>=3G t:beast mv=4
+devotion:bb t:zombie mv=2
+produces>=2 t:creature mv=1
+m<=1 t:artifact t:creature
+produces=c t:land r:common year=2020
+
+# shortcuts
+is:shockland produces:u
+is:fetchland in:ktk
+is:creatureland id:u
+is:party is:outlaw mv=1
+is:modal t:instant c:b mv=2
+is:partner c:g
+is:adventure t:elf
+is:bikeland or is:triome
+not:firstprint !"lightning helix"
+is:duelcommander t:elf mv=3
+is:masterpiece t:artifact mv=1
