@@ -294,6 +294,14 @@ async function run(name, contextOptions) {
   await search(page, "t:sphinx");
   check(!(await page.isVisible("#ignored")), `[${name}] the warning goes when the next search has nothing left out`);
 
+  // A search that finds nothing says so in the page, with how it was read and what to try.
+  await search(page, "t:sphinx c:r mv=1 pow>=9");
+  check((await page.textContent("#status")).startsWith("No cards matched"), `[${name}] a search with no results says so`);
+  check((await page.isVisible("#empty")) && (await page.textContent("#empty-detail")).includes("every condition"), `[${name}] and suggests what to change`);
+  check((await page.$$("#understood li")).length === 4 && (await page.$$("#results .tile")).length === 0, `[${name}] with the conditions it looked for and no stale cards`);
+  await search(page, "t:sphinx");
+  check(!(await page.isVisible("#empty")), `[${name}] the message goes when the next search finds cards`);
+
   // Nothing left to search for: refused, with the reason and the help in view.
   await search(page, "lang:ja");
   check((await page.textContent("#status")).startsWith("Nothing here could be used · 'lang:' is not supported yet"), `[${name}] a query with nothing usable is explained`);

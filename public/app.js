@@ -17,6 +17,7 @@ const uniqueSelect = document.getElementById("unique");
 const pager = document.getElementById("pager");
 const understood = document.getElementById("understood");
 const ignored = document.getElementById("ignored");
+const emptyState = document.getElementById("empty");
 const cardView = document.getElementById("card");
 const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
@@ -196,6 +197,13 @@ function tile(hit, captioned) {
   return item;
 }
 
+/** A search that found nothing: say so in the page, with what to try. No arguments hides it. */
+function showEmpty(title = "", detail = "") {
+  document.getElementById("empty-title").textContent = title;
+  document.getElementById("empty-detail").textContent = detail;
+  emptyState.hidden = !title;
+}
+
 /** Terms that could not be used: the search ran without them, and this says which and why. */
 function showIgnored(terms) {
   ignored.replaceChildren(
@@ -278,6 +286,7 @@ async function run(search, { push = true } = {}) {
     tools.hidden = pager.hidden = true;
     showUnderstood([]);
     showIgnored([]);
+    showEmpty();
     results.replaceChildren();
     current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
@@ -293,6 +302,7 @@ async function run(search, { push = true } = {}) {
     tools.hidden = pager.hidden = true;
     showUnderstood([]);
     showIgnored([]);
+    showEmpty();
     current = { ...EMPTY, unit: "cards" };
     setStatus(label, detail, true);
   };
@@ -318,10 +328,19 @@ async function run(search, { push = true } = {}) {
     showPager(view, data);
     showUnderstood(data.understood);
     showIgnored(data.ignored);
+    showEmpty();
     if (push) window.scrollTo(0, 0);
     if (!data.hits.length) {
       const beyond = view.page > 1 && (data.total === null || data.total > 0);
-      setStatus(beyond ? "Nothing on this page" : "No cards matched", beyond ? "The results end before it." : "Check the syntax, or describe the card in plain words.");
+      setStatus(beyond ? "Nothing on this page" : "No cards matched", "", false, data.took_ms);
+      showEmpty(
+        beyond ? "Nothing on this page" : "No cards matched",
+        beyond
+          ? "The results end before this page. Go back to an earlier one."
+          : data.understood && data.understood.length > 1
+            ? "No card meets every condition above at once. Take one out, or describe the card in plain words instead."
+            : "Check the spelling and the syntax, or describe the card in plain words instead.",
+      );
       return;
     }
     const [label, detail] = describe(data, view);
@@ -606,13 +625,15 @@ async function loadRandom() {
   showCard(data.card, data.printings);
 }
 
-document.getElementById("nav-random").addEventListener("click", (event) => {
-  if (modified(event)) return;
-  event.preventDefault();
-  resultsScroll = window.scrollY;
-  history.pushState(null, "", "/random");
-  loadRandom();
-});
+for (const id of ["nav-random", "empty-random"]) {
+  document.getElementById(id).addEventListener("click", (event) => {
+    if (modified(event)) return;
+    event.preventDefault();
+    resultsScroll = window.scrollY;
+    history.pushState(null, "", "/random");
+    loadRandom();
+  });
+}
 
 backButton.addEventListener("click", () => history.back());
 

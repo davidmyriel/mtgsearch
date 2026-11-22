@@ -86,6 +86,8 @@ and the Scryfall comparison where results could move.
   - A random card at `/random`, also in the header.
   - A footer with the same links, what the site is, where the data comes from, and the
     fan-content notice.
+  - A search that finds nothing says so in the page, with the conditions it looked for and what
+    to try, and an address with nothing at it has a page of its own.
 - **Not in this pass:** a table view of results, an advanced search form, set pages, rulings,
   both faces of a two-faced card set out separately, and a preview when a link is shared.
 
