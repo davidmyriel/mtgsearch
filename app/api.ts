@@ -142,6 +142,7 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
       total: result.total,
       unit: result.unit,
       note: result.note,
+      understood: result.understood,
       hits: result.hits.map(hit),
       offset,
       // false when the next page of this size would pass the reach: it could not be served

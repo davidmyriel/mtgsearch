@@ -184,6 +184,26 @@ code {
   border-radius: 8px;
 }
 
+/* How the query was read: each condition on its own, so a wrong reading is easy to spot. */
+.understood {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -4px 0 14px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.understood li {
+  padding: 3px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow-wrap: anywhere;
+}
+.viewing-card .understood { display: none; }
+
 .pager {
   display: flex;
   flex-wrap: wrap;

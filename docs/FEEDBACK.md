@@ -64,7 +64,7 @@ identity and are not copied.
 
 | Id | Item | Size | Slot | Status |
 |---|---|---|---|---|
-| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary | Waiting: dropping a term reverses an earlier rule, asked of the owner |
+| U-1 | Say what the query was understood to mean, and when a term cannot be used, drop it with a warning and run the rest instead of refusing the whole search | M | Next boundary | First half done. The second half waits: dropping a term reverses an earlier rule, asked of the owner |
 | U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | L | Next boundary | Done |
 | U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary | Done |
 | U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Done |
@@ -107,4 +107,21 @@ are small and can ride along with U-1 to U-4.
 - **Limits, said on the page:** results ranked by meaning have no total, so their pager has no
   Last and they end at 120. No result can be paged past 10,000; the pager says to narrow the
   search there.
+
+### U-1. Saying how the query was read (first half)
+
+- **Taken on 22 November 2026**, at the boundary after U-3 and U-4. Only the half that changes
+  no earlier decision.
+- **What was done:** a query in Scryfall syntax, or a card name, is said back in words under the
+  status line, one entry for each condition that has to hold: `id:rg t:dragon -c:g` reads "its
+  colour identity is within red and green", "the type includes “dragon”", "its colours do not
+  include green". It says what was typed, including the defaults that are easy to forget (a bare
+  `c:` means at least these colours, a bare `id:` means within them, a bare `m:` means at least
+  this cost). Plain-English searches keep their own line ("filtered to ...").
+- **The wording is ours.** Scryfall's sentence was not copied; only the idea of saying the query
+  back.
+- **Still waiting:** when a term cannot be used, running the rest and saying which term was
+  left out. Today such a query is refused with the reason, which was a decision made early on
+  ("reported as unsupported rather than silently ignored"). Recommended: adopt it, because the
+  warning keeps the honesty and the refusal costs the reader the whole search.
 

@@ -149,6 +149,11 @@ async function run(name, contextOptions) {
   await search(page, 'c:u t:sphinx o:"draw two cards"');
   check((await page.textContent("#status")).startsWith("Scryfall syntax · 3 cards"), `[${name}] syntax query reports 3 cards`);
   check((await firstCards(page, 3)).includes("Consecrated Sphinx"), `[${name}] syntax results include Consecrated Sphinx`);
+  const read = await page.$$eval("#understood li", (items) => items.map((li) => li.textContent));
+  check(
+    read.join(" | ") === "its colours include blue | the type includes “sphinx” | the text includes “draw two cards”",
+    `[${name}] the page says how the query was read (${read.join(" | ")})`
+  );
 
   // Paging and sorting, on a query with more results than one page.
   await search(page, "t:sphinx");
@@ -206,6 +211,7 @@ async function run(name, contextOptions) {
   // Results ranked by meaning have no total: no sort controls, and a next page while there is one.
   await search(page, "sphinx that draws two cards");
   check(!(await page.isVisible("#tools")), `[${name}] no sort controls for results ranked by meaning`);
+  check(!(await page.isVisible("#understood")), `[${name}] and no reading of it as syntax`);
   check((await page.textContent("#page-now")) === "Page 1" && !(await page.isVisible("#page-last")), `[${name}] ranked results have pages but no last page`);
   await page.click("#page-next");
   await page.waitForFunction(() => document.getElementById("page-now").textContent === "Page 2");
@@ -268,6 +274,7 @@ async function run(name, contextOptions) {
   await search(page, "lightning bolt");
   check((await page.textContent("#status")).startsWith("Card name"), `[${name}] a card name takes the name path`);
   check((await firstCards(page, 1))[0] === "Lightning Bolt", `[${name}] Lightning Bolt is first`);
+  check((await page.textContent("#understood")) === "the name includes “lightning” and “bolt”", `[${name}] a name search says where it looked`);
 
   await search(page, "lang:ja t:sphinx");
   check((await page.textContent("#status")).startsWith("Not supported yet"), `[${name}] unsupported keyword is explained`);

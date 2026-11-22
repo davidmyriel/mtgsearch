@@ -47,7 +47,7 @@ export type Options = {
 const TYPE_WORDS = new Set<string>(typeWords);
 const COLORS = "WUBRG";
 export const COLOR_NAMES: Record<string, string> = { white: "W", blue: "U", black: "B", red: "R", green: "G" };
-const COLOR_SETS: Record<string, string> = {
+export const COLOR_SETS: Record<string, string> = {
   // guilds
   azorius: "WU", dimir: "UB", rakdos: "BR", gruul: "RG", selesnya: "GW",
   orzhov: "WB", izzet: "UR", golgari: "BG", boros: "RW", simic: "GU",
@@ -59,7 +59,7 @@ const COLOR_SETS: Record<string, string> = {
   // four colours, named for the colour they lack
   chaos: "UBRG", aggression: "WBRG", altruism: "WURG", growth: "WUBG", artifice: "WUBR",
 };
-const FORMAT_ALIASES: Record<string, string> = { edh: "commander", pdh: "paupercommander" };
+export const FORMAT_ALIASES: Record<string, string> = { edh: "commander", pdh: "paupercommander" };
 const FLAGS = new Set([
   "split", "flip", "transform", "meld", "leveler", "mdfc", "dfc", "permanent", "spell", "historic",
   "vanilla", "bear", "commander", "hybrid", "phyrexian", "reserved", "gamechanger", "funny",
@@ -82,8 +82,8 @@ export const PREFER: Record<string, [string, boolean]> = {
   "eur-low": ["eur_c", false], "eur-high": ["eur_c", true],
   "tix-low": ["tix_c", false], "tix-high": ["tix_c", true],
 };
-const RARITIES = ["common", "uncommon", "rare", "special", "mythic", "bonus"]; // in rank order
-const RARITY_ALIASES: Record<string, string> = { c: "common", u: "uncommon", r: "rare", s: "special", m: "mythic", b: "bonus" };
+export const RARITIES = ["common", "uncommon", "rare", "special", "mythic", "bonus"]; // in rank order
+export const RARITY_ALIASES: Record<string, string> = { c: "common", u: "uncommon", r: "rare", s: "special", m: "mythic", b: "bonus" };
 const GAMES = new Set(["paper", "mtgo", "arena", "astral", "sega"]);
 const FRAMES = new Set(["1993", "1997", "2003", "2015", "future"]);
 const PRINTING_FLAGS = new Set<string>(printingFlags);

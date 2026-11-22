@@ -9,6 +9,7 @@
 import { agg, all, any, field, filter, fn, not, select } from "topk-js/query";
 import { lower, ORDER_FIELDS, PREFER, PRINTING_FIELDS } from "./lower.ts";
 import type { IR, Op, Unique } from "./lower.ts";
+import { explain } from "./explain.ts";
 import { extract } from "./nl.ts";
 import { KEYWORDS, parse, QueryError, Unsupported } from "./parser.ts";
 import type { Keyword, Name, Node } from "./parser.ts";
@@ -20,6 +21,7 @@ export type Result = {
   hits: Hit[];
   total: number | null; // exact for syntax and name modes; null when ranked by meaning
   note: string; // what was understood, or why the query was refused
+  understood: string[]; // a syntax query said back in words, one entry for each condition
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
   unit: Unit; // what `total` counts and each hit is
@@ -337,7 +339,7 @@ const UNITS: Record<Unique, Unit> = { cards: "cards", prints: "printings", art: 
 
 export async function search(cols: Collections, query: string, options: SearchOptions = {}): Promise<Result> {
   const { k = 20, offset = 0, fields = SEMANTIC_FIELDS } = options;
-  const none = { hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit };
+  const none = { hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit, understood: [] as string[] };
   let ast: Node | null = null;
   let predicate: IR = ["all"];
   let parsed: ReturnType<typeof lower>[1] | null = null;
@@ -366,12 +368,13 @@ export async function search(cols: Collections, query: string, options: SearchOp
     if (page.total) {
       const hasMore = offset + page.hits.length < page.total;
       const mode = plainWords ? "name" : "syntax";
-      return { mode, hits: page.hits, total: page.total, note: "", hasMore, sortedBy: orderName(sortField), unit: UNITS[unique] };
+      const understood = explain(ast);
+      return { mode, hits: page.hits, total: page.total, note: "", hasMore, sortedBy: orderName(sortField), unit: UNITS[unique], understood };
     }
     if (!plainWords) {
       const split = splitWords(ast);
       if (!(split && split.keywords.length && split.words.length)) {
-        return { ...none, mode: "syntax", total: 0, note: "", unit: UNITS[unique] };
+        return { ...none, mode: "syntax", total: 0, note: "", unit: UNITS[unique], understood: explain(ast) };
       }
       // Keywords matched nothing together with the name words: let the words rank by meaning.
       const keywordAst: Node =
@@ -384,7 +387,7 @@ export async function search(cols: Collections, query: string, options: SearchOp
         : await semantic(cols.cards, words, keywordPredicate, wanted, fields);
       const hits = ranked.slice(offset, offset + k);
       const hasMore = ranked.length === offset + k && offset + k < MAX_RANKED;
-      return { ...none, mode: "mixed", hits, hasMore, note: `filtered by keywords, ranked by '${words}'` };
+      return { ...none, mode: "mixed", hits, hasMore, note: `filtered by keywords, ranked by '${words}'`, understood: explain(keywordAst) };
     }
   }
 

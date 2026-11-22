@@ -15,6 +15,7 @@ const sortSelect = document.getElementById("sort");
 const dirSelect = document.getElementById("dir");
 const uniqueSelect = document.getElementById("unique");
 const pager = document.getElementById("pager");
+const understood = document.getElementById("understood");
 const cardView = document.getElementById("card");
 const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
@@ -194,6 +195,18 @@ function tile(hit, captioned) {
   return item;
 }
 
+/** How a syntax query was read: each condition in words. Nothing for plain English. */
+function showUnderstood(conditions) {
+  understood.replaceChildren(
+    ...(conditions || []).map((condition) => {
+      const item = document.createElement("li");
+      item.textContent = condition;
+      return item;
+    }),
+  );
+  understood.hidden = understood.children.length === 0;
+}
+
 /** Show the results view. The grid is left as it was, so coming back from a card is instant. */
 function showResults() {
   document.body.classList.remove("viewing-card");
@@ -248,6 +261,7 @@ async function run(search, { push = true } = {}) {
   if (!view.query) {
     intro.hidden = false;
     tools.hidden = pager.hidden = true;
+    showUnderstood([]);
     results.replaceChildren();
     current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
@@ -261,6 +275,7 @@ async function run(search, { push = true } = {}) {
   const fail = (label, detail) => {
     results.replaceChildren();
     tools.hidden = pager.hidden = true;
+    showUnderstood([]);
     current = { ...EMPTY, unit: "cards" };
     setStatus(label, detail, true);
   };
@@ -283,6 +298,7 @@ async function run(search, { push = true } = {}) {
     // Results ranked by meaning have no other order to offer.
     tools.hidden = data.sorted_by === null || data.hits.length === 0;
     showPager(view, data);
+    showUnderstood(data.understood);
     if (push) window.scrollTo(0, 0);
     if (!data.hits.length) {
       const beyond = view.page > 1 && (data.total === null || data.total > 0);

@@ -189,7 +189,10 @@ example `/card/ima/47/consecrated-sphinx`), which can be shared and opened direc
 | `order`, `dir` | Sort by `name`, `cmc`, `power`, `toughness`, `edhrec`, `released`, `usd`, `eur`, `tix` or `rarity`; `dir` is `asc` or `desc`, and without it release dates run newest first and everything else ascends. An `order:` or `direction:` keyword in the query wins. Ignored for results ranked by meaning |
 | `unique` | What a result is: `cards` (the default), `prints` or `art`. A `unique:` keyword in the query wins |
 
-The answer carries `total`, `unit` (what the total counts: cards, printings or illustrations),
+The answer carries `understood`, a syntax query said back in words with one entry for each
+condition (`t:sphinx mv<=3` is "the type includes “sphinx”" and "the mana value is 3 or less"),
+which the page shows under the status line so that a wrong reading is easy to spot. It also
+carries `total`, `unit` (what the total counts: cards, printings or illustrations),
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 pager and its three controls (show, sort, direction). The page asks for 60 results at a time.
 Each hit names the printing shown: set, collector number, rarity, artist, release date and
