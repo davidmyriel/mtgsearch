@@ -181,7 +181,10 @@ Open http://127.0.0.1:8000. The page (`public/`) is one responsive page over two
 stays on the server.
 A search lives at `/?q=...`, with its sort, direction, what a result is and the page of results
 in the address too (`/?q=t:sphinx&order=cmc&dir=desc&page=2`), so a reload or a shared link
-opens at the same place. Each card has its own address, `/card/<set>/<number>/<name>` (for
+opens at the same place. Results are drawn as pictures or, with `as=table` in the address, as a
+table: a row for each with its cost, type, set, rarity, artist and the three prices, headings
+that sort, and on a laptop the card's picture beside the pointer. On a phone the table is a
+compact list. Each card has its own address, `/card/<set>/<number>/<name>` (for
 example `/card/ima/47/consecrated-sphinx`), which can be shared and opened directly.
 
 | Parameter | Meaning |
@@ -202,7 +205,7 @@ carries `total`, `unit` (what the total counts: cards, printings or illustration
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 pager and its three controls (show, sort, direction). The page asks for 60 results at a time.
 Each hit names the printing shown: set, collector number, rarity, artist, release date and
-price. Results ranked by meaning stop at 120. TopK returns nothing beyond the first 10,000 of
+three prices (`usd`, `eur`, `tix`). `sorted_desc` says which way the order runs. Results ranked by meaning stop at 120. TopK returns nothing beyond the first 10,000 of
 a result, so `k` plus `offset` is held to that and `has_more` is false there.
 
 `GET /api/card?set=<code>&cn=<collector number>` is what a card's own page shows: `card`, that

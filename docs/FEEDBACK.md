@@ -118,6 +118,8 @@ and the Scryfall comparison where results could move.
 - **A consequence to know about:** a short name that is also part of many other names now opens
   the card: "shock" goes to Shock, "opt" to Opt, "forest" to Forest, each with the link to the
   others. Part of a name ("bolt", "lightning bol") still lists the cards.
+- **Confirmed by the owner on 23 November 2026:** asked whether those short names should show
+  the list instead, the answer was "open the card". It stays as built.
 
 ## From the interface study
 
@@ -133,9 +135,9 @@ identity and are not copied.
 | U-2 | Card page: power and toughness as text, legality by format, and the card's printings listed with their prices | L | Next boundary | Done |
 | U-3 | The position in the results kept in the address, with a pager, so a reload or a shared link opens at the same place | M | Next boundary | Done |
 | U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Done |
-| U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) | Open |
+| U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | L | With the browse tier (v0.2) | Done, brought forward by the owner |
 | U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner | Open |
-| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Done with our own discs. Wizards' own symbols wait for the owner |
+| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Done with our own discs, which the owner chose to keep |
 | U-8 | Rulings on the card page | L | With the browse tier: needs Scryfall's rulings file in the ingest | Open |
 | U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier | Random card done with F-2; the rest open |
 
@@ -221,7 +223,27 @@ with F-2.)
   or number inside and a tint for each colour; a hybrid symbol is split corner to corner. They
   use no Wizards artwork. The brace code stays in the text, out of sight, so copying a card's
   text still gives `{T}: Add {G}`, and a screen reader hears "tap" and "green mana".
-- **Still the owner's to decide:** switching to Wizards' actual symbols through the Mana font.
-  It is a small change (the same hook draws either), but it rests on the policy question above:
-  accept that it is tolerated rather than permitted, or ask Wizards for written permission.
+- **Decided by the owner on 23 November 2026:** "own lettered discs". Wizards' actual symbols
+  are not used. Should that change, the Mana font is the candidate and the same hook draws
+  either; it would rest on the policy question above.
+
+### U-5. Results as a table
+
+- **Decided on 23 November 2026.** Shown a mock-up and told it follows Scryfall's "Checklist",
+  the owner said: "build it with usd eur and tix".
+- **What was done:** a View control beside the others switches between pictures and a table,
+  and the choice is in the address (`as=table`) and carries over to the next search. A row has
+  the name, the cost drawn as discs, type, set and number, rarity, artist, and prices in US
+  dollars, euros and Magic Online tickets. Every row is one line; text that does not fit is
+  cut short and given in full as a tooltip. The Name, Cost, Rarity and price headings sort,
+  and choosing one again turns the order round. On a laptop the card's picture follows the
+  pointer over a row. A row opens its card, and Back returns to the table.
+- **On a phone** there is no room for nine columns, so the table is a list: name and cost,
+  then type, then set and number, with one price at the right (the one the results are sorted
+  by, else dollars). Scryfall keeps a wide table that scrolls sideways; this does not.
+- **Size was L, not M:** card records held only a dollar price. They now carry euros and
+  tickets too, written by the nightly job as field updates with no re-embedding.
+- **Different from Scryfall's:** no language column (only English printings are held), 60 rows
+  to a page as everywhere else, and no sorting by set or artist, which the search does not
+  offer yet.
 

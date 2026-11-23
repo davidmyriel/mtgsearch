@@ -62,6 +62,17 @@ def test_rank_or_price_alone_is_a_small_field_update():
     )
 
 
+def test_the_other_currencies_are_prices_too():
+    # a price in euros or tickets moves daily like the dollar price: a small update, and no
+    # change to the fingerprint that would send the whole document again
+    assert content_hash(doc(eur=1.0, tix=0.2)) == content_hash(doc(eur=9.0)) == content_hash(doc())
+    state = stored(doc(eur=1.0))
+    state["a"]["eur"] = 1.0
+    assert plan([doc(eur=1.25, tix=0.5)], state) == ([], [{"_id": "a", "eur": 1.25, "tix": 0.5}], [])
+    # a price that is no longer listed is cleared
+    assert plan([doc()], state) == ([], [{"_id": "a", "eur": None}], [])
+
+
 def test_a_price_read_back_at_lower_precision_is_not_a_change():
     state = stored(doc())
     state["a"]["usd"] = 1.5000000596046448

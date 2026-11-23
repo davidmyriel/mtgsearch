@@ -21,7 +21,7 @@ const HIT_FIELDS: Record<string, string> = {
   name: "name", mana_cost: "mana_cost", type_line: "type_line", oracle_text: "oracle_text",
   image: "image", scryfall_uri: "scryfall_uri",
   set: "set", set_name: "set_name", cn: "collector_number", rarity: "rarity", artist: "artist",
-  released: "released", usd: "usd", flavor_text: "flavor_text", prints: "prints",
+  released: "released", usd: "usd", eur: "eur", tix: "tix", flavor_text: "flavor_text", prints: "prints",
 };
 // What a card's own page adds, and the columns of its list of printings.
 const LISTS = ["legal", "banned", "restricted"];
@@ -54,7 +54,10 @@ function clamp(raw: string | null, fallback: number, low: number, high: number):
 function hit(row: Hit): Record<string, unknown> {
   const out: Record<string, unknown> = { id: row._id };
   for (const [source, name] of Object.entries(HIT_FIELDS)) out[name] = row[source] ?? null;
-  if (typeof out.usd === "number") out.usd = Math.round(out.usd * 100) / 100; // stored in single precision
+  for (const currency of ["usd", "eur", "tix"]) {
+    const price = out[currency];
+    if (typeof price === "number") out[currency] = Math.round(price * 100) / 100; // stored in single precision
+  }
   if (typeof row.score === "number") out.score = Math.round(row.score * 1000) / 1000;
   return out;
 }
@@ -154,6 +157,7 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
       // false when the next page of this size would pass the reach: it could not be served
       has_more: result.hasMore && offset + 2 * k <= MAX_REACH,
       sorted_by: result.sortedBy,
+      sorted_desc: result.sortedBy === null ? null : Boolean(result.descending),
       took_ms: Math.round(performance.now() - started),
     },
     200,

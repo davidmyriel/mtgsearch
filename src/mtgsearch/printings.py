@@ -141,7 +141,8 @@ def build_printing(printing: dict, tags: dict | None, aggregate: dict | None, pr
     """Build the document for one printing: the card's filter fields plus the printing's own."""
     doc = build_document(as_card(printing), tags, aggregate)
     del doc["rules"], doc["rules_tagged"]  # semantic text lives in the cards collection only
-    doc.pop("usd", None)  # prices are kept in cents here
+    for currency in ("usd", "eur", "tix"):
+        doc.pop(currency, None)  # prices are kept in cents here
 
     faces = printing.get("card_faces") or []
     flavor = printing.get("flavor_text") or "\n".join(f["flavor_text"] for f in faces if f.get("flavor_text"))

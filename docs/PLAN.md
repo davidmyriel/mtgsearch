@@ -93,9 +93,9 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] End-to-end browser test at phone and laptop sizes, run in CI on the local server and as
       Netlify serves the site; Netlify's own build exercised in CI
 - [x] Connected the repository in Netlify, set `TOPK_API_KEY`, deployed. The browser test passes
-      against the live URL (337 checks at phone, laptop and dark-mode sizes and on a 320-pixel
-      screen, after the fourth merge on 22 November 2026, which carried the redesign), repeated
-      searches are
+      against the live URL (376 checks at phone, laptop and dark-mode sizes and on a 320-pixel
+      screen, after the fifth merge on 22 November 2026; the fourth carried the redesign),
+      repeated searches are
       answered from Netlify's CDN cache, and the security headers are served
 - [ ] Confirm the per-client rate limit on the live site. It counts per address, so it needs a
       client with one address: about 80 different searches in a minute should start returning 429.
@@ -118,6 +118,8 @@ picked up: at the boundary between plan steps unless something is broken.
       a syntax guide whose examples run, a random card, and symbols drawn as lettered discs
       (feedback F-2, U-7)
 - [x] A card's exact name, or a search that finds one card, opens that card's page (feedback F-3)
+- [x] A table view of results with USD, EUR and TIX prices, headings that sort and a hover
+      preview (U-5). Card records carry all three prices, refreshed nightly as field updates
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

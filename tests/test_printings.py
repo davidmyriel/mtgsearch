@@ -11,7 +11,8 @@ def test_a_printing_carries_the_card_fields_and_its_own(prints):
     assert (d["released"], d["date"], d["year"]) == ("2017-11-17", 20171117, 2017)
     assert d["artist_lc"] == "mark zug" and d["frame"] == "2015" and d["border"] == "black"
     assert d["games"] == ["mtgo", "paper"] and d["lang"] == "en" and d["stamp"] == "oval"
-    assert (d["usd_c"], d["eur_c"], d["tix_c"]) == (3497, 2621, 23) and "usd" not in d
+    assert (d["usd_c"], d["eur_c"], d["tix_c"]) == (3497, 2621, 23)
+    assert "usd" not in d and "eur" not in d and "tix" not in d
     assert d["pflags"] == ["booster", "foil", "hires", "nonfoil", "reprint"]
 
 

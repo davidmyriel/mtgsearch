@@ -64,6 +64,8 @@ def cards_schema() -> dict:
         "extra": bool_().required(),
         "edhrec_rank": int_(),
         "usd": float_(),
+        "eur": float_(),
+        "tix": float_(),
     }
     for stat in ("pow", "tou", "loy"):
         fields[f"{stat}_min"] = float_()
@@ -82,7 +84,7 @@ def printings_schema() -> dict:
     fields = {
         name: spec
         for name, spec in cards_schema().items()
-        if name not in ("name", "rules", "rules_tagged", "art", "usd")
+        if name not in ("name", "rules", "rules_tagged", "art", "usd", "eur", "tix")
     }
     fields |= {
         "name": text().required(),
@@ -137,7 +139,9 @@ class Target:
     retired: tuple[str, ...] = ()
 
 
-CARDS = Target("cards", config.COLLECTION, cards_schema, ("rules", "rules_tagged"), ("edhrec_rank", "usd"))
+CARDS = Target(
+    "cards", config.COLLECTION, cards_schema, ("rules", "rules_tagged"), ("edhrec_rank", "usd", "eur", "tix")
+)
 PRINTINGS = Target(
     "printings", config.PRINTINGS_COLLECTION, printings_schema, (), ("edhrec_rank", "usd_c", "eur_c", "tix_c")
 )

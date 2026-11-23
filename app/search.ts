@@ -27,6 +27,7 @@ export type Result = {
   exact: Hit | null; // the card whose name is exactly what was typed, if the query is a name
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
+  descending?: boolean; // the direction of that order, as it was applied
   unit: Unit; // what `total` counts and each hit is
 };
 export type SearchOptions = {
@@ -60,8 +61,8 @@ const SHARED = [
   "name", "mana_cost", "type_line", "oracle_text", "image", "scryfall_uri", "edhrec_rank",
   "set", "set_name", "cn", "rarity", "artist", "released", "prints",
 ];
-const CARD_DISPLAY = [...SHARED, "usd"];
-export const PRINTING_DISPLAY = [...SHARED, "usd_c", "flavor_text", "oracle_id", "pref_rank"];
+const CARD_DISPLAY = [...SHARED, "usd", "eur", "tix"];
+export const PRINTING_DISPLAY = [...SHARED, "usd_c", "eur_c", "tix_c", "flavor_text", "oracle_id", "pref_rank"];
 // Semantic score is the sum over these fields: the plain rules text is more precise for
 // descriptions, the tagged text understands jargon ("mana rock").
 export const SEMANTIC_FIELDS = ["rules", "rules_tagged"];
@@ -174,8 +175,10 @@ async function cardPage(col: Collection, predicate: IR, k: number, offset: numbe
 
 /** A printing document as a hit: the same shape as a card hit. */
 export function printingHit(row: Hit): Hit {
-  const { usd_c: cents, pref_rank: _rank, ...hit } = row;
-  return { ...hit, usd: typeof cents === "number" ? cents / 100 : null } as Hit;
+  const { usd_c: usd, eur_c: eur, tix_c: tix, pref_rank: _rank, ...hit } = row;
+  // prices are whole cents on a printing; a hit gives them in the currency's own units
+  const price = (cents: unknown) => (typeof cents === "number" ? cents / 100 : null);
+  return { ...hit, usd: price(usd), eur: price(eur), tix: price(tix) } as Hit;
 }
 
 export type PrintingOptions = { unique: Unique; prefer: string | null; sortField: string; descending: boolean };
@@ -399,7 +402,7 @@ export async function search(cols: Collections, query: string, options: SearchOp
       const hasMore = offset + page.hits.length < page.total;
       const mode = plainWords ? "name" : "syntax";
       const understood = explain(ast);
-      return { ...none, mode, hits: page.hits, total: page.total, hasMore, note: "", sortedBy: orderName(sortField), unit: UNITS[unique], understood, exact };
+      return { ...none, mode, hits: page.hits, total: page.total, hasMore, note: "", sortedBy: orderName(sortField), descending, unit: UNITS[unique], understood, exact };
     }
     if (!plainWords) {
       const split = splitWords(ast);
