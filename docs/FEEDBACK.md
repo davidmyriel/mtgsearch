@@ -42,6 +42,7 @@ and the Scryfall comparison where results could move.
 | F-10 | 23 Nov 2026 | Meaning has to be dealt with systematically behind the scenes, not by hand-written lists | L | Later, as a stage of its own (stage 8 of the plan) | Planned, not started |
 | F-11 | 23 Nov 2026 | Nine typical searches under the bar, a different four on each visit; the news lines say where each set stands | S | Now | Done |
 | F-12 | 23 Nov 2026 | Cards on the home page that do not do what the example says; show five | S | Now | Done; two examples still show a card or two that do not fit (see the item) |
+| F-13 | 23 Nov 2026 | Whatever was scaffolded by hand is not good enough: the site should be dynamic. Note what can be improved; do nothing now | L | Later, with stage 8 | Noted, nothing built |
 
 ### F-1. A page for each card
 
@@ -518,7 +519,27 @@ and the Scryfall comparison where results could move.
     Blue Elemental Blast do not.
   Both are what the search ranks fourth or fifth, not a fault of the home page. By the rule
   of F-10 they are not patched by hand: they go to the query set for stage 8.
-- **Open, for the owner:** whether those two examples stay among the 33 until then.
+- **Open, for the owner:** whether those two examples stay among the 33 until then. (Settled by F-13: they stay,
+  and the choice of examples is to be made systematic.)
+
+### F-13. What was put in by hand, noted for later
+
+- **From:** the project owner, 23 November 2026, after being told that two examples still
+  show a card or two that do not fit and being asked whether to keep them.
+- **In their words:** "all of this should be systematic though, so if you manually scaffolded
+  something, thats not good enough because the site should be dynamic, do not do anything else
+  right now but just note for the future what can be improved".
+- **What was done:** nothing was built or changed on the site. Stage 8 of `docs/PLAN.md` now
+  holds the whole list of what a person put in by hand, in two groups (what the search
+  understands, what the home page shows), each with what would make it follow from the data
+  or from use instead, and a short list of what is already drawn from the data.
+- **What this settles:** the question left open in F-12 (whether the two examples stay) is not
+  to be answered by hand either. They stay as they are until the examples themselves are
+  chosen systematically.
+- **The developer's note on today's work:** most of what was added on 23 November is on that
+  list: the players' words, the examples, the searches under the bar, the news wording and
+  its thresholds. It works and is tested, but each of them is a decision a person made and
+  would have to make again as the game changes.
 
 ## From the interface study
 

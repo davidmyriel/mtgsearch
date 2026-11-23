@@ -179,6 +179,58 @@ and each new case means another entry:
 - `app/search.ts`: the ways of asking for a card's alternatives, as patterns.
 - The home page's examples and the cards each must find, chosen by reading results.
 
+**The whole of what was put in by hand, as of 23 November 2026.** The owner, the same day:
+"all of this should be systematic though, so if you manually scaffolded something, thats not
+good enough because the site should be dynamic, do not do anything else right now but just
+note for the future what can be improved". Nothing here is to be changed now. Each line says
+what a person decided and what would make it follow from the data or from use instead.
+
+*What the search understands*
+
+- Players' words: fifty entries and their narrowing, in `app/jargon.ts`. Could come from the
+  community's own tags, their aliases and descriptions, matched by meaning.
+- Reading plain English: the lists of colour words, filler words, number words, words that
+  are not card types, and the words that make a type the thing an effect is done to, in
+  `app/nl.ts`. Could be one reading of the query by a model, checked by the compiler.
+- Asking for a card's alternatives: three patterns in `app/search.ts`; and how the two
+  rankings are merged, a number chosen by reading the results for seven cards. Could be
+  recognised as an intent like any other, and the merge weighed on the query set.
+- "Most played" is EDHREC's ranking, which is Commander's. Could be by format, or follow
+  what the person searching plays.
+- The `is:` shortcuts in `app/shortcuts.ts` are rules a person wrote to match what Scryfall
+  returns. They are checked against Scryfall every night, so they are kept honest, but each
+  new one is still written by hand.
+
+*What the home page shows*
+
+- The 33 examples in the search box: chosen by running candidates and reading the results;
+  the list is kept twice, in `app/home.ts` and `public/app.js`, with a test that they agree.
+  Could be drawn from what people actually search and then open, or made from the data and
+  shown only when a measure of their results says they are good.
+- The cards each example must find, in `app/test/live.test.ts`: written by hand. Could come
+  from a judged query set, kept apart from the code.
+- The nine searches under the bar, and which four of them the page arrives with: the owner's
+  list, typed into the page and its script. Could be the kinds of card most searched for.
+- How many cards the home page shows (five) and that they are the first five results: set by
+  the owner after two wrong cards. Could show however many the search is sure of.
+- The news lines' wording and its thresholds: "first look" under sixty cards shown, "out now"
+  for forty-five days, decks and sheets named from ten cards, five lines, sets from the last
+  three hundred days. And what counts as news is a list of set types, with "decks" and "bonus
+  sheet" attached by type. Could come from Scryfall's own record of each set (how many cards
+  it will have, which set it belongs with, when previews begin), which would also let the
+  page say "full preview" truthfully, as the owner's example did.
+- The fallback themes (fourteen kinds of card, the newest set one time in three) for when an
+  example finds too few cards. Could be whatever is being searched for that week.
+- The flavour of the week is a file a person edits (`public/flavour.json`). Could follow the
+  calendar and the release schedule.
+- The syntax guide's page was written once by a script from examples typed by hand. Could be
+  built from the keywords the compiler supports, so the guide cannot fall behind it.
+
+*What is already drawn from the data, for contrast:* the newest sets and their dates, the
+cards under each example, the tags themselves, the list of real type words (made from
+Scryfall's catalogue on each ingest), prices and printings, and the nightly comparison with
+Scryfall.
+
 **Where it shows.** "burn spells" lists Commander's most played damage cards, with Shock
 39th, because the tag is wide and "most played" means most played in Commander; the fix on
 offer was another hand-made rule, which the owner declined. A players' word inside a
