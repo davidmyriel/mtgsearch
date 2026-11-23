@@ -43,6 +43,7 @@ and the Scryfall comparison where results could move.
 | F-11 | 23 Nov 2026 | Nine typical searches under the bar, a different four on each visit; the news lines say where each set stands | S | Now | Done |
 | F-12 | 23 Nov 2026 | Cards on the home page that do not do what the example says; show five | S | Now | Done; two examples still show a card or two that do not fit (see the item) |
 | F-13 | 23 Nov 2026 | Whatever was scaffolded by hand is not good enough: the site should be dynamic. Note what can be improved; do nothing now | L | Later, with stage 8 | Noted, nothing built |
+| F-14 | 23 Nov 2026 | Searches about mana, tapping and amounts miss the obvious card; the trial to fix it failed. Remember to fix it | L | Later, with stage 8 | Open, recorded in the plan |
 
 ### F-1. A page for each card
 
@@ -540,6 +541,22 @@ and the Scryfall comparison where results could move.
   list: the players' words, the examples, the searches under the bar, the news wording and
   its thresholds. It works and is tested, but each of them is a decision a person made and
   would have to make again as the game changes.
+
+### F-14. The searches the trial did not fix
+
+- **From:** the project owner, 23 November 2026, over four messages about the trial.
+- **In their words:** asked how the cards would be embedded and whether it would make things
+  strictly better (told: no, not for certain), then "start trial"; on the result, "so the trial
+  failed"; on the seven throwaway collections, "delete"; and then "remember for the future to
+  do something to fix this issue".
+- **What happened:** the trial ran as described to the owner beforehand and is recorded in
+  `docs/PLAN.md` (stage 3) and `experiments/trial/results.txt`. Saying symbols and numbers in
+  words fixed the searches about them and made eight to sixteen other searches worse, under
+  every wording. Nothing was embedded again. The trial's collections were deleted on the
+  owner's word; the live collections were not touched.
+- **What is remembered:** the issue is an open item in the plan, in the owner's words, with the
+  searches that still fail, the two untried ways the trial points to, and how any attempt is
+  to be judged. It is not to be patched one search at a time (F-10, F-13).
 
 ## From the interface study
 

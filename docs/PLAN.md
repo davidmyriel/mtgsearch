@@ -126,11 +126,20 @@ picked up: at the boundary between plan steps unless something is broken.
       card is about. The rule set beforehand was to go on only if no working search got worse.
       None passed, so the cards were not embedded again and the live index is as it was.
       The seven collections were deleted the same day, on the owner's word
-- [ ] What the trial points to instead, none of it tried: say the notation on the side of the
-      query, not the card (a query that speaks of tapping for mana is given the notation as
-      well), which touches only the searches that are about symbols and needs nothing embedded
-      again; or keep the worded text as a field of its own beside today's two, so that it adds
-      to a card's score without replacing what works. Both belong with stage 8
+- [ ] **To be fixed, on the owner's word** (23 November 2026, after the trial failed: "remember
+      for the future to do something to fix this issue"). The issue: searches that speak of
+      mana, tapping or amounts miss the card every player means. "three damage for one mana"
+      does not find Lightning Bolt, "elf that taps for mana" does not find Llanowar Elves,
+      "search for any card" does not find Demonic Tutor, "deals two damage to any target" does
+      not find Shock, "destroy all creatures" does not find Wrath of God. It is open, it is not
+      to be forgotten, and it is not to be patched search by search. Two ways the trial points
+      to, neither tried: say the notation on the side of the query, not the card (a query
+      that speaks of tapping for mana is given the notation as well), which touches only the
+      searches that are about symbols and needs nothing embedded again; or keep the worded
+      text as a field of its own beside today's two, so that it adds to a card's score
+      without replacing what works. Whatever is tried is judged as the trial was: the same
+      cards, the same searches, a control, and nothing that works today made worse. It
+      belongs with stage 8 and is the first thing that stage should show it can do
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),
       plain text wins on numeric queries
 - [ ] Grow the query set to about 150 with a second reviewer; write art descriptions from memory
