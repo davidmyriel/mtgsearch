@@ -1,6 +1,6 @@
 from conftest import AGGREGATES, PRINTINGS, REPRESENTATIVES
 
-from mtgsearch.printings import aggregates, alternate_names, as_card, preference_ranks
+from mtgsearch.printings import aggregates, alternate_names, as_card, first_printings, preference_ranks
 
 
 def test_a_printing_carries_the_card_fields_and_its_own(prints):
@@ -200,3 +200,117 @@ def test_a_name_with_no_plain_form_is_left_out():
         "flavor_name": "魔女の予見",
     }
     assert not any(key.startswith("alt_") for key in aggregates([printing])["x"])
+
+
+def test_what_each_printing_was_the_first_of_its_card_to_have(prints):
+    # Consecrated Sphinx: New Phyrexia first, then Iconic Masters with the same art and no
+    # flavour text, then a printing at rare
+    assert prints["nph-30"]["firsts"] == ["art", "flavor", "frame", "rarity"]
+    assert prints["ima-47"]["firsts"] == ["frame"]  # a new frame only: no flavour text is not a new one
+    assert prints["pima-47s"]["firsts"] == ["rarity"]
+    # Sol Ring: its first printing, then a new flavour text and frame, then a Secret Lair
+    assert prints["lea-270"]["firsts"] == ["frame", "rarity"]
+    assert prints["c21-263"]["firsts"] == ["flavor", "frame"]
+    assert prints["sld-1011"]["firsts"] == ["rarity"]  # a Secret Lair's rarity counts here
+
+
+def test_printings_of_one_day_are_taken_by_set_then_collector_number():
+    def p(pid, set_code, number, **kw):
+        base = {
+            "id": pid,
+            "oracle_id": "x",
+            "set": set_code,
+            "set_type": "masters",
+            "collector_number": number,
+            "released_at": "2022-07-08",
+            "rarity": "rare",
+            "frame": "2015",
+            "illustration_id": "art",
+        }
+        return {**base, **kw}
+
+    several = [p("c", "2x2", "354"), p("b", "2x2", "79"), p("a", "2x2", "439"), p("d", "zzz", "1")]
+    # 79 comes before 354: a number, not text
+    assert first_printings(several) == {"b": ["art", "frame", "rarity"]}
+    # a set whose code sorts first comes before them all
+    assert first_printings([*several, p("e", "1st", "900")]) == {"e": ["art", "frame", "rarity"]}
+    # a set comes before the sets named after it (uma before its box toppers, puma)
+    assert first_printings([p("x", "puma", "U31"), p("y", "uma", "236")]) == {"y": ["art", "frame", "rarity"]}
+    # and a promo set after the others of its day, whatever its code
+    promo = p("z", "p09", "178", set_type="promo")
+    assert first_printings([promo, p("w", "zen", "178", set_type="expansion")]) == {
+        "w": ["art", "frame", "rarity"]
+    }
+
+
+def test_a_flavour_text_is_the_same_with_or_without_its_quotation_marks():
+    def p(pid, released, flavor):
+        return {
+            "id": pid,
+            "oracle_id": "x",
+            "set": pid,
+            "set_type": "core",
+            "collector_number": "1",
+            "released_at": released,
+            "rarity": "rare",
+            "flavor_text": flavor,
+        }
+
+    found = first_printings(
+        [
+            p("a", "1999-01-01", "From Gaea grew the world. Keep your chainmail, of Ætheric make."),
+            p("b", "2018-01-01", '"From Gaea grew the world.\nKeep your chain mail, of aetheric make."'),
+            p("c", "2023-01-01", "Seldom have walked the feet of men."),
+        ]
+    )
+    assert found == {"a": ["flavor", "rarity"], "c": ["flavor"]}
+
+
+def test_a_rarity_is_new_only_among_printings_that_count_for_rarity():
+    def p(pid, released, set_type, rarity):
+        return {
+            "id": pid,
+            "oracle_id": "x",
+            "set": pid,
+            "set_type": set_type,
+            "collector_number": "1",
+            "released_at": released,
+            "rarity": rarity,
+        }
+
+    found = first_printings(
+        [
+            p("m11", "2010-07-16", "core", "common"),
+            p("f11", "2011-01-01", "promo", "rare"),
+            p("pz1", "2015-11-18", "treasure_chest", "uncommon"),
+            p("sta", "2016-01-01", "masterpiece", "mythic"),
+            p("m21", "2020-07-03", "core", "uncommon"),
+            p("sld", "2021-07-03", "box", "rare"),
+            p("m22", "2022-07-03", "core", "rare"),
+        ]
+    )
+    assert found == {"m11": ["rarity"], "m21": ["rarity"], "sld": ["rarity"]}
+
+
+def test_memorabilia_is_never_a_new_frame_or_rarity_but_its_art_counts():
+    def p(pid, released, set_type, frame, art):
+        return {
+            "id": pid,
+            "oracle_id": "x",
+            "set": pid,
+            "set_type": set_type,
+            "collector_number": "1",
+            "released_at": released,
+            "rarity": "rare",
+            "frame": frame,
+            "illustration_id": art,
+        }
+
+    found = first_printings(
+        [
+            p("all", "1996-06-10", "expansion", "1993", "first"),
+            p("olep", "1997-05-30", "memorabilia", "1997", "second"),
+            p("6ed", "1999-04-21", "core", "1997", "second"),
+        ]
+    )
+    assert found == {"all": ["art", "frame", "rarity"], "olep": ["art"], "6ed": ["frame"]}

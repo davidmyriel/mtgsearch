@@ -9,6 +9,29 @@ block:alara
     Cards, Modern Horizons Block. We accept every block's name, since that is what the
     person typing it means.
 
+new:art e:10e
+    `new:` asks whether a printing was the first of its card with this art (or flavour text,
+    frame, rarity). We agree with Scryfall on the cards of 21 of 23 sets tried. Here it finds
+    90 and we find 93: Reya Dawnbringer, Faerie Conclave and Treetop Village came out the
+    same day in Tenth Edition and as its promos, and Scryfall calls the promo the first. For
+    Magic 2010 and its promos it is the other way round, so we put a set before its promos.
+
+!"sol ring" new:art unique:prints
+    Printing by printing, twins differ: of two printings of one day and number (40K 251 and
+    its surge foil 251★, 8th Edition 188 and its foil 188★) Scryfall calls one new, and
+    which one follows nothing in the data: in 8th Edition it is the foil for about half the
+    cards. We call the plain one new. By card the two agree, which is how
+    conformance/new.txt compares.
+
+new:art e:mb2
+    Scryfall finds 131 and we find 142. Eleven Mystery Booster 2 cards carry an illustration
+    of their own in the data and Scryfall still does not call their art new. Unexplained.
+
+new:artist
+    Not supported, on purpose: Scryfall's answer follows no rule we could find (69 of
+    Lightning Bolt's 72 printings are "new", including eight in a row by the same artist).
+    `new:language` is not supported either: it needs printings in other languages.
+
 godzilla unique:prints
     Scryfall lists 14 printings and we list 15. The extra one is Void Beckoner's Arena-only
     variant (Ikoria 373A, "Spacegodzilla, Void Invader"), which Scryfall leaves out of a list

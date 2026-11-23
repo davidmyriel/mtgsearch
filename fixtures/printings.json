@@ -110,7 +110,13 @@
    "nonfoil"
   ],
   "art": "art-sphinx",
-  "pref_rank": 1
+  "pref_rank": 1,
+  "firsts": [
+   "art",
+   "flavor",
+   "frame",
+   "rarity"
+  ]
  },
  {
   "_id": "ima-47",
@@ -222,7 +228,10 @@
    "reprint"
   ],
   "art": "art-sphinx",
-  "pref_rank": 0
+  "pref_rank": 0,
+  "firsts": [
+   "frame"
+  ]
  },
  {
   "_id": "pima-47s",
@@ -330,7 +339,10 @@
    "reprint"
   ],
   "art": "art-sphinx",
-  "pref_rank": 2
+  "pref_rank": 2,
+  "firsts": [
+   "rarity"
+  ]
  },
  {
   "_id": "lea-270",
@@ -425,7 +437,11 @@
    "nonfoil"
   ],
   "art": "lea-270",
-  "pref_rank": 1
+  "pref_rank": 1,
+  "firsts": [
+   "frame",
+   "rarity"
+  ]
  },
  {
   "_id": "c21-263",
@@ -526,7 +542,11 @@
    "reprint"
   ],
   "art": "c21-263",
-  "pref_rank": 0
+  "pref_rank": 0,
+  "firsts": [
+   "flavor",
+   "frame"
+  ]
  },
  {
   "_id": "sld-1011",
@@ -628,7 +648,10 @@
    "universesbeyond"
   ],
   "art": "sld-1011",
-  "pref_rank": 2
+  "pref_rank": 2,
+  "firsts": [
+   "rarity"
+  ]
  },
  {
   "_id": "m19-314",
@@ -736,7 +759,11 @@
    "reprint"
   ],
   "art": "m19-314",
-  "pref_rank": 0
+  "pref_rank": 0,
+  "firsts": [
+   "frame",
+   "rarity"
+  ]
  },
  {
   "_id": "anb-13",
@@ -942,7 +969,12 @@
    "nonfoil"
   ],
   "art": "10e-268",
-  "pref_rank": 0
+  "pref_rank": 0,
+  "firsts": [
+   "flavor",
+   "frame",
+   "rarity"
+  ]
  },
  {
   "_id": "soi-5",
@@ -1061,7 +1093,13 @@
    "nonfoil"
   ],
   "art": "art-avacyn",
-  "pref_rank": 0
+  "pref_rank": 0,
+  "firsts": [
+   "art",
+   "flavor",
+   "frame",
+   "rarity"
+  ]
  },
  {
   "_id": "tm19-8",
@@ -1147,7 +1185,10 @@
    "nonfoil"
   ],
   "art": "tm19-8",
-  "pref_rank": 0
+  "pref_rank": 0,
+  "firsts": [
+   "frame"
+  ]
  },
  {
   "_id": "sld-88",
@@ -1249,6 +1290,10 @@
   ],
   "art": "sld-88",
   "pref_rank": 1,
+  "firsts": [
+   "frame",
+   "rarity"
+  ],
   "alt_plain": "ursa the twin maw",
   "alt_names_plain": [
    "ursa the twin maw"

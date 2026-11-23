@@ -387,6 +387,25 @@ test("block: finds the sets of a block, named by any of them", { skip }, async (
   assert.ok(allies.hits.every((hit) => /ally/i.test(String(hit.type_line))));
 });
 
+test("new: finds the printings that were the first of their card to have something", { skip }, async () => {
+  const cols = collection();
+  const total = async (query: string) => (await search(cols, query, { k: 1 })).total ?? 0;
+  // every printing of a set either is the first with its art or is not
+  const all = await total("e:m21 unique:prints");
+  assert.equal((await total("new:art e:m21 unique:prints")) + (await total("-new:art e:m21 unique:prints")), all);
+  assert.ok((await total("new:art e:m21 unique:prints")) > 100);
+  // Lightning Bolt: one first printing in each frame, Alpha among them
+  const frames = await search(cols, '!"lightning bolt" new:frame unique:prints order:released direction:asc', { k: 20 });
+  assert.deepEqual([frames.mode, frames.unit, frames.hits[0].set], ["syntax", "printings", "lea"]);
+  assert.ok((frames.total ?? 0) >= 5 && (frames.total ?? 0) <= 8);
+  assert.deepEqual(frames.understood.slice(1, 2), ["it is the card's first printing in this frame"]);
+  // a promo is never a card's first at a rarity
+  assert.equal(await total("new:rarity st:promo"), 0);
+  // what Scryfall has and we do not is left out with the reason
+  const artist = await search(cols, "new:artist t:sphinx", { k: 1 });
+  assert.deepEqual(artist.ignored.map((left) => left.term), ["new:artist"]);
+});
+
 test("a card is found by the other names its printings go by, and shown as that printing", { skip }, async () => {
   const cols = collection();
   // a flavour name, by one of its words: the Godzilla cards, each as its Godzilla printing

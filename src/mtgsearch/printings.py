@@ -204,19 +204,109 @@ def preference_ranks(printings: Iterable[dict], representatives: set[str]) -> di
     return {pid: rank for group in by_card.values() for rank, (_, pid) in enumerate(sorted(group))}
 
 
-def build_printing(printing: dict, tags: dict | None, aggregate: dict | None, pref_rank: int) -> dict:
-    """Build the document for one printing: the card's filter fields plus the printing's own."""
+# What `new:` can ask about: was this the first printing of its card with this art, flavour
+# text, frame or rarity.
+NEW_KINDS = ("art", "flavor", "frame", "rarity")
+# Printings Scryfall leaves out when it comes to frames and rarities: they are never new for
+# those and are not looked at. For art and flavour text they count like any other (the art
+# of the 1996 oversized Serra Angel is new there, and From the Vault's reprint of it is not).
+NEW_NEVER = {"memorabilia", "minigame", "vanguard"}
+# Sets that do not count when it decides whether a rarity is new for a card: the ones that
+# do not count for `in:<rarity>`, and Magic Online's treasure chests. Secret Lair drops do
+# count here (Mystic Remora's first rare is one), though they do not for `in:rare`.
+NEW_RARITY_SKIPS = NO_RARITY_SET_TYPES | {"treasure_chest"}
+_NOT_ALNUM = re.compile(r"[^a-z0-9]")
+
+
+def _illustration(printing: dict) -> str | None:
+    return printing.get("illustration_id") or next(
+        (f["illustration_id"] for f in printing.get("card_faces") or [] if f.get("illustration_id")), None
+    )
+
+
+def _flavor(printing: dict) -> str:
+    faces = printing.get("card_faces") or []
+    return printing.get("flavor_text") or "\n".join(f["flavor_text"] for f in faces if f.get("flavor_text"))
+
+
+def _same_flavor(text: str) -> str | None:
+    """A flavour text reduced to what makes it the same text: its letters and digits.
+
+    Reprints change line breaks, quotation marks and spacing ("chainmail" became "chain
+    mail", "Ætheric" became "aetheric") and Scryfall does not call those new.
+    """
+    return _NOT_ALNUM.sub("", fold(text.replace("Æ", "Ae").replace("æ", "ae"))) or text or None
+
+
+def first_printings(printings: Iterable[dict]) -> dict[str, list[str]]:
+    """Printing id -> which of NEW_KINDS it was the first printing of its card to have.
+
+    Worked out from Scryfall's answers to `new:` for 23 sets (23 November 2026), where it
+    leaves 17 cards different out of several thousand, none of them in rarity:
+
+    - a card's printings are taken in the order they came out: by date; on one day a promo
+      set after the others, a set before the sets named after it (uma before puma), then by
+      set code and by collector number as a number;
+    - memorabilia and the like are never a new frame or rarity and are not looked at for
+      those (NEW_NEVER);
+    - a printing with no flavour text is never new for flavour; texts are compared by
+      their letters and digits (_same_flavor);
+    - a rarity is new only among the printings that count for rarity (NEW_RARITY_SKIPS), so
+      a promo never is.
+
+    Which of two printings of the same day and number Scryfall calls new (8th Edition's 188
+    or its foil 188★) follows nothing in the data. Here it is the plain one.
+    """
+    by_card: dict[str, list[tuple]] = defaultdict(list)
+    for p in printings:
+        digits = _DIGITS.search(p.get("collector_number", ""))
+        when = (
+            p.get("released_at", ""),
+            p["set_type"] == "promo",
+            len(p["set"]),
+            p["set"],
+            int(digits.group()) if digits else 10**9,
+            p.get("collector_number", ""),
+        )
+        values = (
+            _illustration(p),
+            _same_flavor(_flavor(p)),
+            p.get("frame") if p["set_type"] not in NEW_NEVER else None,
+            p["rarity"] if p["set_type"] not in NEW_RARITY_SKIPS | NEW_NEVER else None,
+        )
+        by_card[oracle_id(p)].append((when, p["id"], values))
+    firsts: dict[str, list[str]] = {}
+    for group in by_card.values():
+        seen: list[set] = [set() for _ in NEW_KINDS]
+        for _, pid, values in sorted(group):
+            new = [
+                k
+                for k, known, value in zip(NEW_KINDS, seen, values, strict=True)
+                if value and value not in known
+            ]
+            for known, value in zip(seen, values, strict=True):
+                known.add(value)
+            if new:
+                firsts[pid] = new
+    return firsts
+
+
+def build_printing(
+    printing: dict, tags: dict | None, aggregate: dict | None, pref_rank: int, firsts: Iterable[str] = ()
+) -> dict:
+    """Build the document for one printing: the card's filter fields plus the printing's own.
+
+    `firsts` is what this printing was the first of its card to have (see first_printings).
+    """
     doc = build_document(as_card(printing), tags, aggregate)
     del doc["rules"], doc["rules_tagged"]  # semantic text lives in the cards collection only
     for currency in ("usd", "eur", "tix"):
         doc.pop(currency, None)  # prices are kept in cents here
 
     faces = printing.get("card_faces") or []
-    flavor = printing.get("flavor_text") or "\n".join(f["flavor_text"] for f in faces if f.get("flavor_text"))
+    flavor = _flavor(printing)
     watermarks = {printing.get("watermark"), *(f.get("watermark") for f in faces)} - {None}
-    illustration = printing.get("illustration_id") or next(
-        (f["illustration_id"] for f in faces if f.get("illustration_id")), None
-    )
+    illustration = _illustration(printing)
     released = printing["released_at"]
     flags = {name for key, name in FLAG_KEYS if printing.get(key)}
     flags |= set(printing.get("finishes") or []) | set(printing.get("promo_types") or [])
@@ -254,6 +344,7 @@ def build_printing(printing: dict, tags: dict | None, aggregate: dict | None, pr
             # What `unique:art` groups by; printings without an illustration id stand alone.
             "art": illustration or printing["id"],
             "pref_rank": pref_rank,
+            "firsts": sorted(firsts),
         }
     )
     # The card's other names came in with its totals. A printing answers only for its own:

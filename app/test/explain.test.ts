@@ -78,6 +78,11 @@ test("printings: set, rarity, dates, games", () => {
   assert.deepEqual(said("-block:zendikar"), ["the set is not in the Zendikar block"]);
   assert.deepEqual(said("b:dom"), ["the set is DOM"]);
   assert.deepEqual(said("b:nosuchblock"), ["the set is in a block called “nosuchblock” (there is none)"]);
+  // a printing that was the first of its card to have something
+  assert.deepEqual(said("new:art"), ["it is the card's first printing with this art"]);
+  assert.deepEqual(said("new:flavor"), ["it is the card's first printing with this flavour text"]);
+  assert.deepEqual(said("new:frame"), ["it is the card's first printing in this frame"]);
+  assert.deepEqual(said("-new:rarity"), ["it is not the card's first printing at this rarity"]);
   assert.deepEqual(said("r:mythic"), ["its rarity is mythic"]);
   assert.deepEqual(said("r>=r"), ["its rarity is rare or higher"]);
   assert.deepEqual(said("year=2015"), ["it was released in 2015"]);

@@ -1,0 +1,87 @@
+# `new:`: printings that were the first of their card to have an art, a flavour text, a
+# frame or a rarity (first_printings in src/mtgsearch/printings.py). Tuning set: the rule was
+# worked out from Scryfall's answers for 23 sets. Compared by card: which of two printings
+# of one day and number Scryfall calls new follows nothing in the data (see known_gaps.txt).
+# Run with: npm run conformance -- conformance/new.txt
+new:art e:2x2
+new:art e:m21
+new:art e:a25
+new:art e:sta
+new:art e:mm2
+new:art e:e01
+new:art e:ima
+new:frame e:2x2
+new:frame e:m21
+new:frame e:a25
+new:frame e:sta
+new:frame e:mm2
+new:frame e:e01
+new:frame e:ima
+new:rarity e:m21
+new:rarity e:a25
+new:rarity e:mm2
+new:rarity e:ima
+new:rarity e:sta
+new:flavor e:m21
+new:flavor e:sta
+new:flavor e:ima
+# more sets
+new:art e:uma
+new:art e:mh2
+new:art e:cmm
+new:art e:dmr
+new:art e:tsr
+new:art e:m15
+new:art e:5ed
+new:art e:c21
+new:art e:clb
+new:art e:j22
+new:frame e:uma
+new:frame e:mh2
+new:frame e:tsr
+new:frame e:m15
+new:frame e:8ed
+new:frame e:6ed
+new:frame e:c21
+new:frame e:dmr
+new:rarity e:uma
+new:rarity e:mh2
+new:rarity e:cmm
+new:rarity e:dmr
+new:rarity e:m15
+new:rarity e:10e
+new:rarity e:5ed
+new:rarity e:c21
+new:rarity e:clb
+new:rarity e:mb2
+new:flavor e:uma
+new:flavor e:mh2
+new:flavor e:cmm
+new:flavor e:dmr
+new:flavor e:m15
+new:flavor e:8ed
+new:art e:8ed
+new:frame e:8ed
+new:rarity e:8ed
+new:rarity e:puma
+new:art e:puma
+new:art e:m10
+new:flavor e:m10
+new:flavor e:c21
+new:flavor e:tsr
+# one card's printings
+!"lightning bolt" new:art unique:prints
+!"lightning bolt" new:frame unique:prints
+!"lightning bolt" new:rarity unique:prints
+!"lightning bolt" new:flavor unique:prints
+!"sol ring" new:rarity unique:prints
+!"sol ring" new:frame unique:prints
+!"counterspell" new:rarity unique:prints
+!"llanowar elves" new:frame unique:prints
+# with other terms, and ruled out
+new:rarity r:mythic e:2x2
+new:art -new:flavor e:m21 r:rare
+-new:art e:m21 r:mythic
+new:rarity year=2015 r:common t:goblin
+new:art a:"john avon" year=2016
+new:frame frame:future

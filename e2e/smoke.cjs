@@ -460,6 +460,13 @@ async function run(name, contextOptions) {
     `[${name}] a block is found by any of its sets and said by its name (${blockRead.join(" | ")})`
   );
   check((await firstCards(page, 20)).includes("Kazuul Warlord"), `[${name}] and lists the block's cards (${(await firstCards(page, 3)).join(", ")})`);
+  // The printings that were the first of their card in a frame.
+  await search(page, '!"lightning bolt" new:frame unique:prints');
+  const newRead = await page.$$eval("#understood li", (items) => items.map((li) => li.textContent));
+  check(
+    /^Scryfall syntax · [5-8] printings/.test(await page.textContent("#status")) && newRead.includes("it is the card's first printing in this frame"),
+    `[${name}] new: finds a card's first printing in each frame (${await page.textContent("#status")})`
+  );
 
   // Paging and sorting, on a query with more results than one page.
   await search(page, "t:sphinx");

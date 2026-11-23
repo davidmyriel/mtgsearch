@@ -40,6 +40,7 @@ const SUPPORTED: Record<string, string> = {
   r: "rarity", rarity: "rarity",
   s: "set", e: "set", set: "set", edition: "set",
   b: "block", block: "block",
+  new: "new",
   st: "settype",
   cn: "number", number: "number",
   a: "artist", artist: "artist",
@@ -56,7 +57,7 @@ const SUPPORTED: Record<string, string> = {
 };
 
 const NOT_YET =
-  "cube new lang language has art atag arttag cheapest " +
+  "cube lang language has art atag arttag cheapest " +
   "paperprints papersets illustrations artists";
 
 /** alias -> canonical keyword. A null value means recognised but not implemented yet. */

@@ -18,7 +18,7 @@ from pathlib import Path
 
 from . import config, scryfall
 from .documents import build_document
-from .printings import aggregates, build_printing, oracle_id, preference_ranks
+from .printings import aggregates, build_printing, first_printings, oracle_id, preference_ranks
 from .tags import card_tags
 
 BATCH = 250
@@ -186,8 +186,11 @@ def build_documents(data_dir: Path, labels=tuple(TARGETS)) -> dict[str, list[dic
         built[CARDS.label] = _hashed(docs, CARDS)
     if PRINTINGS.label in labels:
         ranks = preference_ranks(scryfall.read_jsonl_gz(printings_path), {c["id"] for c in cards})
+        firsts = first_printings(scryfall.read_jsonl_gz(printings_path))
         docs = [
-            build_printing(p, tags.get(oracle_id(p)), totals[oracle_id(p)], ranks[p["id"]])
+            build_printing(
+                p, tags.get(oracle_id(p)), totals[oracle_id(p)], ranks[p["id"]], firsts.get(p["id"], ())
+            )
             for p in scryfall.read_jsonl_gz(printings_path)
         ]
         built[PRINTINGS.label] = _hashed(docs, PRINTINGS)

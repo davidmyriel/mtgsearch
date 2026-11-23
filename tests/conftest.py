@@ -3,7 +3,7 @@
 import pytest
 
 from mtgsearch.documents import build_document
-from mtgsearch.printings import aggregates, build_printing, oracle_id, preference_ranks
+from mtgsearch.printings import aggregates, build_printing, first_printings, oracle_id, preference_ranks
 
 LEGAL = {"commander": "legal", "modern": "legal", "vintage": "legal", "standard": "not_legal"}
 
@@ -217,8 +217,12 @@ def card_documents() -> list[dict]:
 
 def printing_documents() -> list[dict]:
     ranks = preference_ranks(PRINTINGS, REPRESENTATIVES)
+    firsts = first_printings(PRINTINGS)
     return [
-        build_printing(p, TAGS.get(oracle_id(p)), AGGREGATES[oracle_id(p)], ranks[p["id"]]) for p in PRINTINGS
+        build_printing(
+            p, TAGS.get(oracle_id(p)), AGGREGATES[oracle_id(p)], ranks[p["id"]], firsts.get(p["id"], ())
+        )
+        for p in PRINTINGS
     ]
 
 

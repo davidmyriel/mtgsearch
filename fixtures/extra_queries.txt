@@ -24,13 +24,18 @@ include:tokens
 devotion:wu
 m<=9WWWWUUUUBBBBRRRRGGGG
 lang:ja
-new:art
+new:artist
+new:language
 in:japanese
 order:artist
 prefer:promo
 paperprints>3
 
 # printing-level
+new:art
+-new:rarity t:sphinx
+new:shiny
+new>art
 block:ice
 b:nosuchblock
 b>zen

@@ -32849,6 +32849,2871 @@
    }
   },
   {
+   "query": "new:art e:2x2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "2x2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:m21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "m21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:a25",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "a25"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:sta",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "sta"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:mm2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "mm2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:e01",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "e01"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:2x2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "2x2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:m21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "m21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:a25",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "a25"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:sta",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "sta"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:mm2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "mm2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:e01",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "e01"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:m21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "m21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:a25",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "a25"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:mm2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "mm2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:sta",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "sta"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:m21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "m21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:sta",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "sta"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:ima",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "ima"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:uma",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "uma"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:mh2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "mh2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:cmm",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "cmm"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:dmr",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "dmr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:tsr",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "tsr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:m15",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "m15"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:5ed",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "5ed"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:c21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "c21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:clb",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "clb"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:j22",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "j22"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:uma",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "uma"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:mh2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "mh2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:tsr",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "tsr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:m15",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "m15"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:8ed",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "8ed"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:6ed",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "6ed"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:c21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "c21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame e:dmr",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "set",
+      "dmr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:uma",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "uma"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:mh2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "mh2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:cmm",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "cmm"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:dmr",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "dmr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:m15",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "m15"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:10e",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "10e"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:5ed",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "5ed"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:c21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "c21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:clb",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "clb"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:mb2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "mb2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:uma",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "uma"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:mh2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "mh2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:cmm",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "cmm"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:dmr",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "dmr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:m15",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "m15"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:8ed",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "8ed"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:8ed",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "8ed"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:8ed",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "8ed"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity e:puma",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "set",
+      "puma"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:puma",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "puma"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art e:m10",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "set",
+      "m10"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:m10",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "m10"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:c21",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "c21"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:flavor e:tsr",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "set",
+      "tsr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"lightning bolt\" new:art unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "lightning bolt"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "lightning bolt"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "lightning bolt"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!lightning bolt",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"lightning bolt\" new:frame unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "lightning bolt"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "lightning bolt"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "lightning bolt"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!lightning bolt",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"lightning bolt\" new:rarity unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "lightning bolt"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "lightning bolt"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "lightning bolt"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!lightning bolt",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"lightning bolt\" new:flavor unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "lightning bolt"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "lightning bolt"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "lightning bolt"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "flavor"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!lightning bolt",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"sol ring\" new:rarity unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "sol ring"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "sol ring"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "sol ring"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!sol ring",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"sol ring\" new:frame unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "sol ring"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "sol ring"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "sol ring"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!sol ring",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"counterspell\" new:rarity unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "counterspell"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "counterspell"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "counterspell"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!counterspell",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"llanowar elves\" new:frame unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "llanowar elves"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "llanowar elves"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "llanowar elves"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!llanowar elves",
+     "new",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:rarity r:mythic e:2x2",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ],
+     [
+      "eq",
+      "set",
+      "2x2"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "r",
+     "e"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art -new:flavor e:m21 r:rare",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "not",
+      [
+       "in",
+       "firsts",
+       "flavor"
+      ]
+     ],
+     [
+      "eq",
+      "set",
+      "m21"
+     ],
+     [
+      "eq",
+      "rarity",
+      "rare"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "-new:art e:m21 r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "firsts",
+       "art"
+      ]
+     ],
+     [
+      "eq",
+      "set",
+      "m21"
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "new:rarity year=2015 r:common t:goblin",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "rarity"
+     ],
+     [
+      "cmp",
+      "year",
+      "=",
+      2015
+     ],
+     [
+      "eq",
+      "rarity",
+      "common"
+     ],
+     [
+      "in",
+      "type_words",
+      "goblin"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "year",
+     "r",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:art a:\"john avon\" year=2016",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "has",
+      "artist_lc",
+      "john avon"
+     ],
+     [
+      "cmp",
+      "year",
+      "=",
+      2016
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "a",
+     "year"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "new:frame frame:future",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "frame"
+     ],
+     [
+      "eq",
+      "frame",
+      "future"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new",
+     "frame"
+    ],
+    "words": []
+   }
+  },
+  {
    "query": "o:\"unterminated",
    "error": "QueryError"
   },
@@ -32936,9 +35801,14 @@
    "message": "'lang:' is not supported yet"
   },
   {
-   "query": "new:art",
+   "query": "new:artist",
    "error": "Unsupported",
-   "message": "'new:' is not supported yet"
+   "message": "'new:artist' is not supported yet: Scryfall's own answer to it follows no rule we could find"
+  },
+  {
+   "query": "new:language",
+   "error": "Unsupported",
+   "message": "'new:language' is not supported yet: it needs printings in other languages"
   },
   {
    "query": "in:japanese",
@@ -32959,6 +35829,83 @@
    "query": "paperprints>3",
    "error": "Unsupported",
    "message": "'paperprints:' is not supported yet"
+  },
+  {
+   "query": "new:art",
+   "ir": [
+    "and",
+    [
+     [
+      "in",
+      "firsts",
+      "art"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "new"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-new:rarity t:sphinx",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "in",
+       "firsts",
+       "rarity"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sphinx"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "new:shiny",
+   "error": "QueryError"
+  },
+  {
+   "query": "new>art",
+   "error": "QueryError"
   },
   {
    "query": "block:ice",

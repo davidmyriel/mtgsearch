@@ -60,7 +60,7 @@ test("malformed queries are QueryErrors", () => {
 });
 
 test("unsupported keywords are reported, never silently ignored", () => {
-  for (const query of ["cube:vintage", "is:unicorn", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy"]) {
+  for (const query of ["cube:vintage", "is:unicorn", "lang:ja", "new:artist", "new:language", "order:artist", "prefer:promo", "in:japanese", "pow>loy"]) {
     assert.throws(() => compile(query), Unsupported, query);
   }
 });
@@ -88,14 +88,14 @@ test("a term that cannot be used is taken out, with the reason, and the rest is 
   // negated, or inside a group: the term goes, and so does a group left with nothing
   assert.deepEqual(kept("-lang:ja t:sphinx").left, ["the type includes “sphinx”"]);
   assert.deepEqual(kept("t:elf or lang:ja").left, ["the type includes “elf”"]);
-  assert.deepEqual(kept("t:elf (lang:ja or new:art)").left, ["the type includes “elf”"]);
+  assert.deepEqual(kept("t:elf (lang:ja or new:artist)").left, ["the type includes “elf”"]);
   assert.deepEqual(kept("t:elf (lang:ja or mv=1)").left, ["the type includes “elf”", "the mana value is 1"]);
   // a term is shown as it was typed
   assert.deepEqual(kept('art:"two dragons" order:artist bolt').ignored.map((left) => left.term), ['art:"two dragons"', "order:artist"]);
   assert.deepEqual(kept("bolt lang:ja").left, ["the name includes “bolt”"]);
   // nothing left
   assert.deepEqual(kept("lang:ja"), { left: null, ignored: [{ term: "lang:ja", reason: "'lang:' is not supported yet" }] });
-  assert.equal(kept("lang:ja -new:art").left, null);
+  assert.equal(kept("lang:ja -new:artist").left, null);
   // a query with nothing wrong is untouched
   assert.deepEqual(kept("t:sphinx mv<=3 -c:u").ignored, []);
   assert.deepEqual(usable(parse("t:sphinx or (c:u mv=2)")).ast, parse("t:sphinx or (c:u mv=2)"));

@@ -97,6 +97,7 @@ Measured on 22 November 2026 against the full card set. Raw output is in `confor
 | Regex shorthands tuning set, 16 queries (`\spp`, `\smr` and so on) | | 16 match |
 | Other names tuning set, 42 queries (flavour names, printed names, exact names) | | 42 match |
 | Blocks tuning set, 102 queries (`block:` by set code, by set name, with other terms) | | 102 match |
+| `new:` tuning set, 79 queries (first printing with an art, flavour text, frame or rarity) | 59 of 74 | 79 match |
 
 The first-run column is the honest measure of how well the rules generalise; the earlier
 held-out sets have since been used to fix rules, so they are no longer untouched. The second
@@ -156,11 +157,11 @@ Read these with care:
 | Shortcuts | Land cycles: `is:` fetchland, shockland, dual, checkland, fastland, painland, filterland, bounceland, bikeland, canopyland, gainland, scryland, shadowland, storageland, creatureland, triland, tangoland, triome, slowland, bondland, pathway, surveilland, vergeland (and their other names, such as `is:manland`). Groups: `is:` party, outlaw, companion, partner, oathbreaker, duelcommander, brawler, modal, adventure, augmentation, masterpiece, firstprint |
 | Printings | `set:` `block:` (the code or name of any set in the block) `st:` `cn:` `r:` (with comparisons) `a:` `ft:` `wm:` `frame:` `border:` `stamp:` `game:` `year` `date` (a day, a year or a set code) `usd` `eur` `tix` |
 | Printing flags | `is:` foil, nonfoil, etched, promo, reprint, digital, fullart, textless, spotlight, booster, hires, showcase, extended, borderless, old, new, ub, and every promo type (`is:prerelease`, `is:buyabox`, ...) |
-| Across printings | `in:` a set, rarity or game; `prints`, `sets` |
+| Across printings | `in:` a set, rarity or game; `prints`, `sets`; `new:` art, flavor, frame, rarity (the card's first printing to have it) |
 | Results | `unique:cards`, `unique:prints`, `unique:art`, `prefer:` oldest, newest, usd-low, usd-high (and eur, tix), `include:extras` |
 | Sorting | `order:` name, cmc, power, toughness, edhrec, released, usd, eur, tix, rarity; `direction:` |
 
-Not yet: `lang:` and non-English printings, `new:`, `cube:`, art tags (`art:`), and
+Not yet: `lang:` and non-English printings, `new:artist` and `new:language`, `cube:`, art tags (`art:`), and
 `order:` by set or artist. A term that cannot be used, one of these or a value that makes no
 sense (`c:purple`), is never silently ignored: it is left out, the page says which term and
 why, and the rest of the query runs. If nothing is left, the search is refused with the reasons.

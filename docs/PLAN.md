@@ -31,6 +31,16 @@ picked up: at the boundary between plan steps unless something is broken.
 ## Stages
 
 ### 0. Setup: done except key rotation
+- [ ] **The TopK account ran out of credits on 23 November 2026, about 04:50 UTC.** Every
+      request is refused ("You have run out of credits. Please add a payment method"), so
+      search on the live site answers "The search backend is unavailable" and the nightly
+      run will fail until credits are added at console.topk.io/billing. It happened during a
+      day of heavy use from this branch: the trial's seven collections (18,200 cards
+      embedded), about 80,000 field updates to printings, and several thousand comparison
+      and test queries. Before more of that: find out what a field update, a query and an
+      embedded card cost, and budget for it (the nightly run included)
+- [ ] When credits are back: run the live tests, the browser checks and CI for the `new:`
+      commit, which went in without them
 - [x] Repository on GitHub, lint, unit tests, CI workflows
 - [x] `TOPK_API_KEY` secret on GitHub: integration tests and the nightly refresh run with it
 - [ ] Revoke the first API key that was pasted into chat; create separate keys for CI, staging, production
@@ -67,7 +77,17 @@ picked up: at the boundary between plan steps unless something is broken.
       1,069 sets), because the bulk files do not say which block a set is in. 102 of 102 in
       `conformance/blocks.txt`, which the nightly run repeats. One difference, on purpose:
       we accept every block's name (`block:alara`), Scryfall only some
-- [ ] `new:`, `lang:` and non-English printings, `cube:`
+- [x] `new:art`, `new:flavor`, `new:frame`, `new:rarity` (23 November 2026): the printing
+      that was the first of its card to have that art, flavour text, frame or rarity. The
+      ingest job works it out for every printing (`first_printings`), from a rule found by
+      comparing with Scryfall's answers for 23 sets: 17 cards differ out of several thousand,
+      none in rarity. 59 of 74 on the first run of `conformance/new.txt`, 79 of 79 now, and
+      the nightly run repeats it. A field on 68,000 printings, written as field updates;
+      the printings hold no embeddings. Left out on purpose: `new:artist` (Scryfall's own
+      answer follows no rule: 69 of Lightning Bolt's 72 printings) and `new:language`
+      (needs other languages). Known differences are in `known_gaps.txt`: which of two
+      same-day twins is the new one, and Tenth Edition's promos
+- [ ] `lang:` and non-English printings, `cube:`
 - [ ] `app/type-words.json` is behind the card data by fifteen words (seen when the
       catalogues were regenerated for blocks). Some are ordinary (`pigeon`, `bottle`), some
       would change how short type searches read (`a`, `in`, `city`). Not taken with the block

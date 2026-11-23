@@ -256,6 +256,22 @@ test("block: is the sets of a block, named by any of them; a set outside every b
   assert.throws(() => compile("b:/zen/"), QueryError);
 });
 
+test("new: is the printing that was the first of its card to have an art, a flavour text, a frame or a rarity", () => {
+  // Consecrated Sphinx: New Phyrexia first, then Iconic Masters (a new frame), then a rare printing
+  assert.deepEqual(ids("new:art t:sphinx"), ["nph-30"]);
+  assert.deepEqual(ids("new:flavor t:sphinx"), ["nph-30"]);
+  assert.deepEqual(ids("new:frame t:sphinx"), ["ima-47", "nph-30"]);
+  assert.deepEqual(ids("new:rarity t:sphinx"), ["nph-30", "pima-47s"]);
+  assert.deepEqual(ids("-new:frame t:sphinx"), ["pima-47s"]);
+  assert.deepEqual(ids("NEW:Rarity t:artifact"), ["lea-270", "sld-1011"]); // a Secret Lair's rarity counts
+  assert.deepEqual(ids("new=flavor t:artifact"), ["c21-263"]);
+  assert.equal(compile("new:art")[1].printings, true);
+  // two that Scryfall has are refused with the reason; anything else is a mistake
+  for (const query of ["new:artist", "new:language"]) assert.throws(() => compile(query), Unsupported, query);
+  assert.throws(() => compile("new:shiny"), (e) => e instanceof QueryError && !(e instanceof Unsupported));
+  assert.throws(() => compile("new>art"), QueryError);
+});
+
 test("the catalogue of blocks is consistent", () => {
   for (const [code, block] of Object.entries(BLOCKS.blocks)) {
     assert.ok(block.name && block.sets.length, code);

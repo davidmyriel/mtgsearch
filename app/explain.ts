@@ -273,6 +273,10 @@ function keyword(kw: Keyword): Clause | null {
       return says("the set", "is", value.toUpperCase());
     case "settype":
       return says("the kind of set", "is", quote(value.toLowerCase()));
+    case "new": {
+      const what: Record<string, string> = { art: "with this art", flavor: "with this flavour text", frame: "in this frame", rarity: "at this rarity" };
+      return says("it", "is", `the card's first printing ${what[value.toLowerCase()] ?? `with this ${value.toLowerCase()}`}`);
+    }
     case "block": {
       const code = blockOf(value);
       if (code === null) return says("the set", "is", `in a block called ${quote(value)} (there is none)`);

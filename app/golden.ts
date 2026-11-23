@@ -28,6 +28,7 @@ const QUERY_FILES = [
   "conformance/regex.txt",
   "conformance/names.txt",
   "conformance/blocks.txt",
+  "conformance/new.txt",
   "fixtures/extra_queries.txt",
 ];
 

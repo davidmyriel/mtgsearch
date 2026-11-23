@@ -75,7 +75,15 @@ export const ORDER_FIELDS: Record<string, string> = {
 export const PRINTING_FIELDS = new Set([
   "set", "set_type", "cn", "cn_num", "rarity", "rarity_rank", "artist_lc", "flavor_lc", "watermarks",
   "border", "frame", "frame_effects", "stamp", "games", "year", "date", "usd_c", "eur_c", "tix_c", "pflags",
+  "firsts",
 ]);
+// `new:` asks whether a printing was the first of its card to have something. The ingest
+// job works out these four (see first_printings in printings.py); Scryfall has two more.
+export const NEW_KINDS = ["art", "flavor", "frame", "rarity"];
+const NEW_NOT_YET: Record<string, string> = {
+  artist: "'new:artist' is not supported yet: Scryfall's own answer to it follows no rule we could find",
+  language: "'new:language' is not supported yet: it needs printings in other languages",
+};
 /** `prefer:` values: the field that picks a card's printing, and whether the highest value wins. */
 export const PREFER: Record<string, [string, boolean]> = {
   oldest: ["date", false], newest: ["date", true],
@@ -443,6 +451,13 @@ function keyword(kw: Keyword, options: Working): IR {
     options.includeExtras = true;
   }
   if (canonical === "set") return exact("set", kw);
+  if (canonical === "new") {
+    const kind = value.toLowerCase();
+    if (kw.regex || (op !== ":" && op !== "=")) throw new QueryError(`'${kw.key}' does not take '${kw.regex ? "a regular expression" : op}'`);
+    if (Object.hasOwn(NEW_NOT_YET, kind)) throw new Unsupported(NEW_NOT_YET[kind]);
+    if (!NEW_KINDS.includes(kind)) throw new QueryError(`'new:' takes ${NEW_KINDS.join(", ")}; not '${value}'`);
+    return ["in", "firsts", kind];
+  }
   if (canonical === "block") {
     options.includeExtras = true; // observed: a block lists its tokens too, ruled in or out
     return block(kw);
