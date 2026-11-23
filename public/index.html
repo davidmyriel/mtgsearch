@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mtgsearch</title>
+<title>TutorK</title>
 <meta name="description" content="Search Magic: The Gathering cards with Scryfall syntax or plain English.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -16,19 +16,28 @@
      once there is one it becomes a bar across the top (see .searched in app.css). -->
 <header class="masthead">
   <div class="masthead-inner">
-    <a class="wordmark" href="/">mtgsearch</a>
-    <p class="tagline">Find a Magic card by its Scryfall syntax, by its name, or by what you remember about it.</p>
+    <!-- The name builds itself square by square, from the left, on arrival at the home page;
+         it stands still for anyone who has asked their device for less motion. -->
+    <a class="wordmark" href="/"><picture><source media="(prefers-reduced-motion: reduce)" srcset="/wordmark.svg"><img src="/wordmark-appear.svg" alt="TutorK" width="334" height="56"></picture></a>
     <form id="search" class="search" role="search" action="/" method="get">
-      <label class="sr-only" for="q">Search cards</label>
-      <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
+      <!-- The mark sits inside the bar, at its left end; pressing it puts the cursor in the box. -->
+      <label class="mark" for="q"><img src="/icon.svg" alt="" width="44" height="44"><span class="sr-only">Search cards</span></label>
+      <input id="q" name="q" type="search" maxlength="200" placeholder="Try: sphinx that draws two cards"
              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
-      <button type="submit">Search</button>
+      <!-- Enter searches. The button is kept out of sight for assistive technology. -->
+      <button type="submit" class="sr-only" tabindex="-1">Search</button>
     </form>
     <nav class="nav" aria-label="Site">
       <a href="/syntax">Syntax guide</a>
       <a id="nav-random" href="/random">Random card</a>
     </nav>
+    <!-- Home only: what is new. The first line is the flavour of the week, when
+         public/flavour.json names one; the rest are the newest sets. -->
+    <ul id="news" class="news" aria-label="What is new" hidden></ul>
   </div>
+  <!-- Home only: a fan of cards, different on every visit, cut off by the bottom of the
+       first screen. -->
+  <ul id="home-cards" class="home-cards" aria-label="A few cards" hidden></ul>
 </header>
 
 <main id="main">
@@ -84,41 +93,6 @@
     <!-- A syntax query said back in words, one entry for each condition that has to hold. -->
     <ul id="understood" class="understood" aria-label="How the query was read" hidden></ul>
 
-    <section id="intro" class="intro" aria-label="Ways to search">
-      <div class="ways">
-        <article class="way">
-          <h2>Describe the card</h2>
-          <p>Say what it does in plain English. An opening such as "two mana blue instant" is applied as a filter,
-            and the rest is matched by meaning.</p>
-          <ul class="examples">
-            <li><button type="button" data-q="sphinx that draws two cards">sphinx that draws two cards</button></li>
-            <li><button type="button" data-q="one mana elf that taps for green mana">one mana elf that taps for green mana</button></li>
-            <li><button type="button" data-q="dwarf destroys lands">dwarf destroys lands</button></li>
-          </ul>
-        </article>
-        <article class="way">
-          <h2>Use Scryfall syntax</h2>
-          <p>The keywords you already know return exactly the cards that match, by colour, type, text, cost, set,
-            rarity or price. <a href="/syntax">See the syntax guide</a>.</p>
-          <ul class="examples">
-            <li><button type="button" data-q="c:u t:sphinx o:&quot;draw two cards&quot;">c:u t:sphinx o:"draw two cards"</button></li>
-            <li><button type="button" data-q="t:dragon r:mythic usd&lt;5">t:dragon r:mythic usd&lt;5</button></li>
-            <li><button type="button" data-q="!&quot;lightning bolt&quot; unique:prints order:released">!"lightning bolt" unique:prints order:released</button></li>
-          </ul>
-        </article>
-        <article class="way">
-          <h2>Or both at once</h2>
-          <p>Keywords narrow the cards down and the remaining words rank them. A card's whole name opens that
-            card; part of a name lists the cards that have it.</p>
-          <ul class="examples">
-            <li><button type="button" data-q="c:u t:sphinx draws when opponents draw">c:u t:sphinx draws when opponents draw</button></li>
-            <li><button type="button" data-q="t:goblin mv&lt;=2 makes treasure">t:goblin mv&lt;=2 makes treasure</button></li>
-            <li><button type="button" data-q="lightning bolt">lightning bolt</button></li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
     <!-- A search that found nothing: what to try next. -->
     <section id="empty" class="empty" aria-labelledby="empty-title" hidden>
       <h2 id="empty-title">No cards matched</h2>
@@ -159,7 +133,6 @@
 
     <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
     <article id="card" class="card" aria-labelledby="card-name" hidden>
-      <button id="card-back" class="out back" type="button" hidden>Back to results</button>
       <!-- Shown when a search for an exact name came straight here and other cards matched too. -->
       <p id="card-also" class="also" hidden></p>
       <div class="card-body">

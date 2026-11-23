@@ -1,5 +1,5 @@
-# Netlify serves the static page in public/ and runs two functions from netlify/functions/:
-# search.mts (GET /api/search) and card.mts (GET /api/card).
+# Netlify serves the static page in public/ and runs three functions from netlify/functions/:
+# search.mts (GET /api/search), card.mts (GET /api/card) and home.mts (GET /api/home).
 # Set TOPK_API_KEY in the Netlify UI (Project configuration > Environment variables);
 # variables declared in this file are not available to functions.
 

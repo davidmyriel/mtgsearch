@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Not found · mtgsearch</title>
-<meta name="description" content="There is nothing at this address on mtgsearch.">
+<title>Not found · TutorK</title>
+<meta name="description" content="There is nothing at this address on TutorK.">
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -15,12 +15,13 @@
 
 <header class="masthead">
   <div class="masthead-inner">
-    <a class="wordmark" href="/">mtgsearch</a>
+    <a class="wordmark" href="/"><img src="/wordmark.svg" alt="TutorK" width="334" height="56"></a>
     <form class="search" role="search" action="/" method="get">
-      <label class="sr-only" for="q">Search cards</label>
-      <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
+      <label class="mark" for="q"><img src="/icon.svg" alt="" width="44" height="44"><span class="sr-only">Search cards</span></label>
+      <input id="q" name="q" type="search" maxlength="200" placeholder="Try: sphinx that draws two cards"
              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
-      <button type="submit">Search</button>
+      <!-- Enter searches. The button is kept out of sight for assistive technology. -->
+      <button type="submit" class="sr-only" tabindex="-1">Search</button>
     </form>
     <nav class="nav" aria-label="Site">
       <a href="/syntax">Syntax guide</a>

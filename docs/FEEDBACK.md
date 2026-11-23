@@ -33,6 +33,9 @@ and the Scryfall comparison where results could move.
 | F-1 | 22 Nov 2026 | A page for each card, in place of the popup | M | Next boundary | Done |
 | F-2 | 22 Nov 2026 | The site has to look polished enough for the public; layout closer to Scryfall's first | L | Now, on the owner's word | Done (first pass) |
 | F-3 | 22 Nov 2026 | Typing a card's exact name opens the card's page, not a list of results | M | Next boundary | Done |
+| F-4 | 23 Nov 2026 | The home page's first impression: the search bar is the focus, relaxed, discreet, with room for a flavour of the week | M | Next boundary | Done |
+| F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done, with the search fixed so that all four examples find what they promise |
+| F-6 | 23 Nov 2026 | The home page's cards go with the example in the search box | S | Now, with F-5 | Done |
 
 ### F-1. A page for each card
 
@@ -120,6 +123,209 @@ and the Scryfall comparison where results could move.
   others. Part of a name ("bolt", "lightning bol") still lists the cards.
 - **Confirmed by the owner on 23 November 2026:** asked whether those short names should show
   the list instead, the answer was "open the card". It stays as built.
+
+### F-4. The home page's first impression
+
+- **From:** the project owner, 23 November 2026, as an annotated picture of Scryfall's home
+  page under the words "some ui feedback on scryfall's first impression".
+- **In their words:** "1. the focus is on the search bar. 2. needs a simple relaxed search-like
+  vibe. 3. essential information/config availabel in a discrete way. 4. flavour of the week type
+  changes like christmas cards, anniversary, new set, always space for this". On the picture:
+  "Stylish discrete background focus on the search bar"; "The search bar is big and thick enough
+  to be the centre, inside darker than outside"; "As high as a MacBook air screen"; "News of the
+  week"; "Few user choices discrete colour choice"; "Magic the gathering cards cutoff cool vibe
+  each time a user comes back".
+- **How it was read:** as what our own first screen should do, not as a request to copy theirs.
+  The qualities are taken; their badge, starfield, colours and wording are not.
+- **What was done:**
+  - The first screen is as tall as the window and holds the name, one sentence, the search bar,
+    two quiet links, and what is new. The three ways to search are below it.
+  - The search bar is one thick piece with the button inside it, darker inside than the page
+    around it, in the middle of the screen. On a computer it has the focus on arrival.
+  - The background is a warm glow and faint rings centred on the bar. (Replaced later: see
+    "on the background and a mark" below.)
+  - What is new is automatic: the four newest sets, read from the index, each a link to that
+    set. A set not yet released is marked "Preview".
+  - A flavour of the week is one file, `public/flavour.json`: a line of its own above the sets,
+    a search to draw the home page's cards from, and a look ("winter", "anniversary").
+  - A few cards chosen at random, six on a laptop and three on a phone, sit along the bottom and
+    differ on each visit. Each opens its page.
+- **One thing done differently, and why:** on Scryfall those cards are cut off by the page.
+  Scryfall's rules for anyone using its card images say "Do not cover, crop, or clip off the
+  copyright or artist name on card images", and those are at the bottom of a card. So ours are
+  whole and placed across the bottom edge of the first screen: the window cuts them, which
+  gives the same first impression, and scrolling shows each one complete.
+- **Changed with it:** a query in which nothing can be used no longer returns to the home
+  screen, where the explanation would now be below the fold; the header stays a bar.
+- **The owner's reply to the first version, 23 November 2026:** "dont like rounded corners, no
+  need for search instructions below the cards, also you need to cut off the cards explicit order
+  do it like scryfall".
+  - **Rounded corners:** gone from the whole interface, not only the home page: the search bar,
+    buttons, links, panels, tables and notes are square. Two things keep their shape, and this
+    is the developer's reading: a card's picture, because a card has rounded corners and the
+    picture would show white triangles without them, and the symbol discs, which are discs.
+  - **Search instructions:** the three panels are removed. The home page is one screen and the
+    footer. The syntax guide, one link away, is where the examples are. A query in which
+    nothing can be used, and an address with no card, now show a short note with links
+    instead of those panels.
+  - **Cards cut off:** done as on Scryfall, on the owner's explicit order: seven cards in a fan,
+    every other one lower and in front, cut off by the bottom of the first screen; on a phone
+    the middle of the fan shows. Each links to its page, where the card is whole. The developer
+    had kept the cards whole because Scryfall's rules for users of its images say "Do not
+    cover, crop, or clip off the copyright or artist name on card images"; the owner was told
+    this and decided otherwise. The risk is the owner's: Scryfall could object to the home
+    page. Going back is a small change to the stylesheet.
+- **Later the same day:** "footer different colour, darker". The footer has a colour of its own,
+  darker than the screen above it.
+- **And:** "the homepage cards should have something in common, how are you picking them right
+  now". They were drawn from the whole card pool with nothing to join them. Now each visit has
+  a theme and its seven cards all belong to it: about one visit in three it is the newest set
+  that is out, and otherwise a kind of card that shows at a glance (Dragons, Angels, Demons,
+  Elves, Goblins, Zombies, Wizards, Merfolk, Vampires, Dinosaurs, Sphinxes, Planeswalkers,
+  Sagas, Vehicles). The cards are drawn from the sixty most played of the theme, so they are
+  ones people know. Which things can join them is the developer's choice and is one list in
+  `app/home.ts`; `public/flavour.json` can still name a search of its own for an occasion.
+  The theme is not named on the page, as on Scryfall's; a screen reader is told it.
+- **Then, on the background and a mark:** "you see how scryfalls background is a circle that
+  looks like a tunnel? the visual effect is that the user's view is centered on the search in
+  the middle. can we find a creative way to get the background to get the visitor to focus on
+  the search in the middle, background should be very subtle. also the search bar should have a
+  circular logo just like scryfall but the topK logo or something similar".
+  - **The background, first version:** a corridor seen from its far end, with the search bar
+    as the far end: seven steps around the bar, each the bar's outline drawn larger and
+    fainter, and a hairline from each corner of the bar out through the corners of the steps.
+    The owner's reply is below; it was replaced the same day.
+  - **The mark:** a disc at the left end of the search bar, where Scryfall's study records
+    theirs (inside the field at the left), on the home page and in the header of every page.
+    It is TopK's K, drawn in squares as in TopK's own icon (`docs/icons/topk-icon.svg` in
+    TopK's repository) and in TopK's orange, on a dark disc with the bar's own outline. The
+    mark is TopK's; it is used because the owner asked for it. Pressing it puts the cursor in
+    the box. It does not link anywhere. The browser tab's icon is the same disc, replacing a
+    magnifying glass on a rounded square.
+- **The owner's reply to that, and two more things:** "theres no need to have 'back to the
+  results' link. people will either return using the browser or continue to search in the
+  search bar up top. i believe thats how scryfall works, look at their results. no need for the
+  search button either, people will just hit enter in the real life. background looks choppy
+  not smooth enough".
+  - **The link back:** removed from a card's page. The browser's Back returns to the results,
+    which are kept as they were, and the search bar is at the top of every page. The study of
+    Scryfall's card page records no such link there either. The Escape key still leaves a card
+    that was opened from results; nothing on the page says so.
+  - **The Search button:** removed from the bar on every page; the box runs to the bar's right
+    end. Enter searches, and a phone's keyboard shows its own search key. The study records
+    the same on Scryfall: "no visible button, Enter submits", with a button kept out of sight
+    for assistive technology. Ours is kept the same way, and out of the tab order.
+  - **The background:** the steps and hairlines were edges, and edges are what looked choppy.
+    Now nothing in it has an edge. Light gathers on the bar and eases away to nothing in every
+    direction, and a few soft rings spread from the bar like ripples, each a slow rise and
+    fall of that light, fading with distance. Both are drawn from the bar, so they stay
+    centred on it on any screen. A very fine grain lies over the whole background
+    (`public/grain.svg`): a screen has only so many dark tones, and a slow change between them
+    can show as faint contour lines, which the grain hides. Measured on a laptop-sized
+    picture, the largest jump between two neighbouring points fell from 8 tones (the steps)
+    to 5, and that 5 is the grain itself, not a line. The "anniversary" look lost its
+    hairline rings for the same reason.
+- **And on the words above the bar:** "we dont need the text 'find a magic card by its
+  scryfall syntax, by its name etc.....'. we do however needs a title instead of mtgsearch that
+  signals its a much deeper closer version of scryfall search".
+  - **The sentence:** removed. The first screen is the title, the bar, two links, what is new
+    and the cards.
+  - **The title:** "Scry Deeper", in place of "mtgsearch", on every page and in the browser
+    tab. The choice of words is the developer's proposal: "scry" is the game's own word for
+    looking ahead and the root of Scryfall's name, so it points at that kind of search
+    without using their name, which their terms do not allow in a way that suggests their
+    backing; "deeper" is the claim, that it also finds a card from what you remember of it.
+    Others considered: "Deepscry", "Scry Closer", "Deep Scry". The project, the repository
+    and the Netlify address keep the working name `mtgsearch`. Changing the title is one
+    line in each of the three pages and one in `public/app.js`; a test keeps them the same.
+- **The name, decided by the owner the same day:** asked for names like Scryfall's that
+  stand for deep search, then of one on the list: "Tutor is great, people know whenever they
+  play a tutor they are finding exacrlt what they need. give me more options", and then:
+  "TutorK. and use the same design as topK on the website logo with the blocks orange and
+  black".
+  - **The name** is TutorK on every page and in the browser tab, in place of the stand-in
+    "Scry Deeper". A tutor is what players call a card that finds exactly the card they need;
+    the K is TopK's.
+  - **The logo** is the name in the blocks of TopK's own logo (`docs/logo/topk.svg` in TopK's
+    repository): squares on a grid five rows tall, with the same spacing. T, O and K are
+    TopK's letters; U and R are drawn to match them (R is TopK's P with K's lower arm). The K
+    is TopK's orange. It is a picture, `public/wordmark.svg`.
+  - **One thing read by the developer:** "orange and black". TopK's logo on a light page is
+    dark letters with an orange K, and on a dark page light letters with an orange K. Our
+    header is dark on every page, where black blocks would not show, so TUTOR is light and K
+    is orange, which is TopK's own dark-background version; the black is the ground. The
+    disc in the search bar is the orange K on black. If the owner meant every block orange,
+    or wants a light header so the letters can be black, it is one colour in one file.
+
+### F-5. The logo builds itself, and the empty box shows what to try
+
+- **From:** the project owner, 23 November 2026, in three messages.
+- **In their words:** "can you do the animation where blocks materialize from left to right".
+  Then, on the empty search box: "in the search box say something along the lines: 'you don't
+  need the exact text to find your card'. shorter but you know what im talking about". Then,
+  of the first attempt ("No exact text needed"): "No exact text needed is indirect, people
+  want tget it, need to tell them what to do. give them an example thats random every time in
+  the search box. sphinx that draws two cards, dwarf that destroys lands, tithe alternative,
+  blue land destruction".
+- **The animation:** on arrival at the home page the name's squares appear column by column
+  from the left, the squares of a column not quite together, each fading in; it takes about a
+  second. It is a second picture, `public/wordmark-appear.svg`, made with the still one by
+  `tools/make_wordmark.py`, and it moves by SVG's own animation elements, because a picture
+  shown through `<img>` may carry neither a stylesheet nor a script under the site's
+  Content-Security-Policy. The developer's choices: it plays once, on the home page only
+  (results and card pages show the name still); anyone who has asked their device for less
+  motion gets the still picture; a browser that does not animate shows every square at once.
+- **Found while testing it:** the name and the search bar jumped about 130px upward when the
+  news and the cards arrived, a moment after the page opened, which the animation made
+  obvious. The news and the cards now keep their room from the start, and the bar stays
+  where it is (measured: within 1px at four screen sizes).
+- **The empty box:** shows "Try: " and one of the owner's four examples, drawn afresh on each
+  visit. The developer added one thing: Enter in the empty box tries the example shown, since
+  there is no button and the example would otherwise have to be typed out. On a phone the
+  example is set smaller than what is typed, so the longest one shows whole at 320px. The
+  two pages without a script (the syntax guide and "not found") always show the first.
+- **What the four examples found at first, said plainly:** two did what they promise and two
+  did not. "sphinx that draws two cards" found Consecrated Sphinx first; "dwarf that destroys
+  lands" found Dwarven Blastminer, Mine Layer, Dwarven Driller, Dwarven Miner. "tithe
+  alternative" found Capenna Express, Mr. House, Alms of the Vein: the search read the two
+  words by their meaning and did not know Tithe is a card whose effect is wanted. "blue land
+  destruction" found blue double-faced lands: it read "land" as the kind of card wanted.
+- **Both were faults of the search and are fixed, the same day, without touching the index:**
+  - A query that names a card and asks for others like it ("tithe alternative", "cards like
+    sol ring", "a cheaper replacement for force of will") looks the card up and searches by
+    that card's own text, leaving the card out. "tithe alternative" now finds Gift of Estates,
+    Land Tax, Scholar of New Horizons, Oreskos Explorer. The line above the results says
+    "cards that do what Tithe does". If no card has that name the query is read as before.
+  - A type word followed by what is done to it ("land destruction", "creature removal",
+    "artifact hate") is not a filter; a colour before it still is. "blue land destruction"
+    now finds Erosion, Volcanic Eruption, Mana Vortex.
+  - The frozen relevance set gave the same results on all 31 queries before and after. The
+    four examples are now checked against the live index by the tests.
+- **Known limits, the developer's note:** "budget" and "cheaper" are read but do not yet
+  filter by price; a nickname or part of a name ("bolt alternative") is not found; and "white
+  creature tutor" still ranks poorly, because the index does not know "tutor" as the players'
+  word for searching a library. That last one matters for a site of this name and is in the
+  plan.
+
+### F-6. The home page's cards go with the example in the search box
+
+- **From:** the project owner, 23 November 2026.
+- **In their words:** "wouldnt it be cool if the homepage random cards were somehow related to
+  the sample semantic query in the search bar".
+- **What was done:** the seven cards are the results of the example the empty box is showing.
+  "Try: tithe alternative" stands over Land Tax, Gift of Estates and Knight of the White
+  Orchid; "Try: dwarf that destroys lands" over Dwarven Miner and Dwarven Blastminer. So the
+  first screen shows what the search does before anything is typed, and Enter in the empty
+  box opens the list those cards come from.
+- **How they are drawn, the developer's choices:** the first three results are always among
+  the seven, and the other four are drawn from the eleven that follow, so the cards differ
+  from visit to visit and stay on the point. The closest result is in the middle of the fan,
+  which is the part a phone shows.
+- **What it replaced:** the themes of earlier the same day (Dragons, Angels, the newest set).
+  They remain as the fall-back if an example ever finds too few cards. A search named in
+  `public/flavour.json` for an occasion still takes the place of both.
+- **Cost:** one search per example per minute at most, since the answer is held by the CDN
+  for a minute for each of the four.
 
 ## From the interface study
 

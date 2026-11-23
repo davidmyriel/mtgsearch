@@ -1,15 +1,16 @@
-// Local server for development and the browser test: the page from public/ plus /api/search
-// and /api/card.
+// Local server for development and the browser test: the page from public/ plus /api/search,
+// /api/card and /api/home.
 //
 //   npm run dev            http://127.0.0.1:8000
 //
 // On Netlify the same page is served by the CDN and the same handler runs as a function
-// (netlify/functions/search.mts and card.mts); `npx netlify-cli dev --offline` reproduces that setup.
+// (netlify/functions/search.mts, card.mts and home.mts); `npx netlify-cli dev --offline` reproduces that setup.
 import { readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
-import { handleCard, handleSearch } from "./api.ts";
+import { handleCard, handleHome, handleSearch } from "./api.ts";
 import { card, randomCard } from "./card.ts";
+import { home } from "./home.ts";
 import { search } from "./search.ts";
 import { collectionsFromEnv } from "./topk.ts";
 
@@ -19,6 +20,7 @@ const TYPES: Record<string, string> = {
   js: "text/javascript; charset=utf-8",
   css: "text/css; charset=utf-8",
   svg: "image/svg+xml",
+  json: "application/json; charset=utf-8",
 };
 // Keep in step with [[headers]] in netlify.toml; a test compares the two.
 export const SECURITY_HEADERS: Record<string, string> = {
@@ -31,9 +33,11 @@ export const SECURITY_HEADERS: Record<string, string> = {
 export function createDevServer() {
   return createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", "http://localhost");
-    if (url.pathname === "/api/search" || url.pathname === "/api/card") {
+    if (url.pathname === "/api/search" || url.pathname === "/api/card" || url.pathname === "/api/home") {
       const answer =
-        url.pathname === "/api/card"
+        url.pathname === "/api/home"
+          ? await handleHome(url, (example) => home(collectionsFromEnv(), Math.random, example))
+          : url.pathname === "/api/card"
           ? await handleCard(url, (set, number) => card(collectionsFromEnv(), set, number), () => randomCard(collectionsFromEnv()))
           : await handleSearch(url, (query, options) => search(collectionsFromEnv(), query, options));
       response.writeHead(answer.status, Object.fromEntries(answer.headers));

@@ -70,6 +70,15 @@ picked up: at the boundary between plan steps unless something is broken.
 ### 3. Relevance (about a week)
 - [x] Frozen query set, evaluation harness, full-corpus baseline
 - [x] Filters read from plain English: mana value, colour, type
+- [x] The examples the home page offers find what they promise (23 November 2026). A query that
+      names a card and asks for others like it is answered from that card's own text, without
+      the card; a type word followed by what is done to it ("land destruction") is not a
+      filter. Changes to how the query is read, not to the index; the relevance set is unchanged
+- [ ] "tutor" and other players' words. "white creature tutor" ranks mentors and instructors:
+      the index does not know a tutor is a card that searches a library. The site is named for
+      the word, so it has to work. Likely a list of such words read into their rules wording
+      at query time; measure on the jargon class first
+- [ ] "budget" and "cheaper" in a query for a card's alternatives should filter by price
 - [ ] Spell out mana symbols in the indexed text. Known failure: "taps for two colorless mana" does
       not find Sol Ring, whose text reads `{T}: Add {C}{C}`
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),
@@ -93,8 +102,8 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] End-to-end browser test at phone and laptop sizes, run in CI on the local server and as
       Netlify serves the site; Netlify's own build exercised in CI
 - [x] Connected the repository in Netlify, set `TOPK_API_KEY`, deployed. The browser test passes
-      against the live URL (376 checks at phone, laptop and dark-mode sizes and on a 320-pixel
-      screen, after the fifth merge on 22 November 2026; the fourth carried the redesign),
+      against the live URL (414 checks at phone, laptop and dark-mode sizes and on a 320-pixel
+      screen, after the sixth merge on 23 November 2026, which carried the table view),
       repeated searches are
       answered from Netlify's CDN cache, and the security headers are served
 - [ ] Confirm the per-client rate limit on the live site. It counts per address, so it needs a
@@ -120,6 +129,9 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] A card's exact name, or a search that finds one card, opens that card's page (feedback F-3)
 - [x] A table view of results with USD, EUR and TIX prices, headings that sort and a hover
       preview (U-5). Card records carry all three prices, refreshed nightly as field updates
+- [x] The home page is one screen: the search bar and little else, as tall as the window, with
+      the newest sets under the bar, a fan of random cards cut off by the bottom edge, and a
+      flavour of the week set in one file. Square corners throughout (feedback F-4)
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

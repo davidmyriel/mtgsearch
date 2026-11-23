@@ -2,12 +2,14 @@
 // so it can be unit-tested with a stubbed search.
 
 import type { CardPage } from "./card.ts";
+import type { Home } from "./home.ts";
 import { ORDERS } from "./search.ts";
 import type { Hit, Result, SearchOptions } from "./search.ts";
 
 export type SearchFn = (query: string, options: SearchOptions) => Promise<Result>;
 export type CardFn = (set: string, number: string) => Promise<CardPage | null>;
 export type RandomFn = () => Promise<CardPage | null>;
+export type HomeFn = (example: string | null) => Promise<Home>;
 
 export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
@@ -34,6 +36,12 @@ const CACHED = {
   "Netlify-CDN-Cache-Control": "public, durable, max-age=600, stale-while-revalidate=3600",
 };
 const NOT_CACHED = { "Cache-Control": "no-store" };
+// The home page's cards are meant to differ from visit to visit, so they are held for a
+// minute only: long enough to spare TopK under load, short enough that a return visit differs.
+const BRIEFLY = {
+  "Cache-Control": "public, max-age=0, must-revalidate",
+  "Netlify-CDN-Cache-Control": "public, max-age=60",
+};
 
 function json(body: unknown, status: number, headers: Record<string, string>): Response {
   return new Response(JSON.stringify(body), {
@@ -115,6 +123,28 @@ export async function handleCard(url: URL, card: CardFn, random?: RandomFn): Pro
   return json({ card: detail, printings, took_ms: Math.round(performance.now() - started) }, 200, atRandom ? NOT_CACHED : CACHED);
 }
 
+/**
+ * GET /api/home[?try=<example>]: a few cards and the newest sets, for the home page. `try` is
+ * the example the page's empty search box is showing; the cards are then found by it.
+ */
+export async function handleHome(url: URL, home: HomeFn): Promise<Response> {
+  const example = (url.searchParams.get("try") ?? "").split(/\s+/).filter(Boolean).join(" ");
+  let found: Home;
+  try {
+    found = await home(example && example.length <= MAX_QUERY_CHARS ? example : null);
+  } catch (cause) {
+    console.error("home page data failed:", cause);
+    const setup = setupProblem(cause);
+    if (setup) return error(503, setup);
+    return error(502, "The search backend is unavailable. Try again shortly.");
+  }
+  const cards = found.cards.map((row) => {
+    const full = hit(row);
+    return Object.fromEntries(["id", "name", "image", "set", "collector_number", "type_line", "artist"].map((name) => [name, full[name]]));
+  });
+  return json({ cards, sets: found.sets, theme: found.theme }, 200, BRIEFLY);
+}
+
 export async function handleSearch(url: URL, search: SearchFn): Promise<Response> {
   const query = (url.searchParams.get("q") ?? "").split(/\s+/).filter(Boolean).join(" ");
   if (!query) return error(400, "Type something to search for.");
@@ -152,6 +182,7 @@ export async function handleSearch(url: URL, search: SearchFn): Promise<Response
       understood: result.understood,
       ignored: result.ignored,
       exact: result.exact ? hit(result.exact) : null,
+      like: result.like ?? null,
       hits: result.hits.map(hit),
       offset,
       // false when the next page of this size would pass the reach: it could not be served

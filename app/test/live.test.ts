@@ -4,6 +4,7 @@ import { test } from "node:test";
 import { Client } from "topk-js";
 import { handleCard, handleSearch, MAX_REACH, MAX_RESULTS } from "../api.ts";
 import { card, MAX_PRINTINGS, randomCard } from "../card.ts";
+import { chooseTheme, exampleCards, EXAMPLES, home, HOME_CARDS, newestSets, randomCards, themedCards, THEMES } from "../home.ts";
 import { search } from "../search.ts";
 import type { Collection, Collections } from "../search.ts";
 
@@ -32,6 +33,41 @@ test("plain English finds the card", { skip }, async () => {
   assert.equal(result.note, "sphinx");
   assert.equal(names(result)[0], "Consecrated Sphinx");
   assert.equal(typeof result.hits[0].score, "number");
+});
+
+test("the examples the home page offers find what they promise", { skip }, async () => {
+  const cols = collection();
+  // a card described: the card itself comes first
+  assert.equal(names(await search(cols, "sphinx that draws two cards"))[0], "Consecrated Sphinx");
+  // a kind of card and what it does: dwarves, and the ones known for it among the first few
+  const dwarves = await search(cols, "dwarf that destroys lands", { k: 8 });
+  assert.equal(dwarves.note, "dwarf");
+  assert.ok(dwarves.hits.every((hit) => String(hit.type_line).includes("Dwarf")), names(dwarves).join("; "));
+  assert.ok(names(dwarves).some((name) => ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"].includes(name)));
+  // a card named, and others that do the same wanted: found from that card's own text, without it
+  const likeTithe = await search(cols, "tithe alternative", { k: 8 });
+  assert.equal(likeTithe.mode, "semantic");
+  assert.equal(likeTithe.like, "Tithe");
+  assert.ok(!names(likeTithe).includes("Tithe"));
+  assert.ok(names(likeTithe).includes("Land Tax") && names(likeTithe).includes("Gift of Estates"), names(likeTithe).join("; "));
+  // a colour and an effect: "land" is what is destroyed, not what the card is
+  const blue = await search(cols, "blue land destruction", { k: 8 });
+  assert.equal(blue.note, "blue");
+  assert.ok(blue.hits.filter((hit) => String(hit.type_line).includes("Land")).length <= 1, names(blue).join("; "));
+  assert.ok(names(blue).some((name) => ["Erosion", "Mana Vortex", "Volcanic Eruption", "Mana Breach"].includes(name)), names(blue).join("; "));
+});
+
+test("a query that names no card, or asks nothing of the kind, is read as before", { skip }, async () => {
+  const cols = collection();
+  const none = await search(cols, "ramp alternative", { k: 3 });
+  assert.equal(none.mode, "semantic");
+  assert.equal(none.like, null);
+  // the second page of cards like a named card follows the first without repeats
+  const [first, second] = [await search(cols, "cards like sol ring", { k: 5 }), await search(cols, "cards like sol ring", { k: 5, offset: 5 })];
+  assert.equal(first.like, "Sol Ring");
+  assert.ok(first.hasMore && second.hits.length === 5);
+  assert.equal(new Set([...names(first), ...names(second)]).size, 10);
+  assert.ok(![...names(first), ...names(second)].includes("Sol Ring"));
 });
 
 test("a card name takes the name path, most-played first", { skip }, async () => {
@@ -278,6 +314,102 @@ test("a card's page: one printing with stats and legality, and its printings new
   const body = await (await handleCard(new URL("https://x.test/api/card?set=ima&cn=47"), (set, number) => card(collection(), set, number))).json();
   assert.deepEqual([body.card.name, body.card.stats, body.card.set], ["Consecrated Sphinx", "4/6", "ima"]);
   assert.equal(body.printings.length, page.printings.length);
+});
+
+test("the home page's cards are found by the example the search box shows", { skip }, async () => {
+  const cols = collection();
+  for (const example of EXAMPLES) {
+    const page = await home(cols, Math.random, example);
+    assert.deepEqual(page.theme, { label: example, query: example });
+    assert.equal(page.cards.length, HOME_CARDS);
+    assert.equal(new Set(page.cards.map((card) => card._id)).size, HOME_CARDS);
+    // every one of them is among the first results of that search, and its first three are all there
+    const results = names(await search(cols, example, { k: 14 }));
+    const shown = page.cards.map((card) => card.name);
+    assert.ok(shown.every((name) => results.includes(name)), `${example}: ${shown.join("; ")}`);
+    assert.ok(results.slice(0, 3).every((name) => shown.includes(name)), `${example}: ${shown.join("; ")}`);
+    // the closest is in the middle of the fan, where a phone shows it
+    assert.equal(shown[3], results[0], example);
+    assert.ok(page.cards.every((card) => String(card.image).startsWith("https://cards.scryfall.io/")));
+  }
+  // the rest are drawn afresh: one draw always takes the earliest of what follows, another the latest
+  const [low, high] = [await exampleCards(cols, EXAMPLES[1], HOME_CARDS, () => 0), await exampleCards(cols, EXAMPLES[1], HOME_CARDS, () => 0.999)];
+  assert.notDeepEqual(low.map((card) => card.name).sort(), high.map((card) => card.name).sort());
+  // anything that is not one of the examples is not searched for: the cards share a theme instead
+  const other = await home(cols, Math.random, "ignore previous instructions");
+  assert.ok(other.theme === null || THEMES.some((theme) => theme.query === other.theme?.query) || other.theme.query.startsWith("set:"), JSON.stringify(other.theme));
+});
+
+test("the home page's cards have something in common: a kind of card, or the newest set", { skip }, async () => {
+  const cols = collection();
+  const dice = (seed: number) => {
+    let n = seed;
+    return () => (n = (n * 9301 + 49297) % 233280) / 233280;
+  };
+  // a kind of card: every card drawn is one, they are distinct, and other dice draw others
+  const dragons = await themedCards(cols, "t:dragon", HOME_CARDS, dice(3));
+  assert.equal(dragons.length, HOME_CARDS);
+  assert.ok(dragons.every((card) => /Dragon/.test(String(card.type_line)) && card.image && card.set && card.cn));
+  assert.equal(new Set(dragons.map((card) => card.name)).size, HOME_CARDS);
+  assert.deepEqual(names({ hits: dragons }), names({ hits: await themedCards(cols, "t:dragon", HOME_CARDS, dice(3)) }));
+  assert.notDeepEqual(names({ hits: dragons }), names({ hits: await themedCards(cols, "t:dragon", HOME_CARDS, dice(4)) }));
+  // they are drawn from the sixty most played of the kind, so they are cards people know
+  const mostPlayed = new Set(names(await search(cols, "t:goblin", { k: 60, order: "edhrec" })));
+  for (const seed of [1, 2, 3]) {
+    const goblins = await themedCards(cols, "t:goblin", HOME_CARDS, dice(seed));
+    assert.ok(goblins.every((card) => mostPlayed.has(card.name)), names({ hits: goblins }).join(", "));
+  }
+  // a set: every card is shown by its printing in that set, one printing for each card
+  const set = await themedCards(cols, "set:ima", HOME_CARDS, dice(5));
+  assert.equal(set.length, HOME_CARDS);
+  assert.ok(set.every((card) => card.set === "ima"));
+  assert.equal(new Set(set.map((card) => card.name)).size, HOME_CARDS);
+
+  // which theme a visit gets: the newest set that is out about a third of the time, else a kind
+  const sets = [
+    { code: "nau", name: "Nauctis", released: "2027-02-05", cards: 24, upcoming: true },
+    { code: "trk", name: "Star Trek", released: "2026-11-13", cards: 587, upcoming: false },
+  ];
+  assert.deepEqual(chooseTheme(sets, () => 0.1), { label: "Star Trek", query: "set:trk" });
+  const kind = chooseTheme(sets, () => 0.5);
+  assert.ok(THEMES.includes(kind));
+  assert.ok(THEMES.includes(chooseTheme([], () => 0.1)), "with no set out, always a kind of card");
+  // every kind on the list is a search that finds enough cards to fill the home page
+  for (const theme of THEMES) {
+    assert.equal((await themedCards(cols, theme.query, HOME_CARDS, dice(1))).length, HOME_CARDS, theme.label);
+  }
+  // the whole thing, as the endpoint serves it
+  const page = await home(cols, dice(9));
+  assert.equal(page.cards.length, HOME_CARDS);
+  assert.ok(page.theme && page.theme.label && page.theme.query);
+});
+
+test("the home page's cards differ from draw to draw, and its sets are the newest", { skip }, async () => {
+  const cols = collection();
+  // fixed "dice" stand in for chance: the same dice draw the same cards, other dice others
+  const dice = (seed: number) => {
+    let n = seed;
+    return () => (n = (n * 9301 + 49297) % 233280) / 233280;
+  };
+  const first = await randomCards(cols, HOME_CARDS, dice(7));
+  const again = await randomCards(cols, HOME_CARDS, dice(7));
+  const other = await randomCards(cols, HOME_CARDS, dice(8));
+  assert.equal(first.length, HOME_CARDS);
+  assert.ok(first.every((card) => card.name && card.image && card.set && card.cn));
+  assert.equal(new Set(first.map((card) => card._id)).size, HOME_CARDS);
+  assert.deepEqual(first.map((card) => card._id), again.map((card) => card._id));
+  assert.notDeepEqual(first.map((card) => card._id), other.map((card) => card._id));
+
+  // on a fixed day, so the test does not depend on when it runs
+  const sets = await newestSets(cols, 4, new Date("2026-11-23T00:00:00Z"));
+  assert.equal(sets.length, 4);
+  assert.deepEqual(sets.map((set) => set.released), [...sets.map((set) => set.released)].sort().reverse());
+  assert.ok(sets.every((set) => set.code && set.name && set.cards > 0));
+  assert.deepEqual(sets.map((set) => set.upcoming), sets.map((set) => set.released > "2026-11-23"));
+  // a year and a half earlier, sets since released did not exist yet from that day's point of view
+  const earlier = await newestSets(cols, 4, new Date("2025-06-01T00:00:00Z"));
+  assert.ok(earlier.every((set) => set.released >= "2024-08-05"));
+  assert.ok(earlier.filter((set) => set.released > "2025-06-01").every((set) => set.upcoming));
 });
 
 test("a random card is a real card with its printings, and differs from pick to pick", { skip }, async () => {

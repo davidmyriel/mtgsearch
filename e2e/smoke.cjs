@@ -57,8 +57,153 @@ async function run(name, contextOptions) {
   };
 
   await page.goto(base);
-  check(await page.isVisible("#intro"), `[${name}] home shows example searches`);
+
+  // The first screen: the search bar at its centre, what is new, and a few cards at the bottom edge.
+  await page.waitForFunction(() => {
+    const images = [...document.querySelectorAll("#home-cards img")].filter((img) => img.getBoundingClientRect().width > 0);
+    return images.length > 0 && images.every((img) => img.complete && img.naturalWidth > 0);
+  });
+  const home = await page.evaluate(() => {
+    const box = (element) => element.getBoundingClientRect();
+    // the card itself, not its slot in the row: the slot is only as tall as what shows
+    const cards = [...document.querySelectorAll("#home-cards a")].filter((a) => box(a).width > 0).map((a) => box(a));
+    const bar = box(document.getElementById("search"));
+    return {
+      hero: box(document.querySelector(".masthead")).height,
+      window: innerHeight,
+      barCentre: Math.abs((bar.left + bar.right) / 2 - innerWidth / 2),
+      barHeight: bar.height,
+      cards: cards.length,
+      // the fan is cut off by the bottom of the first screen: every card runs past that edge
+      cutOff:
+        getComputedStyle(document.getElementById("home-cards")).overflow === "hidden" &&
+        cards.every((card) => card.top < innerHeight && card.bottom > box(document.getElementById("home-cards")).bottom),
+      fanBottom: box(document.getElementById("home-cards")).bottom,
+      theme: document.getElementById("home-cards").dataset.query,
+      themeLabel: document.getElementById("home-cards").getAttribute("aria-label"),
+      names: [...document.querySelectorAll("#home-cards img")].map((img) => img.alt),
+      pageBelow: Boolean(document.getElementById("main").offsetHeight),
+      news: [...document.querySelectorAll("#news li")].map((li) => li.textContent),
+      hint: document.getElementById("q").placeholder,
+      focused: document.activeElement ? document.activeElement.id : "",
+    };
+  });
+  check(home.hero >= home.window - 1, `[${name}] the first screen is the search and nothing below it (${Math.round(home.hero)} of ${home.window}px)`);
+  check(home.barCentre <= 2 && home.barHeight >= 60, `[${name}] the search bar is in the middle and thick (${Math.round(home.barHeight)}px)`);
+  check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.join(", ")})`);
+  check(home.cards === 7, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
+  // The seven are found by the example the empty search box is showing: each is among the
+  // first results of that search, and its closest result is in the middle of the fan.
+  const common = await page.evaluate(async ({ query, names }) => {
+    if (!query) return { query, found: 0, first: "" };
+    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "14" })}`);
+    const results = ((await response.json()).hits || []).map((hit) => hit.name);
+    return { query, found: names.filter((cardName) => results.includes(cardName)).length, first: results[0] };
+  }, { query: home.theme, names: home.names });
+  check(home.hint === `Try: ${home.theme}` && home.themeLabel === `A few cards: ${home.theme}`, `[${name}] the cards go with the example in the search box (${home.hint})`);
+  check(common.found === 7 && home.names[3] === common.first, `[${name}] and are what that search finds, the closest in the middle (${common.first})`);
+  check(home.cutOff && Math.abs(home.fanBottom - home.window) <= 4, `[${name}] cut off by the bottom edge of the first screen`);
+  check(!home.pageBelow, `[${name}] and nothing but the footer follows: no search instructions`);
+  if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);
+  // The mark is a disc inside the bar at its left end, and there is no button: Enter searches.
+  // The background is drawn from the bar: light that gathers on it, and soft rings around it.
+  const lookAtBar = () => page.evaluate(() => {
+    const box = (element) => element.getBoundingClientRect();
+    const form = document.getElementById("search");
+    const image = form.querySelector(".mark img");
+    const [disc, bar, field, button] = [box(image), box(form), box(document.getElementById("q")), box(form.querySelector("button"))];
+    // how far the middle of a layer drawn behind the bar is from the middle of the bar
+    const offCentre = (pseudo) => {
+      const style = getComputedStyle(form, pseudo);
+      if (style.content === "none" || !style.backgroundImage.includes("radial-gradient")) return null;
+      const px = (value) => parseFloat(value) || 0;
+      const across = px(style.left) + px(style.marginLeft) + px(style.width) / 2 - form.clientWidth / 2;
+      const down = px(style.top) + px(style.marginTop) + px(style.height) / 2 - form.clientHeight / 2;
+      return Math.max(Math.abs(across), Math.abs(down));
+    };
+    return {
+      drawn: image.complete && image.naturalWidth > 0,
+      size: disc.width,
+      round: Math.abs(disc.width - disc.height) < 0.5,
+      inside: disc.left >= bar.left && disc.right <= field.left + 1 && disc.top >= bar.top && disc.bottom <= bar.bottom,
+      // the box runs from the mark to the bar's right end: nothing to press takes its place
+      noButton: button.width <= 1 && button.height <= 1 && bar.right - field.right < 12,
+      light: offCentre("::before"),
+      rings: offCentre("::after"),
+    };
+  });
+  // The name is a picture of block letters above the bar, and the tab carries the same name.
+  const title = await page.evaluate(() => {
+    const image = document.querySelector(".wordmark img");
+    const [name, bar] = [image.getBoundingClientRect(), document.getElementById("search").getBoundingClientRect()];
+    return {
+      name: image.alt,
+      drawn: image.complete && image.naturalWidth > 0,
+      above: name.bottom <= bar.top && name.left >= 0 && name.right <= innerWidth,
+      centred: Math.abs((name.left + name.right) / 2 - innerWidth / 2) <= 2,
+      tab: document.title,
+      picture: new URL(image.currentSrc).pathname,
+      hint: document.getElementById("q").placeholder,
+    };
+  });
+  check(title.drawn && title.above && title.centred && title.name === "TutorK" && title.tab === "TutorK", `[${name}] the name stands above the bar in block letters (${title.name}), and titles the tab`);
+  check(title.picture === "/wordmark-appear.svg", `[${name}] on arrival at the home page the name builds itself (${title.picture})`);
+  // The empty box says what to do: try a card described in plain words, one of these.
+  const examples = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+  const shownExample = title.hint.replace(/^Try: /, "");
+  check(title.hint.startsWith("Try: ") && examples.includes(shownExample), `[${name}] the empty box shows something to try ("${title.hint}")`);
+  // Whichever is drawn, all of it shows in the box, and each one finds cards.
+  const tried = await page.evaluate(async (examples) => {
+    const box = document.getElementById("q");
+    const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
+    const pen = document.createElement("canvas").getContext("2d");
+    pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
+    const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const out = [];
+    for (const example of examples) {
+      const response = await fetch(`/api/search?${new URLSearchParams({ q: example, k: "8" })}`);
+      const found = await response.json();
+      out.push({
+        example,
+        fits: pen.measureText(`Try: ${example}`).width <= room,
+        mode: found.mode,
+        like: found.like,
+        note: found.note,
+        names: (found.hits || []).map((hit) => hit.name),
+        lands: (found.hits || []).filter((hit) => hit.type_line.includes("Land")).length,
+      });
+    }
+    return out;
+  }, examples);
+  check(tried.every((one) => one.fits), `[${name}] every example fits in the box (${tried.filter((one) => !one.fits).map((one) => one.example).join(", ") || "all four"})`);
+  check(tried.every((one) => one.mode === "semantic" && one.names.length === 8), `[${name}] and every example is read as plain English and finds cards`);
+  // Each finds what it promises.
+  const [sphinx, dwarf, tithe, blueLand] = tried;
+  check(sphinx.names[0] === "Consecrated Sphinx", `[${name}] "${sphinx.example}" finds ${sphinx.names[0]} first`);
+  check(dwarf.names.some((card) => ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"].includes(card)), `[${name}] "${dwarf.example}" finds ${dwarf.names.slice(0, 3).join(", ")}`);
+  check(tithe.like === "Tithe" && !tithe.names.includes("Tithe") && tithe.names.includes("Land Tax"), `[${name}] "${tithe.example}" finds cards that do what Tithe does (${tithe.names.slice(0, 3).join(", ")})`);
+  check(blueLand.note === "blue" && blueLand.lands <= 1 && blueLand.names.some((card) => ["Erosion", "Mana Vortex", "Volcanic Eruption", "Mana Breach"].includes(card)), `[${name}] "${blueLand.example}" finds blue cards that destroy lands, not blue lands (${blueLand.names.slice(0, 3).join(", ")})`);
+  const mark = await lookAtBar();
+  check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
+  check(mark.noButton, `[${name}] the bar has no button: the box fills it, and Enter searches`);
+  check(mark.light !== null && mark.light <= 1 && mark.rings !== null && mark.rings <= 1, `[${name}] the background's light and rings are centred on the bar (off by ${mark.light}px and ${mark.rings}px)`);
+  await page.evaluate(() => document.activeElement && document.activeElement.blur());
+  await page.click("#search .mark");
+  check((await page.evaluate(() => document.activeElement && document.activeElement.id)) === "q", `[${name}] pressing the mark puts the cursor in the box`);
   await shot("1-home");
+  // A line of news runs its search; a card opens its page; Back returns home each time.
+  await page.click("#news li:last-child a");
+  await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Scryfall syntax"));
+  check(new URL(page.url()).searchParams.get("q").startsWith("set:"), `[${name}] a line of news searches for that set (${new URL(page.url()).searchParams.get("q")})`);
+  await page.goBack();
+  await page.waitForFunction(() => !document.body.classList.contains("searched"));
+  const stripHref = await page.getAttribute("#home-cards li:nth-child(4) a", "href");
+  await page.click("#home-cards li:nth-child(4) a");
+  await page.waitForFunction(() => !document.getElementById("card").hidden);
+  check(new URL(page.url()).pathname === stripHref && (await page.textContent("#card-name")).length > 0, `[${name}] a card on the home page opens its page (${stripHref})`);
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("card").hidden && !document.body.classList.contains("searched"));
+  check((await page.getAttribute("#home-cards li:nth-child(4) a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
 
   await search(page, "sphinx that draws two cards");
   check((await firstCards(page, 1))[0] === "Consecrated Sphinx", `[${name}] plain English finds Consecrated Sphinx first`);
@@ -71,6 +216,8 @@ async function run(name, contextOptions) {
   check(true, `[${name}] first card image loaded`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(overflow <= 0, `[${name}] no horizontal scrolling (overflow ${overflow}px)`);
+  const barMark = await lookAtBar();
+  check(barMark.drawn && barMark.round && barMark.inside && barMark.size < mark.size && barMark.noButton && barMark.light === null && barMark.rings === null, `[${name}] as a bar the header keeps the mark, smaller, with no button and nothing drawn behind it (${Math.round(barMark.size)}px)`);
   await shot("2-results");
 
   // A card has its own page, at an address that can be shared.
@@ -122,8 +269,10 @@ async function run(name, contextOptions) {
   await fresh.goto(cardUrl);
   await fresh.waitForFunction(() => !document.getElementById("card").hidden);
   check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] a shared card address opens that card`);
+  const stillName = await fresh.$eval(".wordmark img", (image) => new URL(image.currentSrc).pathname);
+  check(stillName === "/wordmark.svg", `[${name}] where the name stands still in the header (${stillName})`);
   check((await fresh.textContent("#card-printing")) === (await page.textContent("#card-printing")), `[${name}] and the same printing of it`);
-  check(!(await fresh.isVisible("#card-back")), `[${name}] with no "Back to results", as there are none`);
+  check((await fresh.$("#card-back")) === null && !(await fresh.isVisible("text=Back to results")), `[${name}] a card's page has no link back: the browser's Back and the search bar do that`);
   check((await fresh.textContent("#card-stats")) === "4/6" && (await fresh.$$("#printings-list a")).length === listed.length, `[${name}] and the same stats and printings`);
   // Another printing is one tap away, at its own address; Back returns to the first.
   const marked = (href) => document.querySelector("#printings-list a[aria-current]")?.getAttribute("href") === href;
@@ -149,7 +298,7 @@ async function run(name, contextOptions) {
   await fresh.press("#q", "Enter");
   await fresh.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
   check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] typing a card's exact name opens its page (${new URL(fresh.url()).pathname})`);
-  check(!(await fresh.isVisible("#card-also")) && !(await fresh.isVisible("#card-back")), `[${name}] with nothing else to offer when no other card matches`);
+  check(!(await fresh.isVisible("#card-also")), `[${name}] with nothing else to offer when no other card matches`);
   check((await fresh.inputValue("#q")) === "Consecrated Sphinx", `[${name}] and what was typed stays in the box`);
   await fresh.goBack();
   await fresh.waitForFunction(() => document.getElementById("card").hidden);
@@ -175,12 +324,58 @@ async function run(name, contextOptions) {
   check((await fresh.textContent("#card-name")) === "Urza's Saga", `[${name}] "urzas saga" opens Urza's Saga`);
   await fresh.goto(`${base}/card/nosuchset/999/nothing`);
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("No card at this address"));
-  check(await fresh.isVisible("#intro"), `[${name}] an address with no card says so and offers the examples`);
+  check((await fresh.isVisible("#empty")) && (await fresh.textContent("#empty-title")) === "No card at this address", `[${name}] an address with no card says so and offers where to go`);
+  // The moving name, opened as a picture of its own so its clock can be set: the squares
+  // materialize from left to right, and all of them are there at the end.
+  await fresh.goto(`${base}/wordmark-appear.svg`);
+  const shownAt = (seconds) => fresh.evaluate((seconds) => {
+    const svg = document.documentElement;
+    svg.pauseAnimations();
+    svg.setCurrentTime(seconds);
+    const shown = (from, to) => [...svg.querySelectorAll("rect")]
+      .filter((square) => square.x.baseVal.value >= from && square.x.baseVal.value < to)
+      .filter((square) => Number(getComputedStyle(square).opacity) > 0.5).length;
+    return { first: shown(0, 648), last: shown(2895, 9999), all: shown(0, 9999) };
+  }, seconds);
+  const [early, midway, done] = [await shownAt(0.02), await shownAt(0.45), await shownAt(1.5)];
+  check(early.all === 0 && midway.first === 9 && midway.last === 0 && done.all === 68, `[${name}] the name's squares materialize from left to right (${early.all}, then ${midway.all} with the T whole and no K, then ${done.all})`);
+  // Someone who has asked their device for less motion gets the name standing still.
+  await fresh.emulateMedia({ reducedMotion: "reduce" });
+  await fresh.goto(base);
+  await fresh.waitForFunction(() => { const image = document.querySelector(".wordmark img"); return image.complete && image.naturalWidth > 0; });
+  const calmName = await fresh.$eval(".wordmark img", (image) => new URL(image.currentSrc).pathname);
+  check(calmName === "/wordmark.svg", `[${name}] and stands still for anyone who asked for less motion (${calmName})`);
+  // Nothing on the first screen moves when the news and the cards arrive: they are held back
+  // here, and the bar is where it will be before they come.
+  let letThrough;
+  const held = new Promise((resolve) => { letThrough = resolve; });
+  await fresh.route("**/api/home", async (route) => { await held; await route.continue(); });
+  await fresh.goto(base);
+  const barTop = () => fresh.$eval("#search", (bar) => bar.getBoundingClientRect().top);
+  const barBefore = await barTop();
+  const waiting = await fresh.evaluate(() => document.getElementById("news").hidden && document.getElementById("home-cards").hidden);
+  letThrough();
+  await fresh.waitForFunction(() => document.querySelectorAll("#home-cards img").length === 7 && !document.getElementById("news").hidden);
+  const barAfter = await barTop();
+  check(waiting && Math.abs(barAfter - barBefore) <= 2, `[${name}] the search bar does not move when the news and cards arrive (${Math.round(barBefore)}px, then ${Math.round(barAfter)}px)`);
+  await fresh.unroute("**/api/home");
+  // Enter in the empty box tries the example it shows.
+  const offered = (await fresh.getAttribute("#q", "placeholder")).replace(/^Try: /, "");
+  await fresh.focus("#q");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Plain English"));
+  check(new URL(fresh.url()).searchParams.get("q") === offered && (await fresh.inputValue("#q")) === offered, `[${name}] Enter in the empty box tries the example it shows (${offered})`);
+  // A query that names a card and asks for others like it says so above the results.
+  await fresh.fill("#q", "tithe alternative");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.includes("Tithe"));
+  const likeStatus = await fresh.textContent("#status");
+  check(likeStatus.startsWith("Plain English · cards that do what Tithe does"), `[${name}] asking for a card's alternatives is said back in words (${likeStatus})`);
   await fresh.close();
 
-  await page.click("#card-back");
+  await page.goBack();
   await page.waitForFunction(() => document.getElementById("card").hidden);
-  check(page.url() === resultsUrl, `[${name}] "Back to results" returns to the results`);
+  check(page.url() === resultsUrl, `[${name}] the browser's Back returns to the results`);
 
   await search(page, 'c:u t:sphinx o:"draw two cards"');
   check((await page.textContent("#status")).startsWith("Scryfall syntax · 3 cards"), `[${name}] syntax query reports 3 cards`);
@@ -271,7 +466,7 @@ async function run(name, contextOptions) {
   const tableUrl = page.url();
   await page.click("#rows tr:nth-child(3) td.t-type");
   await page.waitForFunction(() => !document.getElementById("card").hidden);
-  check((await page.textContent("#card-name")) === rowName && (await page.isVisible("#card-back")), `[${name}] a row opens its card (${rowName}), with a way back`);
+  check((await page.textContent("#card-name")) === rowName, `[${name}] a row opens its card (${rowName})`);
   check(!(await page.isVisible("#table")) && !(await page.isVisible("#preview")), `[${name}] and the table is out of the way`);
   await page.goBack();
   await page.waitForFunction(() => document.getElementById("card").hidden);
@@ -396,7 +591,7 @@ async function run(name, contextOptions) {
   // Nothing left to search for: refused, with the reason and the help in view.
   await search(page, "lang:ja");
   check((await page.textContent("#status")).startsWith("Nothing here could be used · 'lang:' is not supported yet"), `[${name}] a query with nothing usable is explained`);
-  check((await page.isVisible("#intro")) && (await page.$$("#results .tile")).length === 0, `[${name}] with the examples and no stale results`);
+  check((await page.isVisible("#empty")) && (await page.textContent("#empty-detail")).includes("syntax guide") && (await page.$$("#results .tile")).length === 0, `[${name}] pointing to the syntax guide, with no stale results`);
   const statusTop = await page.$eval("#status", (el) => el.getBoundingClientRect().top);
   check(statusTop < page.viewportSize().height, `[${name}] the explanation is visible without scrolling`);
 
@@ -465,6 +660,17 @@ async function narrow() {
     if (ready) await page.waitForFunction(ready);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     check(overflow <= 0, `[320 wide] ${what} does not scroll sideways (overflow ${overflow}px)`);
+    if (path !== "/" && path !== "/syntax") continue;
+    // the longest example still shows whole in the empty box, on the home page and in a header
+    const spare = await page.evaluate(() => {
+      const box = document.getElementById("q");
+      const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
+      const pen = document.createElement("canvas").getContext("2d");
+      pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
+      const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      return Math.floor(room - pen.measureText("Try: sphinx that draws two cards").width);
+    });
+    check(spare >= 0, `[320 wide] ${what}: the longest example fits in the empty box (${spare}px to spare)`);
   }
   await browser.close();
 }

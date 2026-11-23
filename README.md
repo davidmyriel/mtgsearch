@@ -3,6 +3,10 @@
 Card search for Magic: The Gathering that accepts Scryfall's query syntax and also plain
 English, built on [TopK](https://topk.io).
 
+The site itself is named **TutorK**: a tutor is what players call a card that finds exactly
+the card they need, and the K is TopK's. `mtgsearch` remains the name of the project, the
+package and the repository.
+
 ```text
 c:u t:sphinx o:"draw two cards"          Scryfall syntax: the same three cards Scryfall returns
 sphinx that draws two cards              plain English: Consecrated Sphinx first
@@ -214,6 +218,25 @@ lists of formats (`legal`, `banned`, `restricted`); and `printings`, the card's 
 newest first with set, number, rarity, date and price, at most 60. An address with no card
 is a 404. `GET /api/card?random=1` answers in the same shape with a card chosen at random,
 and is never cached.
+
+`GET /api/home?try=<example>` gives the home page seven cards, the `theme` that joins them,
+and the newest sets (those still to be released are marked `upcoming`). The empty search box
+shows an example to try, a different one of four on each visit, and names it in `try`: the
+cards are then that search's results, the first three always and the rest drawn from the
+eleven that follow, so the page shows what the search does before anything is typed. The
+examples are one list in `app/home.ts` and the same list in `public/app.js`. Without an
+example the cards share a theme instead: the newest set that is out about one time in three,
+otherwise a kind of card (Dragons, Angels, Planeswalkers and so on), drawn from its sixty most
+played. The answer is held by the CDN for a minute, so a return visit sees other cards.
+
+The home page's flavour of the week is one file, `public/flavour.json`: a `featured` line shown
+above the newest sets, a `cards` search to draw the home page's cards from (`set:trk` for a new
+set, `t:snow` in winter), and a `theme` (`winter`, `anniversary`). Edit it and deploy; no code
+changes. The cards on the home page are a fan cut off by the bottom of the first screen, as on
+Scryfall's own home page. That is the owner's decision, taken knowing that Scryfall's rules
+for users of its card images say not to cover, crop or clip off the artist's name and
+copyright (see F-4 in [docs/FEEDBACK.md](docs/FEEDBACK.md)). Each card in the fan links to its
+page, where the card is shown whole.
 
 The site has three addresses besides a search: `/card/<set>/<number>/<name>`, `/syntax` (the
 syntax guide, a static page whose examples are links that run the search) and `/random`.

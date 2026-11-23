@@ -7,7 +7,6 @@
 
 const form = document.getElementById("search");
 const input = document.getElementById("q");
-const intro = document.getElementById("intro");
 const statusLine = document.getElementById("status");
 const results = document.getElementById("results");
 const tools = document.getElementById("tools");
@@ -21,10 +20,11 @@ const tableWrap = document.getElementById("table");
 const rows = document.getElementById("rows");
 const preview = document.getElementById("preview");
 const understood = document.getElementById("understood");
+const news = document.getElementById("news");
+const homeCards = document.getElementById("home-cards");
 const ignored = document.getElementById("ignored");
 const emptyState = document.getElementById("empty");
 const cardView = document.getElementById("card");
-const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
 const copyButton = document.getElementById("card-copy");
 const legalitySection = document.getElementById("card-legality");
@@ -35,6 +35,14 @@ const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
 // Results on one page, and how far into a result the endpoint will go. Keep in step with
 // MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
+// What to type, shown in the empty box: a card described in plain words, a different one of
+// these on each visit.
+const EXAMPLES = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+const example = EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
+input.placeholder = `Try: ${example}`;
+
+// The site's title, as the pages themselves show it.
+const SITE = "TutorK";
 const PAGE_SIZE = 60;
 const MAX_REACH = 10000;
 const LAST_PAGE = Math.floor(MAX_REACH / PAGE_SIZE); // the last page that fits whole
@@ -150,6 +158,8 @@ function describe(data, view) {
     case "mixed":
       return ["Syntax and plain English", `${data.note}, ${ranked}`];
     case "semantic":
+      // a query that names a card and asks for others like it
+      if (data.like) return ["Plain English", `cards that do what ${data.like} does, ${ranked}`];
       return ["Plain English", data.note ? `filtered to ${data.note}, ${ranked}` : `${ranked} by meaning`];
     default:
       return ["", ""];
@@ -248,6 +258,119 @@ function showUnderstood(conditions) {
   understood.hidden = understood.children.length === 0;
 }
 
+// --- home page -------------------------------------------------------------------------
+
+// A device with a pointer rather than a finger: the search box can take the focus on arrival
+// without a keyboard sliding up, and rows of a table can show a picture on hover.
+const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const HOME_CARDS = 7;
+let homeAsked = false;
+
+/** GET a JSON file or endpoint of this site; null if it cannot be had. */
+async function getJson(path) {
+  try {
+    const response = await fetch(path);
+    return response.ok ? await response.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** One line of what is new: a small tag and a few words, linking to a search on this site. */
+function newsLine(tag, words, href, className) {
+  const item = document.createElement("li");
+  if (className) item.className = className;
+  const link = document.createElement("a");
+  link.href = href;
+  const label = document.createElement("span");
+  label.className = tag.toLowerCase() === "preview" ? "tag upcoming" : "tag";
+  label.textContent = tag;
+  // the words in an element of their own, so a long name is cut short rather than wrapped
+  const text = document.createElement("span");
+  text.className = "words";
+  text.textContent = words;
+  link.append(label, text);
+  // A link to a search is answered in the page; anything else is followed as a link.
+  const url = new URL(link.href);
+  if (url.origin === location.origin && url.pathname === "/" && url.searchParams.get("q")) {
+    link.addEventListener("click", (event) => {
+      if (modified(event)) return;
+      event.preventDefault();
+      run({ query: url.searchParams.get("q") });
+    });
+  }
+  item.append(link);
+  return item;
+}
+
+/**
+ * What the home page shows around the search box: what is new, and a few cards that differ
+ * on every visit. public/flavour.json can put a line of its own first, choose where the
+ * cards are drawn from, and give the page another look: the flavour of the week.
+ */
+async function loadHome() {
+  if (homeAsked) return;
+  homeAsked = true;
+  // The cards are asked for by the example the empty box is showing, so they are its results.
+  const [flavour, found] = await Promise.all([getJson("/flavour.json"), getJson(`/api/home?${new URLSearchParams({ try: example })}`)]);
+  const taste = flavour || {};
+  if (typeof taste.theme === "string" && /^[a-z]{1,20}$/.test(taste.theme)) document.body.dataset.flavour = taste.theme;
+
+  const lines = [];
+  const featured = taste.featured;
+  if (featured && typeof featured.text === "string" && typeof featured.href === "string" && featured.href.startsWith("/")) {
+    lines.push(newsLine(String(featured.label || "New"), featured.text, featured.href, "featured"));
+  }
+  for (const set of (found && found.sets) || []) {
+    lines.push(newsLine(set.upcoming ? "Preview" : "New", set.name, searchPath({ ...EMPTY, query: `set:${set.code}` })));
+  }
+  news.replaceChildren(...lines);
+  news.hidden = lines.length === 0;
+
+  // The cards have something in common: they are found by the example in the empty box, or
+  // by the flavour's own search when it names one. (If the example somehow finds too few, the
+  // server falls back to a theme of its own: the newest set, or a kind of card.)
+  let cards = (found && found.cards) || [];
+  let theme = (found && found.theme) || null;
+  if (typeof taste.cards === "string" && taste.cards.trim()) {
+    const query = taste.cards.trim();
+    const themed = await getJson(`/api/search?${new URLSearchParams({ q: query, k: String(PAGE_SIZE), order: "edhrec" })}`);
+    const pool = ((themed && themed.hits) || []).filter((hit) => hit.image && cardPath(hit));
+    const drawn = [];
+    while (pool.length && drawn.length < HOME_CARDS) drawn.push(...pool.splice(Math.floor(Math.random() * pool.length), 1));
+    if (drawn.length === HOME_CARDS) {
+      cards = drawn;
+      theme = { label: query, query };
+    }
+  }
+  // What they have in common is said to a screen reader and kept on the list for anyone looking.
+  homeCards.setAttribute("aria-label", theme ? `A few cards: ${theme.label}` : "A few cards");
+  homeCards.dataset.query = theme ? theme.query : "";
+  const strip = cards
+    .filter((hit) => hit.image && hit.image.startsWith(IMAGE_HOST) && cardPath(hit))
+    .slice(0, HOME_CARDS)
+    .map((hit) => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = cardPath(hit);
+      const image = new Image(488, 680);
+      image.alt = hit.name;
+      image.decoding = "async";
+      image.src = hit.image;
+      link.append(image);
+      link.addEventListener("click", (event) => {
+        if (modified(event)) return;
+        event.preventDefault();
+        history.pushState(null, "", link.getAttribute("href"));
+        loadCard({ set: hit.set, number: hit.collector_number });
+      });
+      item.append(link);
+      return item;
+    });
+  homeCards.replaceChildren(...strip);
+  homeCards.hidden = strip.length === 0;
+}
+
 // --- results as a table ----------------------------------------------------------------
 
 /** One result as a row of the table. Clicking anywhere on the row opens the card. */
@@ -317,7 +440,7 @@ function showHeadings(view, data) {
 }
 
 // On a device with a pointer, the card under it is shown beside it while a row is hovered.
-if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+if (finePointer) {
   rows.addEventListener("pointermove", (event) => {
     const tr = event.target.closest("tr");
     if (!tr || !tr.dataset.image) return void (preview.hidden = true);
@@ -397,21 +520,22 @@ async function run(search, { push = true } = {}) {
     button.setAttribute("aria-pressed", String(button.dataset.as === view.as));
   }
   if (push) history.pushState(null, "", searchPath(view));
-  document.title = view.query ? `${view.query} · mtgsearch` : "mtgsearch";
+  document.title = view.query ? `${view.query} · ${SITE}` : SITE;
   document.body.classList.toggle("searched", Boolean(view.query));
   if (inFlight) inFlight.abort();
   if (!view.query) {
-    intro.hidden = false;
     clearHits();
     showUnderstood([]);
     showIgnored([]);
     showEmpty();
     current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
+    // The home page: the search box is what it is for.
+    loadHome();
+    if (finePointer) input.focus();
     return;
   }
 
-  intro.hidden = true;
   setStatus("", "Searching…");
   const controller = new AbortController();
   inFlight = controller;
@@ -430,10 +554,10 @@ async function run(search, { push = true } = {}) {
     const data = await response.json();
     if (!response.ok) return fail("", data.error || "Something went wrong.");
     if (data.mode === "unsupported") {
-      intro.hidden = false;
-      document.body.classList.remove("searched");
-      // Every term was one that cannot be used, so there is nothing left to search for.
-      return fail("Nothing here could be used", `${data.note}. The syntax guide lists what can be typed.`);
+      // Every term was one that cannot be used, so there is nothing left to search for. The
+      // header stays a bar, so that the explanation is in view.
+      fail("Nothing here could be used", `${data.note}.`);
+      return showEmpty("Nothing here could be used", "The syntax guide lists what can be typed.");
     }
     // A card's exact name, or a search that finds one card and nothing else, goes straight to
     // that card's page. Not when the list was asked for, a control was changed, or a term was
@@ -658,13 +782,10 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
   link.hidden = !hasLink;
   if (hasLink) link.href = hit.scryfall_uri;
   copyButton.textContent = "Copy link";
-  // "Back to results" only when there are results to go back to.
-  backButton.hidden = shownCount() === 0;
   preview.hidden = true;
   showAlso(history.state && history.state.also);
-  document.title = `${hit.name} · mtgsearch`;
+  document.title = `${hit.name} · ${SITE}`;
   document.body.classList.add("viewing-card", "searched");
-  intro.hidden = true;
   cardView.hidden = false;
   if (!keepScroll) window.scrollTo(0, 0);
 
@@ -743,7 +864,6 @@ async function loadCard({ set, number }) {
   const fromCard = !cardView.hidden; // moving between printings: keep the page while it loads
   if (!fromCard) {
     showResults();
-    intro.hidden = true;
     document.body.classList.add("searched");
     setStatus("", "Loading the card…");
   }
@@ -752,8 +872,8 @@ async function loadCard({ set, number }) {
   if (!data || data.error) {
     showResults();
     if (data && data.missing) {
-      intro.hidden = false;
-      return setStatus("No card at this address", `Nothing is numbered ${number} in the set "${set}".`, true);
+      setStatus("No card at this address", `Nothing is numbered ${number} in the set "${set}".`, true);
+      return showEmpty("No card at this address", "Search for the card by name, or look one up at random.");
     }
     return setStatus("", data ? data.error : "Could not reach the server. Check your connection and try again.", true);
   }
@@ -768,7 +888,6 @@ async function loadRandom() {
   inFlight = null;
   if (cardView.hidden) {
     showResults();
-    intro.hidden = true;
     document.body.classList.add("searched");
     setStatus("", "Picking a card…");
   }
@@ -801,8 +920,6 @@ for (const id of ["nav-random", "empty-random"]) {
   });
 }
 
-backButton.addEventListener("click", () => history.back());
-
 printsButton.addEventListener("click", () => run({ query: printsButton.dataset.q }));
 
 copyButton.addEventListener("click", async () => {
@@ -826,7 +943,7 @@ function route(state) {
   // Coming back from a card to the search that is still on screen: no need to ask again.
   if (view.query && sameSearch(view, current) && shownCount()) {
     showResults();
-    document.title = `${view.query} · mtgsearch`;
+    document.title = `${view.query} · ${SITE}`;
     window.scrollTo(0, resultsScroll);
     return;
   }
@@ -836,13 +953,9 @@ function route(state) {
 // A new query starts from the defaults: first page, default order, cards.
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  run({ query: input.value });
+  // Enter in the empty box tries the example it is showing.
+  run({ query: input.value.trim() ? input.value : example });
   input.blur(); // dismiss the phone keyboard so results are visible
-});
-
-intro.addEventListener("click", (event) => {
-  const example = event.target.closest("button[data-q]");
-  if (example) run({ query: example.dataset.q });
 });
 
 // Changing what is shown or how it is sorted keeps the query and goes back to the first page.
@@ -876,8 +989,13 @@ document.addEventListener("keydown", (event) => {
     input.focus();
     input.select();
   }
-  // Escape leaves a card that was opened from the results.
-  if (event.key === "Escape" && !cardView.hidden && !backButton.hidden) history.back();
+  // Escape leaves a card that was opened from the results, as the browser's Back does.
+  if (event.key === "Escape" && !cardView.hidden && shownCount() > 0) history.back();
 });
+
+// The name builds itself only on arrival at the home page. Anywhere else this page is opened
+// (results, a card) the header shows it still.
+const wordmark = document.querySelector(".wordmark img");
+if (wordmark && (location.pathname !== "/" || location.search)) wordmark.src = "/wordmark.svg";
 
 route(history.state);
