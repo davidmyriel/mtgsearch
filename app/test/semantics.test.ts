@@ -12,7 +12,7 @@ import { extract } from "../nl.ts";
 import { fold, plain } from "../normalize.ts";
 import { parse, QueryError, Unsupported } from "../parser.ts";
 import type { Node } from "../parser.ts";
-import { isPlainWords, splitWords } from "../search.ts";
+import { isPlainWords, namedForLikeness, splitWords } from "../search.ts";
 
 const read = (name: string) => JSON.parse(readFileSync(new URL(`../../fixtures/${name}`, import.meta.url), "utf8"));
 const docs: Doc[] = read("documents.json");
@@ -241,6 +241,40 @@ test("plain English: filters come from the opening noun phrase only", () => {
     assert.ok(!found.some((n) => n.startsWith("mana value") || ["red", "land", "boar"].includes(n)), `${query}: ${found}`);
   }
   assert.deepEqual(extract("something about drawing cards"), { predicate: ["all"], notes: [], any: false });
+});
+
+test("plain English: a type that an effect is done to is not a filter, and a colour before it is", () => {
+  const notes = (query: string) => extract(query).notes;
+  // "land destruction" is not a search for lands; the colour still describes the card wanted
+  assert.deepEqual(notes("blue land destruction"), ["blue"]);
+  assert.deepEqual(notes("black creature removal"), ["black"]);
+  assert.deepEqual(notes("green artifact and enchantment hate"), ["green", "artifact"]); // only an unbroken run of types
+  assert.deepEqual(notes("white creature tutor"), ["white"]);
+  assert.deepEqual(notes("zombie token maker"), []);
+  // with no colour there is nothing to filter by, and the words are left to their meaning
+  assert.deepEqual(extract("land destruction"), { predicate: ["all"], notes: [], any: false });
+  assert.deepEqual(extract("creature removal"), { predicate: ["all"], notes: [], any: false });
+  // a type that is not followed by such a word is still what the card is
+  assert.deepEqual(notes("blue land"), ["blue", "land"]);
+  assert.deepEqual(notes("blue land that destroys creatures"), ["blue", "land"]);
+  assert.deepEqual(notes("green creature that destroys lands"), ["green", "creature"]);
+});
+
+test("plain English: a query that names a card and asks for others like it", () => {
+  for (const [query, named] of [
+    ["tithe alternative", "tithe"],
+    ["Tithe  alternatives", "tithe"],
+    ["cards like sol ring", "sol ring"],
+    ["something similar to Rhystic Study", "rhystic study"],
+    ["budget alternative to mana crypt", "mana crypt"],
+    ["a cheaper replacement for Force of Will", "force of will"],
+    ["urza's saga substitutes", "urza's saga"],
+  ]) {
+    assert.equal(namedForLikeness(query), named, query);
+  }
+  for (const query of ["sphinx that draws two cards", "alternative win condition", "likes to attack", "alternative"]) {
+    assert.equal(namedForLikeness(query), null, query);
+  }
 });
 
 test("plain-English filters select the right fixture cards", () => {

@@ -25,6 +25,7 @@ export type Result = {
   understood: string[]; // a syntax query said back in words, one entry for each condition
   ignored: Ignored[]; // terms that could not be used and were left out, each with the reason
   exact: Hit | null; // the card whose name is exactly what was typed, if the query is a name
+  like?: string | null; // the card a query names when it asks for others that do the same
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
   descending?: boolean; // the direction of that order, as it was applied
@@ -354,6 +355,39 @@ async function exactName(col: Collection, ast: Node): Promise<Hit | null> {
   return rows[0] ?? null;
 }
 
+// "tithe alternative", "cards like sol ring", "replacement for mana crypt": the query names a
+// card and asks for others that do what it does.
+const ALIKE = [
+  /^(?:(?:a|an|any|some|good|better|budget|cheap|cheaper) )*(?:alternatives?|replacements?|substitutes?) (?:to|for|of) (.+)$/,
+  /^(?:(?:cards?|spells?|something|anything|more|other|others) )*(?:like|similar to|such as) (.+)$/,
+  /^(.+?) (?:alternatives?|replacements?|substitutes?|lookalikes?)$/,
+];
+
+/** The card name inside a query that asks for cards like it, as typed, or null if it asks no such thing. */
+export function namedForLikeness(query: string): string | null {
+  const said = query.toLowerCase().trim().replace(/\s+/g, " ");
+  for (const pattern of ALIKE) {
+    const found = pattern.exec(said);
+    if (found) return found[1];
+  }
+  return null;
+}
+
+/**
+ * Cards that do what the named card does: ranked by meaning against that card's own text
+ * (its cost, colour, type and rules), with the card itself left out. Null if no card has
+ * that name, when the query is read as ordinary plain English instead.
+ */
+async function alike(col: Collection, named: string, k: number, fields: string[]): Promise<{ name: string; ranked: Hit[] } | null> {
+  const wanted = plain(named);
+  if (!wanted) return null;
+  const itself: IR = ["eq", "name_plain", wanted];
+  const rows = await col.query(select(pick(["name", "rules"])).filter(toTopk(and(itself, VISIBLE))!).limit(1));
+  const card = rows[0];
+  if (!card || !card.rules) return null;
+  return { name: card.name, ranked: await semantic(col, String(card.rules), and(["not", itself], VISIBLE), k, fields) };
+}
+
 const fieldName = (order: string | null | undefined) => (order && Object.hasOwn(ORDERS, order) ? ORDERS[order] : null);
 const orderName = (sortField: string) => Object.keys(ORDERS).find((name) => ORDERS[name] === sortField) ?? null;
 const UNITS: Record<Unique, Unit> = { cards: "cards", prints: "printings", art: "illustrations" };
@@ -363,6 +397,7 @@ export async function search(cols: Collections, query: string, options: SearchOp
   const none = {
     hits: [], total: null, hasMore: false, sortedBy: null, unit: "cards" as Unit, understood: [] as string[], ignored: [] as Ignored[],
     exact: null as Hit | null,
+    like: null as string | null,
   };
   let ast: Node | null = null;
   let predicate: IR = ["all"];
@@ -429,8 +464,16 @@ export async function search(cols: Collections, query: string, options: SearchOp
     ast !== null && none.ignored.length
       ? [...nodes(ast)].flatMap((n) => (n.kind === "name" ? [n.text] : [])).join(" ")
       : query;
-  const extracted = extract(text);
   const wanted = Math.min(offset + k, MAX_RANKED);
+  // A query that names a card and asks for others like it is answered from that card's text.
+  const named = namedForLikeness(text);
+  const others = named ? await alike(cols.cards, named, wanted, fields) : null;
+  if (others) {
+    const hits = others.ranked.slice(offset, offset + k);
+    const hasMore = others.ranked.length === offset + k && offset + k < MAX_RANKED;
+    return { ...none, mode: "semantic", hits, hasMore, note: "", like: others.name };
+  }
+  const extracted = extract(text);
   let ranked = await semantic(cols.cards, text, and(extracted.predicate, VISIBLE), wanted, fields);
   if (extracted.any && ranked.length < wanted) {
     // the filter was too strict: top up without it

@@ -35,6 +35,41 @@ test("plain English finds the card", { skip }, async () => {
   assert.equal(typeof result.hits[0].score, "number");
 });
 
+test("the examples the home page offers find what they promise", { skip }, async () => {
+  const cols = collection();
+  // a card described: the card itself comes first
+  assert.equal(names(await search(cols, "sphinx that draws two cards"))[0], "Consecrated Sphinx");
+  // a kind of card and what it does: dwarves, and the ones known for it among the first few
+  const dwarves = await search(cols, "dwarf that destroys lands", { k: 8 });
+  assert.equal(dwarves.note, "dwarf");
+  assert.ok(dwarves.hits.every((hit) => String(hit.type_line).includes("Dwarf")), names(dwarves).join("; "));
+  assert.ok(names(dwarves).some((name) => ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"].includes(name)));
+  // a card named, and others that do the same wanted: found from that card's own text, without it
+  const likeTithe = await search(cols, "tithe alternative", { k: 8 });
+  assert.equal(likeTithe.mode, "semantic");
+  assert.equal(likeTithe.like, "Tithe");
+  assert.ok(!names(likeTithe).includes("Tithe"));
+  assert.ok(names(likeTithe).includes("Land Tax") && names(likeTithe).includes("Gift of Estates"), names(likeTithe).join("; "));
+  // a colour and an effect: "land" is what is destroyed, not what the card is
+  const blue = await search(cols, "blue land destruction", { k: 8 });
+  assert.equal(blue.note, "blue");
+  assert.ok(blue.hits.filter((hit) => String(hit.type_line).includes("Land")).length <= 1, names(blue).join("; "));
+  assert.ok(names(blue).some((name) => ["Erosion", "Mana Vortex", "Volcanic Eruption", "Mana Breach"].includes(name)), names(blue).join("; "));
+});
+
+test("a query that names no card, or asks nothing of the kind, is read as before", { skip }, async () => {
+  const cols = collection();
+  const none = await search(cols, "ramp alternative", { k: 3 });
+  assert.equal(none.mode, "semantic");
+  assert.equal(none.like, null);
+  // the second page of cards like a named card follows the first without repeats
+  const [first, second] = [await search(cols, "cards like sol ring", { k: 5 }), await search(cols, "cards like sol ring", { k: 5, offset: 5 })];
+  assert.equal(first.like, "Sol Ring");
+  assert.ok(first.hasMore && second.hits.length === 5);
+  assert.equal(new Set([...names(first), ...names(second)]).size, 10);
+  assert.ok(![...names(first), ...names(second)].includes("Sol Ring"));
+});
+
 test("a card name takes the name path, most-played first", { skip }, async () => {
   const result = await search(collection(), "lightning bolt");
   assert.equal(result.mode, "name");

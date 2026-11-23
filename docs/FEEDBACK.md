@@ -34,7 +34,7 @@ and the Scryfall comparison where results could move.
 | F-2 | 22 Nov 2026 | The site has to look polished enough for the public; layout closer to Scryfall's first | L | Now, on the owner's word | Done (first pass) |
 | F-3 | 22 Nov 2026 | Typing a card's exact name opens the card's page, not a list of results | M | Next boundary | Done |
 | F-4 | 23 Nov 2026 | The home page's first impression: the search bar is the focus, relaxed, discreet, with room for a flavour of the week | M | Next boundary | Done |
-| F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done; two of the four examples find the wrong cards (see the item) |
+| F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done, with the search fixed so that all four examples find what they promise |
 
 ### F-1. A page for each card
 
@@ -283,15 +283,28 @@ and the Scryfall comparison where results could move.
   there is no button and the example would otherwise have to be typed out. On a phone the
   example is set smaller than what is typed, so the longest one shows whole at 320px. The
   two pages without a script (the syntax guide and "not found") always show the first.
-- **What the four examples find today, said plainly:** two do what they promise and two do
-  not. "sphinx that draws two cards" finds Consecrated Sphinx first; "dwarf that destroys
-  lands" finds Dwarven Blastminer, Mine Layer, Dwarven Driller, Dwarven Miner. "tithe
-  alternative" finds Capenna Express, Mr. House, Alms of the Vein: the search reads the two
-  words by their meaning and does not know Tithe is a card whose effect is wanted. "blue
-  land destruction" finds blue double-faced lands (Jwari Disruption, Sea Gate Restoration):
-  it does not treat "blue" as a colour to filter by. Both are faults of the search, not of
-  the examples, and are the next piece of work (see `docs/PLAN.md`); all four are shown
-  meanwhile because the owner listed them.
+- **What the four examples found at first, said plainly:** two did what they promise and two
+  did not. "sphinx that draws two cards" found Consecrated Sphinx first; "dwarf that destroys
+  lands" found Dwarven Blastminer, Mine Layer, Dwarven Driller, Dwarven Miner. "tithe
+  alternative" found Capenna Express, Mr. House, Alms of the Vein: the search read the two
+  words by their meaning and did not know Tithe is a card whose effect is wanted. "blue land
+  destruction" found blue double-faced lands: it read "land" as the kind of card wanted.
+- **Both were faults of the search and are fixed, the same day, without touching the index:**
+  - A query that names a card and asks for others like it ("tithe alternative", "cards like
+    sol ring", "a cheaper replacement for force of will") looks the card up and searches by
+    that card's own text, leaving the card out. "tithe alternative" now finds Gift of Estates,
+    Land Tax, Scholar of New Horizons, Oreskos Explorer. The line above the results says
+    "cards that do what Tithe does". If no card has that name the query is read as before.
+  - A type word followed by what is done to it ("land destruction", "creature removal",
+    "artifact hate") is not a filter; a colour before it still is. "blue land destruction"
+    now finds Erosion, Volcanic Eruption, Mana Vortex.
+  - The frozen relevance set gave the same results on all 31 queries before and after. The
+    four examples are now checked against the live index by the tests.
+- **Known limits, the developer's note:** "budget" and "cheaper" are read but do not yet
+  filter by price; a nickname or part of a name ("bolt alternative") is not found; and "white
+  creature tutor" still ranks poorly, because the index does not know "tutor" as the players'
+  word for searching a library. That last one matters for a site of this name and is in the
+  plan.
 
 ## From the interface study
 

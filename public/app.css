@@ -309,20 +309,30 @@ body:not(.searched) .search::after {
 /* What is new: the flavour of the week, then the newest sets. */
 .news {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* every line the same height whatever fonts the device has, so the room kept for the
+     lines before they arrive (below) is exactly the room they take */
+  grid-auto-rows: 1.5rem;
   gap: 7px;
   justify-items: center;
+  align-items: center;
+  width: 100%;
   margin: 24px 0 0;
   padding: 0;
   list-style: none;
   font-size: 0.93rem;
 }
+.news li { min-width: 0; max-width: 100%; }
 .news a {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 9px;
+  min-width: 0;
   color: var(--band-muted);
   text-decoration: none;
+  white-space: nowrap;
 }
+.news .words { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .news a:hover { color: var(--band-ink); }
 .news .tag {
   padding: 2px 7px;

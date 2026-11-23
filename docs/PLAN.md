@@ -70,12 +70,15 @@ picked up: at the boundary between plan steps unless something is broken.
 ### 3. Relevance (about a week)
 - [x] Frozen query set, evaluation harness, full-corpus baseline
 - [x] Filters read from plain English: mana value, colour, type
-- [ ] The examples the home page offers have to find what they promise (found 23 November 2026).
-      "tithe alternative" does not know Tithe is a card whose effect is wanted: look the named
-      card up and search by its text, leaving the card itself out. "blue land destruction"
-      reads "land" as the type of card wanted and returns blue lands: a type word that is the
-      object of the effect ("land destruction", "creature removal") is not a filter. Both are
-      changes to how the query is read, not to the index
+- [x] The examples the home page offers find what they promise (23 November 2026). A query that
+      names a card and asks for others like it is answered from that card's own text, without
+      the card; a type word followed by what is done to it ("land destruction") is not a
+      filter. Changes to how the query is read, not to the index; the relevance set is unchanged
+- [ ] "tutor" and other players' words. "white creature tutor" ranks mentors and instructors:
+      the index does not know a tutor is a card that searches a library. The site is named for
+      the word, so it has to work. Likely a list of such words read into their rules wording
+      at query time; measure on the jargon class first
+- [ ] "budget" and "cheaper" in a query for a card's alternatives should filter by price
 - [ ] Spell out mana symbols in the indexed text. Known failure: "taps for two colorless mana" does
       not find Sol Ring, whose text reads `{T}: Add {C}{C}`
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),

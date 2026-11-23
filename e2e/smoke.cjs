@@ -162,14 +162,28 @@ async function run(name, contextOptions) {
     const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
     const out = [];
     for (const example of examples) {
-      const response = await fetch(`/api/search?${new URLSearchParams({ q: example, k: "1" })}`);
+      const response = await fetch(`/api/search?${new URLSearchParams({ q: example, k: "8" })}`);
       const found = await response.json();
-      out.push({ example, fits: pen.measureText(`Try: ${example}`).width <= room, mode: found.mode, cards: (found.hits || []).length });
+      out.push({
+        example,
+        fits: pen.measureText(`Try: ${example}`).width <= room,
+        mode: found.mode,
+        like: found.like,
+        note: found.note,
+        names: (found.hits || []).map((hit) => hit.name),
+        lands: (found.hits || []).filter((hit) => hit.type_line.includes("Land")).length,
+      });
     }
     return out;
   }, examples);
   check(tried.every((one) => one.fits), `[${name}] every example fits in the box (${tried.filter((one) => !one.fits).map((one) => one.example).join(", ") || "all four"})`);
-  check(tried.every((one) => one.mode === "semantic" && one.cards >= 1), `[${name}] and every example is read as plain English and finds cards`);
+  check(tried.every((one) => one.mode === "semantic" && one.names.length === 8), `[${name}] and every example is read as plain English and finds cards`);
+  // Each finds what it promises.
+  const [sphinx, dwarf, tithe, blueLand] = tried;
+  check(sphinx.names[0] === "Consecrated Sphinx", `[${name}] "${sphinx.example}" finds ${sphinx.names[0]} first`);
+  check(dwarf.names.some((card) => ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"].includes(card)), `[${name}] "${dwarf.example}" finds ${dwarf.names.slice(0, 3).join(", ")}`);
+  check(tithe.like === "Tithe" && !tithe.names.includes("Tithe") && tithe.names.includes("Land Tax"), `[${name}] "${tithe.example}" finds cards that do what Tithe does (${tithe.names.slice(0, 3).join(", ")})`);
+  check(blueLand.note === "blue" && blueLand.lands <= 1 && blueLand.names.some((card) => ["Erosion", "Mana Vortex", "Volcanic Eruption", "Mana Breach"].includes(card)), `[${name}] "${blueLand.example}" finds blue cards that destroy lands, not blue lands (${blueLand.names.slice(0, 3).join(", ")})`);
   const mark = await lookAtBar();
   check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
   check(mark.noButton, `[${name}] the bar has no button: the box fills it, and Enter searches`);
@@ -352,6 +366,12 @@ async function run(name, contextOptions) {
   await fresh.press("#q", "Enter");
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Plain English"));
   check(new URL(fresh.url()).searchParams.get("q") === offered && (await fresh.inputValue("#q")) === offered, `[${name}] Enter in the empty box tries the example it shows (${offered})`);
+  // A query that names a card and asks for others like it says so above the results.
+  await fresh.fill("#q", "tithe alternative");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.includes("Tithe"));
+  const likeStatus = await fresh.textContent("#status");
+  check(likeStatus.startsWith("Plain English · cards that do what Tithe does"), `[${name}] asking for a card's alternatives is said back in words (${likeStatus})`);
   await fresh.close();
 
   await page.goBack();

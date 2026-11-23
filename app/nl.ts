@@ -24,6 +24,14 @@ const NOT_TYPES = new Set(["card", "cards", "spell", "spells", "permanent", "per
 // \p{L}\p{N}_ stands in for Python's Unicode-aware \w.
 const TRAILING_COST = new RegExp(`(?<![\\p{L}\\p{N}_])([\\p{L}\\p{N}_]+) for (${NUM}) mana$`, "u");
 const MANA_PRODUCERS = new Set(["tap", "taps", "add", "adds", "produce", "produces", "make", "makes", "pay", "pays"]);
+// A type word followed by one of these names what the effect is done to, not what the card
+// is: "land destruction" is not a search for lands, nor "creature removal" for creatures.
+const DONE_TO = new Set(
+  (
+    "destruction removal hate kill killer wipe wipes sweeper sweepers bounce theft steal tutor tutors " +
+    "fetch search recursion reanimation protection denial token tokens sacrifice sac exile hoser lock"
+  ).split(" "),
+);
 const MANA_VALUE = new RegExp(`^(${NUM})[- ](?:mana|cmc|mv|drop)\\b|^(?:cmc|mv|mana value) (${NUM})\\b`);
 
 const number = (token: string) => NUMBER_WORDS.get(token) ?? Number.parseInt(token, 10);
@@ -73,6 +81,11 @@ export function extract(query: string): Extracted {
     rest = rest.slice(word[0].length).replace(/^[ ,-]+/, "");
   }
 
+  // "blue land destruction": the types just read are what the effect is done to. They stay
+  // part of the meaning and are not a filter; a colour before them still describes the card.
+  const doneTo = types.length > 0 && DONE_TO.has(/^[a-z'-]+/.exec(rest)?.[0] ?? "");
+  if (doneTo) types.length = 0;
+
   if (manaValue === null) {
     const trailing = TRAILING_COST.exec(text);
     if (trailing && !MANA_PRODUCERS.has(trailing[1])) manaValue = number(trailing[2]);
@@ -83,7 +96,7 @@ export function extract(query: string): Extracted {
     notes.push(`mana value ${manaValue}`);
   }
   // A colour only counts when it describes a card: "blue sphinx", not a query that is just "red".
-  if (colorWords.length && (types.length || manaValue !== null)) {
+  if (colorWords.length && (types.length || manaValue !== null || doneTo)) {
     for (const color of colorWords) {
       parts.push(colors("c_sets", ":", color, ">="));
       notes.push(color);

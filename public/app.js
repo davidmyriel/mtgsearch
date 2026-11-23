@@ -158,6 +158,8 @@ function describe(data, view) {
     case "mixed":
       return ["Syntax and plain English", `${data.note}, ${ranked}`];
     case "semantic":
+      // a query that names a card and asks for others like it
+      if (data.like) return ["Plain English", `cards that do what ${data.like} does, ${ranked}`];
       return ["Plain English", data.note ? `filtered to ${data.note}, ${ranked}` : `${ranked} by meaning`];
     default:
       return ["", ""];
@@ -283,7 +285,11 @@ function newsLine(tag, words, href, className) {
   const label = document.createElement("span");
   label.className = tag.toLowerCase() === "preview" ? "tag upcoming" : "tag";
   label.textContent = tag;
-  link.append(label, words);
+  // the words in an element of their own, so a long name is cut short rather than wrapped
+  const text = document.createElement("span");
+  text.className = "words";
+  text.textContent = words;
+  link.append(label, text);
   // A link to a search is answered in the page; anything else is followed as a link.
   const url = new URL(link.href);
   if (url.origin === location.origin && url.pathname === "/" && url.searchParams.get("q")) {
