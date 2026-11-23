@@ -124,7 +124,8 @@ picked up: at the boundary between plan steps unless something is broken.
       flying" from first to fourth or lower, "fight target creature" from first to seventh,
       "sphinx that draws two cards" from first to second): the added words change what every
       card is about. The rule set beforehand was to go on only if no working search got worse.
-      None passed, so the cards were not embedded again and the live index is as it was
+      None passed, so the cards were not embedded again and the live index is as it was.
+      The seven collections were deleted the same day, on the owner's word
 - [ ] What the trial points to instead, none of it tried: say the notation on the side of the
       query, not the card (a query that speaks of tapping for mana is given the notation as
       well), which touches only the searches that are about symbols and needs nothing embedded

@@ -23,10 +23,12 @@ const ALL: [string, string][] = [
 // TRIAL_VARIANTS=a,a2 compares only those; the first named is what the others are set against.
 const chosen = (process.env.TRIAL_VARIANTS || ALL.map(([variant]) => variant).join(",")).split(",");
 const VARIANTS = chosen.map((variant) => ALL.find(([name]) => name === variant)!);
+// The same name as in build.py. Trial t1's collections were deleted once it had been reported.
+const TRIAL = "t2";
 const key = (process.env.TOPK_API_KEY ?? "").trim();
 const client = new Client({ apiKey: key, region: process.env.TOPK_REGION || "aws-us-east-1-elastica" });
 const printings = client.collection(process.env.MTGSEARCH_PRINTINGS_COLLECTION || "mtg-printings-v1") as unknown as Collection;
-const cols = (variant: string): Collections => ({ cards: client.collection("mtg-trial-t1-" + variant) as unknown as Collection, printings });
+const cols = (variant: string): Collections => ({ cards: client.collection("mtg-trial-" + TRIAL + "-" + variant) as unknown as Collection, printings });
 
 const NOT_FOUND = 99;
 const ranks = new Map<string, number[]>(); // query -> its rank under each wording

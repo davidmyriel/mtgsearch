@@ -45,7 +45,10 @@ from mtgsearch.ingest import BATCH, CARDS, _hashed, cards_schema  # noqa: E402
 from mtgsearch.printings import aggregates  # noqa: E402
 from mtgsearch.tags import card_tags  # noqa: E402
 
-TRIAL = "t1"
+# The collections of trial t1 were deleted on 23 November 2026, on the owner's word, once it
+# had been reported. A collection is never recreated under a name that has been used (writes
+# to a same-name recreate can be lost), so a new run takes the next name.
+TRIAL = "t2"
 VARIANTS = ("a", "b", "c", "d", "e", "f", "a2")
 SIZE = 2600
 SEED = 23
