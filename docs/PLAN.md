@@ -161,7 +161,24 @@ picked up: at the boundary between plan steps unless something is broken.
       the newest sets under the bar, a fan of random cards cut off by the bottom edge, and a
       flavour of the week set in one file. Square corners throughout (feedback F-4)
 - [ ] Anonymous query and click logging
-- [ ] Measure p95 latency under load, including function cold starts
+- [x] Measure response time on the live site, including the function's cold start (23 November
+      2026, `experiments/latency.py`, twice, 52 searches each that had never been asked, so the
+      cache could not answer them; this is a measurement, not the load test of stage 6).
+      - The search itself, as the function reports it: filters (Scryfall syntax, players' words)
+        a median of about 50 to 65 ms; ranked by meaning a median of about 300 ms. Of all
+        kinds together, 95 in 100 under about 410 ms one at a time, and under 570 ms four at
+        a time, where the searches by meaning stretch to 650 ms.
+      - The whole request from the machine that measured: a median of 315 to 335 ms, 95 in
+        100 under 640 to 780 ms one at a time and under 960 ms four at a time. About 200 ms
+        of every one of those is that machine's own route to Netlify (a search answered from
+        the cache took 201 ms), so a visitor nearer to Netlify sees less.
+      - The first request after the site has been idle waited for the function to start: 1.7 s
+        for a search that itself took 0.16 s.
+- [ ] Bring the slow end down. The exit below is met by filter searches and by the search
+      itself one at a time, and missed by searches by meaning when several run at once and by
+      the first request after idle. To look at: a plain-English query first asks whether its
+      words are a card name and only then ranks by meaning, one request after the other, where
+      the two could be asked together; and whether the function can be kept warm
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms
 
 ### 5. Internal alpha (3–4 days)
