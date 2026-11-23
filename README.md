@@ -221,10 +221,12 @@ and is never cached.
 
 `GET /api/home?try=<example>` gives the home page seven cards, the `theme` that joins them,
 and the newest sets (those still to be released are marked `upcoming`). The empty search box
-shows an example to try, a different one of four on each visit, and names it in `try`: the
+shows an example to try, a different one of some thirty on each visit, and names it in `try`: the
 cards are then that search's results, the first three always and the rest drawn from the
 eleven that follow, so the page shows what the search does before anything is typed. The
-examples are one list in `app/home.ts` and the same list in `public/app.js`. Without an
+examples are one list in `app/home.ts` and the same list in `public/app.js`: a few for each
+colour, for artifacts and for cards of more than one colour, each held to a card or two it
+must find by `app/test/live.test.ts`. Without an
 example the cards share a theme instead: the newest set that is out about one time in three,
 otherwise a kind of card (Dragons, Angels, Planeswalkers and so on), drawn from its sixty most
 played. The answer is held by the CDN for a minute, so a return visit sees other cards.

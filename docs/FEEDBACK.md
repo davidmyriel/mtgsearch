@@ -37,6 +37,7 @@ and the Scryfall comparison where results could move.
 | F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done, with the search fixed so that all four examples find what they promise |
 | F-6 | 23 Nov 2026 | The home page's cards go with the example in the search box | S | Now, with F-5 | Done |
 | F-7 | 23 Nov 2026 | Say "powered by TopK AI search" somewhere | S | Now | Done, where the developer recommended; the owner asked where, not yet confirmed |
+| F-8 | 23 Nov 2026 | More examples for the search box: three or four for each colour, some for artifacts and more than one colour, and alternatives for well-known cards | M | Now | Done: 33 examples, each checked against the search |
 
 ### F-1. A page for each card
 
@@ -339,6 +340,56 @@ and the Scryfall comparison where results could move.
   TopK at all. Not inside the bar: on a phone it would crowd out the example.
 - **Open:** the owner asked where and has not yet said yes to this place. Moving it is a
   small change.
+
+### F-8. More examples, by colour, each one checked
+
+- **From:** the project owner, 23 November 2026, in three messages.
+- **In their words:** "tithe alternative is no good, can you make up some more legit examples
+  of things magic players would search for. blue land destruction is good, sphinx draw two
+  cards is good, pick 3-4 per each colour maybe some for artifact and multicolour". Then:
+  "keep tithe alternative". Then: "also lets do alternatives for shock, brainstorm, ritual,
+  llanowar alternative (for llanowar elves), mana rocks (i dont know if mana rocks will find
+  various mana rock artifacts)".
+- **How they were chosen:** about sixty candidates were run through the search and the first
+  ten results of each read; an example was kept only if a player would call those results
+  right. About half were. Among the ones dropped: "white board wipe" (found cards with
+  "wipe" in the name), "three damage for one mana" (did not find Lightning Bolt), "two mana
+  counterspell" (did not find Counterspell), "search for any card" (did not find Demonic
+  Tutor), "elf that taps for mana" (did not find Llanowar Elves). Those are faults of the
+  search worth fixing, and are in the plan.
+- **The list, 33 in all:**
+  - White: angel that gains life; knight with first strike; white enchantment removal;
+    creature that taxes spells; tithe alternative.
+  - Blue: sphinx that draws two cards; blue land destruction; wizard that copies spells;
+    merfolk that draws cards; brainstorm alternative.
+  - Black: black creature removal; reanimate a creature; demon with a drawback; zombie that
+    comes back; ritual alternative.
+  - Red: dwarf that destroys lands; goblin that makes goblins; dragon with haste; damage to
+    each creature; shock alternative.
+  - Green: hydra with x in its cost; druid that untaps lands; fight target creature; search
+    for a basic land; llanowar alternative.
+  - Artifacts: equipment that gives haste; vehicle with flying; artifact that draws cards;
+    mana rocks.
+  - More than one colour: izzet dragon; orzhov vampire; simic hydra; dimir rogue.
+- **What the search had to learn for them:**
+  - The names players give to two and three colours together (izzet, orzhov, esper and the
+    rest) are read as colours in plain English, as they already were in Scryfall syntax.
+  - Asking for a card's alternatives, part of its name will do: "llanowar" is Llanowar
+    Elves and "ritual" is Dark Ritual, the most played card with those words in its name.
+    The line above the results names the card that was understood.
+  - A named card's alternatives are found from what the card does, without its name (with
+    the name, "llanowar alternative" found cards called Llanowar something), asked once as
+    the rules alone and once with the community's tags, and the two rankings merged.
+    "llanowar alternative" finds Fyndhorn Elves and Elvish Mystic first; "brainstorm
+    alternative" includes Ponder and Preordain; "ritual alternative" finds Culling the Weak
+    and Cabal Ritual; "shock alternative" finds Burst Lightning and Play with Fire.
+  - "mana rocks" needed nothing: it finds Mana Crypt, Fellwar Stone, Mana Vault, Mana Prism
+    and the Mana Batteries. Sol Ring and the Signets are not among the first ten.
+- **Kept honest:** `app/test/live.test.ts` holds, for every example, a card or two it must
+  find among its first ten results, and fails if an example is added without one. The
+  browser test checks that the widest example shows whole in the box at 320px.
+- **Cost:** a search for a card's alternatives takes about 320 to 490 ms here, against about
+  240 ms for other plain English, because it asks twice and to a fixed depth.
 
 ## From the interface study
 

@@ -30,6 +30,15 @@ async function choose(page, selector, value) {
   await page.waitForFunction(() => !document.getElementById("status").textContent.includes("Searching"));
 }
 
+/** The examples the empty search box draws from, read out of the script the page itself runs. */
+async function examplesOffered(page) {
+  return page.evaluate(async () => {
+    const script = await (await fetch("/app.js")).text();
+    const list = (script.match(/const EXAMPLES = \[([^\]]+)\];/) || [])[1] || "";
+    return [...list.matchAll(/"([^"]+)"/g)].map((found) => found[1]);
+  });
+}
+
 async function firstCards(page, n = 3) {
   return page.$$eval("#results img", (imgs, n) => imgs.slice(0, n).map((i) => i.alt), n);
 }
@@ -155,41 +164,21 @@ async function run(name, contextOptions) {
   check(title.powered.says === "Powered by TopK AI search" && title.powered.link === "https://topk.io/" && title.powered.between, `[${name}] under the name it says whose search this is (${title.powered.says})`);
   check(title.drawn && title.above && title.centred && title.name === "TutorK" && title.tab === "TutorK", `[${name}] the name stands above the bar in block letters (${title.name}), and titles the tab`);
   check(title.picture === "/wordmark-appear.svg", `[${name}] on arrival at the home page the name builds itself (${title.picture})`);
-  // The empty box says what to do: try a card described in plain words, one of these.
-  const examples = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+  // The empty box says what to do: try something players look for, said in plain words. The
+  // list is the one in the page's own script.
+  const examples = await examplesOffered(page);
   const shownExample = title.hint.replace(/^Try: /, "");
-  check(title.hint.startsWith("Try: ") && examples.includes(shownExample), `[${name}] the empty box shows something to try ("${title.hint}")`);
-  // Whichever is drawn, all of it shows in the box, and each one finds cards.
-  const tried = await page.evaluate(async (examples) => {
+  check(examples.length >= 20 && title.hint.startsWith("Try: ") && examples.includes(shownExample), `[${name}] the empty box shows something to try, one of ${examples.length} ("${title.hint}")`);
+  // Whichever is drawn, all of it shows in the box.
+  const tooLong = await page.evaluate((examples) => {
     const box = document.getElementById("q");
     const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
     const pen = document.createElement("canvas").getContext("2d");
     pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
     const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-    const out = [];
-    for (const example of examples) {
-      const response = await fetch(`/api/search?${new URLSearchParams({ q: example, k: "8" })}`);
-      const found = await response.json();
-      out.push({
-        example,
-        fits: pen.measureText(`Try: ${example}`).width <= room,
-        mode: found.mode,
-        like: found.like,
-        note: found.note,
-        names: (found.hits || []).map((hit) => hit.name),
-        lands: (found.hits || []).filter((hit) => hit.type_line.includes("Land")).length,
-      });
-    }
-    return out;
+    return examples.filter((example) => pen.measureText(`Try: ${example}`).width > room);
   }, examples);
-  check(tried.every((one) => one.fits), `[${name}] every example fits in the box (${tried.filter((one) => !one.fits).map((one) => one.example).join(", ") || "all four"})`);
-  check(tried.every((one) => one.mode === "semantic" && one.names.length === 8), `[${name}] and every example is read as plain English and finds cards`);
-  // Each finds what it promises.
-  const [sphinx, dwarf, tithe, blueLand] = tried;
-  check(sphinx.names[0] === "Consecrated Sphinx", `[${name}] "${sphinx.example}" finds ${sphinx.names[0]} first`);
-  check(dwarf.names.some((card) => ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"].includes(card)), `[${name}] "${dwarf.example}" finds ${dwarf.names.slice(0, 3).join(", ")}`);
-  check(tithe.like === "Tithe" && !tithe.names.includes("Tithe") && tithe.names.includes("Land Tax"), `[${name}] "${tithe.example}" finds cards that do what Tithe does (${tithe.names.slice(0, 3).join(", ")})`);
-  check(blueLand.note === "blue" && blueLand.lands <= 1 && blueLand.names.some((card) => ["Erosion", "Mana Vortex", "Volcanic Eruption", "Mana Breach"].includes(card)), `[${name}] "${blueLand.example}" finds blue cards that destroy lands, not blue lands (${blueLand.names.slice(0, 3).join(", ")})`);
+  check(tooLong.length === 0, `[${name}] every example fits in the box (${tooLong.join(", ") || `all ${examples.length}`})`);
   const mark = await lookAtBar();
   check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
   check(mark.noButton, `[${name}] the bar has no button: the box fills it, and Enter searches`);
@@ -669,16 +658,16 @@ async function narrow() {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     check(overflow <= 0, `[320 wide] ${what} does not scroll sideways (overflow ${overflow}px)`);
     if (path !== "/" && path !== "/syntax") continue;
-    // the longest example still shows whole in the empty box, on the home page and in a header
-    const spare = await page.evaluate(() => {
+    // the widest example still shows whole in the empty box, on the home page and in a header
+    const spare = await page.evaluate((examples) => {
       const box = document.getElementById("q");
       const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
       const pen = document.createElement("canvas").getContext("2d");
       pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
       const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-      return Math.floor(room - pen.measureText("Try: sphinx that draws two cards").width);
-    });
-    check(spare >= 0, `[320 wide] ${what}: the longest example fits in the empty box (${spare}px to spare)`);
+      return Math.floor(room - Math.max(...examples.map((example) => pen.measureText(`Try: ${example}`).width)));
+    }, await examplesOffered(page));
+    check(spare >= 0, `[320 wide] ${what}: the widest example fits in the empty box (${spare}px to spare)`);
   }
   await browser.close();
 }

@@ -86,39 +86,32 @@ test("the site shows one name on every page, in TopK's blocks, and no sentence u
   assert.match(picture, /viewBox="0 0 3340 560"/);
 });
 
-test("the empty search box shows something to try: a card described in plain words", async () => {
+test("the empty search box shows something to try: what players look for, in plain words", async () => {
   const { parse } = await import("../parser.ts");
-  const script = root("public/app.js");
-  const examples: string[] = JSON.parse((script.match(/const EXAMPLES = (\[[^\]]+\]);/) ?? [])[1] ?? "[]");
-  assert.deepEqual(examples, ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"]);
-  // the home page's cards are asked for by the example shown, so the server holds the same list
   const { EXAMPLES } = await import("../home.ts");
+  const script = root("public/app.js");
+  const list = (script.match(/const EXAMPLES = \[([^\]]+)\];/) ?? [])[1] ?? "";
+  const examples = [...list.matchAll(/"([^"]+)"/g)].map(([, example]) => example);
+  // the home page's cards are asked for by the example shown, so the server holds the same list
   assert.deepEqual(examples, EXAMPLES);
   assert.ok(script.includes("getJson(`/api/home?${new URLSearchParams({ try: example })}`)"));
   assert.ok(script.includes("input.placeholder = `Try: ${example}`;"));
+  // three or four for each colour, and some for artifacts and for more than one colour
+  assert.ok(examples.length >= 20 && new Set(examples).size === examples.length, `${examples.length} examples`);
+  for (const word of ["white", "blue", "black", "red", "green", "artifacts", "more than one colour"]) {
+    assert.ok(list.includes(`// ${word}\n`), `no examples under "${word}"`);
+  }
   for (const example of examples) {
     // plain words: nothing in it is Scryfall syntax, so the search reads it by meaning
     assert.ok(!/[:=<>!"()]/.test(example), example);
     assert.doesNotThrow(() => parse(example), example);
+    // short enough to show whole in the box on a narrow phone (the browser test measures it)
+    assert.ok(example.length <= 27, `${example} is ${example.length} characters`);
   }
-  // before the script runs, and on the pages that have no script, the box shows the first of them
+  // before the script runs, and on the pages that have no script, the box shows one of them
   for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
-    assert.ok(root(page).includes(`placeholder="Try: ${examples[0]}"`), page);
-  }
-});
-
-test("the site says whose search it is: under the name on the home page, and in every footer", () => {
-  const topk = '<a href="https://topk.io" rel="noopener">TopK</a>';
-  // on the home page, one line between the name and the search bar
-  assert.match(
-    root("public/index.html"),
-    /<\/picture><\/a>\s*<!--[^]*?-->\s*<p class="powered">Powered by <a href="https:\/\/topk\.io" rel="noopener">TopK<\/a> AI search<\/p>\s*<form id="search"/,
-  );
-  // once the header is a bar there is no room for it
-  assert.ok(root("public/app.css").includes(".searched .powered,"));
-  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
-    const footer = root(page).slice(root(page).indexOf('<footer class="foot">'));
-    assert.ok(footer.replace(/\s+/g, " ").includes(`powered by ${topk} AI search`), page);
+    const shown = (root(page).match(/placeholder="Try: ([^"]+)"/) ?? [])[1];
+    assert.ok(examples.includes(shown), `${page}: ${shown}`);
   }
 });
 

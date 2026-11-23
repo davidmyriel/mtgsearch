@@ -22,10 +22,32 @@ export type HomeSet = { code: string; name: string; released: string; cards: num
 export type Theme = { label: string; query: string };
 export type Home = { cards: Hit[]; sets: HomeSet[]; theme: Theme | null };
 
-// What the empty search box offers to try: a card described in plain words. The page shows
-// one of these on each visit (public/app.js has the same list) and names it when it asks for
-// the home page's cards.
-export const EXAMPLES = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+// What the empty search box offers to try: things players look for, said in plain words. The
+// page shows one of these on each visit (public/app.js has the same list) and names it when
+// it asks for the home page's cards. Each was kept because of what it finds: the tests hold a
+// card or two that each one must find, so one that stops working is noticed. Keep them short:
+// the longest has to show whole in the box on a narrow phone.
+export const EXAMPLES = [
+  // white
+  "angel that gains life", "knight with first strike", "white enchantment removal", "creature that taxes spells",
+  "tithe alternative",
+  // blue
+  "sphinx that draws two cards", "blue land destruction", "wizard that copies spells", "merfolk that draws cards",
+  "brainstorm alternative",
+  // black
+  "black creature removal", "reanimate a creature", "demon with a drawback", "zombie that comes back",
+  "ritual alternative",
+  // red
+  "dwarf that destroys lands", "goblin that makes goblins", "dragon with haste", "damage to each creature",
+  "shock alternative",
+  // green
+  "hydra with x in its cost", "druid that untaps lands", "fight target creature", "search for a basic land",
+  "llanowar alternative",
+  // artifacts
+  "equipment that gives haste", "vehicle with flying", "artifact that draws cards", "mana rocks",
+  // more than one colour
+  "izzet dragon", "orzhov vampire", "simic hydra", "dimir rogue",
+];
 // Of an example's results, the first few are always among the cards shown, and the rest are
 // drawn from the ones that follow, so the cards differ from visit to visit and stay on the point.
 const ALWAYS = 3;

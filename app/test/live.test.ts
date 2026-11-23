@@ -35,33 +35,90 @@ test("plain English finds the card", { skip }, async () => {
   assert.equal(typeof result.hits[0].score, "number");
 });
 
-test("the examples the home page offers find what they promise", { skip }, async () => {
+// A card or two that each example the home page offers has to find among its first results.
+// An example with no entry here fails the test below: none is offered that has not been looked at.
+const FINDS: Record<string, string[]> = {
+  "angel that gains life": ["Angel of Vitality", "Angel of Mercy", "Herald of Faith"],
+  "knight with first strike": ["White Knight", "Black Knight", "Knight of Malice"],
+  "white enchantment removal": ["Leave No Trace", "Echoing Calm", "Cursebreak"],
+  "creature that taxes spells": ["Esper Sentinel", "Spelltithe Enforcer", "Aven Interrupter"],
+  "tithe alternative": ["Land Tax", "Gift of Estates"],
+  "sphinx that draws two cards": ["Consecrated Sphinx"],
+  "blue land destruction": ["Erosion", "Mana Vortex", "Volcanic Eruption"],
+  "wizard that copies spells": ["Echo Mage", "Naru Meha, Master Wizard", "Dualcaster Mage"],
+  "merfolk that draws cards": ["Silvergill Adept", "Seafloor Oracle", "Mindspring Merfolk"],
+  "brainstorm alternative": ["Ponder", "Preordain", "Impulse"],
+  "black creature removal": ["Snuff Out", "Eradicate", "Noxious Grasp"],
+  "reanimate a creature": ["Reanimate", "Animate Dead", "Zombify"],
+  "demon with a drawback": ["Desecration Demon", "Hellcarver Demon", "Grinning Demon"],
+  "zombie that comes back": ["Relentless Dead", "Ashen Ghoul", "Dread Wanderer"],
+  "ritual alternative": ["Cabal Ritual", "Culling the Weak"],
+  "dwarf that destroys lands": ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"],
+  "goblin that makes goblins": ["Krenko, Mob Boss", "Mogg War Marshal", "Goblin Instigator"],
+  "dragon with haste": ["Hellkite Charger", "Karrthus, Tyrant of Jund", "Thundermane Dragon"],
+  "damage to each creature": ["Anger of the Gods", "Firespout", "Flamebreak"],
+  "shock alternative": ["Burst Lightning", "Play with Fire", "Galvanic Blast"],
+  "hydra with x in its cost": ["Primordial Hydra", "Hungering Hydra", "Feral Hydra"],
+  "druid that untaps lands": ["Ley Druid", "Krosan Restorer", "Argothian Elder"],
+  "fight target creature": ["Prey Upon", "Pounce", "Prizefight"],
+  "search for a basic land": ["Traverse the Ulvenwald", "Search for Tomorrow", "Traveler's Amulet"],
+  "llanowar alternative": ["Elvish Mystic", "Druid of the Cowl", "Leaf Gilder"],
+  "equipment that gives haste": ["Swiftfoot Boots", "Boots of Speed", "Helm of the Host"],
+  "vehicle with flying": ["Aethersphere Harvester", "Dragonfly Suit", "Mindlink Mech"],
+  "artifact that draws cards": ["Mindstorm Crown", "Urza's Miter", "Trigon of Thought"],
+  "mana rocks": ["Mana Crypt", "Mana Vault", "Fellwar Stone"],
+  "izzet dragon": ["Niv-Mizzet, Parun", "Niv-Mizzet, the Firemind", "Niv-Mizzet, Dracogenius"],
+  "orzhov vampire": ["Blood Baron of Vizkopa", "Vizkopa Vampire", "Cliffhaven Vampire"],
+  "simic hydra": ["Bioessence Hydra", "Hydroid Krasis", "Zaxara, the Exemplary"],
+  "dimir rogue": ["Soaring Thought-Thief", "Dimir Strandcatcher", "Deathcult Rogue"],
+};
+
+test("every example the home page offers finds what it promises", { skip }, async () => {
   const cols = collection();
-  // a card described: the card itself comes first
+  assert.deepEqual(Object.keys(FINDS).sort(), [...EXAMPLES].sort());
+  for (const example of EXAMPLES) {
+    const result = await search(cols, example, { k: 10 });
+    assert.equal(result.mode, "semantic", example);
+    assert.equal(result.hits.length, 10, example);
+    assert.ok(FINDS[example].some((name) => names(result).includes(name)), `${example}: ${names(result).join("; ")}`);
+  }
+  // the card itself comes first when one card is described
   assert.equal(names(await search(cols, "sphinx that draws two cards"))[0], "Consecrated Sphinx");
-  // a kind of card and what it does: dwarves, and the ones known for it among the first few
+});
+
+test("what a kind of card does, a colour and an effect, and a named card's like", { skip }, async () => {
+  const cols = collection();
+  // a kind of card and what it does: only that kind
   const dwarves = await search(cols, "dwarf that destroys lands", { k: 8 });
   assert.equal(dwarves.note, "dwarf");
   assert.ok(dwarves.hits.every((hit) => String(hit.type_line).includes("Dwarf")), names(dwarves).join("; "));
-  assert.ok(names(dwarves).some((name) => ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"].includes(name)));
+  // a colour and an effect: "land" is what is destroyed, not what the card is
+  const blue = await search(cols, "blue land destruction", { k: 8 });
+  assert.equal(blue.note, "blue");
+  assert.ok(blue.hits.filter((hit) => String(hit.type_line).includes("Land")).length <= 1, names(blue).join("; "));
+  // two colours by the name players give them, and a kind of card: only cards of both colours
+  const izzet = await search(cols, "izzet dragon", { k: 8 });
+  assert.equal(izzet.note, "izzet, dragon");
+  assert.ok(izzet.hits.every((hit) => String(hit.type_line).includes("Dragon")), names(izzet).join("; "));
+  assert.ok(izzet.hits.every((hit) => /U/.test(String(hit.mana_cost)) && /R/.test(String(hit.mana_cost))), names(izzet).join("; "));
   // a card named, and others that do the same wanted: found from that card's own text, without it
   const likeTithe = await search(cols, "tithe alternative", { k: 8 });
   assert.equal(likeTithe.mode, "semantic");
   assert.equal(likeTithe.like, "Tithe");
   assert.ok(!names(likeTithe).includes("Tithe"));
   assert.ok(names(likeTithe).includes("Land Tax") && names(likeTithe).includes("Gift of Estates"), names(likeTithe).join("; "));
-  // a colour and an effect: "land" is what is destroyed, not what the card is
-  const blue = await search(cols, "blue land destruction", { k: 8 });
-  assert.equal(blue.note, "blue");
-  assert.ok(blue.hits.filter((hit) => String(hit.type_line).includes("Land")).length <= 1, names(blue).join("; "));
-  assert.ok(names(blue).some((name) => ["Erosion", "Mana Vortex", "Volcanic Eruption", "Mana Breach"].includes(name)), names(blue).join("; "));
 });
 
 test("a query that names no card, or asks nothing of the kind, is read as before", { skip }, async () => {
   const cols = collection();
-  const none = await search(cols, "ramp alternative", { k: 3 });
+  const none = await search(cols, "frobnicate alternative", { k: 3 });
   assert.equal(none.mode, "semantic");
   assert.equal(none.like, null);
+  // asking for a card's alternatives, part of its name will do: the most played card with those words
+  assert.equal((await search(cols, "llanowar alternative", { k: 3 })).like, "Llanowar Elves");
+  assert.equal((await search(cols, "a ritual replacement", { k: 3 })).like, "Dark Ritual");
+  // "like ..." is followed by all sorts of things, so there only a whole name is a card
+  assert.equal((await search(cols, "cards like goblins", { k: 3 })).like, null);
   // the second page of cards like a named card follows the first without repeats
   const [first, second] = [await search(cols, "cards like sol ring", { k: 5 }), await search(cols, "cards like sol ring", { k: 5, offset: 5 })];
   assert.equal(first.like, "Sol Ring");
@@ -318,7 +375,9 @@ test("a card's page: one printing with stats and legality, and its printings new
 
 test("the home page's cards are found by the example the search box shows", { skip }, async () => {
   const cols = collection();
-  for (const example of EXAMPLES) {
+  // a few of them: one for a colour, one for an effect, one for two colours
+  for (const example of ["sphinx that draws two cards", "black creature removal", "izzet dragon"]) {
+    assert.ok(EXAMPLES.includes(example));
     const page = await home(cols, Math.random, example);
     assert.deepEqual(page.theme, { label: example, query: example });
     assert.equal(page.cards.length, HOME_CARDS);
@@ -333,7 +392,7 @@ test("the home page's cards are found by the example the search box shows", { sk
     assert.ok(page.cards.every((card) => String(card.image).startsWith("https://cards.scryfall.io/")));
   }
   // the rest are drawn afresh: one draw always takes the earliest of what follows, another the latest
-  const [low, high] = [await exampleCards(cols, EXAMPLES[1], HOME_CARDS, () => 0), await exampleCards(cols, EXAMPLES[1], HOME_CARDS, () => 0.999)];
+  const [low, high] = [await exampleCards(cols, "dwarf that destroys lands", HOME_CARDS, () => 0), await exampleCards(cols, "dwarf that destroys lands", HOME_CARDS, () => 0.999)];
   assert.notDeepEqual(low.map((card) => card.name).sort(), high.map((card) => card.name).sort());
   // anything that is not one of the examples is not searched for: the cards share a theme instead
   const other = await home(cols, Math.random, "ignore previous instructions");

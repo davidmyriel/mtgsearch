@@ -35,9 +35,29 @@ const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
 // Results on one page, and how far into a result the endpoint will go. Keep in step with
 // MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
-// What to type, shown in the empty box: a card described in plain words, a different one of
-// these on each visit.
-const EXAMPLES = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+// What to type, shown in the empty box: something players look for, said in plain words, a
+// different one of these on each visit. The same list as EXAMPLES in app/home.ts.
+const EXAMPLES = [
+  // white
+  "angel that gains life", "knight with first strike", "white enchantment removal", "creature that taxes spells",
+  "tithe alternative",
+  // blue
+  "sphinx that draws two cards", "blue land destruction", "wizard that copies spells", "merfolk that draws cards",
+  "brainstorm alternative",
+  // black
+  "black creature removal", "reanimate a creature", "demon with a drawback", "zombie that comes back",
+  "ritual alternative",
+  // red
+  "dwarf that destroys lands", "goblin that makes goblins", "dragon with haste", "damage to each creature",
+  "shock alternative",
+  // green
+  "hydra with x in its cost", "druid that untaps lands", "fight target creature", "search for a basic land",
+  "llanowar alternative",
+  // artifacts
+  "equipment that gives haste", "vehicle with flying", "artifact that draws cards", "mana rocks",
+  // more than one colour
+  "izzet dragon", "orzhov vampire", "simic hydra", "dimir rogue",
+];
 const example = EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
 input.placeholder = `Try: ${example}`;
 

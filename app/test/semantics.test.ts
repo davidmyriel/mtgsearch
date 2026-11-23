@@ -12,7 +12,7 @@ import { extract } from "../nl.ts";
 import { fold, plain } from "../normalize.ts";
 import { parse, QueryError, Unsupported } from "../parser.ts";
 import type { Node } from "../parser.ts";
-import { isPlainWords, namedForLikeness, splitWords } from "../search.ts";
+import { isPlainWords, merged, namedForLikeness, splitWords } from "../search.ts";
 
 const read = (name: string) => JSON.parse(readFileSync(new URL(`../../fixtures/${name}`, import.meta.url), "utf8"));
 const docs: Doc[] = read("documents.json");
@@ -258,6 +258,31 @@ test("plain English: a type that an effect is done to is not a filter, and a col
   assert.deepEqual(notes("blue land"), ["blue", "land"]);
   assert.deepEqual(notes("blue land that destroys creatures"), ["blue", "land"]);
   assert.deepEqual(notes("green creature that destroys lands"), ["green", "creature"]);
+});
+
+test("plain English: the names players give to two and three colours together are colours", () => {
+  const notes = (query: string) => extract(query).notes;
+  assert.deepEqual(notes("izzet dragon"), ["izzet", "dragon"]);
+  assert.deepEqual(notes("orzhov vampire that drains life"), ["orzhov", "vampire"]);
+  assert.deepEqual(notes("esper artifact"), ["esper", "artifact"]);
+  assert.deepEqual(notes("golgari creature removal"), ["golgari"]);
+  // such a name on its own is not a filter, like a colour on its own
+  assert.deepEqual(extract("jund"), { predicate: ["all"], notes: [], any: false });
+  // the four-colour names are ordinary words and are left to their meaning
+  assert.deepEqual(notes("growth creature"), []);
+  assert.deepEqual(notes("chaos dragon"), []);
+});
+
+test("two rankings merge into one: a card found by both comes before a card found by one", () => {
+  const hit = (name: string) => ({ _id: name, name });
+  const order = merged([
+    [hit("a"), hit("b"), hit("c")],
+    [hit("c"), hit("d"), hit("a")],
+  ]).map((found) => found.name);
+  assert.deepEqual(order.slice(0, 2).sort(), ["a", "c"]);
+  assert.deepEqual(order.slice(2).sort(), ["b", "d"]);
+  // one ranking is left as it is
+  assert.deepEqual(merged([[hit("x"), hit("y")]]).map((found) => found.name), ["x", "y"]);
 });
 
 test("plain English: a query that names a card and asks for others like it", () => {

@@ -79,6 +79,14 @@ picked up: at the boundary between plan steps unless something is broken.
       the word, so it has to work. Likely a list of such words read into their rules wording
       at query time; measure on the jargon class first
 - [ ] "budget" and "cheaper" in a query for a card's alternatives should filter by price
+- [ ] Searches that failed when examples were being chosen (23 November 2026), each a card any
+      player expects: "three damage for one mana" without Lightning Bolt, "two mana counterspell"
+      without Counterspell, "search for any card" without Demonic Tutor, "elf that taps for mana"
+      without Llanowar Elves, "white board wipe" finding cards named Wipe. Add them to the query
+      set. Most trace to mana symbols and numbers in the indexed text (the item below)
+- [ ] Asking TopK for more results than are shown seems to find better ones: Fyndhorn Elves came
+      first for Llanowar Elves' text when 120 were asked for and was absent when 10 were. Measure
+      on the query set whether ordinary plain-English searches should ask deeper and cut
 - [ ] Spell out mana symbols in the indexed text. Known failure: "taps for two colorless mana" does
       not find Sol Ring, whose text reads `{T}: Add {C}{C}`
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),
