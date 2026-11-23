@@ -74,6 +74,7 @@ test("returns the documented shape", async () => {
         tix: null,
         flavor_text: null,
         prints: 11,
+        printed_as: null,
         score: 4.252,
       },
     ],

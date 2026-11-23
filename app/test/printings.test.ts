@@ -8,7 +8,7 @@ import { evaluate } from "../evaluate.ts";
 import type { Doc } from "../evaluate.ts";
 import { lower, usesPrintings } from "../lower.ts";
 import { parse, QueryError, Unsupported } from "../parser.ts";
-import { grouped } from "../search.ts";
+import { asNamed, grouped } from "../search.ts";
 import type { Collection, Hit } from "../search.ts";
 
 const read = (name: string) => JSON.parse(readFileSync(new URL(`../../fixtures/${name}`, import.meta.url), "utf8"));
@@ -120,8 +120,8 @@ test("in:, prints and sets are facts about the card, true on every printing and 
   assert.deepEqual(names("in:rare"), ["Consecrated Sphinx"]);
   assert.deepEqual(names("in:uncommon"), ["Sol Ring"]);
   assert.deepEqual(names("in:mtgo -in:arena"), ["Archangel Avacyn // Avacyn, the Purifier", "Consecrated Sphinx", "Grizzly Bears", "Sol Ring"]);
-  assert.deepEqual(names("prints>=3"), ["Consecrated Sphinx", "Sol Ring"]);
-  assert.deepEqual(names("sets=1"), ["Archangel Avacyn // Avacyn, the Purifier", "Grizzly Bears"]);
+  assert.deepEqual(names("prints>=3"), ["Consecrated Sphinx", "Grizzly Bears", "Sol Ring"]);
+  assert.deepEqual(names("sets=1"), ["Archangel Avacyn // Avacyn, the Purifier"]);
   assert.deepEqual(ids("in:lea"), ["c21-263", "lea-270", "sld-1011"]);
   for (const query of ["in:ima", "prints>=3", "-in:paper"]) assert.equal(compile(query)[1].printings, false, query);
   assert.throws(() => compile("in:japanese"), Unsupported);
@@ -228,4 +228,60 @@ test("grouping: a card whose printings have different names is one result", asyn
   ];
   const cheapest = await grouped(answering(priced), ["all"], { unique: "cards", prefer: null, sortField: "usd_c", descending: false });
   assert.deepEqual(cheapest.map((g) => [g.key, g.rank]), [[500, 3]]);
+});
+
+// In the fixtures one Grizzly Bears printing has the flavour name "Ursa, the Twin Maw" and
+// another is printed as "Bob's Hungry Bear".
+test("a flavour name finds the card by its words; a name only printed on it, when given whole", () => {
+  for (const query of ["ursa", "twin maw", '"the twin maw"', "name:ursa", "ursa bears"]) {
+    assert.deepEqual(names(query), ["Grizzly Bears"], query);
+  }
+  assert.deepEqual(names("hungry"), []); // a word of a printed name
+  assert.deepEqual(names("name:/ursa/"), []); // a regular expression reads the card's own name
+  const whole = ['!"Bob\'s Hungry Bear"', '!"bobs hungry bear"', '!"Ursa, the Twin Maw"', '!"ursa the twin maw"', '!"Grizzly Bears"'];
+  for (const query of whole) assert.deepEqual(names(query), ["Grizzly Bears"], query);
+  assert.deepEqual(names('!"hungry bear"'), []); // part of a name is not the name
+  // ruling a name out keeps the card: it has printings that are not called that
+  assert.deepEqual(names("-ursa t:bear"), ["Grizzly Bears"]);
+  assert.deepEqual(names('-!"ursa the twin maw" t:bear'), ["Grizzly Bears"]);
+  assert.deepEqual(names("-grizzly t:bear"), []);
+  assert.deepEqual(names("-(-ursa) t:bear"), ["Grizzly Bears"]); // ruled out twice is asked for
+  for (const query of ["ursa", '!"bobs hungry bear"', "-ursa"]) assert.equal(compile(query)[1].printings, false, query);
+});
+
+test("an exact name may leave out its punctuation", () => {
+  assert.deepEqual(names('!"jace the mind sculptor"'), ["Jace, the Mind Sculptor"]);
+  assert.deepEqual(names('!"Jace, the Mind Sculptor"'), ["Jace, the Mind Sculptor"]);
+  assert.deepEqual(names('!"archangel avacyn"'), ["Archangel Avacyn // Avacyn, the Purifier"]); // one face
+  assert.deepEqual(names('!"jace the mind"'), []);
+});
+
+test("among printings, each answers for its own names only", () => {
+  assert.deepEqual(ids("ursa"), ["sld-88"]);
+  assert.deepEqual(ids("ursa unique:prints"), ["sld-88"]);
+  assert.deepEqual(ids('!"bobs hungry bear"'), ["sld-89"]);
+  // ruled out, a name drops the printings that carry it and keeps the card's others
+  assert.deepEqual(ids("-ursa t:bear"), ["10e-268", "sld-89"]);
+  assert.deepEqual(ids('-!"bobs hungry bear" t:bear'), ["10e-268", "sld-88"]);
+  assert.deepEqual(ids('!"grizzly bears"'), ["10e-268", "sld-88", "sld-89"]);
+});
+
+test("a card found by a name one printing carries is shown as that printing", async () => {
+  const bears = cards.find((doc) => doc.name === "Grizzly Bears") as Hit;
+  const ring = cards.find((doc) => doc.name === "Sol Ring") as Hit;
+  const named = printings.filter((doc) => doc._id === "sld-88" || doc._id === "sld-89");
+  const shown = async (query: string, col = answering(named)) => (await asNamed(col, [ring, bears], parse(query)))[1];
+  const unasked: Collection = { query: async () => assert.fail("no printing is needed"), count: async () => 0 };
+
+  assert.deepEqual([(await shown("ursa")).cn, (await shown("ursa")).printed_as], ["88", "Ursa, the Twin Maw"]);
+  assert.deepEqual([(await shown('!"bobs hungry bear"')).cn, (await shown('!"bobs hungry bear"')).printed_as], ["89", "Bob's Hungry Bear"]);
+  assert.equal((await shown("ursa or ring")).cn, "88");
+  assert.equal((await shown("ursa bears")).cn, "88"); // one word from each name
+  // found by its own name, or not by name at all: the card as it is, and nothing is asked
+  for (const query of ["grizzly", "t:bear", "-ursa", "bears -maw"]) {
+    const kept = await shown(query, unasked);
+    assert.deepEqual([kept.name, kept.cn, "alt_prints" in kept], ["Grizzly Bears", undefined, false], query);
+  }
+  // the printing is gone from the index: the card as it is
+  assert.equal((await shown("ursa", answering([]))).name, "Grizzly Bears");
 });

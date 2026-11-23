@@ -291,7 +291,8 @@
   "stats": "2/2",
   "scryfall_uri": "https://scryfall.com/card/x/1/grizzly-bears",
   "in_sets": [
-   "10e"
+   "10e",
+   "sld"
   ],
   "in_rarities": [
    "common"
@@ -300,8 +301,17 @@
    "mtgo",
    "paper"
   ],
-  "prints": 1,
-  "sets": 1,
+  "prints": 3,
+  "sets": 2,
+  "alt_plain": "ursa the twin maw",
+  "alt_names_plain": [
+   "bobs hungry bear",
+   "ursa the twin maw"
+  ],
+  "alt_prints": [
+   "bobs hungry bear|sld|89",
+   "ursa the twin maw|sld|88"
+  ],
   "pow_min": 2.0,
   "pow_max": 2.0,
   "tou_min": 2.0,

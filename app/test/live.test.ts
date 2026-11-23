@@ -362,6 +362,45 @@ test("a query that is exactly a card's name names that card, beside the list", {
   assert.equal((await search(cols, "sphinx that draws two cards")).exact, null);
 });
 
+test("a card is found by the other names its printings go by, and shown as that printing", { skip }, async () => {
+  const cols = collection();
+  // a flavour name, by one of its words: the Godzilla cards, each as its Godzilla printing
+  const godzilla = await search(cols, "godzilla", { k: 20 });
+  assert.deepEqual([godzilla.mode, godzilla.total], ["name", 8]);
+  const zilortha = godzilla.hits.find((hit) => hit.name === "Zilortha, Strength Incarnate");
+  assert.deepEqual([zilortha?.set, zilortha?.cn, zilortha?.printed_as], ["iko", "275", "Godzilla, King of the Monsters"]);
+  assert.ok(godzilla.hits.every((hit) => String(hit.printed_as).includes("odzilla")), "every hit is a Godzilla printing");
+  assert.ok(godzilla.hits.every((hit) => !("alt_prints" in hit)));
+  // the whole flavour name opens the card, at that printing; so does the name without its comma
+  for (const typed of ["Godzilla, King of the Monsters", "godzilla king of the monsters"]) {
+    const found = await search(cols, typed);
+    assert.deepEqual([found.exact?.name, found.exact?.set, found.exact?.cn], ["Zilortha, Strength Incarnate", "iko", "275"], typed);
+  }
+  // a name that is only printed on the card is found whole and not by its words, as on
+  // Scryfall; typed in full it is still the card
+  const rick = await search(cols, "Rick, Steadfast Leader");
+  assert.deepEqual([rick.mode, rick.total, names(rick)], ["name", 1, ["Greymond, Avacyn's Stalwart"]]);
+  assert.deepEqual([rick.exact?.name, rick.exact?.printed_as], ["Greymond, Avacyn's Stalwart", "Rick, Steadfast Leader"]);
+  assert.equal((await search(cols, '!"Rick, Steadfast Leader"')).total, 1);
+  assert.notEqual((await search(cols, "rick steadfast")).mode, "name");
+  // found by its own name, a card is shown as usual
+  const greaves = await search(cols, "lightning greaves");
+  assert.equal(greaves.exact?.name, "Lightning Greaves");
+  assert.equal(greaves.exact?.printed_as ?? null, null);
+  // ...and by its flavour name, as the printing that carries it
+  const sneakers = await search(cols, "power sneakers");
+  assert.deepEqual([sneakers.exact?.name, sneakers.exact?.printed_as], ["Lightning Greaves", "Power Sneakers"]);
+  // among printings, only the ones that carry the name
+  const prints = await search(cols, '!"power sneakers" unique:prints');
+  assert.deepEqual([prints.total, prints.hits[0].printed_as], [1, "Power Sneakers"]);
+  // ruled out, a name keeps the card: its other printings are not called that
+  const without = await search(cols, "-godzilla t:dinosaur c=rg mv=5 t:legendary", { k: 60 });
+  assert.ok(names(without).includes("Zilortha, Strength Incarnate"));
+  // the card page of such a printing says what it is printed as
+  const page = await card(cols, "iko", "275");
+  assert.deepEqual([page?.card.name, page?.card.printed_as], ["Zilortha, Strength Incarnate", "Godzilla, King of the Monsters"]);
+});
+
 test("a term that cannot be used is left out and the rest of the query runs", { skip }, async () => {
   const cols = collection();
   const plain = await search(cols, "t:sphinx", { k: 5 });

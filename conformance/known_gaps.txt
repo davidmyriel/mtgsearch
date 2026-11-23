@@ -1,9 +1,12 @@
 # Queries where we knowingly differ from Scryfall. They are not counted in the conformance rate.
 # Format: query, then an indented line explaining the difference.
 
-power include:extras
-    Scryfall also matches flavour names of individual printings (a Lightning Greaves printed as a
-    Power Rangers card). That is printing-level data, which this version does not index.
+godzilla unique:prints
+    Scryfall lists 14 printings and we list 15. The extra one is Void Beckoner's Arena-only
+    variant (Ikoria 373A, "Spacegodzilla, Void Invader"), which Scryfall leaves out of a list
+    of printings unless it is asked for by number or with is:variation. The same printing is
+    the difference in `!"void beckoner" unique:prints` (4 against 5), so this is about which
+    printings Scryfall hides and not about names. The rule for that is not known yet.
 
 -pow>=1 t:sphinx
     Scryfall reads a negated comparison as a negated name word and returns every Sphinx.

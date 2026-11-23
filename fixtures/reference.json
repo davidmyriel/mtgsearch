@@ -7,14 +7,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "lightning"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "lightning"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "lightning"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "bolt"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "bolt"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "bolt"
+       ]
+      ]
      ],
      [
       "eq",
@@ -43,9 +63,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "lightning bolt"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "lightning bolt"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "lightning bolt"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "lightning bolt"
+       ]
+      ]
      ],
      [
       "eq",
@@ -73,9 +108,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "fire"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "fire"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "fire"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "fire"
+       ]
+      ]
      ],
      [
       "eq",
@@ -103,9 +153,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "sphinx"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sphinx"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sphinx"
+       ]
+      ]
      ],
      [
       "eq",
@@ -133,14 +193,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "urzas"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "urzas"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "urzas"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "tower"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "tower"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "tower"
+       ]
+      ]
      ],
      [
       "eq",
@@ -171,9 +251,19 @@
      [
       "not",
       [
-       "has",
-       "name_plain",
-       "fire"
+       "or",
+       [
+        [
+         "has",
+         "name_plain",
+         "fire"
+        ],
+        [
+         "has",
+         "alt_own_plain",
+         "fire"
+        ]
+       ]
       ]
      ],
      [
@@ -293,9 +383,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "through"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "through"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "through"
+       ]
+      ]
      ],
      [
       "or",
@@ -307,12 +407,27 @@
        ],
        [
         "has",
+        "alt_plain",
+        "depths"
+       ],
+       [
+        "has",
         "name_plain",
         "sands"
        ],
        [
         "has",
+        "alt_plain",
+        "sands"
+       ],
+       [
+        "has",
         "name_plain",
+        "mists"
+       ],
+       [
+        "has",
+        "alt_plain",
         "mists"
        ]
       ]
@@ -378,9 +493,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "ightning"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "ightning"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "ightning"
+       ]
+      ]
      ],
      [
       "cmp",
@@ -5685,9 +5810,19 @@
   {
    "query": "sphinx include:extras",
    "ir": [
-    "has",
-    "name_plain",
-    "sphinx"
+    "or",
+    [
+     [
+      "has",
+      "name_plain",
+      "sphinx"
+     ],
+     [
+      "has",
+      "alt_plain",
+      "sphinx"
+     ]
+    ]
    ],
    "options": {
     "include_extras": true,
@@ -5710,9 +5845,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "counterspell"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "counterspell"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "counterspell"
+       ]
+      ]
      ],
      [
       "eq",
@@ -5740,9 +5885,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "sol ring"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sol ring"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sol ring"
+       ]
+      ]
      ],
      [
       "eq",
@@ -5770,14 +5925,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "jace"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "jace"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "jace"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mind"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mind"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mind"
+       ]
+      ]
      ],
      [
       "eq",
@@ -5806,9 +5981,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "jace, the mind sculptor"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "jace, the mind sculptor"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "jace the mind sculptor"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "jace the mind sculptor"
+       ]
+      ]
      ],
      [
       "eq",
@@ -5838,9 +6028,19 @@
      [
       "not",
       [
-       "has",
-       "name_plain",
-       "dragon"
+       "or",
+       [
+        [
+         "has",
+         "name_plain",
+         "dragon"
+        ],
+        [
+         "has",
+         "alt_own_plain",
+         "dragon"
+        ]
+       ]
       ]
      ],
      [
@@ -10978,9 +11178,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "angel"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "angel"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "angel"
+       ]
+      ]
      ],
      [
       "cmp",
@@ -14051,9 +14261,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "consecrated sphinx"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "consecrated sphinx"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "consecrated sphinx"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "consecrated sphinx"
+       ]
+      ]
      ],
      [
       "eq",
@@ -14120,9 +14345,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "consecrated sphinx"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "consecrated sphinx"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "consecrated sphinx"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "consecrated sphinx"
+       ]
+      ]
      ],
      [
       "eq",
@@ -15736,9 +15976,24 @@
      [
       "not",
       [
-       "in",
-       "names_lc",
-       "practiced scrollsmith"
+       "or",
+       [
+        [
+         "in",
+         "names_lc",
+         "practiced scrollsmith"
+        ],
+        [
+         "eq",
+         "name_plain",
+         "practiced scrollsmith"
+        ],
+        [
+         "in",
+         "alt_own_names_plain",
+         "practiced scrollsmith"
+        ]
+       ]
       ]
      ],
      [
@@ -20229,9 +20484,24 @@
      [
       "not",
       [
-       "in",
-       "names_lc",
-       "ashaya's enduring bond"
+       "or",
+       [
+        [
+         "in",
+         "names_lc",
+         "ashaya's enduring bond"
+        ],
+        [
+         "eq",
+         "name_plain",
+         "ashayas enduring bond"
+        ],
+        [
+         "in",
+         "alt_own_names_plain",
+         "ashayas enduring bond"
+        ]
+       ]
       ]
      ],
      [
@@ -20679,9 +20949,24 @@
      [
       "not",
       [
-       "in",
-       "names_lc",
-       "celebr-8000"
+       "or",
+       [
+        [
+         "in",
+         "names_lc",
+         "celebr-8000"
+        ],
+        [
+         "eq",
+         "name_plain",
+         "celebr8000"
+        ],
+        [
+         "in",
+         "alt_own_names_plain",
+         "celebr8000"
+        ]
+       ]
       ]
      ],
      [
@@ -22967,9 +23252,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "sol ring"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "sol ring"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "sol ring"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "sol ring"
+       ]
+      ]
      ],
      [
       "eq",
@@ -22997,9 +23297,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "swords to"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "swords to"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "swords to"
+       ]
+      ]
      ],
      [
       "eq",
@@ -23628,9 +23938,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "counterspell"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "counterspell"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "counterspell"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "counterspell"
+       ]
+      ]
      ],
      [
       "eq",
@@ -23865,9 +24190,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "serra angel"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "serra angel"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "serra angel"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "serra angel"
+       ]
+      ]
      ],
      [
       "eq",
@@ -24931,9 +25271,24 @@
       ]
      ],
      [
-      "in",
-      "names_lc",
-      "lightning helix"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "lightning helix"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "lightning helix"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "lightning helix"
+       ]
+      ]
      ],
      [
       "eq",
@@ -29184,9 +29539,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "bolt"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "bolt"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "bolt"
+       ]
+      ]
      ],
      [
       "eq",
@@ -29225,6 +29590,11 @@
         "has",
         "name_plain",
         "limdul"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "limdul"
        ]
       ]
      ],
@@ -29254,9 +29624,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "fire // ice"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "fire // ice"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "fire ice"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "fire ice"
+       ]
+      ]
      ],
      [
       "eq",
@@ -29284,9 +29669,24 @@
     "and",
     [
      [
-      "in",
-      "names_lc",
-      "urza's"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "urza's"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "urzas"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "urzas"
+       ]
+      ]
      ],
      [
       "eq",
@@ -29324,6 +29724,11 @@
        [
         "has",
         "name_plain",
+        "urzas"
+       ],
+       [
+        "has",
+        "alt_plain",
         "urzas"
        ]
       ]
@@ -29365,13 +29770,28 @@
         "has",
         "name_plain",
         "limduls"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "limduls"
        ]
       ]
      ],
      [
-      "has",
-      "name_plain",
-      "vault"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "vault"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "vault"
+       ]
+      ]
      ],
      [
       "eq",
@@ -29400,9 +29820,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "seance"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "seance"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "seance"
+       ]
+      ]
      ],
      [
       "eq",
@@ -29430,9 +29860,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "quoted or phrase"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "quoted or phrase"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "quoted or phrase"
+       ]
+      ]
      ],
      [
       "eq",
@@ -29496,20 +29936,45 @@
         "and",
         [
          [
-          "has",
-          "name_plain",
-          "a"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "a"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "a"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "b"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "b"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "b"
+           ]
+          ]
          ]
         ]
        ],
        [
         "has",
         "name_plain",
+        "c"
+       ],
+       [
+        "has",
+        "alt_plain",
         "c"
        ]
       ]
@@ -29544,7 +30009,17 @@
        ],
        [
         "has",
+        "alt_plain",
+        "a"
+       ],
+       [
+        "has",
         "name_plain",
+        "b"
+       ],
+       [
+        "has",
+        "alt_plain",
         "b"
        ]
       ]
@@ -29552,9 +30027,19 @@
      [
       "not",
       [
-       "has",
-       "name_plain",
-       "c"
+       "or",
+       [
+        [
+         "has",
+         "name_plain",
+         "c"
+        ],
+        [
+         "has",
+         "alt_own_plain",
+         "c"
+        ]
+       ]
       ]
      ],
      [
@@ -30895,24 +31380,64 @@
       "sphinx"
      ],
      [
-      "has",
-      "name_plain",
-      "draws"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "draws"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "draws"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "when"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "when"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "when"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "opponents"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "opponents"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "opponents"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "draw"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "draw"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "draw"
+       ]
+      ]
      ],
      [
       "eq",
@@ -30951,14 +31476,39 @@
       "sphinx"
      ],
      [
-      "in",
-      "names_lc",
-      "fire"
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "fire"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "fire"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "fire"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "draws"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "draws"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "draws"
+       ]
+      ]
      ],
      [
       "eq",
@@ -30989,29 +31539,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "sphinx"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sphinx"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sphinx"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "draws"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "draws"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "draws"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "cards"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "cards"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cards"
+       ]
+      ]
      ],
      [
       "eq",
@@ -31249,29 +31849,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "sphinx"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sphinx"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sphinx"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "draws"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "draws"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "draws"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "cards"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "cards"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cards"
+       ]
+      ]
      ],
      [
       "eq",
@@ -31303,49 +31953,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "artifact"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "artifact"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "artifact"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "taps"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "taps"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "taps"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "colorless"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "colorless"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "colorless"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
       "eq",
@@ -31381,64 +32121,184 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "exile"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "exile"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "exile"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "its"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "its"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "its"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "controller"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "controller"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "controller"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "gains"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "gains"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "gains"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "life"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "life"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "life"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "equal"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "equal"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "equal"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "to"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "to"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "to"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "its"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "its"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "its"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "power"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "power"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "power"
+       ]
+      ]
      ],
      [
       "eq",
@@ -31483,29 +32343,79 @@
         "and",
         [
          [
-          "has",
-          "name_plain",
-          "enchantment"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "enchantment"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "enchantment"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "where"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "where"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "where"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "opponents"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "opponents"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "opponents"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "pay"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "pay"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "pay"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "one"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "one"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "one"
+           ]
+          ]
          ]
         ]
        ],
@@ -31513,49 +32423,139 @@
         "and",
         [
          [
-          "has",
-          "name_plain",
-          "i"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "i"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "i"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "draw"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "draw"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "draw"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "a"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "a"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "a"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "card"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "card"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "card"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "whenever"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "whenever"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "whenever"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "they"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "they"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "they"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "cast"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "cast"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "cast"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "a"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "a"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "a"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "spell"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "spell"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "spell"
+           ]
+          ]
          ]
         ]
        ]
@@ -31588,49 +32588,139 @@
         "and",
         [
          [
-          "has",
-          "name_plain",
-          "whenever"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "whenever"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "whenever"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "an"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "an"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "an"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "opponent"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "opponent"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "opponent"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "draws"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "draws"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "draws"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "a"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "a"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "a"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "card"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "card"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "card"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "they"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "they"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "they"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "pay"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "pay"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "pay"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "two"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "two"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "two"
+           ]
+          ]
          ]
         ]
        ],
@@ -31638,24 +32728,64 @@
         "and",
         [
          [
-          "has",
-          "name_plain",
-          "i"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "i"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "i"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "get"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "get"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "get"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "a"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "a"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "a"
+           ]
+          ]
          ],
          [
-          "has",
-          "name_plain",
-          "treasure"
+          "or",
+          [
+           [
+            "has",
+            "name_plain",
+            "treasure"
+           ],
+           [
+            "has",
+            "alt_plain",
+            "treasure"
+           ]
+          ]
          ]
         ]
        ]
@@ -31682,19 +32812,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "bounce"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "bounce"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "bounce"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "all"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "all"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "all"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
       "or",
@@ -31708,33 +32868,88 @@
         "has",
         "name_plain",
         "opponents"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "opponents"
        ]
       ]
      ],
      [
-      "has",
-      "name_plain",
-      "nonland"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "nonland"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "nonland"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "permanents"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "permanents"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "permanents"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "at"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "at"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "at"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "instant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "instant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "instant"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "speed"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "speed"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "speed"
+       ]
+      ]
      ],
      [
       "eq",
@@ -31770,49 +32985,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "drains"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "drains"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "drains"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "each"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "each"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "each"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "opponent"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "opponent"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "opponent"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "whenever"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "whenever"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "whenever"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "another"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "another"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "another"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "dies"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "dies"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "dies"
+       ]
+      ]
      ],
      [
       "eq",
@@ -31848,49 +33153,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "elf"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "elf"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "elf"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "taps"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "taps"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "taps"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "green"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "green"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "green"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
       "eq",
@@ -31926,84 +33321,244 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "sorcery"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sorcery"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sorcery"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "searches"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "searches"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "searches"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "library"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "library"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "library"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "any"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "any"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "any"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "card"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "card"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "card"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "puts"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "puts"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "puts"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "it"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "it"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "it"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "into"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "into"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "into"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "hand"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "hand"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "hand"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32046,39 +33601,109 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "enchantment"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "enchantment"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "enchantment"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "doubles"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "doubles"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "doubles"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "the"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "the"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "the"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "tokens"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "tokens"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "tokens"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "i"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "i"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "i"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "create"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "create"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "create"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32112,49 +33737,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "win"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "win"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "win"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "the"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "the"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "the"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "game"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "game"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "game"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "when"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "when"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "when"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "library"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "library"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "library"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "has"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "has"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "has"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "no"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "no"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "no"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "cards"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "cards"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cards"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32190,49 +33905,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "equipment"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "equipment"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "equipment"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "free"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "free"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "free"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "equip"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "equip"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "equip"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "gives"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "gives"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "gives"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "haste"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "haste"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "haste"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "shroud"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "shroud"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "shroud"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32268,39 +34073,109 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "lets"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "lets"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "lets"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "me"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "me"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "me"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "play"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "play"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "play"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "lands"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "lands"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "lands"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "from"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "from"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "from"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "graveyard"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "graveyard"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "graveyard"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32334,44 +34209,124 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "stops"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "stops"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "stops"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "opponents"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "opponents"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "opponents"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "from"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "from"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "from"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "casting"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "casting"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "casting"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "spells"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "spells"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "spells"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "during"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "during"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "during"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "turn"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "turn"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "turn"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32406,89 +34361,259 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "big"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "big"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "big"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "green"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "green"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "green"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "gives"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "gives"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "gives"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "all"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "all"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "all"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creatures"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creatures"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creatures"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "trample"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "trample"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "trample"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "plus"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "plus"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "plus"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "x"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "x"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "x"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "plus"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "plus"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "plus"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "x"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "x"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "x"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "when"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "when"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "when"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "it"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "it"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "it"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "enters"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "enters"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "enters"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32532,44 +34657,124 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "blue"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "blue"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "blue"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "instant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "instant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "instant"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "counters"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "counters"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "counters"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "any"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "any"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "any"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "spell"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "spell"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "spell"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32604,59 +34809,169 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "red"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "red"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "red"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "instant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "instant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "instant"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "deals"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "deals"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "deals"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "three"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "three"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "three"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "damage"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "damage"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "damage"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "to"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "to"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "to"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "any"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "any"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "any"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "target"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "target"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "target"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32694,39 +35009,109 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "zero"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "zero"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "zero"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "artifact"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "artifact"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "artifact"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "taps"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "taps"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "taps"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32760,44 +35145,124 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "four"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "four"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "four"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "white"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "white"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "white"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "sorcery"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sorcery"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sorcery"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "destroys"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "destroys"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "destroys"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "all"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "all"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "all"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creatures"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creatures"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creatures"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32832,84 +35297,244 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "four"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "four"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "four"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "green"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "green"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "green"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "sorcery"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sorcery"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sorcery"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "searches"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "searches"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "searches"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "basic"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "basic"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "basic"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "lands"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "lands"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "lands"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "puts"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "puts"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "puts"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "them"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "them"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "them"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "onto"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "onto"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "onto"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "the"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "the"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "the"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "battlefield"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "battlefield"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "battlefield"
+       ]
+      ]
      ],
      [
       "eq",
@@ -32952,64 +35577,184 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "green"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "green"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "green"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "taps"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "taps"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "taps"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "of"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "of"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "of"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "any"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "any"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "any"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "color"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "color"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "color"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33048,79 +35793,229 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "white"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "white"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "white"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "instant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "instant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "instant"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "gives"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "gives"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "gives"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "protection"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "protection"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "protection"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "from"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "from"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "from"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "color"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "color"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "color"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "of"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "of"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "of"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "choice"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "choice"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "choice"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33162,79 +36057,229 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "black"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "black"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "black"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "instant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "instant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "instant"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "puts"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "puts"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "puts"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "any"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "any"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "any"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "card"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "card"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "card"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "from"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "from"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "from"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "my"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "my"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "my"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "library"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "library"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "library"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "on"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "on"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "on"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "top"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "top"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "top"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "of"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "of"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "of"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "it"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "it"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "it"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33276,14 +36321,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "board"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "board"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "board"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "wipe"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "wipe"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "wipe"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33312,14 +36377,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "rock"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "rock"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "rock"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33348,14 +36433,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "dork"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "dork"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "dork"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33384,14 +36489,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "wheel"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "wheel"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "wheel"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "effect"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "effect"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "effect"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33420,9 +36545,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "tutor"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "tutor"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "tutor"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33450,14 +36585,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "fog"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "fog"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "fog"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "effect"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "effect"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "effect"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33486,14 +36641,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "sacrifice"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sacrifice"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sacrifice"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "outlet"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "outlet"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "outlet"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33522,14 +36697,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "reanimation"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "reanimation"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "reanimation"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "spell"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "spell"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "spell"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33558,64 +36753,184 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "skeletal"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "skeletal"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "skeletal"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "winged"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "winged"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "winged"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "made"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "made"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "made"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "of"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "of"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "of"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "bone"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "bone"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "bone"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "metal"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "metal"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "metal"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "flying"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "flying"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "flying"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "over"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "over"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "over"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "orange"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "orange"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "orange"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "canyons"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "canyons"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "canyons"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33665,43 +36980,118 @@
         "has",
         "name_plain",
         "closeup"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "closeup"
        ]
       ]
      ],
      [
-      "has",
-      "name_plain",
-      "of"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "of"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "of"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "armored"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "armored"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "armored"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "boots"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "boots"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "boots"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "stomping"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "stomping"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "stomping"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "on"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "on"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "on"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "rocky"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "rocky"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "rocky"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "ground"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "ground"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "ground"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33736,34 +37126,94 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "spinning"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "spinning"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "spinning"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "top"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "top"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "top"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "engraved"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "engraved"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "engraved"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "symbols"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "symbols"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "symbols"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33796,44 +37246,124 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "man"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "man"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "man"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "coughing"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "coughing"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "coughing"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "up"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "up"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "up"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "gold"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "gold"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "gold"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "coins"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "coins"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "coins"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "into"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "into"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "into"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "his"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "his"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "his"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "hand"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "hand"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "hand"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33868,54 +37398,154 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "bald"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "bald"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "bald"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "man"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "man"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "man"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mechanical"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mechanical"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mechanical"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "device"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "device"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "device"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "clamped"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "clamped"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "clamped"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "over"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "over"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "over"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "his"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "his"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "his"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "eye"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "eye"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "eye"
+       ]
+      ]
      ],
      [
       "eq",
@@ -33952,49 +37582,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "ornate"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "ornate"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "ornate"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "golden"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "golden"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "golden"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "lantern"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "lantern"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "lantern"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "an"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "an"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "an"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "owl"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "owl"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "owl"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "stained"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "stained"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "stained"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "glass"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "glass"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "glass"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34030,34 +37750,94 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "crowned"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "crowned"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "crowned"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "crane"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "crane"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "crane"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "flying"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "flying"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "flying"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "over"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "over"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "over"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "river"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "river"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "river"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34090,64 +37870,184 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "tall"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "tall"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "tall"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "thin"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "thin"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "thin"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "white"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "white"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "white"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "spire"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "spire"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "spire"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "on"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "on"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "on"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "floating"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "floating"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "floating"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "island"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "island"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "island"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "under"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "under"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "under"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "pink"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "pink"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "pink"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "sky"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sky"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sky"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34186,49 +38086,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "young"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "young"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "young"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "wizards"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "wizards"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "wizards"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "studying"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "studying"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "studying"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "glowing"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "glowing"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "glowing"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "crystals"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "crystals"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "crystals"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "fire"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "fire"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "fire"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34264,14 +38254,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "giant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "giant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "giant"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "green"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "green"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "green"
+       ]
+      ]
      ],
      [
       "or",
@@ -34285,28 +38295,73 @@
         "has",
         "name_plain",
         "mosscovered"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mosscovered"
        ]
       ]
      ],
      [
-      "has",
-      "name_plain",
-      "mammoth"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mammoth"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mammoth"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "huge"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "huge"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "huge"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "tusks"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "tusks"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "tusks"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34340,59 +38395,169 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "red"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "red"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "red"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "muscular"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "muscular"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "muscular"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "masked"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "masked"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "masked"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "figure"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "figure"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "figure"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "standing"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "standing"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "standing"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "in"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "in"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "in"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "jungle"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "jungle"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "jungle"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "covered"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "covered"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "covered"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "in"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "in"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "in"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "vines"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "vines"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "vines"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34430,49 +38595,139 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "snake"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "snake"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "snake"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "person"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "person"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "person"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "holding"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "holding"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "holding"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "staff"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "staff"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "staff"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "in"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "in"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "in"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "swampy"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "swampy"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "swampy"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "forest"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "forest"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "forest"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34508,14 +38763,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "blue"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "blue"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "blue"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "sphinx"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sphinx"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sphinx"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34544,9 +38819,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
       "or",
@@ -34560,18 +38845,43 @@
         "has",
         "name_plain",
         "3drop"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "3drop"
        ]
       ]
      ],
      [
-      "has",
-      "name_plain",
-      "blue"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "blue"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "blue"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "instant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "instant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "instant"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34602,44 +38912,124 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "4"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "4"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "4"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "cmc"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "cmc"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cmc"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "white"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "white"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "white"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "sorcery"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sorcery"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sorcery"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "destroys"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "destroys"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "destroys"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "all"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "all"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "all"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creatures"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creatures"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creatures"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34674,34 +39064,94 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "legendary"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "legendary"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "legendary"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "elves"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "elves"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "elves"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "tap"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "tap"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "tap"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34734,34 +39184,94 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "destroy"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "destroy"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "destroy"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "all"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "all"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "all"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creatures"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creatures"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creatures"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "four"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "four"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "four"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34794,34 +39304,94 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "artifact"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "artifact"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "artifact"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "taps"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "taps"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "taps"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34854,24 +39424,64 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "cmc"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "cmc"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cmc"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "3"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "3"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "3"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "green"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "green"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "green"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34902,29 +39512,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "value"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "value"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "value"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "2"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "2"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "2"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "black"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "black"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "black"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "instant"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "instant"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "instant"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34956,19 +39616,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "fourteen"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "fourteen"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "fourteen"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "eldrazi"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "eldrazi"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "eldrazi"
+       ]
+      ]
      ],
      [
       "eq",
@@ -34998,19 +39688,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "big"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "big"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "big"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "colorless"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "colorless"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "colorless"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "creature"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "creature"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "creature"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35040,29 +39760,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "mono"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mono"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mono"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "red"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "red"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "red"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "goblin"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "goblin"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "goblin"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "haste"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "haste"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "haste"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35094,29 +39864,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "the"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "the"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "the"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "white"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "white"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "white"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "blue"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "blue"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "blue"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "angel"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "angel"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "angel"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35148,9 +39968,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "red"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "red"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "red"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35178,19 +40008,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "protection"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "protection"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "protection"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "from"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "from"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "from"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "red"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "red"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "red"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35220,14 +40080,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "board"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "board"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "board"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "wipe"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "wipe"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "wipe"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35256,14 +40136,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "token"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "token"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "token"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "doubler"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "doubler"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "doubler"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35292,29 +40192,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "spell"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "spell"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "spell"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "counters"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "counters"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "counters"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "a"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "a"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "a"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "spell"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "spell"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "spell"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35346,19 +40296,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "wolves"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "wolves"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "wolves"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "and"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "and"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "and"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "dwarves"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "dwarves"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "dwarves"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35388,19 +40368,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "sphinxes"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sphinxes"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sphinxes"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "with"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "with"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "with"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "flying"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "flying"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "flying"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35430,9 +40440,19 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "zombies"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "zombies"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "zombies"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35460,14 +40480,34 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "glass"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "glass"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "glass"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "cannon"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "cannon"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cannon"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35496,24 +40536,64 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "cafe"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "cafe"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cafe"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "for"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "for"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "for"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "two"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "two"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "two"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35544,29 +40624,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "elf"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "elf"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "elf"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "that"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "that"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "that"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "taps"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "taps"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "taps"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35609,18 +40739,43 @@
         "has",
         "name_plain",
         "twomana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "twomana"
        ]
       ]
      ],
      [
-      "has",
-      "name_plain",
-      "green"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "green"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "green"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "elf"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "elf"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "elf"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35661,13 +40816,28 @@
         "has",
         "name_plain",
         "cheap"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "cheap"
        ]
       ]
      ],
      [
-      "has",
-      "name_plain",
-      "artifact"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "artifact"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "artifact"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35700,19 +40870,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "12"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "12"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "12"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "artifact"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "artifact"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "artifact"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35742,19 +40942,49 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "100"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "100"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "100"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "artifact"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "artifact"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "artifact"
+       ]
+      ]
      ],
      [
       "eq",
@@ -35784,29 +41014,79 @@
     "and",
     [
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "one"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "one"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "one"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "mana"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mana"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mana"
+       ]
+      ]
      ],
      [
-      "has",
-      "name_plain",
-      "elf"
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "elf"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "elf"
+       ]
+      ]
      ],
      [
       "eq",

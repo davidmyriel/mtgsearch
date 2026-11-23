@@ -74,8 +74,11 @@ const SHARED = [
   "name", "mana_cost", "type_line", "oracle_text", "image", "scryfall_uri", "edhrec_rank",
   "set", "set_name", "cn", "rarity", "artist", "released", "prints",
 ];
-const CARD_DISPLAY = [...SHARED, "usd", "eur", "tix"];
-export const PRINTING_DISPLAY = [...SHARED, "usd_c", "eur_c", "tix_c", "flavor_text", "oracle_id", "pref_rank"];
+// `alt_prints` is not shown: it says which printing carries each of a card's other names.
+const CARD_DISPLAY = [...SHARED, "usd", "eur", "tix", "alt_prints"];
+export const PRINTING_DISPLAY = [
+  ...SHARED, "usd_c", "eur_c", "tix_c", "flavor_text", "oracle_id", "pref_rank", "printed_as",
+];
 // Semantic score is the sum over these fields: the plain rules text is more precise for
 // descriptions, the tagged text understands jargon ("mana rock").
 export const SEMANTIC_FIELDS = ["rules", "rules_tagged"];
@@ -355,16 +358,57 @@ const given = (ast: Node, canonical: string) =>
 /**
  * The card whose whole name is what was typed, ignoring case, accents and punctuation
  * ("urzas saga" is Urza's Saga). Only for words on their own: no `or`, no negation. The page
- * opens this card instead of listing every card with those words in its name.
+ * opens this card instead of listing every card with those words in its name. Another name
+ * one of its printings goes by counts too ("godzilla king of the monsters"); a card that is
+ * really called that comes first.
  */
 async function exactName(col: Collection, ast: Node): Promise<Hit | null> {
   const names = ast.kind === "name" ? [ast] : ast.kind === "and" ? ast.children : [];
   if (!names.length || !names.every((n): n is Name => n.kind === "name" && !n.exact)) return null;
   const wanted = plain(names.map((n) => n.text).join(" "));
   if (!wanted) return null;
-  const whole = toTopk(["and", [["eq", "name_plain", wanted], VISIBLE]]);
-  const rows = await col.query(select(pick(CARD_DISPLAY)).filter(whole!).limit(1));
-  return rows[0] ?? null;
+  const called: IR = ["or", [["eq", "name_plain", wanted], ["in", "alt_names_plain", wanted]]];
+  const rows = await col.query(select(pick([...CARD_DISPLAY, "name_plain"])).filter(toTopk(["and", [called, VISIBLE]])!).limit(5));
+  const { name_plain: _plain, ...card } = rows.find((row) => row.name_plain === wanted) ?? rows[0] ?? {};
+  return "name" in card ? (card as Hit) : null;
+}
+
+/** The names a query asks for (the ones it does not rule out), in the form of `name_plain`. */
+function namesAsked(ast: Node, negated = false): string[] {
+  if (ast.kind === "name") return negated || !plain(ast.text) ? [] : [plain(ast.text)];
+  if (ast.kind === "not") return namesAsked(ast.child, !negated);
+  return ast.kind === "keyword" ? [] : ast.children.flatMap((child) => namesAsked(child, negated));
+}
+
+/**
+ * Cards found by a name that only one of their printings carries are shown as that printing:
+ * "godzilla" shows the Godzilla printings and not the cards' usual ones, as on Scryfall. A
+ * card's `alt_prints` says where each of its other names is printed ("name|set|number").
+ * One more query, and only when such a card is among the hits.
+ */
+export async function asNamed(printings: Collection, hits: Hit[], ast: Node): Promise<Hit[]> {
+  const asked = namesAsked(ast);
+  const where = new Map<string, string>(); // card id -> "set|number" of the printing to show
+  for (const hit of hits) {
+    if (!Array.isArray(hit.alt_prints)) continue;
+    const own = plain(hit.name);
+    const missing = asked.filter((text) => !own.includes(text));
+    if (!missing.length) continue;
+    const places = hit.alt_prints.map((entry) => String(entry).split("|"));
+    const found =
+      places.find(([name]) => missing.every((text) => name.includes(text))) ??
+      places.find(([name]) => missing.some((text) => name.includes(text)));
+    if (found) where.set(hit._id, `${found[1]}|${found[2]}`);
+  }
+  const plainHit = ({ alt_prints: _prints, ...hit }: Hit) => hit as Hit;
+  if (!where.size) return hits.map(plainHit);
+  const places: IR[] = [...new Set(where.values())].map((place) => {
+    const [set, number] = place.split("|");
+    return ["and", [["eq", "set", set], ["eq", "cn", number]]];
+  });
+  const rows = await printings.query(select(pick(PRINTING_DISPLAY)).filter(toTopk(["or", places])!).limit(places.length));
+  const byPlace = new Map(rows.map((row) => [`${row.set}|${row.cn}`, printingHit(row)]));
+  return hits.map((hit) => byPlace.get(where.get(hit._id) ?? "") ?? plainHit(hit));
 }
 
 // "tithe alternative", "cards like sol ring", "replacement for mana crypt": the query names a
@@ -507,17 +551,26 @@ export async function search(cols: Collections, query: string, options: SearchOp
     const unique: Unique = given(ast, "unique") ? parsed.unique : (options.unique ?? "cards");
     // Anything about a printing, including sorting by price or date, is answered from the printings.
     const printings = parsed.printings || PRINTING_FIELDS.has(sortField) || unique !== "cards";
-    const [page, exact] = await Promise.all([
+    const [page, named] = await Promise.all([
       printings
         ? printingPage(cols.printings, predicate, k, offset, { unique, prefer: parsed.prefer, sortField, descending })
         : cardPage(cols.cards, predicate, k, offset, sortField, descending),
       plainWords && offset === 0 ? exactName(cols.cards, ast) : null,
     ]);
-    if (page.total) {
-      const hasMore = offset + page.hits.length < page.total;
+    // A card found by a name that one of its printings carries is shown as that printing.
+    const hits = printings ? page.hits : await asNamed(cols.printings, page.hits, ast);
+    const exact = named ? (await asNamed(cols.printings, [named], ast))[0] : null;
+    // A name that is only printed on a card is found whole and not by its words (as on
+    // Scryfall), so typing one in full can match no card by name and still be a card.
+    if (page.total || exact) {
+      const total = page.total || 1;
+      const hasMore = offset + hits.length < page.total;
       const mode = plainWords ? "name" : "syntax";
       const understood = explain(ast);
-      return { ...none, mode, hits: page.hits, total: page.total, hasMore, note: "", sortedBy: orderName(sortField), descending, unit: UNITS[unique], understood, exact };
+      return {
+        ...none, mode, hits: page.total ? hits : [exact as Hit], total, hasMore, note: "",
+        sortedBy: orderName(sortField), descending, unit: UNITS[unique], understood, exact,
+      };
     }
     if (!plainWords) {
       const split = splitWords(ast);

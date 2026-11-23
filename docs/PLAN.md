@@ -61,9 +61,21 @@ picked up: at the boundary between plan steps unless something is broken.
       TopK `group_by` returns each matching card and the printing that shows it
 - [x] Differential testing: 79/79 tuning, 53/61 held-out first run, 59/61 after fixes
 - [ ] `new:`, `lang:` and non-English printings, `block:`, `cube:`
-- [ ] Name search over printed and flavour names
+- [x] Name search over printed and flavour names (23 November 2026). 720 cards go by another
+      name on some printing. A flavour name (Godzilla, King of the Monsters on a Zilortha,
+      Strength Incarnate) is found by its words and whole; a name that is only printed on the
+      card (Rick, Steadfast Leader on a Greymond, Avacyn's Stalwart) only whole, as on
+      Scryfall. The card is shown as the printing that carries the name, and its page says
+      "Printed as". Ruling a name out (`-godzilla`) keeps the card, whose other printings are
+      not called that. An exact name may leave out its punctuation (`!"urzas saga"`). Fields
+      added to 720 cards and 933 printings as field updates; nothing was embedded again.
+      42 of 42 in `conformance/names.txt`, which the nightly run repeats
 - [ ] The cases in `conformance/known_gaps.txt`: Arena printings that only exist to be conjured,
-      Scryfall's loose match on two-letter artist fragments
+      Scryfall's loose match on two-letter artist fragments, and variant printings that
+      Scryfall leaves out of a list of printings (`godzilla unique:prints`: 14 against our 15)
+- [ ] `!"avacyn the purifier"`: the exact name of one face of a double-faced card, typed
+      without its punctuation, is not found (with the comma it is). Needs the faces' names in
+      plain form on every card, a field update of the whole index
 - Exit: held-out conformance at 95% or better with printing keywords included. Met: a fresh
   held-out set across everything matched 52 of 54 on its first run (`conformance/heldout2.txt`)
 

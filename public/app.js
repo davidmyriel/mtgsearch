@@ -834,9 +834,11 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
   text("card-rules", hit.oracle_text, true);
   text("card-stats", hit.stats);
   text("card-flavor", hit.flavor_text);
-  // The printing shown: its set, number, rarity and year, then artist and price.
+  // The printing shown: its set, number, rarity and year, then artist and price. A printing
+  // that carries another name (a Zilortha printed as Godzilla) says so first.
   const set = hit.set_name ? `${hit.set_name}${setAndNumber(hit) ? ` (${setAndNumber(hit)})` : ""}` : setAndNumber(hit);
-  text("card-printing", [set, capital(hit.rarity), year(hit.released)].filter(Boolean).join(" · "));
+  const printedAs = hit.printed_as ? `Printed as ${hit.printed_as}` : "";
+  text("card-printing", [printedAs, set, capital(hit.rarity), year(hit.released)].filter(Boolean).join(" · "));
   text("card-artist", [hit.artist ? `Illustrated by ${hit.artist}` : "", price(hit.usd)].filter(Boolean).join(" · "));
   const link = document.getElementById("card-link");
   const hasLink = Boolean(hit.scryfall_uri && hit.scryfall_uri.startsWith(CARD_HOST));

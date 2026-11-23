@@ -197,6 +197,11 @@ PRINTINGS = [
         ],
     },
     printing("Goblin", "tm19", "8", "common", "2018-07-13", layout="token", set_type="token", artist="Karl Kopinski"),
+    # the same card under other names: a flavour name, and a name printed on the card
+    printing("Grizzly Bears", "sld", "88", "uncommon", "2019-06-01", set_type="box", reprint=True,
+             artist="D. J. Cleland-Hura", flavor_name="Ursa, the Twin Maw"),
+    printing("Grizzly Bears", "sld", "89", "uncommon", "2019-06-01", set_type="box", reprint=True,
+             artist="D. J. Cleland-Hura", printed_name="Bob's Hungry Bear"),
 ]  # fmt: skip
 PRINTINGS[0]["illustration_id"] = PRINTINGS[1]["illustration_id"] = PRINTINGS[2]["illustration_id"] = (
     "art-sphinx"

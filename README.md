@@ -95,6 +95,7 @@ Measured on 22 November 2026 against the full card set. Raw output is in `confor
 | `is:` shortcuts, 54 queries (land cycles, party, modal and so on) | 35 of 49 | 54 match |
 | Second held-out set, 54 queries across all of the above | 52 match | 52 match |
 | Regex shorthands tuning set, 16 queries (`\spp`, `\smr` and so on) | | 16 match |
+| Other names tuning set, 42 queries (flavour names, printed names, exact names) | | 42 match |
 
 The first-run column is the honest measure of how well the rules generalise; the earlier
 held-out sets have since been used to fix rules, so they are no longer untouched. The second
@@ -144,7 +145,7 @@ Read these with care:
 
 | Area | Supported |
 |---|---|
-| Names and logic | Card names, `!exact`, `name:`, `-negation`, `or`, parentheses, regex on name, type, text and flavour text, with Scryfall's shorthands (`\spp` `\smm` `\spt` `\sm` `\sc` `\ss` `\smr` `\smh` `\smp`) |
+| Names and logic | Card names, the other names some printings carry (`godzilla` finds the cards printed as one; a name that is only printed on a card, such as Rick, Steadfast Leader, is found whole), `!exact` with or without its punctuation, `name:`, `-negation`, `or`, parentheses, regex on name, type, text and flavour text, with Scryfall's shorthands (`\spp` `\smm` `\spt` `\sm` `\sc` `\ss` `\smr` `\smh` `\smp`) |
 | Colour | `c:` `id:` with every comparison, colour names, guilds, shards, wedges, counts |
 | Text and type | `t:` `o:` `fo:` `kw:` including `~` |
 | Numbers | `mv` `pow` `tou` `pt` `loy`, `pow>tou`, `mv:even` |
@@ -207,7 +208,9 @@ which the page shows under the status line so that a wrong reading is easy to sp
 lists each term that was left out, with the reason. `exact` is the card whose whole name is
 what was typed, if there is one: the page opens that card instead of listing every card with
 those words in its name (as it does when a search finds exactly one card), unless the address
-asks for the list with `list=1`. `reads_as` is the Scryfall syntax a players' word was read as
+asks for the list with `list=1`. A card found by a name that only one of its printings carries
+(a flavour name such as Godzilla, King of the Monsters, or a name printed on the card) comes
+back as that printing, and its `printed_as` says what the printing is called. `reads_as` is the Scryfall syntax a players' word was read as
 ("board wipes" is `otag:sweeper`; the words and their readings are one list in `app/jargon.ts`),
 and `like` is the card a query named when it asked for that card's alternatives. It also
 carries `total`, `unit` (what the total counts: cards, printings or illustrations),

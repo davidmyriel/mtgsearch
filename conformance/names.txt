@@ -1,0 +1,47 @@
+# Other names a card goes by on some printings. A flavour name (Godzilla, King of the Monsters
+# on a Zilortha, Strength Incarnate) is found by its words and whole; a name that is only
+# printed on the card (Rick, Steadfast Leader on a Greymond, Avacyn's Stalwart) only whole.
+godzilla
+name:godzilla
+"king of the monsters"
+godzilla doom
+godzilla t:dinosaur
+-godzilla t:dinosaur c=rg mv=5 t:legendary
+-godzilla !"void beckoner" unique:prints
+-!"power sneakers" t:equipment mv=2 o:shroud
+-!"power sneakers" !"lightning greaves" unique:prints
+godzilla unique:prints -t:nightmare
+power include:extras
+godzilla e:iko
+godzilla -e:iko
+godzilla or mothra
+mothra
+power sneakers
+chancla
+!"Power Sneakers"
+!"power sneakers" unique:prints
+!"Godzilla, King of the Monsters"
+!"godzilla king of the monsters"
+!"Chancla Relampago"
+name:/godzilla/
+dracula
+dracula unique:prints
+optimus prime
+# only printed on the card: the whole name, or nothing
+rick steadfast
+!"Rick, Steadfast Leader"
+ademi
+ademi silkchutes
+!"Ademi of the Silkchutes"
+principled referee
+!"Principled Referee"
+!"Principled Referee" unique:prints
+# exact names, with and without their punctuation
+!"urzas saga"
+!"Urza's Saga"
+!"zilortha strength incarnate"
+!"fire"
+!"fire ice"
+!"Fire // Ice"
+!"lightning bolt"
+!"jace the mind sculptor"

@@ -253,11 +253,33 @@ function type(kw: Keyword): IR {
   return TYPE_WORDS.has(value) ? ["in", "type_words", value] : ["has", "type_lc", value];
 }
 
-/** Name contains the text, ignoring case, diacritics and punctuation ("urzas" finds "Urza's"). */
-function name(value: string): IR {
-  if (plain(value) === fold(value)) return ["has", "name_plain", plain(value)];
-  if (!plain(value)) return ["has", "name_lc", fold(value)];
-  return ["or", [["has", "name_lc", fold(value)], ["has", "name_plain", plain(value)]]];
+/**
+ * Name contains the text, ignoring case, diacritics and punctuation ("urzas" finds "Urza's").
+ * A flavour name counts as well: "godzilla" finds the cards that were printed as one. A name
+ * that is only printed on a card (Rick, Steadfast Leader) does not: Scryfall finds those by
+ * the whole name alone (see `whole`).
+ *
+ * `alt_plain` holds a card's flavour names from all of its printings, and on a printing that
+ * printing's own. A name that is ruled out is looked for in `alt_own_plain`, which only
+ * printings have: `-godzilla` drops Zilortha's Godzilla printing and keeps the card, whose
+ * other printings are not Godzilla, as Scryfall does.
+ */
+function name(value: string, negated: boolean): IR {
+  const words = plain(value);
+  if (!words) return ["has", "name_lc", fold(value)];
+  const own: IR[] = words === fold(value) ? [] : [["has", "name_lc", fold(value)]];
+  return ["or", [...own, ["has", "name_plain", words], ["has", negated ? "alt_own_plain" : "alt_plain", words]]];
+}
+
+/**
+ * `!"..."`: the whole name of the card, of one of its faces, or any other name one of its
+ * printings goes by. Punctuation may be left out, as on Scryfall: `!"urzas saga"`.
+ */
+function whole(value: string, negated: boolean): IR {
+  const words = plain(value);
+  if (!words) return ["in", "names_lc", fold(value)];
+  const other = negated ? "alt_own_names_plain" : "alt_names_plain";
+  return ["or", [["in", "names_lc", fold(value)], ["eq", "name_plain", words], ["in", other, words]]];
 }
 
 /** pow, tou and loy match when any face satisfies the comparison; pow can be compared with tou. */
@@ -342,7 +364,7 @@ function keyword(kw: Keyword, options: Working): IR {
       options.includeExtras = true; // observed: a name regex on Scryfall also searches extras
       return ["re", "name_lc", regex(value)];
     }
-    return name(value);
+    return name(value, options.negated);
   }
   if (canonical === "keyword") return ["in", "keywords_lc", fold(value)];
   if (canonical === "manavalue") {
@@ -450,7 +472,7 @@ function lowerNode(node: Node, options: Working): IR {
       return ["not", child];
     }
     case "name":
-      return node.exact ? ["in", "names_lc", fold(node.text)] : name(node.text);
+      return node.exact ? whole(node.text, options.negated) : name(node.text, options.negated);
     case "keyword":
       return keyword(node, options);
   }

@@ -905,7 +905,8 @@
   "released": "2007-07-13",
   "rarity": "common",
   "in_sets": [
-   "10e"
+   "10e",
+   "sld"
   ],
   "in_rarities": [
    "common"
@@ -914,8 +915,8 @@
    "mtgo",
    "paper"
   ],
-  "prints": 1,
-  "sets": 1,
+  "prints": 3,
+  "sets": 2,
   "pow_min": 2.0,
   "pow_max": 2.0,
   "tou_min": 2.0,
@@ -1147,5 +1148,223 @@
   ],
   "art": "tm19-8",
   "pref_rank": 0
+ },
+ {
+  "_id": "sld-88",
+  "name": "Grizzly Bears",
+  "name_lc": "grizzly bears",
+  "name_plain": "grizzly bears",
+  "names_lc": [
+   "grizzly bears"
+  ],
+  "type_lc": "creature — bear",
+  "type_words": [
+   "bear",
+   "creature"
+  ],
+  "oracle_lc": "",
+  "oracle_tilde_lc": "",
+  "fulloracle_lc": "",
+  "cmc": 2.0,
+  "cmc_even": true,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 4.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "bear",
+   "permanent",
+   "spell",
+   "vanilla"
+  ],
+  "layout": "normal",
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "1|G",
+  "m0_gen": 1,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
+  "extra": false,
+  "mana_cost": "{1}{G}",
+  "type_line": "Creature — Bear",
+  "oracle_text": "",
+  "stats": "2/2",
+  "scryfall_uri": "https://scryfall.com/card/sld/88/x",
+  "artist": "D. J. Cleland-Hura",
+  "set": "sld",
+  "set_name": "SLD",
+  "cn": "88",
+  "released": "2019-06-01",
+  "rarity": "uncommon",
+  "in_sets": [
+   "10e",
+   "sld"
+  ],
+  "in_rarities": [
+   "common"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 2,
+  "pow_min": 2.0,
+  "pow_max": 2.0,
+  "tou_min": 2.0,
+  "tou_max": 2.0,
+  "oracle_id": "grizzly-bears",
+  "set_type": "box",
+  "cn_num": 88.0,
+  "rarity_rank": 1,
+  "artist_lc": "d. j. cleland-hura",
+  "frame": "2015",
+  "border": "black",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20190601,
+  "year": 2019,
+  "pflags": [
+   "foil",
+   "nonfoil",
+   "reprint"
+  ],
+  "art": "sld-88",
+  "pref_rank": 1,
+  "alt_plain": "ursa the twin maw",
+  "alt_names_plain": [
+   "ursa the twin maw"
+  ],
+  "alt_own_plain": "ursa the twin maw",
+  "alt_own_names_plain": [
+   "ursa the twin maw"
+  ],
+  "printed_as": "Ursa, the Twin Maw"
+ },
+ {
+  "_id": "sld-89",
+  "name": "Grizzly Bears",
+  "name_lc": "grizzly bears",
+  "name_plain": "grizzly bears",
+  "names_lc": [
+   "grizzly bears"
+  ],
+  "type_lc": "creature — bear",
+  "type_words": [
+   "bear",
+   "creature"
+  ],
+  "oracle_lc": "",
+  "oracle_tilde_lc": "",
+  "fulloracle_lc": "",
+  "cmc": 2.0,
+  "cmc_even": true,
+  "c_sets": [
+   "G"
+  ],
+  "id_sets": [
+   "G"
+  ],
+  "stat_rel": [
+   "pow=tou"
+  ],
+  "pt_num": 4.0,
+  "legal": [
+   "commander",
+   "modern",
+   "vintage"
+  ],
+  "flags": [
+   "bear",
+   "permanent",
+   "spell",
+   "vanilla"
+  ],
+  "layout": "normal",
+  "m_syms": [
+   "0:G:1"
+  ],
+  "m0_key": "1|G",
+  "m0_gen": 1,
+  "dev_WG": 1,
+  "dev_UG": 1,
+  "dev_BG": 1,
+  "dev_RG": 1,
+  "dev_G": 1,
+  "extra": false,
+  "mana_cost": "{1}{G}",
+  "type_line": "Creature — Bear",
+  "oracle_text": "",
+  "stats": "2/2",
+  "scryfall_uri": "https://scryfall.com/card/sld/89/x",
+  "artist": "D. J. Cleland-Hura",
+  "set": "sld",
+  "set_name": "SLD",
+  "cn": "89",
+  "released": "2019-06-01",
+  "rarity": "uncommon",
+  "in_sets": [
+   "10e",
+   "sld"
+  ],
+  "in_rarities": [
+   "common"
+  ],
+  "in_games": [
+   "mtgo",
+   "paper"
+  ],
+  "prints": 3,
+  "sets": 2,
+  "pow_min": 2.0,
+  "pow_max": 2.0,
+  "tou_min": 2.0,
+  "tou_max": 2.0,
+  "oracle_id": "grizzly-bears",
+  "set_type": "box",
+  "cn_num": 89.0,
+  "rarity_rank": 1,
+  "artist_lc": "d. j. cleland-hura",
+  "frame": "2015",
+  "border": "black",
+  "games": [
+   "mtgo",
+   "paper"
+  ],
+  "lang": "en",
+  "date": 20190601,
+  "year": 2019,
+  "pflags": [
+   "foil",
+   "nonfoil",
+   "reprint"
+  ],
+  "art": "sld-89",
+  "pref_rank": 2,
+  "alt_names_plain": [
+   "bobs hungry bear"
+  ],
+  "alt_own_names_plain": [
+   "bobs hungry bear"
+  ],
+  "printed_as": "Bob's Hungry Bear"
  }
 ]

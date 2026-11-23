@@ -1,6 +1,6 @@
 from conftest import AGGREGATES, PRINTINGS, REPRESENTATIVES
 
-from mtgsearch.printings import aggregates, as_card, preference_ranks
+from mtgsearch.printings import aggregates, alternate_names, as_card, preference_ranks
 
 
 def test_a_printing_carries_the_card_fields_and_its_own(prints):
@@ -115,3 +115,88 @@ def test_in_rarity_ignores_promos_and_special_products():
     # box sets count, except Secret Lair drops
     lair = {**p("box", "rare"), "set": "sld"}
     assert aggregates([p("box", "common"), lair])["x"]["in_rarities"] == ["common"]
+
+
+def test_a_card_knows_the_other_names_its_printings_go_by(docs):
+    bears = docs["Grizzly Bears"]
+    # words of a flavour name find the card; a printed name only when given whole
+    assert bears["alt_plain"] == "ursa the twin maw"
+    assert bears["alt_names_plain"] == ["bobs hungry bear", "ursa the twin maw"]
+    # and which printing carries each name
+    assert bears["alt_prints"] == ["bobs hungry bear|sld|89", "ursa the twin maw|sld|88"]
+    assert not any(key.startswith("alt_own") for key in bears)
+
+
+def test_a_card_with_no_other_name_has_no_such_fields(docs, prints):
+    for doc in (docs["Sol Ring"], prints["c21-263"], prints["10e-268"]):
+        assert not any(key.startswith("alt_") or key == "printed_as" for key in doc)
+
+
+def test_a_printing_answers_only_for_its_own_names(prints):
+    flavoured, printed = prints["sld-88"], prints["sld-89"]
+    assert (flavoured["alt_plain"], flavoured["alt_names_plain"]) == (
+        "ursa the twin maw",
+        ["ursa the twin maw"],
+    )
+    assert flavoured["printed_as"] == "Ursa, the Twin Maw" and flavoured["name"] == "Grizzly Bears"
+    assert "alt_plain" not in printed and printed["alt_names_plain"] == ["bobs hungry bear"]
+    assert printed["printed_as"] == "Bob's Hungry Bear"
+    assert all("alt_prints" not in doc for doc in prints.values())
+    # the same again under the names a ruled-out name is looked for in, which no card has
+    assert flavoured["alt_own_plain"] == "ursa the twin maw" and "alt_own_plain" not in printed
+    assert (flavoured["alt_own_names_plain"], printed["alt_own_names_plain"]) == (
+        ["ursa the twin maw"],
+        ["bobs hungry bear"],
+    )
+
+
+def test_the_printing_shown_for_a_name_is_a_regular_one_then_the_earliest():
+    def p(set_code, number, set_type, released):
+        return {
+            "oracle_id": "x",
+            "name": "X",
+            "lang": "en",
+            "set": set_code,
+            "set_type": set_type,
+            "collector_number": number,
+            "released_at": released,
+            "rarity": "rare",
+            "flavor_name": "Mothra, Supersonic Queen",
+        }
+
+    several = [
+        p("pxx", "1", "promo", "2019-01-01"),
+        p("zzz", "9", "box", "2021-01-01"),
+        p("yyy", "2", "box", "2020-01-01"),
+    ]
+    assert aggregates(several)["x"]["alt_prints"] == ["mothra supersonic queen|yyy|2"]
+
+
+def test_other_names_are_read_from_faces_and_only_from_english_printings():
+    faces = [{"name": "Front", "flavor_name": "Mothra"}, {"name": "Back", "printed_name": "Hinten"}]
+    card = {"name": "Front // Back", "lang": "en", "card_faces": faces}
+    assert alternate_names(card) == (["Mothra"], ["Hinten"])
+    assert alternate_names({**card, "lang": "de"}) == (["Mothra"], [])
+    # a printed name that repeats the flavour name, or the card's name in capitals, is not another name
+    assert alternate_names({"name": "A", "lang": "en", "flavor_name": "B", "printed_name": "B"}) == (
+        ["B"],
+        [],
+    )
+    assert alternate_names({"name": "Grizzly Bears", "lang": "en", "printed_name": "GRIZZLY BEARS"}) == (
+        [],
+        [],
+    )
+
+
+def test_a_name_with_no_plain_form_is_left_out():
+    printing = {
+        "oracle_id": "x",
+        "name": "X",
+        "lang": "ja",
+        "set": "sld",
+        "set_type": "box",
+        "rarity": "rare",
+        "collector_number": "1",
+        "flavor_name": "魔女の予見",
+    }
+    assert not any(key.startswith("alt_") for key in aggregates([printing])["x"])

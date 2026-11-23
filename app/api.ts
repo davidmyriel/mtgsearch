@@ -24,6 +24,7 @@ const HIT_FIELDS: Record<string, string> = {
   image: "image", scryfall_uri: "scryfall_uri",
   set: "set", set_name: "set_name", cn: "collector_number", rarity: "rarity", artist: "artist",
   released: "released", usd: "usd", eur: "eur", tix: "tix", flavor_text: "flavor_text", prints: "prints",
+  printed_as: "printed_as", // what this printing is called on the card, when not the card's name
 };
 // What a card's own page adds, and the columns of its list of printings.
 const LISTS = ["legal", "banned", "restricted"];

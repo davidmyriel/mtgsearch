@@ -374,6 +374,20 @@ async function run(name, contextOptions) {
   await fresh.press("#q", "Enter");
   await fresh.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
   check((await fresh.textContent("#card-name")) === "Urza's Saga", `[${name}] "urzas saga" opens Urza's Saga`);
+  // A name that only one printing carries opens the card as well, at that printing.
+  await fresh.fill("#q", "power sneakers");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/sld/"));
+  check((await fresh.textContent("#card-name")) === "Lightning Greaves", `[${name}] a name one printing carries opens the card (${new URL(fresh.url()).pathname})`);
+  check((await fresh.textContent("#card-printing")).startsWith("Printed as Power Sneakers · Secret Lair"), `[${name}] and its page says what that printing is called (${await fresh.textContent("#card-printing")})`);
+  await fresh.waitForFunction(() => !document.getElementById("card-printings").hidden);
+  check((await fresh.textContent("#card-printing")).startsWith("Printed as Power Sneakers · "), `[${name}] which is still there once the card's details arrive`);
+  // Part of such a name lists the cards, each as the printing that carries it.
+  await fresh.fill("#q", "godzilla");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Card name") && document.querySelectorAll("#results .tile").length === 8);
+  const godzillas = await fresh.$$eval("#results .tile", (links) => links.map((link) => link.getAttribute("href")));
+  check(godzillas.length === 8 && godzillas.every((href) => /^\/card\/(iko|plg20)\//.test(href)), `[${name}] "godzilla" lists the eight cards printed as one, each at that printing (${godzillas[0]})`);
   await fresh.goto(`${base}/card/nosuchset/999/nothing`);
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("No card at this address"));
   check((await fresh.isVisible("#empty")) && (await fresh.textContent("#empty-title")) === "No card at this address", `[${name}] an address with no card says so and offers where to go`);
