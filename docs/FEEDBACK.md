@@ -154,6 +154,24 @@ and the Scryfall comparison where results could move.
   gives the same first impression, and scrolling shows each one complete.
 - **Changed with it:** a query in which nothing can be used no longer returns to the home
   screen, where the explanation would now be below the fold; the header stays a bar.
+- **The owner's reply to the first version, 23 November 2026:** "dont like rounded corners, no
+  need for search instructions below the cards, also you need to cut off the cards explicit order
+  do it like scryfall".
+  - **Rounded corners:** gone from the whole interface, not only the home page: the search bar,
+    buttons, links, panels, tables and notes are square. Two things keep their shape, and this
+    is the developer's reading: a card's picture, because a card has rounded corners and the
+    picture would show white triangles without them, and the symbol discs, which are discs.
+  - **Search instructions:** the three panels are removed. The home page is one screen and the
+    footer. The syntax guide, one link away, is where the examples are. A query in which
+    nothing can be used, and an address with no card, now show a short note with links
+    instead of those panels.
+  - **Cards cut off:** done as on Scryfall, on the owner's explicit order: seven cards in a fan,
+    every other one lower and in front, cut off by the bottom of the first screen; on a phone
+    the middle of the fan shows. Each links to its page, where the card is whole. The developer
+    had kept the cards whole because Scryfall's rules for users of its images say "Do not
+    cover, crop, or clip off the copyright or artist name on card images"; the owner was told
+    this and decided otherwise. The risk is the owner's: Scryfall could object to the home
+    page. Going back is a small change to the stylesheet.
 
 ## From the interface study
 

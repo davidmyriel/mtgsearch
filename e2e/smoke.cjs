@@ -57,7 +57,6 @@ async function run(name, contextOptions) {
   };
 
   await page.goto(base);
-  check(await page.isVisible("#intro"), `[${name}] home shows example searches`);
 
   // The first screen: the search bar at its centre, what is new, and a few cards at the bottom edge.
   await page.waitForFunction(() => {
@@ -66,7 +65,8 @@ async function run(name, contextOptions) {
   });
   const home = await page.evaluate(() => {
     const box = (element) => element.getBoundingClientRect();
-    const cards = [...document.querySelectorAll("#home-cards li")].filter((li) => box(li).width > 0).map((li) => box(li));
+    // the card itself, not its slot in the row: the slot is only as tall as what shows
+    const cards = [...document.querySelectorAll("#home-cards a")].filter((a) => box(a).width > 0).map((a) => box(a));
     const bar = box(document.getElementById("search"));
     return {
       hero: box(document.querySelector(".masthead")).height,
@@ -74,9 +74,12 @@ async function run(name, contextOptions) {
       barCentre: Math.abs((bar.left + bar.right) / 2 - innerWidth / 2),
       barHeight: bar.height,
       cards: cards.length,
-      acrossTheFold: cards.every((card) => card.top < innerHeight && card.bottom > innerHeight),
-      wholeInThePage: cards.every((card) => card.bottom + scrollY <= document.documentElement.scrollHeight),
-      clipped: getComputedStyle(document.querySelector(".masthead")).overflow !== "visible" || getComputedStyle(document.getElementById("home-cards")).overflow !== "visible",
+      // the fan is cut off by the bottom of the first screen: every card runs past that edge
+      cutOff:
+        getComputedStyle(document.getElementById("home-cards")).overflow === "hidden" &&
+        cards.every((card) => card.top < innerHeight && card.bottom > box(document.getElementById("home-cards")).bottom),
+      fanBottom: box(document.getElementById("home-cards")).bottom,
+      pageBelow: Boolean(document.getElementById("main").offsetHeight),
       news: [...document.querySelectorAll("#news li")].map((li) => li.textContent),
       focused: document.activeElement ? document.activeElement.id : "",
     };
@@ -84,8 +87,9 @@ async function run(name, contextOptions) {
   check(home.hero >= home.window - 1, `[${name}] the first screen is the search and nothing below it (${Math.round(home.hero)} of ${home.window}px)`);
   check(home.barCentre <= 2 && home.barHeight >= 60, `[${name}] the search bar is in the middle and thick (${Math.round(home.barHeight)}px)`);
   check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.join(", ")})`);
-  check(home.cards === (contextOptions.isMobile ? 3 : 6), `[${name}] a few cards sit along the bottom (${home.cards})`);
-  check(home.acrossTheFold && home.wholeInThePage && !home.clipped, `[${name}] the window's edge runs across them, but the page shows each card whole`);
+  check(home.cards === 7, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
+  check(home.cutOff && Math.abs(home.fanBottom - home.window) <= 4, `[${name}] cut off by the bottom edge of the first screen`);
+  check(!home.pageBelow, `[${name}] and nothing but the footer follows: no search instructions`);
   if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);
   await shot("1-home");
   // A line of news runs its search; a card opens its page; Back returns home each time.
@@ -94,13 +98,13 @@ async function run(name, contextOptions) {
   check(new URL(page.url()).searchParams.get("q").startsWith("set:"), `[${name}] a line of news searches for that set (${new URL(page.url()).searchParams.get("q")})`);
   await page.goBack();
   await page.waitForFunction(() => !document.body.classList.contains("searched"));
-  const stripHref = await page.getAttribute("#home-cards li:first-child a", "href");
-  await page.click("#home-cards li:first-child a");
+  const stripHref = await page.getAttribute("#home-cards li:nth-child(4) a", "href");
+  await page.click("#home-cards li:nth-child(4) a");
   await page.waitForFunction(() => !document.getElementById("card").hidden);
   check(new URL(page.url()).pathname === stripHref && (await page.textContent("#card-name")).length > 0, `[${name}] a card on the home page opens its page (${stripHref})`);
   await page.goBack();
   await page.waitForFunction(() => document.getElementById("card").hidden && !document.body.classList.contains("searched"));
-  check((await page.getAttribute("#home-cards li:first-child a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
+  check((await page.getAttribute("#home-cards li:nth-child(4) a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
 
   await search(page, "sphinx that draws two cards");
   check((await firstCards(page, 1))[0] === "Consecrated Sphinx", `[${name}] plain English finds Consecrated Sphinx first`);
@@ -217,7 +221,7 @@ async function run(name, contextOptions) {
   check((await fresh.textContent("#card-name")) === "Urza's Saga", `[${name}] "urzas saga" opens Urza's Saga`);
   await fresh.goto(`${base}/card/nosuchset/999/nothing`);
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("No card at this address"));
-  check(await fresh.isVisible("#intro"), `[${name}] an address with no card says so and offers the examples`);
+  check((await fresh.isVisible("#empty")) && (await fresh.textContent("#empty-title")) === "No card at this address", `[${name}] an address with no card says so and offers where to go`);
   await fresh.close();
 
   await page.click("#card-back");
@@ -438,7 +442,7 @@ async function run(name, contextOptions) {
   // Nothing left to search for: refused, with the reason and the help in view.
   await search(page, "lang:ja");
   check((await page.textContent("#status")).startsWith("Nothing here could be used · 'lang:' is not supported yet"), `[${name}] a query with nothing usable is explained`);
-  check((await page.isVisible("#intro")) && (await page.$$("#results .tile")).length === 0, `[${name}] with the examples and no stale results`);
+  check((await page.isVisible("#empty")) && (await page.textContent("#empty-detail")).includes("syntax guide") && (await page.$$("#results .tile")).length === 0, `[${name}] pointing to the syntax guide, with no stale results`);
   const statusTop = await page.$eval("#status", (el) => el.getBoundingClientRect().top);
   check(statusTop < page.viewportSize().height, `[${name}] the explanation is visible without scrolling`);
 

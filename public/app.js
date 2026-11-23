@@ -7,7 +7,6 @@
 
 const form = document.getElementById("search");
 const input = document.getElementById("q");
-const intro = document.getElementById("intro");
 const statusLine = document.getElementById("status");
 const results = document.getElementById("results");
 const tools = document.getElementById("tools");
@@ -255,7 +254,7 @@ function showUnderstood(conditions) {
 // A device with a pointer rather than a finger: the search box can take the focus on arrival
 // without a keyboard sliding up, and rows of a table can show a picture on hover.
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-const HOME_CARDS = 6;
+const HOME_CARDS = 7;
 let homeAsked = false;
 
 /** GET a JSON file or endpoint of this site; null if it cannot be had. */
@@ -346,7 +345,6 @@ async function loadHome() {
     });
   homeCards.replaceChildren(...strip);
   homeCards.hidden = strip.length === 0;
-  document.body.classList.toggle("has-strip", strip.length > 0);
 }
 
 // --- results as a table ----------------------------------------------------------------
@@ -502,7 +500,6 @@ async function run(search, { push = true } = {}) {
   document.body.classList.toggle("searched", Boolean(view.query));
   if (inFlight) inFlight.abort();
   if (!view.query) {
-    intro.hidden = false;
     clearHits();
     showUnderstood([]);
     showIgnored([]);
@@ -515,7 +512,6 @@ async function run(search, { push = true } = {}) {
     return;
   }
 
-  intro.hidden = true;
   setStatus("", "Searching…");
   const controller = new AbortController();
   inFlight = controller;
@@ -534,10 +530,10 @@ async function run(search, { push = true } = {}) {
     const data = await response.json();
     if (!response.ok) return fail("", data.error || "Something went wrong.");
     if (data.mode === "unsupported") {
-      // The header stays a bar, so that the explanation is in view, with the examples under it.
-      intro.hidden = false;
-      // Every term was one that cannot be used, so there is nothing left to search for.
-      return fail("Nothing here could be used", `${data.note}. The syntax guide lists what can be typed.`);
+      // Every term was one that cannot be used, so there is nothing left to search for. The
+      // header stays a bar, so that the explanation is in view.
+      fail("Nothing here could be used", `${data.note}.`);
+      return showEmpty("Nothing here could be used", "The syntax guide lists what can be typed.");
     }
     // A card's exact name, or a search that finds one card and nothing else, goes straight to
     // that card's page. Not when the list was asked for, a control was changed, or a term was
@@ -768,7 +764,6 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
   showAlso(history.state && history.state.also);
   document.title = `${hit.name} · mtgsearch`;
   document.body.classList.add("viewing-card", "searched");
-  intro.hidden = true;
   cardView.hidden = false;
   if (!keepScroll) window.scrollTo(0, 0);
 
@@ -847,7 +842,6 @@ async function loadCard({ set, number }) {
   const fromCard = !cardView.hidden; // moving between printings: keep the page while it loads
   if (!fromCard) {
     showResults();
-    intro.hidden = true;
     document.body.classList.add("searched");
     setStatus("", "Loading the card…");
   }
@@ -856,8 +850,8 @@ async function loadCard({ set, number }) {
   if (!data || data.error) {
     showResults();
     if (data && data.missing) {
-      intro.hidden = false;
-      return setStatus("No card at this address", `Nothing is numbered ${number} in the set "${set}".`, true);
+      setStatus("No card at this address", `Nothing is numbered ${number} in the set "${set}".`, true);
+      return showEmpty("No card at this address", "Search for the card by name, or look one up at random.");
     }
     return setStatus("", data ? data.error : "Could not reach the server. Check your connection and try again.", true);
   }
@@ -872,7 +866,6 @@ async function loadRandom() {
   inFlight = null;
   if (cardView.hidden) {
     showResults();
-    intro.hidden = true;
     document.body.classList.add("searched");
     setStatus("", "Picking a card…");
   }
@@ -942,11 +935,6 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   run({ query: input.value });
   input.blur(); // dismiss the phone keyboard so results are visible
-});
-
-intro.addEventListener("click", (event) => {
-  const example = event.target.closest("button[data-q]");
-  if (example) run({ query: example.dataset.q });
 });
 
 // Changing what is shown or how it is sorted keeps the query and goes back to the first page.

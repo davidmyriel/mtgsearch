@@ -71,7 +71,7 @@ test("the Scryfall comparison stays inside Scryfall's published rate limit", asy
   assert.ok(MIN_INTERVAL_MS >= 500, `one request every ${MIN_INTERVAL_MS} ms is faster than 2 a second`);
 });
 
-test("every example in the syntax guide and on the home page is a search that can be run", async () => {
+test("every example in the syntax guide is a search that can be run", async () => {
   const { readFileSync } = await import("node:fs");
   const { lower } = await import("../lower.ts");
   const { parse } = await import("../parser.ts");
@@ -85,10 +85,8 @@ test("every example in the syntax guide and on the home page is a search that ca
     assert.equal(query, unescape(label), "the link runs the query it shows");
     assert.doesNotThrow(() => lower(parse(query)), query);
   }
-  // the home page's examples are buttons carrying the query
-  const home = [...read("index.html").matchAll(/data-q="([^"]+)"/g)].map(([, q]) => unescape(q));
-  assert.equal(home.length, 9);
-  for (const query of home) assert.doesNotThrow(() => lower(parse(query)), query);
+  // the home page itself carries no instructions: the guide is where they are
+  assert.ok(!read("index.html").includes("data-q="));
 });
 
 test("the flavour of the week is a file the home page can read", async () => {

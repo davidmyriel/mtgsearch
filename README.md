@@ -222,9 +222,11 @@ visit sees other cards.
 The home page's flavour of the week is one file, `public/flavour.json`: a `featured` line shown
 above the newest sets, a `cards` search to draw the home page's cards from (`set:trk` for a new
 set, `t:snow` in winter), and a `theme` (`winter`, `anniversary`). Edit it and deploy; no code
-changes. The cards on the home page are always whole: Scryfall's rules for card images forbid
-covering or cropping the artist's name and copyright, so they are placed across the bottom of
-the first screen, not cut off by the page.
+changes. The cards on the home page are a fan cut off by the bottom of the first screen, as on
+Scryfall's own home page. That is the owner's decision, taken knowing that Scryfall's rules
+for users of its card images say not to cover, crop or clip off the artist's name and
+copyright (see F-4 in [docs/FEEDBACK.md](docs/FEEDBACK.md)). Each card in the fan links to its
+page, where the card is shown whole.
 
 The site has three addresses besides a search: `/card/<set>/<number>/<name>`, `/syntax` (the
 syntax guide, a static page whose examples are links that run the search) and `/random`.

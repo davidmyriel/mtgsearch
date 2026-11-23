@@ -120,9 +120,9 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] A card's exact name, or a search that finds one card, opens that card's page (feedback F-3)
 - [x] A table view of results with USD, EUR and TIX prices, headings that sort and a hover
       preview (U-5). Card records carry all three prices, refreshed nightly as field updates
-- [x] The home page's first screen is the search bar and little else: as tall as the window,
-      with the newest sets under the bar, a few random cards across the bottom edge, and a
-      flavour of the week set in one file (feedback F-4)
+- [x] The home page is one screen: the search bar and little else, as tall as the window, with
+      the newest sets under the bar, a fan of random cards cut off by the bottom edge, and a
+      flavour of the week set in one file. Square corners throughout (feedback F-4)
 - [ ] Anonymous query and click logging
 - [ ] Measure p95 latency under load, including function cold starts
 - Exit: deployed, end-to-end test passes against the deployment, p95 under 500 ms

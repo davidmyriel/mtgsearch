@@ -5,7 +5,7 @@ import { agg, field, filter, select } from "topk-js/query";
 import { pick, toTopk, VISIBLE } from "./search.ts";
 import type { Collections, Hit } from "./search.ts";
 
-export const HOME_CARDS = 6;
+export const HOME_CARDS = 7;
 export const HOME_SETS = 4;
 // Sets people open packs of. Promos, tokens, commander decks and the like are not news.
 const SET_TYPES = ["expansion", "core", "masters", "draft_innovation"];
