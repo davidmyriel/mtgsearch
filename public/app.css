@@ -17,6 +17,8 @@
   /* The dark band behind the masthead and the footer. */
   --band: #211d19;
   --band-glow: #3b2a1f;
+  /* The footer is darker than the band above it, so the two read as separate. */
+  --foot: #120f0d;
   --band-ink: #f4efe6;
   --band-muted: #bbb3a5;
   --band-line: rgb(255 255 255 / 0.16);
@@ -55,6 +57,7 @@
     --warn: #e5c46a;
     --band: #0b0a09;
     --band-glow: #2a1d15;
+    --foot: #040303;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 22px rgb(0 0 0 / 0.45);
     --shadow-small: 0 1px 2px rgb(0 0 0 / 0.4);
   }
@@ -1000,7 +1003,7 @@ td.t-set strong { font-weight: 600; }
 .foot {
   margin-top: 56px;
   color: var(--band-muted);
-  background: var(--band);
+  background: var(--foot);
   font-size: 0.9rem;
 }
 
