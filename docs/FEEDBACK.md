@@ -36,6 +36,7 @@ and the Scryfall comparison where results could move.
 | F-4 | 23 Nov 2026 | The home page's first impression: the search bar is the focus, relaxed, discreet, with room for a flavour of the week | M | Next boundary | Done |
 | F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done, with the search fixed so that all four examples find what they promise |
 | F-6 | 23 Nov 2026 | The home page's cards go with the example in the search box | S | Now, with F-5 | Done |
+| F-7 | 23 Nov 2026 | Say "powered by TopK AI search" somewhere | S | Now | Done, where the developer recommended; the owner asked where, not yet confirmed |
 
 ### F-1. A page for each card
 
@@ -326,6 +327,18 @@ and the Scryfall comparison where results could move.
   `public/flavour.json` for an occasion still takes the place of both.
 - **Cost:** one search per example per minute at most, since the answer is held by the CDN
   for a minute for each of the four.
+
+### F-7. Whose search it is
+
+- **From:** the project owner, 23 November 2026.
+- **In their words:** "where should we put 'powered by topk AI search'".
+- **The developer's answer, built so it can be seen:** on the home page, one small line
+  directly under the name and above the search bar, with "TopK" in TopK's orange and linking
+  to topk.io. It explains the orange K at a glance, shows on every size of screen and leaves
+  the bar itself alone. And one sentence in the footer of every page, which had not named
+  TopK at all. Not inside the bar: on a phone it would crowd out the example.
+- **Open:** the owner asked where and has not yet said yes to this place. Moving it is a
+  small change.
 
 ## From the interface study
 

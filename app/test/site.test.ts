@@ -107,6 +107,21 @@ test("the empty search box shows something to try: a card described in plain wor
   }
 });
 
+test("the site says whose search it is: under the name on the home page, and in every footer", () => {
+  const topk = '<a href="https://topk.io" rel="noopener">TopK</a>';
+  // on the home page, one line between the name and the search bar
+  assert.match(
+    root("public/index.html"),
+    /<\/picture><\/a>\s*<!--[^]*?-->\s*<p class="powered">Powered by <a href="https:\/\/topk\.io" rel="noopener">TopK<\/a> AI search<\/p>\s*<form id="search"/,
+  );
+  // once the header is a bar there is no room for it
+  assert.ok(root("public/app.css").includes(".searched .powered,"));
+  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
+    const footer = root(page).slice(root(page).indexOf('<footer class="foot">'));
+    assert.ok(footer.replace(/\s+/g, " ").includes(`powered by ${topk} AI search`), page);
+  }
+});
+
 test("the moving name is the still one, its squares appearing from left to right", () => {
   // the still picture's squares, by colour
   const still = new Set<string>();

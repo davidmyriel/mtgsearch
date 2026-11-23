@@ -144,8 +144,15 @@ async function run(name, contextOptions) {
       tab: document.title,
       picture: new URL(image.currentSrc).pathname,
       hint: document.getElementById("q").placeholder,
+      // whose search it is: one line between the name and the bar, linking to TopK
+      powered: (() => {
+        const line = document.querySelector(".powered");
+        const box = line.getBoundingClientRect();
+        return { says: line.textContent, link: line.querySelector("a").href, between: box.top >= name.bottom && box.bottom <= bar.top && box.height > 0 };
+      })(),
     };
   });
+  check(title.powered.says === "Powered by TopK AI search" && title.powered.link === "https://topk.io/" && title.powered.between, `[${name}] under the name it says whose search this is (${title.powered.says})`);
   check(title.drawn && title.above && title.centred && title.name === "TutorK" && title.tab === "TutorK", `[${name}] the name stands above the bar in block letters (${title.name}), and titles the tab`);
   check(title.picture === "/wordmark-appear.svg", `[${name}] on arrival at the home page the name builds itself (${title.picture})`);
   // The empty box says what to do: try a card described in plain words, one of these.
@@ -217,6 +224,7 @@ async function run(name, contextOptions) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(overflow <= 0, `[${name}] no horizontal scrolling (overflow ${overflow}px)`);
   const barMark = await lookAtBar();
+  check(!(await page.isVisible(".powered")) && (await page.textContent("footer")).replace(/\s+/g, " ").includes("powered by TopK AI search"), `[${name}] as a bar the header drops that line, and the footer still says it`);
   check(barMark.drawn && barMark.round && barMark.inside && barMark.size < mark.size && barMark.noButton && barMark.light === null && barMark.rings === null, `[${name}] as a bar the header keeps the mark, smaller, with no button and nothing drawn behind it (${Math.round(barMark.size)}px)`);
   await shot("2-results");
 

@@ -236,6 +236,18 @@ body:not(.searched) .search::after {
 .wordmark, .wordmark picture { display: block; line-height: 0; }
 .wordmark img { display: block; width: auto; height: clamp(36px, 5.2vw, 52px); }
 
+/* Whose search this is: one small line under the name, on the home page only. */
+.powered {
+  margin: 12px 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--band-muted);
+}
+.powered a { color: #fe5000; text-decoration: none; }
+.powered a:hover { text-decoration: underline; }
+
 /* The search bar: one thick piece, darker inside than the page around it. */
 .search {
   display: flex;
@@ -414,7 +426,7 @@ body[data-flavour="anniversary"]:not(.searched) .masthead {
 }
 
 .searched .wordmark img { height: 20px; }
-.searched .news, .searched .home-cards { display: none; }
+.searched .powered, .searched .news, .searched .home-cards { display: none; }
 .searched .search { max-width: none; margin: 0; padding: 3px; border-radius: var(--radius); border-color: var(--band-line); box-shadow: none; }
 .searched .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28); }
 .searched .search .mark { margin-left: 4px; }
