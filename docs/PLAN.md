@@ -31,7 +31,7 @@ picked up: at the boundary between plan steps unless something is broken.
 ## Stages
 
 ### 0. Setup: done except key rotation
-- [ ] **The TopK account ran out of credits on 23 November 2026, about 04:50 UTC.** Every
+- [ ] **The TopK account ran out of credits on 23 November 2026, about 04:35 UTC.** Every
       request is refused ("You have run out of credits. Please add a payment method"), so
       search on the live site answers "The search backend is unavailable" and the nightly
       run will fail until credits are added at console.topk.io/billing. It happened during a
