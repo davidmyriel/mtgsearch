@@ -31,11 +31,11 @@ picked up: at the boundary between plan steps unless something is broken.
 ## Stages
 
 ### 0. Setup: done except key rotation
-- [ ] **The TopK account ran out of credits on 23 November 2026, about 04:35 UTC.** Every
-      request is refused ("You have run out of credits. Please add a payment method"), so
-      search on the live site answers "The search backend is unavailable" and the nightly
-      run will fail until credits are added at console.topk.io/billing. The account had
-      TopK's $10 of free credits and no payment method.
+- [x] **The TopK account ran out of credits on 23 November 2026, about 04:35 UTC**, and the
+      owner restored them the same day (search answered again by 15:45 UTC). In between,
+      every request was refused ("You have run out of credits. Please add a payment
+      method") and search on the live site answered "The search backend is unavailable".
+      The account had TopK's $10 of free credits and no payment method.
       What it costs, from topk.io/pricing on that day: storage $0.10 per GiB a month;
       **query memory $20 per GiB a month**; data written $0.50 per GiB and $0.01 per 1,000
       write requests; $0.50 per million queries; $0.005 per TiB scanned; $0.20 per GiB
@@ -47,11 +47,19 @@ picked up: at the boundary between plan steps unless something is broken.
       cards and some 80,000 field updates, is an estimate of well under a dollar. Ten
       dollars is half a GiB of query memory for a month, so what is held in memory, in
       every collection of the project and not only the two this site uses, is the likely
-      cost. Not confirmed: the console's Billing page has the real breakdown. To decide
-      once it is seen: which collections to keep (`mtg-cards-v1` and `mtg-spike-5k` are
-      already waiting on the owner; the project holds about nineteen others)
-- [ ] When credits are back: run the live tests, the browser checks and CI for the `new:`
-      commit, which went in without them
+      cost. Not confirmed: the console's Billing page has the real breakdown
+- [ ] See on the Billing page what the first $10 went on, and decide which collections to
+      keep (`mtg-cards-v1` and `mtg-spike-5k` are already waiting on the owner; the project
+      holds about nineteen others). Nothing warns before the credits run out: an alert on
+      the balance, or a check of it in the nightly run, would have caught this
+- [x] The checks the `new:` commit went in without, run once the credits were back: 154
+      app tests with the live index, 552 browser checks, every comparison set (no query
+      regressed), CI. One live test still used `new:art` as its example of a term that
+      cannot be used; it now uses `new:artist`
+- [ ] The nightly workflow has never run on its schedule (three runs, all started by
+      hand; none at 11:17 UTC on 23 November). GitHub runs schedules from the default
+      branch only and can skip them on a new repository: check after the next 11:17 UTC,
+      and start it by hand until it does
 - [x] Repository on GitHub, lint, unit tests, CI workflows
 - [x] `TOPK_API_KEY` secret on GitHub: integration tests and the nightly refresh run with it
 - [ ] Revoke the first API key that was pasted into chat; create separate keys for CI, staging, production

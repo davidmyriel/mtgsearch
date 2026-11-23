@@ -459,7 +459,7 @@ test("a term that cannot be used is left out and the rest of the query runs", { 
   const invalid = await search(cols, "t:sphinx c:purple", { k: 5 });
   assert.deepEqual([invalid.total, invalid.ignored.map((left) => left.term)], [plain.total, ["c:purple"]]);
   // a card name: still found by name
-  const named = await search(cols, "new:art lightning bolt", { k: 3 });
+  const named = await search(cols, "new:artist lightning bolt", { k: 3 });
   assert.equal(named.mode, "name");
   assert.equal(named.hits[0].name, "Lightning Bolt");
   assert.equal(named.ignored.length, 1);
@@ -469,9 +469,12 @@ test("a term that cannot be used is left out and the rest of the query runs", { 
   assert.equal(described.hits[0].name, "Consecrated Sphinx");
   assert.deepEqual(described.ignored.map((left) => left.term), ["is:unicorn"]);
   // nothing left to search for: refused, with every reason
-  const nothing = await search(cols, "lang:ja new:art");
+  const nothing = await search(cols, "lang:ja new:artist");
   assert.deepEqual([nothing.mode, nothing.hits.length], ["unsupported", 0]);
-  assert.equal(nothing.note, "'lang:' is not supported yet; 'new:' is not supported yet");
+  assert.equal(
+    nothing.note,
+    "'lang:' is not supported yet; 'new:artist' is not supported yet: Scryfall's own answer to it follows no rule we could find",
+  );
 });
 
 test("the deepest page the endpoint offers is one TopK will serve", { skip }, async () => {
