@@ -230,6 +230,59 @@ async function run(name, contextOptions) {
   check((await firstCards(page, 1))[0] !== cheapest, `[${name}] descending puts a different card first`);
   check((await page.$$("#results .tile")).length === 60 && (await page.textContent("#page-now")) === "Page 1 of 2", `[${name}] changing the sort starts again from the first page`);
 
+  // The same results as a table: a row for each, with three prices. The choice is in the address.
+  const amounts = (cells) => cells.filter((c) => c !== "—").map((c) => Number(c.replace(/[^\d.]/g, "")));
+  await search(page, "t:sphinx");
+  await page.click('#view-switch button[data-as="table"]');
+  await page.waitForFunction(() => document.querySelectorAll("#rows tr").length === 60);
+  check(new URL(page.url()).searchParams.get("as") === "table" && !(await page.isVisible("#results")), `[${name}] choosing Table shows the results as rows, and the address says so`);
+  const firstRow = await page.$$eval("#rows tr:first-child td", (cells) => cells.map((c) => c.textContent));
+  check(firstRow.length === 9 && firstRow[0].length > 0 && /^[A-Z0-9]+ #\S+$/.test(firstRow[3]), `[${name}] a row has name, cost, type, set, rarity, artist and three prices (${firstRow[0]}, ${firstRow[3]})`);
+  check((await page.$$("#rows tr:first-child td.t-cost .pip")).length > 0, `[${name}] with the cost drawn as symbols`);
+  const tableOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  check(tableOverflow <= 0, `[${name}] the table does not scroll sideways (overflow ${tableOverflow}px)`);
+  if (contextOptions.isMobile) {
+    // A phone has no room for headings: the table is a list, sorted from the menus.
+    check(!(await page.isVisible("#table thead")), `[${name}] on a phone the table is a list without headings`);
+    await choose(page, "#sort", "eur");
+    await choose(page, "#dir", "desc");
+    check((await page.isVisible("#rows tr:first-child td.t-eur")) && !(await page.isVisible("#rows tr:first-child td.t-usd")), `[${name}] showing the price the list is sorted by`);
+  } else {
+    // A heading sorts by its column; choosing it again turns the order round.
+    await page.click('#table th[data-order="usd"] a');
+    await page.waitForFunction(() => document.querySelector('#table th[data-order="usd"]').getAttribute("aria-sort") === "ascending");
+    const rising = amounts(await page.$$eval("#rows td.t-usd", (cells) => cells.map((c) => c.textContent)));
+    check(new URL(page.url()).searchParams.get("order") === "usd" && rising.length > 5 && rising.every((p, i) => i === 0 || p >= rising[i - 1]), `[${name}] a heading sorts by its column, cheapest first`);
+    await page.click('#table th[data-order="usd"] a');
+    await page.waitForFunction(() => document.querySelector('#table th[data-order="usd"]').getAttribute("aria-sort") === "descending");
+    const falling = amounts(await page.$$eval("#rows td.t-usd", (cells) => cells.map((c) => c.textContent)));
+    check(new URL(page.url()).searchParams.get("dir") === "desc" && falling.every((p, i) => i === 0 || p <= falling[i - 1]), `[${name}] choosing it again turns the order round`);
+    check((await page.inputValue("#sort")) === "usd" && (await page.inputValue("#dir")) === "desc", `[${name}] and the menus agree with the headings`);
+    // The card under the pointer is shown beside it.
+    await page.hover("#rows tr:nth-child(2) td.t-type");
+    await page.waitForFunction(() => {
+      const img = document.getElementById("preview");
+      return !img.hidden && img.complete && img.naturalWidth > 0;
+    });
+    check(true, `[${name}] hovering a row shows that card's picture`);
+  }
+  // A row opens its card; Back returns to the table as it was.
+  const rowName = await page.textContent("#rows tr:nth-child(3) td.t-name");
+  const tableUrl = page.url();
+  await page.click("#rows tr:nth-child(3) td.t-type");
+  await page.waitForFunction(() => !document.getElementById("card").hidden);
+  check((await page.textContent("#card-name")) === rowName && (await page.isVisible("#card-back")), `[${name}] a row opens its card (${rowName}), with a way back`);
+  check(!(await page.isVisible("#table")) && !(await page.isVisible("#preview")), `[${name}] and the table is out of the way`);
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("card").hidden);
+  check(page.url() === tableUrl && (await page.$$("#rows tr")).length === 60, `[${name}] Back returns to the table`);
+  // The next search stays a table; Images goes back to pictures.
+  await search(page, "t:dragon");
+  check((await page.$$("#rows tr")).length === 60 && new URL(page.url()).searchParams.get("as") === "table", `[${name}] the next search is a table too`);
+  await page.click('#view-switch button[data-as=""]');
+  await page.waitForFunction(() => document.querySelectorAll("#results .tile").length === 60);
+  check(!new URL(page.url()).searchParams.has("as") && !(await page.isVisible("#table")), `[${name}] choosing Images goes back to pictures`);
+
   // Cards, printings or illustrations: the "Show" control, or `unique:` in the query.
   await search(page, "t:sphinx c:w mv<=4");
   const cardCount = Number(((await page.textContent("#status")).match(/(\d+) cards/) || [])[1]);
@@ -251,7 +304,7 @@ async function run(name, contextOptions) {
 
   // Results ranked by meaning have no total: no sort controls, and a next page while there is one.
   await search(page, "sphinx that draws two cards");
-  check(!(await page.isVisible("#tools")), `[${name}] no sort controls for results ranked by meaning`);
+  check(!(await page.isVisible("#sorters")) && (await page.isVisible("#view-switch")), `[${name}] no sort controls for results ranked by meaning, only the choice of pictures or table`);
   check(!(await page.isVisible("#understood")), `[${name}] and no reading of it as syntax`);
   check((await page.textContent("#page-now")) === "Page 1" && !(await page.isVisible("#page-last")), `[${name}] ranked results have pages but no last page`);
   await page.click("#page-next");
@@ -307,7 +360,7 @@ async function run(name, contextOptions) {
   await choose(page, "#sort", "usd");
   await choose(page, "#dir", "desc");
   check((await page.$$("#results .caption")).length > 0, `[${name}] a price sort captions the cards with the printing that decides it`);
-  const prices = await page.$$eval("#results .caption", (nodes) => nodes.map((n) => Number((n.textContent.match(/\$([\d.]+)/) || [])[1])));
+  const prices = await page.$$eval("#results .caption", (nodes) => nodes.map((n) => Number(((n.textContent.match(/\$([\d,.]+)/) || [])[1] || "").replaceAll(",", "") || NaN)));
   const priced = prices.filter((p) => !Number.isNaN(p));
   check(priced.length > 5 && priced.every((p, i) => i === 0 || p <= priced[i - 1]), `[${name}] price sort lists the dearest printings first`);
 
@@ -405,6 +458,7 @@ async function narrow() {
     ["results", "/?q=t%3Asphinx", () => document.querySelectorAll("#results .tile").length > 0],
     ["a card's page", "/card/ima/47/consecrated-sphinx", () => !document.getElementById("card-printings").hidden],
     ["the syntax guide", "/syntax", null],
+    ["results as a table", "/?q=t%3Asphinx&as=table", () => document.querySelectorAll("#rows tr").length > 0],
   ];
   for (const [what, path, ready] of visits) {
     await page.goto(base + path);

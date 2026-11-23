@@ -37,35 +37,43 @@
     <div class="bar">
       <p id="status" class="status" role="status" aria-live="polite"></p>
       <div id="tools" class="tools" hidden>
-        <label>Show
-          <select id="unique">
-            <option value="">Cards</option>
-            <option value="prints">Printings</option>
-            <option value="art">Illustrations</option>
-          </select>
-        </label>
-        <label>Sort
-          <select id="sort">
-            <option value="">Default</option>
-            <option value="name">Name</option>
-            <option value="cmc">Mana value</option>
-            <option value="power">Power</option>
-            <option value="toughness">Toughness</option>
-            <option value="edhrec">Most played</option>
-            <option value="released">Release date</option>
-            <option value="rarity">Rarity</option>
-            <option value="usd">Price (USD)</option>
-            <option value="eur">Price (EUR)</option>
-            <option value="tix">Price (TIX)</option>
-          </select>
-        </label>
-        <label>Direction
-          <select id="dir">
-            <option value="">Auto</option>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-          </select>
-        </label>
+        <span class="view">View
+          <span id="view-switch" class="view-switch" role="group" aria-label="View">
+            <button type="button" data-as="" aria-pressed="true">Images</button>
+            <button type="button" data-as="table" aria-pressed="false">Table</button>
+          </span>
+        </span>
+        <span id="sorters" class="sorters">
+          <label>Show
+            <select id="unique">
+              <option value="">Cards</option>
+              <option value="prints">Printings</option>
+              <option value="art">Illustrations</option>
+            </select>
+          </label>
+          <label>Sort
+            <select id="sort">
+              <option value="">Default</option>
+              <option value="name">Name</option>
+              <option value="cmc">Mana value</option>
+              <option value="power">Power</option>
+              <option value="toughness">Toughness</option>
+              <option value="edhrec">Most played</option>
+              <option value="released">Release date</option>
+              <option value="rarity">Rarity</option>
+              <option value="usd">Price (USD)</option>
+              <option value="eur">Price (EUR)</option>
+              <option value="tix">Price (TIX)</option>
+            </select>
+          </label>
+          <label>Direction
+            <select id="dir">
+              <option value="">Auto</option>
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </label>
+        </span>
       </div>
     </div>
   </div>
@@ -119,6 +127,27 @@
     </section>
 
     <ol id="results" class="grid"></ol>
+    <!-- The same results as a table: a row for each, with its set and three prices. -->
+    <div id="table" class="table-wrap" hidden>
+      <table class="cards">
+        <thead>
+          <tr>
+            <th scope="col" class="t-name" data-order="name">Name</th>
+            <th scope="col" class="t-cost" data-order="cmc">Cost</th>
+            <th scope="col" class="t-type">Type</th>
+            <th scope="col" class="t-set">Set</th>
+            <th scope="col" class="t-rarity" data-order="rarity">Rarity</th>
+            <th scope="col" class="t-artist">Artist</th>
+            <th scope="col" class="t-price t-usd" data-order="usd">USD</th>
+            <th scope="col" class="t-price t-eur" data-order="eur">EUR</th>
+            <th scope="col" class="t-price t-tix" data-order="tix">TIX</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <!-- The card under the pointer, shown beside it while a row of the table is hovered. -->
+    <img id="preview" class="preview" alt="" width="488" height="680" hidden>
     <!-- The page of results is in the address (?page=2), so these are links. -->
     <nav id="pager" class="pager" aria-label="Pages of results" hidden>
       <a id="page-first">First</a>

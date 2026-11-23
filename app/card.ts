@@ -26,7 +26,8 @@ export async function randomCard(cols: Collections, random: () => number = Math.
     const rows = await cols.cards.query(
       select(pick(["set", "cn"])).filter(field("_id").startsWith(prefix).and(field("extra").eq(false))).limit(500),
     );
-    const known = rows.filter((row) => row.set && row.cn);
+    // TopK returns the handful in no particular order; sorting it makes a pick repeatable.
+    const known = rows.filter((row) => row.set && row.cn).sort((a, b) => (a._id < b._id ? -1 : 1));
     if (known.length) {
       const chosen = known[Math.floor(random() * known.length)];
       return card(cols, String(chosen.set), String(chosen.cn));

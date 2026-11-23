@@ -402,6 +402,8 @@ def build_document(card: dict, tags: dict | None = None, aggregate: dict | None 
         "released": card.get("released_at"),
         "rarity": card.get("rarity"),
         "usd": price(card.get("prices") or {}, "usd", "usd_foil", "usd_etched"),
+        "eur": price(card.get("prices") or {}, "eur", "eur_foil"),
+        "tix": price(card.get("prices") or {}, "tix"),
         **(aggregate or {}),
     }
     for key, prefix in (("power", "pow"), ("toughness", "tou"), ("loyalty", "loy")):

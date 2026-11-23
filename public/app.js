@@ -15,6 +15,11 @@ const sortSelect = document.getElementById("sort");
 const dirSelect = document.getElementById("dir");
 const uniqueSelect = document.getElementById("unique");
 const pager = document.getElementById("pager");
+const sorters = document.getElementById("sorters");
+const viewSwitch = document.getElementById("view-switch");
+const tableWrap = document.getElementById("table");
+const rows = document.getElementById("rows");
+const preview = document.getElementById("preview");
 const understood = document.getElementById("understood");
 const ignored = document.getElementById("ignored");
 const emptyState = document.getElementById("empty");
@@ -50,7 +55,10 @@ const PRINTING_ORDERS = new Set(["released", "usd", "eur", "tix", "rarity"]);
 // A search as its address names it. Empty strings are the defaults and are left out of the address.
 // `list` asks for the list of results even when the query is a card's exact name, which
 // otherwise opens that card.
-const EMPTY = { query: "", order: "", dir: "", unique: "", list: "", page: 1 };
+// `as` is how results are drawn: pictures, or "table".
+const EMPTY = { query: "", order: "", dir: "", unique: "", list: "", as: "", page: 1 };
+// The reader's choice of pictures or table carries over to the next search they make.
+let viewMode = "";
 let inFlight = null;
 let current = { ...EMPTY, unit: "cards" }; // what the grid is showing
 let resultsScroll = 0; // where the results were scrolled to when a card was opened
@@ -59,7 +67,11 @@ function plural(n, word) {
   return `${n.toLocaleString("en")} ${word}${n === 1 ? "" : "s"}`;
 }
 
-const price = (usd) => (typeof usd === "number" ? `$${usd.toFixed(2)}` : "");
+/** An amount with two decimals, or as whole units with separators once it reaches a thousand. */
+const amount = (n) =>
+  n.toLocaleString("en", n >= 1000 ? { maximumFractionDigits: 0 } : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const money = { usd: (n) => `$${amount(n)}`, eur: (n) => `€${amount(n)}`, tix: (n) => amount(n) };
+const price = (usd) => (typeof usd === "number" ? money.usd(usd) : "");
 const year = (released) => (released ? released.slice(0, 4) : "");
 const capital = (word) => (word ? word[0].toUpperCase() + word.slice(1) : "");
 const setAndNumber = (hit) => (hit.set ? `${hit.set.toUpperCase()}${hit.collector_number ? ` #${hit.collector_number}` : ""}` : "");
@@ -103,6 +115,7 @@ function readAddress() {
     dir: dir === "asc" || dir === "desc" ? dir : "",
     unique: unique === "prints" || unique === "art" ? unique : "",
     list: params.get("list") === "1" ? "1" : "",
+    as: params.get("as") === "table" ? "table" : "",
     page: page > 1 ? Math.min(page, LAST_PAGE) : 1,
   };
 }
@@ -111,13 +124,15 @@ function readAddress() {
 function searchPath(view) {
   const params = new URLSearchParams();
   if (view.query) params.set("q", view.query);
-  for (const key of ["order", "dir", "unique", "list"]) if (view[key]) params.set(key, view[key]);
+  for (const key of ["order", "dir", "unique", "list", "as"]) if (view[key]) params.set(key, view[key]);
   if (view.page > 1) params.set("page", String(view.page));
   const text = params.toString();
   return text ? `/?${text}` : "/";
 }
 
-const sameSearch = (a, b) => ["query", "order", "dir", "unique", "list", "page"].every((key) => a[key] === b[key]);
+const sameSearch = (a, b) => ["query", "order", "dir", "unique", "list", "as", "page"].every((key) => a[key] === b[key]);
+/** How many results are on screen, as pictures or as rows. */
+const shownCount = () => results.children.length + rows.children.length;
 
 // --- results view ----------------------------------------------------------------------
 
@@ -233,6 +248,101 @@ function showUnderstood(conditions) {
   understood.hidden = understood.children.length === 0;
 }
 
+// --- results as a table ----------------------------------------------------------------
+
+/** One result as a row of the table. Clicking anywhere on the row opens the card. */
+function row(hit) {
+  const tr = document.createElement("tr");
+  const cell = (className, content, title) => {
+    const td = document.createElement("td");
+    td.className = className;
+    if (title) td.title = title; // the whole text, for a cell that is cut short
+    td.append(...[].concat(content));
+    tr.append(td);
+  };
+  const link = document.createElement("a");
+  link.href = cardPath(hit) || "#";
+  link.textContent = hit.name;
+  cell("t-name", link, hit.name);
+  cell("t-cost", withSymbols(hit.mana_cost || ""));
+  cell("t-type", hit.type_line || "", hit.type_line);
+  const code = document.createElement("strong");
+  code.textContent = (hit.set || "").toUpperCase();
+  cell("t-set", [code, hit.collector_number ? ` #${hit.collector_number}` : ""], hit.set_name);
+  cell("t-rarity", capital(hit.rarity));
+  cell("t-artist", hit.artist || "", hit.artist);
+  for (const currency of ["usd", "eur", "tix"]) {
+    cell(`t-price t-${currency}`, typeof hit[currency] === "number" ? money[currency](hit[currency]) : "—");
+  }
+  if (hit.image && hit.image.startsWith(IMAGE_HOST)) tr.dataset.image = hit.image;
+  tr.addEventListener("click", (event) => {
+    // Leave modified clicks on the name alone: they open the card's page in a new tab.
+    if (modified(event)) return;
+    event.preventDefault();
+    preview.hidden = true;
+    openCard(hit);
+  });
+  return tr;
+}
+
+/**
+ * The table's headings. One with an order is a link that sorts by it; the one the results
+ * are sorted by says which way, and choosing it again turns the order round.
+ */
+function showHeadings(view, data) {
+  const priced = ["eur", "tix"].includes(data.sorted_by) ? data.sorted_by : "usd";
+  tableWrap.querySelector("table").dataset.price = priced; // the one price a phone has room for
+  for (const th of tableWrap.querySelectorAll("th")) {
+    const order = th.dataset.order;
+    th.dataset.label = th.dataset.label || th.textContent;
+    // Results ranked by meaning have no other order to offer.
+    if (!order || data.sorted_by === null) {
+      th.textContent = th.dataset.label;
+      th.removeAttribute("aria-sort");
+      continue;
+    }
+    const active = data.sorted_by === order;
+    const dir = active ? (data.sorted_desc ? "asc" : "desc") : "";
+    const link = document.createElement("a");
+    link.href = searchPath({ ...view, order, dir, page: 1 });
+    link.textContent = th.dataset.label;
+    link.addEventListener("click", (event) => {
+      if (modified(event)) return;
+      event.preventDefault();
+      run({ ...view, order, dir, page: 1 });
+    });
+    th.replaceChildren(link);
+    th.setAttribute("aria-sort", active ? (data.sorted_desc ? "descending" : "ascending") : "none");
+  }
+}
+
+// On a device with a pointer, the card under it is shown beside it while a row is hovered.
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  rows.addEventListener("pointermove", (event) => {
+    const tr = event.target.closest("tr");
+    if (!tr || !tr.dataset.image) return void (preview.hidden = true);
+    if (preview.getAttribute("src") !== tr.dataset.image) preview.src = tr.dataset.image;
+    const width = 240;
+    const height = Math.round((width * 680) / 488);
+    // To the right of the pointer, or to its left near the edge; kept inside the window.
+    const left = event.clientX + 20 + width > window.innerWidth ? event.clientX - 20 - width : event.clientX + 20;
+    const top = Math.min(Math.max(8, event.clientY - height / 3), window.innerHeight - height - 8);
+    preview.style.left = `${Math.max(8, left)}px`;
+    preview.style.top = `${top}px`;
+    preview.hidden = false;
+  });
+  rows.addEventListener("pointerleave", () => (preview.hidden = true));
+  window.addEventListener("scroll", () => (preview.hidden = true), { passive: true });
+}
+
+/** Take the results off the screen: pictures, rows, and the controls that go with them. */
+function clearHits() {
+  results.replaceChildren();
+  rows.replaceChildren();
+  tableWrap.hidden = preview.hidden = true;
+  tools.hidden = pager.hidden = true;
+}
+
 /** Show the results view. The grid is left as it was, so coming back from a card is instant. */
 function showResults() {
   document.body.classList.remove("viewing-card");
@@ -275,22 +385,27 @@ async function run(search, { push = true } = {}) {
   const view = { ...EMPTY };
   for (const key of Object.keys(EMPTY)) if (search[key]) view[key] = search[key];
   view.query = view.query.trim();
+  // A search that does not say how to draw its results keeps the reader's last choice.
+  if (search.as === undefined) view.as = viewMode;
+  viewMode = view.as;
   showResults();
   input.value = view.query;
   sortSelect.value = view.order;
   dirSelect.value = view.dir;
   uniqueSelect.value = view.unique;
+  for (const button of viewSwitch.querySelectorAll("button")) {
+    button.setAttribute("aria-pressed", String(button.dataset.as === view.as));
+  }
   if (push) history.pushState(null, "", searchPath(view));
   document.title = view.query ? `${view.query} · mtgsearch` : "mtgsearch";
   document.body.classList.toggle("searched", Boolean(view.query));
   if (inFlight) inFlight.abort();
   if (!view.query) {
     intro.hidden = false;
-    tools.hidden = pager.hidden = true;
+    clearHits();
     showUnderstood([]);
     showIgnored([]);
     showEmpty();
-    results.replaceChildren();
     current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
     return;
@@ -301,8 +416,7 @@ async function run(search, { push = true } = {}) {
   const controller = new AbortController();
   inFlight = controller;
   const fail = (label, detail) => {
-    results.replaceChildren();
-    tools.hidden = pager.hidden = true;
+    clearHits();
     showUnderstood([]);
     showIgnored([]);
     showEmpty();
@@ -328,8 +442,7 @@ async function run(search, { push = true } = {}) {
     const target = data.exact || only;
     const asTyped = view.page === 1 && !view.list && !view.order && !view.dir && !view.unique;
     if (target && asTyped && cardPath(target) && !(data.ignored && data.ignored.length)) {
-      results.replaceChildren();
-      tools.hidden = pager.hidden = true;
+      clearHits();
       showUnderstood([]);
       showIgnored([]);
       showEmpty();
@@ -341,13 +454,21 @@ async function run(search, { push = true } = {}) {
       showCard(target);
       return;
     }
+    // The same results as pictures or as rows of a table; only one of the two is filled.
+    const table = view.as === "table";
     const captioned = data.unit !== "cards" || PRINTING_ORDERS.has(data.sorted_by);
-    results.replaceChildren(...data.hits.map((hit) => tile(hit, captioned)));
+    results.replaceChildren(...(table ? [] : data.hits.map((hit) => tile(hit, captioned))));
+    rows.replaceChildren(...(table ? data.hits.map(row) : []));
+    results.hidden = table;
+    tableWrap.hidden = !table || data.hits.length === 0;
+    preview.hidden = true;
+    if (table) showHeadings(view, data);
     current = { ...view, unit: data.unit };
     // The menu shows what the results are, also when the query itself says so (`unique:prints`).
     uniqueSelect.value = UNIQUE_OF[data.unit] ?? "";
+    tools.hidden = data.hits.length === 0;
     // Results ranked by meaning have no other order to offer.
-    tools.hidden = data.sorted_by === null || data.hits.length === 0;
+    sorters.hidden = data.sorted_by === null;
     showPager(view, data);
     showUnderstood(data.understood);
     showIgnored(data.ignored);
@@ -538,7 +659,8 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
   if (hasLink) link.href = hit.scryfall_uri;
   copyButton.textContent = "Copy link";
   // "Back to results" only when there are results to go back to.
-  backButton.hidden = results.children.length === 0;
+  backButton.hidden = shownCount() === 0;
+  preview.hidden = true;
   showAlso(history.state && history.state.also);
   document.title = `${hit.name} · mtgsearch`;
   document.body.classList.add("viewing-card", "searched");
@@ -702,7 +824,7 @@ function route(state) {
   if (location.pathname === "/random") return loadRandom();
   const view = readAddress();
   // Coming back from a card to the search that is still on screen: no need to ask again.
-  if (view.query && sameSearch(view, current) && results.children.length) {
+  if (view.query && sameSearch(view, current) && shownCount()) {
     showResults();
     document.title = `${view.query} · mtgsearch`;
     window.scrollTo(0, resultsScroll);
@@ -729,6 +851,13 @@ for (const select of [sortSelect, dirSelect, uniqueSelect]) {
     run({ query: current.query, order: sortSelect.value, dir: dirSelect.value, unique: uniqueSelect.value, list: current.list }),
   );
 }
+
+// Pictures or a table: the same search and the same page of it, drawn the other way.
+viewSwitch.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-as]");
+  if (!button || button.getAttribute("aria-pressed") === "true") return;
+  run({ ...current, as: button.dataset.as });
+});
 
 // The pager's links are real addresses; an ordinary click is answered without leaving the page.
 pager.addEventListener("click", (event) => {

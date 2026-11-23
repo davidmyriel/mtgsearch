@@ -70,6 +70,8 @@ test("returns the documented shape", async () => {
         artist: "Mark Zug",
         released: "2022-07-08",
         usd: 20.49,
+        eur: null,
+        tix: null,
         flavor_text: null,
         prints: 11,
         score: 4.252,
@@ -78,6 +80,7 @@ test("returns the documented shape", async () => {
     offset: 0,
     has_more: true,
     sorted_by: null,
+    sorted_desc: null,
   });
 });
 
@@ -208,6 +211,23 @@ test("terms that were left out come back with their reasons, beside the results"
   const body = await response.json();
   assert.deepEqual(body.ignored, [{ term: "lang:ja", reason: "'lang:' is not supported yet" }]);
   assert.deepEqual([body.mode, body.total, body.hits.length, body.understood], ["syntax", 91, 1, ["the type includes “sphinx”"]]);
+});
+
+test("three prices come back rounded to cents, and the direction the results were sorted in", async () => {
+  // decimals are stored in single precision, so they come back with noise after the cents
+  const priced = { ...HIT, usd: 20.489999771118164, eur: 17.299999237060547, tix: 0.07000000029802322 };
+  const sorted: Result = {
+    mode: "syntax", hits: [priced, { ...HIT, _id: "def", usd: null, eur: undefined }], total: 2, note: "", hasMore: false,
+    sortedBy: "eur", descending: true, unit: "cards", understood: [], ignored: [], exact: null,
+  };
+  const body = await (await get({ q: "t:sphinx", order: "eur", dir: "desc" }, stub(sorted).search)).json();
+  assert.deepEqual([body.hits[0].usd, body.hits[0].eur, body.hits[0].tix], [20.49, 17.3, 0.07]);
+  assert.deepEqual([body.hits[1].usd, body.hits[1].eur, body.hits[1].tix], [null, null, null]);
+  assert.deepEqual([body.sorted_by, body.sorted_desc], ["eur", true]);
+  // ascending is said too; results ranked by meaning have no direction
+  const ascending = await (await get({ q: "t:sphinx" }, stub({ ...sorted, descending: false }).search)).json();
+  assert.equal(ascending.sorted_desc, false);
+  assert.equal((await (await get({ q: "sphinx" }, stub().search)).json()).sorted_desc, null);
 });
 
 test("the card named exactly by the query comes back beside the results, shaped like a hit", async () => {

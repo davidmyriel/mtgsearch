@@ -262,7 +262,28 @@ code {
   font-size: 0.93rem;
 }
 
-.tools label { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.tools label, .tools .view { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.sorters { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; }
+
+/* Pictures or a table: two buttons that read as one control. */
+.view-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.view-switch button {
+  height: 32px;
+  padding: 0 12px;
+  font: inherit;
+  color: var(--muted);
+  background: var(--surface);
+  border: 0;
+  cursor: pointer;
+}
+.view-switch button + button { border-left: 1px solid var(--line); }
+.view-switch button[aria-pressed="true"] { font-weight: 600; color: var(--bg); background: var(--ink); }
+.view-switch button:focus-visible { outline-offset: -3px; }
 
 .tools select {
   max-width: 100%;
@@ -321,6 +342,8 @@ code {
 .viewing-card .ignored,
 .viewing-card .understood,
 .viewing-card #results,
+.viewing-card #table,
+.viewing-card #preview,
 .viewing-card #pager { display: none; }
 
 /* --- home: three ways to search -------------------------------------------------------- */
@@ -468,6 +491,119 @@ code {
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .tile { transition: transform 120ms ease-out, box-shadow 120ms ease-out; }
   .tile:hover { transform: translateY(-3px); }
+}
+
+/* --- results as a table ------------------------------------------------------------------
+   A row for each result. Every row is one line; text that does not fit is cut short and
+   given in full as the cell's tooltip. */
+
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-small);
+  overflow: hidden;
+}
+
+table.cards {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.92rem;
+}
+
+table.cards th {
+  padding: 10px 8px;
+  text-align: left;
+  font-size: 0.74rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--tint);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+table.cards th a { color: inherit; text-decoration: none; }
+table.cards th a:hover { color: var(--accent); }
+table.cards th[aria-sort="ascending"], table.cards th[aria-sort="descending"] { color: var(--ink); }
+table.cards th[aria-sort="ascending"] a::after { content: " \25B2"; font-size: 0.72em; }
+table.cards th[aria-sort="descending"] a::after { content: " \25BC"; font-size: 0.72em; }
+
+table.cards td {
+  padding: 7px 8px;
+  border-top: 1px solid var(--line);
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+table.cards tbody tr:first-child td { border-top: 0; }
+table.cards th:first-child, table.cards td:first-child { padding-left: 14px; }
+table.cards th:last-child, table.cards td:last-child { padding-right: 14px; }
+table.cards tbody tr { cursor: pointer; }
+table.cards tbody tr:hover td { background: var(--accent-soft); }
+
+table.cards .t-name { width: 21%; }
+table.cards .t-cost { width: 10%; }
+table.cards .t-type { width: 14%; }
+table.cards .t-set { width: 10%; }
+table.cards .t-rarity { width: 10%; }
+table.cards .t-artist { width: 11%; }
+table.cards .t-price { width: 8%; text-align: right; font-variant-numeric: tabular-nums; }
+
+td.t-name a { font-weight: 600; color: var(--ink); text-decoration: none; }
+tr:hover td.t-name a { color: var(--accent); text-decoration: underline; }
+td.t-type, td.t-artist { color: var(--muted); }
+td.t-set { font-variant-numeric: tabular-nums; }
+td.t-set strong { font-weight: 600; }
+
+/* The card under the pointer, beside it. It never takes the pointer, so the row stays hovered. */
+.preview {
+  position: fixed;
+  z-index: 5;
+  width: 240px;
+  height: auto;
+  border-radius: 4.75% / 3.5%;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+
+/* Between a phone and a laptop there is no room for the artist. */
+@media (max-width: 940px) {
+  table.cards .t-artist { display: none; }
+  table.cards .t-name { width: 24%; }
+  table.cards .t-type { width: 15%; }
+  table.cards .t-cost { width: 13%; }
+  table.cards .t-set { width: 12%; }
+  table.cards .t-rarity { width: 12%; }
+}
+
+/* On a phone the table becomes a list: name and cost, then type, then set and rarity, with
+   one price at the right: the one the results are sorted by, else dollars. */
+@media (max-width: 700px) {
+  table.cards thead { display: none; }
+  table.cards, table.cards tbody, table.cards td { display: block; }
+  table.cards tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1px 12px;
+    padding: 9px 12px;
+    border-top: 1px solid var(--line);
+  }
+  table.cards tbody tr:first-child { border-top: 0; }
+  table.cards td[class] { width: auto; padding: 0; border: 0; }
+  table.cards tbody tr:hover td { background: none; }
+  table.cards tbody tr:hover { background: var(--accent-soft); }
+  td.t-name { grid-column: 1; }
+  td.t-cost { grid-column: 2; text-align: right; overflow: visible; }
+  td.t-type { grid-column: 1; font-size: 0.85rem; }
+  td.t-set { grid-column: 1; font-size: 0.85rem; color: var(--muted); }
+  td.t-price { grid-column: 2; grid-row: 2 / span 2; align-self: center; overflow: visible; }
+  table.cards td.t-rarity, table.cards td.t-artist { display: none; }
+  table.cards[data-price="usd"] td.t-eur, table.cards[data-price="usd"] td.t-tix,
+  table.cards[data-price="eur"] td.t-usd, table.cards[data-price="eur"] td.t-tix,
+  table.cards[data-price="tix"] td.t-usd, table.cards[data-price="tix"] td.t-eur { display: none; }
+  .preview { display: none; }
 }
 
 /* Under a tile, when the printing is the point of the search: set, number, year, price. */
