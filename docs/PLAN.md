@@ -34,11 +34,22 @@ picked up: at the boundary between plan steps unless something is broken.
 - [ ] **The TopK account ran out of credits on 23 November 2026, about 04:35 UTC.** Every
       request is refused ("You have run out of credits. Please add a payment method"), so
       search on the live site answers "The search backend is unavailable" and the nightly
-      run will fail until credits are added at console.topk.io/billing. It happened during a
-      day of heavy use from this branch: the trial's seven collections (18,200 cards
-      embedded), about 80,000 field updates to printings, and several thousand comparison
-      and test queries. Before more of that: find out what a field update, a query and an
-      embedded card cost, and budget for it (the nightly run included)
+      run will fail until credits are added at console.topk.io/billing. The account had
+      TopK's $10 of free credits and no payment method.
+      What it costs, from topk.io/pricing on that day: storage $0.10 per GiB a month;
+      **query memory $20 per GiB a month**; data written $0.50 per GiB and $0.01 per 1,000
+      write requests; $0.50 per million queries; $0.005 per TiB scanned; $0.20 per GiB
+      returned; embedding $0.05 per million tokens.
+      By those prices the work is cheap and the standing charges are not. The half hour
+      before the credits ran out (two rounds of field updates and the comparison runs:
+      1,200 queries, 10.8 GiB scanned, 108 MiB returned, 133 write requests, 80 MiB
+      written) comes to about six cents. The whole day, with the trial's 18,200 embedded
+      cards and some 80,000 field updates, is an estimate of well under a dollar. Ten
+      dollars is half a GiB of query memory for a month, so what is held in memory, in
+      every collection of the project and not only the two this site uses, is the likely
+      cost. Not confirmed: the console's Billing page has the real breakdown. To decide
+      once it is seen: which collections to keep (`mtg-cards-v1` and `mtg-spike-5k` are
+      already waiting on the owner; the project holds about nineteen others)
 - [ ] When credits are back: run the live tests, the browser checks and CI for the `new:`
       commit, which went in without them
 - [x] Repository on GitHub, lint, unit tests, CI workflows
