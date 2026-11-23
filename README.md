@@ -224,21 +224,22 @@ newest first with set, number, rarity, date and price, at most 60. An address wi
 is a 404. `GET /api/card?random=1` answers in the same shape with a card chosen at random,
 and is never cached.
 
-`GET /api/home?try=<example>` gives the home page seven cards, the `theme` that joins them,
+`GET /api/home?try=<example>` gives the home page five cards, the `theme` that joins them,
 and what is new: the five newest of the sets people open packs of, the Commander decks that
 come out with them and their bonus sheets (`kind` says which). One still to be released is
 marked `upcoming` and says how many different cards have been `revealed`; the page words
 that as "first look" or "previews" with the date it is out, and a set that is out as "out
 now" or "released in" its month. The empty search box
 shows an example to try, a different one of some thirty on each visit, and names it in `try`: the
-cards are then that search's results, the first three always and the rest drawn from the
-eleven that follow, so the page shows what the search does before anything is typed. The
+cards are then that search's first five results and nothing from further down, so the page
+shows what the search does before anything is typed and shows it at its best. The
 examples are one list in `app/home.ts` and the same list in `public/app.js`: a few for each
 colour, for artifacts and for cards of more than one colour, each held to a card or two it
 must find by `app/test/live.test.ts`. Without an
 example the cards share a theme instead: the newest set that is out about one time in three,
 otherwise a kind of card (Dragons, Angels, Planeswalkers and so on), drawn from its sixty most
-played. The answer is held by the CDN for a minute, so a return visit sees other cards.
+played. The answer is held by the CDN for a minute; a return visit sees other cards because
+it is shown another example.
 
 The home page's flavour of the week is one file, `public/flavour.json`: a `featured` line shown
 above the newest sets, a `cards` search to draw the home page's cards from (`set:trk` for a new

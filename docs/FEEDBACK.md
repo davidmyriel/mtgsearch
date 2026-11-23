@@ -41,6 +41,7 @@ and the Scryfall comparison where results could move.
 | F-9 | 23 Nov 2026 | Under the bar, typical searches in place of the two links; players' words have to find the cards players mean | M | Now | Done |
 | F-10 | 23 Nov 2026 | Meaning has to be dealt with systematically behind the scenes, not by hand-written lists | L | Later, as a stage of its own (stage 8 of the plan) | Planned, not started |
 | F-11 | 23 Nov 2026 | Nine typical searches under the bar, a different four on each visit; the news lines say where each set stands | S | Now | Done |
+| F-12 | 23 Nov 2026 | Cards on the home page that do not do what the example says; show five | S | Now | Done; two examples still show a card or two that do not fit (see the item) |
 
 ### F-1. A page for each card
 
@@ -324,7 +325,8 @@ and the Scryfall comparison where results could move.
   box opens the list those cards come from.
 - **How they are drawn, the developer's choices:** the first three results are always among
   the seven, and the other four are drawn from the eleven that follow, so the cards differ
-  from visit to visit and stay on the point. The closest result is in the middle of the fan,
+  from visit to visit and stay on the point. (Changed by F-12: five cards, the first five
+  results, no draw.) The closest result is in the middle of the fan,
   which is the part a phone shows.
 - **What it replaced:** the themes of earlier the same day (Dragons, Angels, the newest set).
   They remain as the fall-back if an example ever finds too few cards. A search named in
@@ -494,6 +496,29 @@ and the Scryfall comparison where results could move.
 - **One thing found on the way:** the count has to be of different cards, not printings.
   Nauctis has 24 printings in the index and 7 different cards; the first version would have
   said "24 cards so far".
+
+### F-12. Five cards on the home page, and only the ones that fit
+
+- **From:** the project owner, 23 November 2026, with pictures of Stoic Farmer and Druid of
+  the Emerald Grove, which the home page had shown under "Try: dwarf that destroys lands".
+- **In their words:** "these dwarves do not destroy lands, i think we should reduce the
+  number of results to 5 on the homepage".
+- **Why those two were there:** the home page took the example's first three results and drew
+  four more from the eleven after them (F-6, the developer's choice, so that the cards would
+  differ from visit to visit). Both dwarves fetch lands and sit further down that list.
+- **What was done:** the home page shows five cards, and they are the example's first five
+  results with nothing from further down. There is no draw any more: an example always shows
+  the same five, and a return visit differs because it is shown another of the 33 examples.
+  The cards are a little larger, since there are fewer.
+- **What five from the top looks like for every example:** all 33 were listed and read. For
+  31 the five fit what is asked. Two still show something that does not:
+  - "dwarf that destroys lands": Dwarven Blastminer, Mine Layer, Dwarven Driller and Dwarven
+    Miner do; the fifth, Duergar Hedge-Mage, destroys an artifact or an enchantment.
+  - "blue land destruction": Erosion, Volcanic Eruption and Mana Vortex do; Mystic Might and
+    Blue Elemental Blast do not.
+  Both are what the search ranks fourth or fifth, not a fault of the home page. By the rule
+  of F-10 they are not patched by hand: they go to the query set for stage 8.
+- **Open, for the owner:** whether those two examples stay among the 33 until then.
 
 ## From the interface study
 

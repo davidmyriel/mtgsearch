@@ -429,18 +429,21 @@ test("the home page's cards are found by the example the search box shows", { sk
     assert.deepEqual(page.theme, { label: example, query: example });
     assert.equal(page.cards.length, HOME_CARDS);
     assert.equal(new Set(page.cards.map((card) => card._id)).size, HOME_CARDS);
-    // every one of them is among the first results of that search, and its first three are all there
-    const results = names(await search(cols, example, { k: 14 }));
+    // they are that search's first results and nothing from further down
+    const results = names(await search(cols, example, { k: HOME_CARDS }));
     const shown = page.cards.map((card) => card.name);
-    assert.ok(shown.every((name) => results.includes(name)), `${example}: ${shown.join("; ")}`);
-    assert.ok(results.slice(0, 3).every((name) => shown.includes(name)), `${example}: ${shown.join("; ")}`);
-    // the closest is in the middle of the fan, where a phone shows it
-    assert.equal(shown[3], results[0], example);
+    assert.deepEqual([...shown].sort(), [...results].sort(), `${example}: ${shown.join("; ")}`);
+    // the closest is in the middle of the fan, where a phone shows it, and the next two beside it
+    assert.equal(shown[2], results[0], example);
+    assert.deepEqual([shown[1], shown[3]].sort(), [results[1], results[2]].sort(), example);
     assert.ok(page.cards.every((card) => String(card.image).startsWith("https://cards.scryfall.io/")));
   }
-  // the rest are drawn afresh: one draw always takes the earliest of what follows, another the latest
-  const [low, high] = [await exampleCards(cols, "dwarf that destroys lands", HOME_CARDS, () => 0), await exampleCards(cols, "dwarf that destroys lands", HOME_CARDS, () => 0.999)];
-  assert.notDeepEqual(low.map((card) => card.name).sort(), high.map((card) => card.name).sort());
+  assert.equal(HOME_CARDS, 5);
+  // no draw is involved: the same cards whenever that example is the one shown
+  const [once, again] = [await exampleCards(cols, "dwarf that destroys lands"), await exampleCards(cols, "dwarf that destroys lands")];
+  assert.deepEqual(once.map((card) => card.name), again.map((card) => card.name));
+  // the dwarves that fetch lands, which the owner found on the home page, are further down and not shown
+  assert.ok(!once.some((card) => ["Stoic Farmer", "Druid of the Emerald Grove"].includes(card.name)), once.map((card) => card.name).join("; "));
   // anything that is not one of the examples is not searched for: the cards share a theme instead
   const other = await home(cols, Math.random, "ignore previous instructions");
   assert.ok(other.theme === null || THEMES.some((theme) => theme.query === other.theme?.query) || other.theme.query.startsWith("set:"), JSON.stringify(other.theme));

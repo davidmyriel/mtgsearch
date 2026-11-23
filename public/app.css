@@ -391,7 +391,7 @@ body:not(.searched) .home-cards[hidden] { display: flex !important; visibility: 
 /* A fan of cards along the bottom, cut off by the edge of the first screen: every other card
    stands a little lower and in front, and on a narrow screen the fan's middle shows. */
 .home-cards {
-  --fan-w: clamp(118px, 13vw, 168px);
+  --fan-w: clamp(124px, 14vw, 184px);
   display: flex;
   flex: none;
   justify-content: center;

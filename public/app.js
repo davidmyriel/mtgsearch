@@ -295,7 +295,7 @@ function showUnderstood(conditions) {
 // A device with a pointer rather than a finger: the search box can take the focus on arrival
 // without a keyboard sliding up, and rows of a table can show a picture on hover.
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-const HOME_CARDS = 7;
+const HOME_CARDS = 5;
 let homeAsked = false;
 
 /** GET a JSON file or endpoint of this site; null if it cannot be had. */

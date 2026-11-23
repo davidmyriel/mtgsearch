@@ -9,7 +9,7 @@ import { parse } from "./parser.ts";
 import { pick, search, toTopk, VISIBLE } from "./search.ts";
 import type { Collections, Hit } from "./search.ts";
 
-export const HOME_CARDS = 7;
+export const HOME_CARDS = 5;
 export const HOME_SETS = 5;
 // What counts as news, and what each is: the sets people open packs of, and what comes out
 // beside them, the Commander decks and the bonus sheet. Promos, tokens and the like are not news.
@@ -71,10 +71,11 @@ export const EXAMPLES = [
   // more than one colour
   "izzet dragon", "orzhov vampire", "simic hydra", "dimir rogue",
 ];
-// Of an example's results, the first few are always among the cards shown, and the rest are
-// drawn from the ones that follow, so the cards differ from visit to visit and stay on the point.
-const ALWAYS = 3;
-const EXAMPLE_POOL = 14;
+// The cards shown are the example's first results and nothing from further down: the further
+// down, the less a card is what the example asks for, and a home page that shows a dwarf that
+// fetches lands under "dwarf that destroys lands" says the search is worse than it is. A few
+// more are asked for than are shown, in case one has no picture.
+const SPARE = 3;
 
 // What a visit's cards can have in common, apart from being the newest set's. Each is a
 // search, so a theme is anything the search box understands, and a kind of card that shows
@@ -190,14 +191,11 @@ export function chooseTheme(sets: HomeSet[], random: () => number = Math.random)
 }
 
 /**
- * Cards found by one of the examples: its first results and a draw from the next ones. They
- * are arranged with the closest in the middle, where a narrow screen shows the fan.
+ * Cards found by one of the examples: its first results, arranged with the closest in the
+ * middle, where a narrow screen shows the fan.
  */
-export async function exampleCards(cols: Collections, example: string, n = HOME_CARDS, random: () => number = Math.random): Promise<Hit[]> {
-  const found = (await search(cols, example, { k: EXAMPLE_POOL })).hits.filter((hit) => hit.image);
-  const chosen = found.slice(0, ALWAYS);
-  const rest = found.slice(ALWAYS);
-  while (rest.length && chosen.length < n) chosen.push(...rest.splice(Math.floor(random() * rest.length), 1));
+export async function exampleCards(cols: Collections, example: string, n = HOME_CARDS): Promise<Hit[]> {
+  const chosen = (await search(cols, example, { k: n + SPARE })).hits.filter((hit) => hit.image).slice(0, n);
   if (chosen.length < n) return [];
   // middle out: the first goes in the middle, the next either side of it, and so on
   const arranged: Hit[] = [];
@@ -208,7 +206,7 @@ export async function exampleCards(cols: Collections, example: string, n = HOME_
 export async function home(cols: Collections, random: () => number = Math.random, example: string | null = null): Promise<Home> {
   const [sets, found] = await Promise.all([
     newestSets(cols),
-    example !== null && EXAMPLES.includes(example) ? exampleCards(cols, example, HOME_CARDS, random) : [],
+    example !== null && EXAMPLES.includes(example) ? exampleCards(cols, example, HOME_CARDS) : [],
   ]);
   if (example !== null && found.length === HOME_CARDS) return { cards: found, sets, theme: { label: example, query: example } };
   const theme = chooseTheme(sets, random);

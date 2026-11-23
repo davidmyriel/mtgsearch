@@ -105,17 +105,17 @@ async function run(name, contextOptions) {
     home.news.every((line) => (line.startsWith("Preview") ? /(first look|previews) \d+ cards? so far, out \d+ \w+$/ : /(out now since \d+ \w+|released in \w+)$/).test(line.replace(/\s+/g, " "))),
     `[${name}] and each says where the set stands (${home.news.map((line) => line.replace(/\s+/g, " ").replace(/^(New|Preview)/, "")).join("; ")})`,
   );
-  check(home.cards === 7, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
-  // The seven are found by the example the empty search box is showing: each is among the
-  // first results of that search, and its closest result is in the middle of the fan.
+  check(home.cards === 5, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
+  // The five are what the example in the empty search box finds first, and nothing from
+  // further down its results; the closest is in the middle of the fan.
   const common = await page.evaluate(async ({ query, names }) => {
     if (!query) return { query, found: 0, first: "" };
-    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "14" })}`);
+    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "5" })}`);
     const results = ((await response.json()).hits || []).map((hit) => hit.name);
     return { query, found: names.filter((cardName) => results.includes(cardName)).length, first: results[0] };
   }, { query: home.theme, names: home.names });
   check(home.hint === `Try: ${home.theme}` && home.themeLabel === `A few cards: ${home.theme}`, `[${name}] the cards go with the example in the search box (${home.hint})`);
-  check(common.found === 7 && home.names[3] === common.first, `[${name}] and are what that search finds, the closest in the middle (${common.first})`);
+  check(common.found === 5 && home.names[2] === common.first, `[${name}] and are that search's first five results, the closest in the middle (${common.first})`);
   check(home.cutOff && Math.abs(home.fanBottom - home.window) <= 4, `[${name}] cut off by the bottom edge of the first screen`);
   check(!home.pageBelow, `[${name}] and nothing but the footer follows: no search instructions`);
   if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);
@@ -248,13 +248,13 @@ async function run(name, contextOptions) {
   check(new URL(page.url()).searchParams.get("q").startsWith("set:"), `[${name}] a line of news searches for that set (${new URL(page.url()).searchParams.get("q")})`);
   await page.goBack();
   await page.waitForFunction(() => !document.body.classList.contains("searched"));
-  const stripHref = await page.getAttribute("#home-cards li:nth-child(4) a", "href");
-  await page.click("#home-cards li:nth-child(4) a");
+  const stripHref = await page.getAttribute("#home-cards li:nth-child(3) a", "href");
+  await page.click("#home-cards li:nth-child(3) a");
   await page.waitForFunction(() => !document.getElementById("card").hidden);
   check(new URL(page.url()).pathname === stripHref && (await page.textContent("#card-name")).length > 0, `[${name}] a card on the home page opens its page (${stripHref})`);
   await page.goBack();
   await page.waitForFunction(() => document.getElementById("card").hidden && !document.body.classList.contains("searched"));
-  check((await page.getAttribute("#home-cards li:nth-child(4) a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
+  check((await page.getAttribute("#home-cards li:nth-child(3) a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
 
   await search(page, "sphinx that draws two cards");
   check((await firstCards(page, 1))[0] === "Consecrated Sphinx", `[${name}] plain English finds Consecrated Sphinx first`);
@@ -407,7 +407,7 @@ async function run(name, contextOptions) {
   const barBefore = await barTop();
   const waiting = await fresh.evaluate(() => document.getElementById("news").hidden && document.getElementById("home-cards").hidden);
   letThrough();
-  await fresh.waitForFunction(() => document.querySelectorAll("#home-cards img").length === 7 && !document.getElementById("news").hidden);
+  await fresh.waitForFunction(() => document.querySelectorAll("#home-cards img").length === 5 && !document.getElementById("news").hidden);
   const barAfter = await barTop();
   check(waiting && Math.abs(barAfter - barBefore) <= 2, `[${name}] the search bar does not move when the news and cards arrive (${Math.round(barBefore)}px, then ${Math.round(barAfter)}px)`);
   await fresh.unroute("**/api/home");

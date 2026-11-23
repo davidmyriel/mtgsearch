@@ -227,6 +227,9 @@ understand; what it finds instead is in brackets.
   Falkenrath Aristocrat). These are kinds of deck, not of card: what is wanted is the cards
   such a deck plays
 - treasure makers, token makers, etb effects, haste enablers (loosely related cards)
+- "dwarf that destroys lands" ranks Duergar Hedge-Mage fifth, which destroys an artifact or
+  an enchantment; "blue land destruction" ranks Mystic Might and Blue Elemental Blast fourth
+  and fifth. Both are among the examples the home page shows
 
 Words from the same list that are about play and not about cards (goldfishing, topdecking,
 win-more, chump block, durdling, scoop, curve, whiff, Timmy/Johnny/Spike) are not searches
