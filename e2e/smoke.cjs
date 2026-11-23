@@ -58,7 +58,49 @@ async function run(name, contextOptions) {
 
   await page.goto(base);
   check(await page.isVisible("#intro"), `[${name}] home shows example searches`);
+
+  // The first screen: the search bar at its centre, what is new, and a few cards at the bottom edge.
+  await page.waitForFunction(() => {
+    const images = [...document.querySelectorAll("#home-cards img")].filter((img) => img.getBoundingClientRect().width > 0);
+    return images.length > 0 && images.every((img) => img.complete && img.naturalWidth > 0);
+  });
+  const home = await page.evaluate(() => {
+    const box = (element) => element.getBoundingClientRect();
+    const cards = [...document.querySelectorAll("#home-cards li")].filter((li) => box(li).width > 0).map((li) => box(li));
+    const bar = box(document.getElementById("search"));
+    return {
+      hero: box(document.querySelector(".masthead")).height,
+      window: innerHeight,
+      barCentre: Math.abs((bar.left + bar.right) / 2 - innerWidth / 2),
+      barHeight: bar.height,
+      cards: cards.length,
+      acrossTheFold: cards.every((card) => card.top < innerHeight && card.bottom > innerHeight),
+      wholeInThePage: cards.every((card) => card.bottom + scrollY <= document.documentElement.scrollHeight),
+      clipped: getComputedStyle(document.querySelector(".masthead")).overflow !== "visible" || getComputedStyle(document.getElementById("home-cards")).overflow !== "visible",
+      news: [...document.querySelectorAll("#news li")].map((li) => li.textContent),
+      focused: document.activeElement ? document.activeElement.id : "",
+    };
+  });
+  check(home.hero >= home.window - 1, `[${name}] the first screen is the search and nothing below it (${Math.round(home.hero)} of ${home.window}px)`);
+  check(home.barCentre <= 2 && home.barHeight >= 60, `[${name}] the search bar is in the middle and thick (${Math.round(home.barHeight)}px)`);
+  check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.join(", ")})`);
+  check(home.cards === (contextOptions.isMobile ? 3 : 6), `[${name}] a few cards sit along the bottom (${home.cards})`);
+  check(home.acrossTheFold && home.wholeInThePage && !home.clipped, `[${name}] the window's edge runs across them, but the page shows each card whole`);
+  if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);
   await shot("1-home");
+  // A line of news runs its search; a card opens its page; Back returns home each time.
+  await page.click("#news li:last-child a");
+  await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Scryfall syntax"));
+  check(new URL(page.url()).searchParams.get("q").startsWith("set:"), `[${name}] a line of news searches for that set (${new URL(page.url()).searchParams.get("q")})`);
+  await page.goBack();
+  await page.waitForFunction(() => !document.body.classList.contains("searched"));
+  const stripHref = await page.getAttribute("#home-cards li:first-child a", "href");
+  await page.click("#home-cards li:first-child a");
+  await page.waitForFunction(() => !document.getElementById("card").hidden);
+  check(new URL(page.url()).pathname === stripHref && (await page.textContent("#card-name")).length > 0, `[${name}] a card on the home page opens its page (${stripHref})`);
+  await page.goBack();
+  await page.waitForFunction(() => document.getElementById("card").hidden && !document.body.classList.contains("searched"));
+  check((await page.getAttribute("#home-cards li:first-child a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
 
   await search(page, "sphinx that draws two cards");
   check((await firstCards(page, 1))[0] === "Consecrated Sphinx", `[${name}] plain English finds Consecrated Sphinx first`);

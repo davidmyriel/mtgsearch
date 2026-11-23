@@ -28,7 +28,13 @@
       <a href="/syntax">Syntax guide</a>
       <a id="nav-random" href="/random">Random card</a>
     </nav>
+    <!-- Home only: what is new. The first line is the flavour of the week, when
+         public/flavour.json names one; the rest are the newest sets. -->
+    <ul id="news" class="news" aria-label="What is new" hidden></ul>
   </div>
+  <!-- Home only: a few cards, different on every visit. They are whole, and placed so that
+       the bottom of the first screen runs across them. -->
+  <ul id="home-cards" class="home-cards" aria-label="A few cards" hidden></ul>
 </header>
 
 <main id="main">

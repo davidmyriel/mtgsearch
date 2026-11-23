@@ -113,20 +113,48 @@ code {
 [hidden] { display: none !important; }
 
 /* --- masthead --------------------------------------------------------------------------
-   The home page's centrepiece when nothing is being searched for; a bar once something is. */
+   On the home page it is the whole first screen, with the search bar at its centre and
+   little else. Once there is a search it becomes a bar across the top. */
+
+:root {
+  /* The width of a card in the strip at the bottom of the home page. */
+  --strip-w: clamp(96px, 13vw, 160px);
+  /* How much of each of those cards hangs below the first screen: scroll to see it whole. */
+  --strip-drop: calc(var(--strip-w) * 0.585);
+  --field: #14110e;
+  --field-line: rgb(242 171 128 / 0.55);
+}
 
 .masthead {
   color: var(--band-ink);
-  background: radial-gradient(120% 150% at 50% 0%, var(--band-glow) 0%, var(--band) 62%);
+  background: var(--band);
   border-bottom: 3px solid var(--accent);
 }
 
 .masthead :focus-visible { outline-color: var(--band-link); }
 
+/* Home: as tall as the window. A warm glow and faint rings centre on the search bar. */
+body:not(.searched) .masthead {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  background:
+    radial-gradient(56% 46% at 50% 40%, rgb(162 67 26 / 0.2), transparent 72%),
+    repeating-radial-gradient(circle at 50% 40%, transparent 0 58px, rgb(255 255 255 / 0.016) 58px 59px),
+    radial-gradient(130% 120% at 50% 0%, var(--band-glow) 0%, var(--band) 66%);
+}
+
 .masthead-inner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   max-width: 720px;
   margin-inline: auto;
-  padding: clamp(44px, 11vh, 112px) var(--gutter) clamp(40px, 9vh, 88px);
+  padding: 40px var(--gutter) 28px;
   text-align: center;
 }
 
@@ -138,70 +166,166 @@ code {
 }
 
 .tagline {
-  margin: 14px auto 0;
+  margin: 12px auto 0;
   max-width: 44ch;
   color: var(--band-muted);
-  font-size: 1.08rem;
+  font-size: 1.05rem;
 }
 
+/* The search bar: one thick piece, darker inside than the page around it. */
 .search {
   display: flex;
-  gap: 8px;
-  margin-top: 28px;
+  align-items: center;
+  width: 100%;
+  max-width: 640px;
+  margin-top: 30px;
+  padding: 5px;
+  background: var(--field);
+  border: 1.5px solid var(--field-line);
+  border-radius: 14px;
+  box-shadow: 0 8px 34px rgb(0 0 0 / 0.38);
 }
+.search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28), 0 8px 34px rgb(0 0 0 / 0.38); }
 
 .search input {
   flex: 1;
   min-width: 0;
-  height: 58px;
-  padding: 0 18px;
+  height: 56px;
+  padding: 0 16px;
   font: inherit;
-  font-size: 1.15rem; /* 16px or more, so phones do not zoom on focus */
-  color: var(--ink);
-  background: var(--surface);
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.25);
+  font-size: 1.25rem; /* 16px or more, so phones do not zoom on focus */
+  color: var(--band-ink);
+  color-scheme: dark;
+  background: transparent;
+  border: 0;
+  outline: none; /* the bar itself shows the focus, above */
 }
+.search input::placeholder { color: var(--band-muted); opacity: 0.75; }
 
 .search button {
+  height: 56px;
   padding: 0 24px;
   font: inherit;
   font-weight: 600;
   color: #ffffff;
   background: #a2431a;
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 10px;
   cursor: pointer;
 }
 .search button:hover { background: #b34d20; }
 
+/* The few other things there are to do, kept quiet. */
 .nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  margin-top: 22px;
+  gap: 8px;
+  margin-top: 18px;
 }
 
 .nav a {
-  padding: 7px 16px;
-  font-size: 0.95rem;
+  padding: 5px 14px;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--band-ink);
+  color: var(--band-muted);
   text-decoration: none;
   border: 1px solid var(--band-line);
   border-radius: 999px;
 }
 .nav a:hover, .nav a[aria-current] { border-color: var(--band-link); color: var(--band-link); }
 
-/* As a bar: wordmark, field and links on one line. */
-.searched .masthead { background: var(--band); }
+/* What is new: the flavour of the week, then the newest sets. */
+.news {
+  display: grid;
+  gap: 7px;
+  justify-items: center;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.93rem;
+}
+.news a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--band-muted);
+  text-decoration: none;
+}
+.news a:hover { color: var(--band-ink); }
+.news .tag {
+  padding: 2px 7px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #a2431a;
+  border-radius: 5px;
+}
+.news .tag.upcoming { background: #2c6a86; }
+.news .featured a { color: var(--band-ink); font-weight: 600; }
 
+/* A few cards along the bottom. They are whole: each hangs partly below the first screen,
+   over the page beneath, so the window's edge runs across them and scrolling shows the rest. */
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(6, var(--strip-w));
+  justify-content: center;
+  gap: clamp(8px, 1.4vw, 16px);
+  margin: 0 0 calc(var(--strip-drop) * -1);
+  padding: 0 var(--gutter);
+  list-style: none;
+}
+.home-cards li:nth-child(even) { transform: translateY(12px); }
+.home-cards a {
+  display: block;
+  aspect-ratio: 488 / 680;
+  background: var(--surface);
+  border-radius: 4.75% / 3.5%;
+  box-shadow: 0 6px 22px rgb(0 0 0 / 0.45);
+  overflow: hidden;
+}
+.home-cards img { display: block; width: 100%; height: 100%; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .home-cards a { transition: transform 140ms ease-out; }
+  .home-cards a:hover { transform: translateY(-6px); }
+}
+/* Fewer cards on a narrower screen, so that each stays large enough to recognise. */
+@media (max-width: 760px) {
+  :root { --strip-w: 21vw; }
+  .home-cards { grid-template-columns: repeat(4, var(--strip-w)); }
+  .home-cards li:nth-child(n + 5) { display: none; }
+}
+@media (max-width: 520px) {
+  :root { --strip-w: 27vw; }
+  .home-cards { grid-template-columns: repeat(3, var(--strip-w)); }
+  .home-cards li:nth-child(n + 4) { display: none; }
+}
+/* The page under the first screen starts below the cards that hang over it. */
+body.has-strip:not(.searched) main { padding-top: calc(var(--strip-drop) + 20px); }
+
+/* Flavours of the week (public/flavour.json): the home page in another light. */
+body[data-flavour="winter"]:not(.searched) .masthead {
+  background:
+    radial-gradient(56% 46% at 50% 40%, rgb(86 150 190 / 0.24), transparent 72%),
+    radial-gradient(circle, rgb(255 255 255 / 0.26) 0 1px, transparent 1.5px) 0 0 / 46px 46px,
+    radial-gradient(circle, rgb(255 255 255 / 0.16) 0 1px, transparent 1.5px) 23px 31px / 62px 62px,
+    radial-gradient(130% 120% at 50% 0%, #1c2a36 0%, #10151b 66%);
+}
+body[data-flavour="anniversary"]:not(.searched) .masthead {
+  background:
+    radial-gradient(56% 46% at 50% 40%, rgb(214 168 60 / 0.26), transparent 72%),
+    repeating-radial-gradient(circle at 50% 40%, transparent 0 58px, rgb(255 226 150 / 0.03) 58px 59px),
+    radial-gradient(130% 120% at 50% 0%, #3a2e14 0%, var(--band) 66%);
+}
+
+/* As a bar: wordmark, field and links on one line; nothing of the home page's extras. */
 .searched .masthead-inner {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
+  justify-content: stretch;
   gap: 8px 20px;
   max-width: var(--content);
   padding-block: 12px;
@@ -209,12 +333,13 @@ code {
 }
 
 .searched .wordmark { font-size: 1.45rem; }
-.searched .tagline { display: none; }
-.searched .search { margin: 0; }
-.searched .search input { height: 42px; padding: 0 12px; font-size: 1.02rem; box-shadow: none; }
-.searched .search button { padding: 0 16px; }
+.searched .tagline, .searched .news, .searched .home-cards { display: none; }
+.searched .search { max-width: none; margin: 0; padding: 3px; border-radius: 10px; border-color: var(--band-line); box-shadow: none; }
+.searched .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28); }
+.searched .search input { height: 36px; padding: 0 10px; font-size: 1.02rem; }
+.searched .search button { height: 36px; padding: 0 16px; border-radius: 7px; }
 .searched .nav { margin: 0; flex-wrap: nowrap; gap: 4px; }
-.searched .nav a { padding: 6px 10px; border-color: transparent; color: var(--band-muted); white-space: nowrap; }
+.searched .nav a { padding: 6px 10px; font-size: 0.95rem; border-color: transparent; color: var(--band-muted); white-space: nowrap; }
 .searched .nav a:hover, .searched .nav a[aria-current] { color: var(--band-ink); text-decoration: underline; }
 
 /* Narrow: name and links on one line, the field under them. The links may wrap and never

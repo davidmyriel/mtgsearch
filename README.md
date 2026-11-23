@@ -215,6 +215,17 @@ newest first with set, number, rarity, date and price, at most 60. An address wi
 is a 404. `GET /api/card?random=1` answers in the same shape with a card chosen at random,
 and is never cached.
 
+`GET /api/home` gives the home page a few cards chosen at random and the newest sets (those
+still to be released are marked `upcoming`); it is held by the CDN for a minute, so a return
+visit sees other cards.
+
+The home page's flavour of the week is one file, `public/flavour.json`: a `featured` line shown
+above the newest sets, a `cards` search to draw the home page's cards from (`set:trk` for a new
+set, `t:snow` in winter), and a `theme` (`winter`, `anniversary`). Edit it and deploy; no code
+changes. The cards on the home page are always whole: Scryfall's rules for card images forbid
+covering or cropping the artist's name and copyright, so they are placed across the bottom of
+the first screen, not cut off by the page.
+
 The site has three addresses besides a search: `/card/<set>/<number>/<name>`, `/syntax` (the
 syntax guide, a static page whose examples are links that run the search) and `/random`.
 Mana and other symbols in a card's cost and text are drawn as small lettered discs of the

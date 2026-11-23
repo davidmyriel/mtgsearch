@@ -4,6 +4,7 @@ import { test } from "node:test";
 import { Client } from "topk-js";
 import { handleCard, handleSearch, MAX_REACH, MAX_RESULTS } from "../api.ts";
 import { card, MAX_PRINTINGS, randomCard } from "../card.ts";
+import { HOME_CARDS, newestSets, randomCards } from "../home.ts";
 import { search } from "../search.ts";
 import type { Collection, Collections } from "../search.ts";
 
@@ -278,6 +279,34 @@ test("a card's page: one printing with stats and legality, and its printings new
   const body = await (await handleCard(new URL("https://x.test/api/card?set=ima&cn=47"), (set, number) => card(collection(), set, number))).json();
   assert.deepEqual([body.card.name, body.card.stats, body.card.set], ["Consecrated Sphinx", "4/6", "ima"]);
   assert.equal(body.printings.length, page.printings.length);
+});
+
+test("the home page's cards differ from draw to draw, and its sets are the newest", { skip }, async () => {
+  const cols = collection();
+  // fixed "dice" stand in for chance: the same dice draw the same cards, other dice others
+  const dice = (seed: number) => {
+    let n = seed;
+    return () => (n = (n * 9301 + 49297) % 233280) / 233280;
+  };
+  const first = await randomCards(cols, HOME_CARDS, dice(7));
+  const again = await randomCards(cols, HOME_CARDS, dice(7));
+  const other = await randomCards(cols, HOME_CARDS, dice(8));
+  assert.equal(first.length, HOME_CARDS);
+  assert.ok(first.every((card) => card.name && card.image && card.set && card.cn));
+  assert.equal(new Set(first.map((card) => card._id)).size, HOME_CARDS);
+  assert.deepEqual(first.map((card) => card._id), again.map((card) => card._id));
+  assert.notDeepEqual(first.map((card) => card._id), other.map((card) => card._id));
+
+  // on a fixed day, so the test does not depend on when it runs
+  const sets = await newestSets(cols, 4, new Date("2026-11-23T00:00:00Z"));
+  assert.equal(sets.length, 4);
+  assert.deepEqual(sets.map((set) => set.released), [...sets.map((set) => set.released)].sort().reverse());
+  assert.ok(sets.every((set) => set.code && set.name && set.cards > 0));
+  assert.deepEqual(sets.map((set) => set.upcoming), sets.map((set) => set.released > "2026-11-23"));
+  // a year and a half earlier, sets since released did not exist yet from that day's point of view
+  const earlier = await newestSets(cols, 4, new Date("2025-06-01T00:00:00Z"));
+  assert.ok(earlier.every((set) => set.released >= "2024-08-05"));
+  assert.ok(earlier.filter((set) => set.released > "2025-06-01").every((set) => set.upcoming));
 });
 
 test("a random card is a real card with its printings, and differs from pick to pick", { skip }, async () => {

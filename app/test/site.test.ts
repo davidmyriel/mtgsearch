@@ -45,7 +45,7 @@ test("the dev server serves the page, its assets and nothing else", async () => 
     assert.equal(page.status, 200);
     assert.ok((await page.text()).includes('id="search"'));
     assert.equal(page.headers.get("x-content-type-options"), "nosniff");
-    for (const asset of ["app.js", "app.css", "icon.svg"]) assert.equal((await fetch(`${base}/${asset}`)).status, 200, asset);
+    for (const asset of ["app.js", "app.css", "icon.svg", "flavour.json"]) assert.equal((await fetch(`${base}/${asset}`)).status, 200, asset);
     // a card's own address is the same page; its script reads the address
     const card = await fetch(`${base}/card/ima/47/consecrated-sphinx`);
     assert.equal(card.status, 200);
@@ -89,6 +89,24 @@ test("every example in the syntax guide and on the home page is a search that ca
   const home = [...read("index.html").matchAll(/data-q="([^"]+)"/g)].map(([, q]) => unescape(q));
   assert.equal(home.length, 9);
   for (const query of home) assert.doesNotThrow(() => lower(parse(query)), query);
+});
+
+test("the flavour of the week is a file the home page can read", async () => {
+  const { readFileSync } = await import("node:fs");
+  const flavour = JSON.parse(readFileSync(new URL("../../public/flavour.json", import.meta.url), "utf8"));
+  // a line of its own, or none; it may only link within this site
+  const featured = flavour.featured;
+  assert.ok(featured === null || (typeof featured.text === "string" && typeof featured.href === "string" && featured.href.startsWith("/")));
+  // a search to draw the home page's cards from, which has to be one that can be run
+  assert.equal(typeof flavour.cards, "string");
+  if (flavour.cards) {
+    const { lower } = await import("../lower.ts");
+    const { parse } = await import("../parser.ts");
+    assert.doesNotThrow(() => lower(parse(flavour.cards)), flavour.cards);
+  }
+  // a look the stylesheet knows
+  const css = readFileSync(new URL("../../public/app.css", import.meta.url), "utf8");
+  assert.ok(flavour.theme === "" || css.includes(`body[data-flavour="${flavour.theme}"]`), flavour.theme);
 });
 
 test("the page asks for pages the endpoint will serve", async () => {

@@ -1,0 +1,9 @@
+{
+  "_how": "The home page's flavour of the week. Edit this file and deploy; no code changes. All three are optional.",
+  "_featured": "A line above the newest sets, for example {\"label\": \"New\", \"text\": \"Star Trek is out\", \"href\": \"/?q=set:trk\"}. The link must stay on this site (start with /).",
+  "_cards": "A search whose results the cards at the bottom of the home page are drawn from, for example \"set:trk\" for a new set or \"t:snow\" in winter. Leave empty for cards from anywhere.",
+  "_theme": "A look for the home page: \"\" (the usual one), \"winter\" or \"anniversary\".",
+  "featured": null,
+  "cards": "",
+  "theme": ""
+}

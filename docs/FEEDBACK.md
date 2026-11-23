@@ -33,6 +33,7 @@ and the Scryfall comparison where results could move.
 | F-1 | 22 Nov 2026 | A page for each card, in place of the popup | M | Next boundary | Done |
 | F-2 | 22 Nov 2026 | The site has to look polished enough for the public; layout closer to Scryfall's first | L | Now, on the owner's word | Done (first pass) |
 | F-3 | 22 Nov 2026 | Typing a card's exact name opens the card's page, not a list of results | M | Next boundary | Done |
+| F-4 | 23 Nov 2026 | The home page's first impression: the search bar is the focus, relaxed, discreet, with room for a flavour of the week | M | Next boundary | Done |
 
 ### F-1. A page for each card
 
@@ -120,6 +121,39 @@ and the Scryfall comparison where results could move.
   others. Part of a name ("bolt", "lightning bol") still lists the cards.
 - **Confirmed by the owner on 23 November 2026:** asked whether those short names should show
   the list instead, the answer was "open the card". It stays as built.
+
+### F-4. The home page's first impression
+
+- **From:** the project owner, 23 November 2026, as an annotated picture of Scryfall's home
+  page under the words "some ui feedback on scryfall's first impression".
+- **In their words:** "1. the focus is on the search bar. 2. needs a simple relaxed search-like
+  vibe. 3. essential information/config availabel in a discrete way. 4. flavour of the week type
+  changes like christmas cards, anniversary, new set, always space for this". On the picture:
+  "Stylish discrete background focus on the search bar"; "The search bar is big and thick enough
+  to be the centre, inside darker than outside"; "As high as a MacBook air screen"; "News of the
+  week"; "Few user choices discrete colour choice"; "Magic the gathering cards cutoff cool vibe
+  each time a user comes back".
+- **How it was read:** as what our own first screen should do, not as a request to copy theirs.
+  The qualities are taken; their badge, starfield, colours and wording are not.
+- **What was done:**
+  - The first screen is as tall as the window and holds the name, one sentence, the search bar,
+    two quiet links, and what is new. The three ways to search are below it.
+  - The search bar is one thick piece with the button inside it, darker inside than the page
+    around it, in the middle of the screen. On a computer it has the focus on arrival.
+  - The background is a warm glow and faint rings centred on the bar.
+  - What is new is automatic: the four newest sets, read from the index, each a link to that
+    set. A set not yet released is marked "Preview".
+  - A flavour of the week is one file, `public/flavour.json`: a line of its own above the sets,
+    a search to draw the home page's cards from, and a look ("winter", "anniversary").
+  - A few cards chosen at random, six on a laptop and three on a phone, sit along the bottom and
+    differ on each visit. Each opens its page.
+- **One thing done differently, and why:** on Scryfall those cards are cut off by the page.
+  Scryfall's rules for anyone using its card images say "Do not cover, crop, or clip off the
+  copyright or artist name on card images", and those are at the bottom of a card. So ours are
+  whole and placed across the bottom edge of the first screen: the window cuts them, which
+  gives the same first impression, and scrolling shows each one complete.
+- **Changed with it:** a query in which nothing can be used no longer returns to the home
+  screen, where the explanation would now be below the fold; the header stays a bar.
 
 ## From the interface study
 

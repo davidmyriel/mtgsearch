@@ -1,7 +1,7 @@
 // The HTTP contract, with a stubbed search: no network and no TopK key.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { handleCard, handleSearch, MAX_QUERY_CHARS, MAX_REACH, MAX_RESULTS } from "../api.ts";
+import { handleCard, handleHome, handleSearch, MAX_QUERY_CHARS, MAX_REACH, MAX_RESULTS } from "../api.ts";
 import type { CardPage } from "../card.ts";
 import type { Result, SearchOptions } from "../search.ts";
 
@@ -269,6 +269,41 @@ test("a printing search says what its total counts and returns the printing's de
     [body.hits[0].id, body.hits[0].flavor_text, body.hits[0].usd, body.hits[0].collector_number],
     ["p1", "Blessed by the hands of Jin-Gitaxias.", 34.97, "43"],
   );
+});
+
+// --- GET /api/home ---------------------------------------------------------------------
+
+test("the home page gets a few cards and the newest sets, held only briefly", async () => {
+  const found = {
+    cards: [{ ...HIT, usd: 1.5 }, { ...HIT, _id: "def", name: "Sol Ring", set: "trc", cn: "499" }],
+    sets: [{ code: "nau", name: "Nauctis: The Sunken Realm", released: "2027-02-05", cards: 24, upcoming: true }],
+  };
+  const response = await handleHome(async () => found);
+  assert.equal(response.status, 200);
+  // a minute at the CDN: a return visit sees other cards, and TopK is spared under load
+  assert.equal(response.headers.get("Netlify-CDN-Cache-Control"), "public, max-age=60");
+  const body = await response.json();
+  // a card carries what is needed to show it and link to its page, and no more
+  assert.deepEqual(body.cards[0], {
+    id: "abc", name: "Consecrated Sphinx", image: "https://cards.scryfall.io/normal/front/x.jpg", set: "2x2", collector_number: "43",
+    type_line: "Creature — Sphinx", artist: "Mark Zug",
+  });
+  assert.deepEqual([body.cards[1].name, body.cards[1].set, body.cards[1].collector_number], ["Sol Ring", "trc", "499"]);
+  assert.deepEqual(body.sets, found.sets);
+});
+
+test("a failure behind the home page is an error the page can ignore", async () => {
+  const quiet = console.error;
+  console.error = () => {};
+  try {
+    const down = await handleHome(async () => {
+      throw new Error("connection reset");
+    });
+    assert.equal(down.status, 502);
+    assert.equal(down.headers.get("Cache-Control"), "no-store");
+  } finally {
+    console.error = quiet;
+  }
 });
 
 // --- GET /api/card ---------------------------------------------------------------------

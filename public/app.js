@@ -21,6 +21,8 @@ const tableWrap = document.getElementById("table");
 const rows = document.getElementById("rows");
 const preview = document.getElementById("preview");
 const understood = document.getElementById("understood");
+const news = document.getElementById("news");
+const homeCards = document.getElementById("home-cards");
 const ignored = document.getElementById("ignored");
 const emptyState = document.getElementById("empty");
 const cardView = document.getElementById("card");
@@ -248,6 +250,105 @@ function showUnderstood(conditions) {
   understood.hidden = understood.children.length === 0;
 }
 
+// --- home page -------------------------------------------------------------------------
+
+// A device with a pointer rather than a finger: the search box can take the focus on arrival
+// without a keyboard sliding up, and rows of a table can show a picture on hover.
+const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const HOME_CARDS = 6;
+let homeAsked = false;
+
+/** GET a JSON file or endpoint of this site; null if it cannot be had. */
+async function getJson(path) {
+  try {
+    const response = await fetch(path);
+    return response.ok ? await response.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** One line of what is new: a small tag and a few words, linking to a search on this site. */
+function newsLine(tag, words, href, className) {
+  const item = document.createElement("li");
+  if (className) item.className = className;
+  const link = document.createElement("a");
+  link.href = href;
+  const label = document.createElement("span");
+  label.className = tag.toLowerCase() === "preview" ? "tag upcoming" : "tag";
+  label.textContent = tag;
+  link.append(label, words);
+  // A link to a search is answered in the page; anything else is followed as a link.
+  const url = new URL(link.href);
+  if (url.origin === location.origin && url.pathname === "/" && url.searchParams.get("q")) {
+    link.addEventListener("click", (event) => {
+      if (modified(event)) return;
+      event.preventDefault();
+      run({ query: url.searchParams.get("q") });
+    });
+  }
+  item.append(link);
+  return item;
+}
+
+/**
+ * What the home page shows around the search box: what is new, and a few cards that differ
+ * on every visit. public/flavour.json can put a line of its own first, choose where the
+ * cards are drawn from, and give the page another look: the flavour of the week.
+ */
+async function loadHome() {
+  if (homeAsked) return;
+  homeAsked = true;
+  const [flavour, found] = await Promise.all([getJson("/flavour.json"), getJson("/api/home")]);
+  const taste = flavour || {};
+  if (typeof taste.theme === "string" && /^[a-z]{1,20}$/.test(taste.theme)) document.body.dataset.flavour = taste.theme;
+
+  const lines = [];
+  const featured = taste.featured;
+  if (featured && typeof featured.text === "string" && typeof featured.href === "string" && featured.href.startsWith("/")) {
+    lines.push(newsLine(String(featured.label || "New"), featured.text, featured.href, "featured"));
+  }
+  for (const set of (found && found.sets) || []) {
+    lines.push(newsLine(set.upcoming ? "Preview" : "New", set.name, searchPath({ ...EMPTY, query: `set:${set.code}` })));
+  }
+  news.replaceChildren(...lines);
+  news.hidden = lines.length === 0;
+
+  // The cards: drawn from the flavour's own search when it names one, else from anywhere.
+  let cards = (found && found.cards) || [];
+  if (typeof taste.cards === "string" && taste.cards.trim()) {
+    const themed = await getJson(`/api/search?${new URLSearchParams({ q: taste.cards.trim(), k: String(PAGE_SIZE) })}`);
+    const pool = ((themed && themed.hits) || []).filter((hit) => hit.image && cardPath(hit));
+    const drawn = [];
+    while (pool.length && drawn.length < HOME_CARDS) drawn.push(...pool.splice(Math.floor(Math.random() * pool.length), 1));
+    if (drawn.length) cards = drawn;
+  }
+  const strip = cards
+    .filter((hit) => hit.image && hit.image.startsWith(IMAGE_HOST) && cardPath(hit))
+    .slice(0, HOME_CARDS)
+    .map((hit) => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = cardPath(hit);
+      const image = new Image(488, 680);
+      image.alt = hit.name;
+      image.decoding = "async";
+      image.src = hit.image;
+      link.append(image);
+      link.addEventListener("click", (event) => {
+        if (modified(event)) return;
+        event.preventDefault();
+        history.pushState(null, "", link.getAttribute("href"));
+        loadCard({ set: hit.set, number: hit.collector_number });
+      });
+      item.append(link);
+      return item;
+    });
+  homeCards.replaceChildren(...strip);
+  homeCards.hidden = strip.length === 0;
+  document.body.classList.toggle("has-strip", strip.length > 0);
+}
+
 // --- results as a table ----------------------------------------------------------------
 
 /** One result as a row of the table. Clicking anywhere on the row opens the card. */
@@ -317,7 +418,7 @@ function showHeadings(view, data) {
 }
 
 // On a device with a pointer, the card under it is shown beside it while a row is hovered.
-if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+if (finePointer) {
   rows.addEventListener("pointermove", (event) => {
     const tr = event.target.closest("tr");
     if (!tr || !tr.dataset.image) return void (preview.hidden = true);
@@ -408,6 +509,9 @@ async function run(search, { push = true } = {}) {
     showEmpty();
     current = { ...EMPTY, unit: "cards" };
     setStatus("", "");
+    // The home page: the search box is what it is for.
+    loadHome();
+    if (finePointer) input.focus();
     return;
   }
 
@@ -430,8 +534,8 @@ async function run(search, { push = true } = {}) {
     const data = await response.json();
     if (!response.ok) return fail("", data.error || "Something went wrong.");
     if (data.mode === "unsupported") {
+      // The header stays a bar, so that the explanation is in view, with the examples under it.
       intro.hidden = false;
-      document.body.classList.remove("searched");
       // Every term was one that cannot be used, so there is nothing left to search for.
       return fail("Nothing here could be used", `${data.note}. The syntax guide lists what can be typed.`);
     }

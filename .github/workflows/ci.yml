@@ -39,6 +39,7 @@ jobs:
           npx -y netlify-cli@27 build --offline
           unzip -l .netlify/functions/search.zip | grep -q 'topk-js.*\.node$'
           unzip -l .netlify/functions/card.zip | grep -q 'topk-js.*\.node$'
+          unzip -l .netlify/functions/home.zip | grep -q 'topk-js.*\.node$'
 
   ingest:
     name: Ingest job (Python ${{ matrix.python }})

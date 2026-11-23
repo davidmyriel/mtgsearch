@@ -2,12 +2,14 @@
 // so it can be unit-tested with a stubbed search.
 
 import type { CardPage } from "./card.ts";
+import type { Home } from "./home.ts";
 import { ORDERS } from "./search.ts";
 import type { Hit, Result, SearchOptions } from "./search.ts";
 
 export type SearchFn = (query: string, options: SearchOptions) => Promise<Result>;
 export type CardFn = (set: string, number: string) => Promise<CardPage | null>;
 export type RandomFn = () => Promise<CardPage | null>;
+export type HomeFn = () => Promise<Home>;
 
 export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
@@ -34,6 +36,12 @@ const CACHED = {
   "Netlify-CDN-Cache-Control": "public, durable, max-age=600, stale-while-revalidate=3600",
 };
 const NOT_CACHED = { "Cache-Control": "no-store" };
+// The home page's cards are meant to differ from visit to visit, so they are held for a
+// minute only: long enough to spare TopK under load, short enough that a return visit differs.
+const BRIEFLY = {
+  "Cache-Control": "public, max-age=0, must-revalidate",
+  "Netlify-CDN-Cache-Control": "public, max-age=60",
+};
 
 function json(body: unknown, status: number, headers: Record<string, string>): Response {
   return new Response(JSON.stringify(body), {
@@ -113,6 +121,24 @@ export async function handleCard(url: URL, card: CardFn, random?: RandomFn): Pro
     return { id: full.id, ...Object.fromEntries(PRINTING_ROW.map((name) => [name, full[name]])) };
   });
   return json({ card: detail, printings, took_ms: Math.round(performance.now() - started) }, 200, atRandom ? NOT_CACHED : CACHED);
+}
+
+/** GET /api/home: a few cards chosen at random and the newest sets, for the home page. */
+export async function handleHome(home: HomeFn): Promise<Response> {
+  let found: Home;
+  try {
+    found = await home();
+  } catch (cause) {
+    console.error("home page data failed:", cause);
+    const setup = setupProblem(cause);
+    if (setup) return error(503, setup);
+    return error(502, "The search backend is unavailable. Try again shortly.");
+  }
+  const cards = found.cards.map((row) => {
+    const full = hit(row);
+    return Object.fromEntries(["id", "name", "image", "set", "collector_number", "type_line", "artist"].map((name) => [name, full[name]]));
+  });
+  return json({ cards, sets: found.sets }, 200, BRIEFLY);
 }
 
 export async function handleSearch(url: URL, search: SearchFn): Promise<Response> {
