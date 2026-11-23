@@ -118,6 +118,8 @@ and the Scryfall comparison where results could move.
 - **A consequence to know about:** a short name that is also part of many other names now opens
   the card: "shock" goes to Shock, "opt" to Opt, "forest" to Forest, each with the link to the
   others. Part of a name ("bolt", "lightning bol") still lists the cards.
+- **Confirmed by the owner on 23 November 2026:** asked whether those short names should show
+  the list instead, the answer was "open the card". It stays as built.
 
 ## From the interface study
 
@@ -135,7 +137,7 @@ identity and are not copied.
 | U-4 | Sort key, direction, and cards / printings / illustrations as separate controls | S | With U-3 | Done |
 | U-5 | A table view of results (set, number, name, cost, type, rarity, artist, prices) | M | With the browse tier (v0.2) | Open |
 | U-6 | A preview image when a card's address is shared in a chat | M | With the browse tier, unless asked for sooner | Open |
-| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Done with our own discs. Wizards' own symbols wait for the owner |
+| U-7 | Mana symbols drawn instead of written as `{W}` | S | Needs a decision: a symbol set whose licence allows it | Done with our own discs, which the owner chose to keep |
 | U-8 | Rulings on the card page | L | With the browse tier: needs Scryfall's rulings file in the ingest | Open |
 | U-9 | A sets index and set pages, an advanced search form, a random card | L | With the browse tier | Random card done with F-2; the rest open |
 
@@ -221,7 +223,7 @@ with F-2.)
   or number inside and a tint for each colour; a hybrid symbol is split corner to corner. They
   use no Wizards artwork. The brace code stays in the text, out of sight, so copying a card's
   text still gives `{T}: Add {G}`, and a screen reader hears "tap" and "green mana".
-- **Still the owner's to decide:** switching to Wizards' actual symbols through the Mana font.
-  It is a small change (the same hook draws either), but it rests on the policy question above:
-  accept that it is tolerated rather than permitted, or ask Wizards for written permission.
+- **Decided by the owner on 23 November 2026:** "own lettered discs". Wizards' actual symbols
+  are not used. Should that change, the Mana font is the candidate and the same hook draws
+  either; it would rest on the policy question above.
 
