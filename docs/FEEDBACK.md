@@ -34,6 +34,7 @@ and the Scryfall comparison where results could move.
 | F-2 | 22 Nov 2026 | The site has to look polished enough for the public; layout closer to Scryfall's first | L | Now, on the owner's word | Done (first pass) |
 | F-3 | 22 Nov 2026 | Typing a card's exact name opens the card's page, not a list of results | M | Next boundary | Done |
 | F-4 | 23 Nov 2026 | The home page's first impression: the search bar is the focus, relaxed, discreet, with room for a flavour of the week | M | Next boundary | Done |
+| F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done; two of the four examples find the wrong cards (see the item) |
 
 ### F-1. A page for each card
 
@@ -254,6 +255,43 @@ and the Scryfall comparison where results could move.
     is orange, which is TopK's own dark-background version; the black is the ground. The
     disc in the search bar is the orange K on black. If the owner meant every block orange,
     or wants a light header so the letters can be black, it is one colour in one file.
+
+### F-5. The logo builds itself, and the empty box shows what to try
+
+- **From:** the project owner, 23 November 2026, in three messages.
+- **In their words:** "can you do the animation where blocks materialize from left to right".
+  Then, on the empty search box: "in the search box say something along the lines: 'you don't
+  need the exact text to find your card'. shorter but you know what im talking about". Then,
+  of the first attempt ("No exact text needed"): "No exact text needed is indirect, people
+  want tget it, need to tell them what to do. give them an example thats random every time in
+  the search box. sphinx that draws two cards, dwarf that destroys lands, tithe alternative,
+  blue land destruction".
+- **The animation:** on arrival at the home page the name's squares appear column by column
+  from the left, the squares of a column not quite together, each fading in; it takes about a
+  second. It is a second picture, `public/wordmark-appear.svg`, made with the still one by
+  `tools/make_wordmark.py`, and it moves by SVG's own animation elements, because a picture
+  shown through `<img>` may carry neither a stylesheet nor a script under the site's
+  Content-Security-Policy. The developer's choices: it plays once, on the home page only
+  (results and card pages show the name still); anyone who has asked their device for less
+  motion gets the still picture; a browser that does not animate shows every square at once.
+- **Found while testing it:** the name and the search bar jumped about 130px upward when the
+  news and the cards arrived, a moment after the page opened, which the animation made
+  obvious. The news and the cards now keep their room from the start, and the bar stays
+  where it is (measured: within 1px at four screen sizes).
+- **The empty box:** shows "Try: " and one of the owner's four examples, drawn afresh on each
+  visit. The developer added one thing: Enter in the empty box tries the example shown, since
+  there is no button and the example would otherwise have to be typed out. On a phone the
+  example is set smaller than what is typed, so the longest one shows whole at 320px. The
+  two pages without a script (the syntax guide and "not found") always show the first.
+- **What the four examples find today, said plainly:** two do what they promise and two do
+  not. "sphinx that draws two cards" finds Consecrated Sphinx first; "dwarf that destroys
+  lands" finds Dwarven Blastminer, Mine Layer, Dwarven Driller, Dwarven Miner. "tithe
+  alternative" finds Capenna Express, Mr. House, Alms of the Vein: the search reads the two
+  words by their meaning and does not know Tithe is a card whose effect is wanted. "blue
+  land destruction" finds blue double-faced lands (Jwari Disruption, Sea Gate Restoration):
+  it does not treat "blue" as a colour to filter by. Both are faults of the search, not of
+  the examples, and are the next piece of work (see `docs/PLAN.md`); all four are shown
+  meanwhile because the owner listed them.
 
 ## From the interface study
 

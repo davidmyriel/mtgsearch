@@ -16,11 +16,13 @@
      once there is one it becomes a bar across the top (see .searched in app.css). -->
 <header class="masthead">
   <div class="masthead-inner">
-    <a class="wordmark" href="/"><img src="/wordmark.svg" alt="TutorK" width="334" height="56"></a>
+    <!-- The name builds itself square by square, from the left, on arrival at the home page;
+         it stands still for anyone who has asked their device for less motion. -->
+    <a class="wordmark" href="/"><picture><source media="(prefers-reduced-motion: reduce)" srcset="/wordmark.svg"><img src="/wordmark-appear.svg" alt="TutorK" width="334" height="56"></picture></a>
     <form id="search" class="search" role="search" action="/" method="get">
       <!-- The mark sits inside the bar, at its left end; pressing it puts the cursor in the box. -->
       <label class="mark" for="q"><img src="/icon.svg" alt="" width="44" height="44"><span class="sr-only">Search cards</span></label>
-      <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
+      <input id="q" name="q" type="search" maxlength="200" placeholder="Try: sphinx that draws two cards"
              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
       <!-- Enter searches. The button is kept out of sight for assistive technology. -->
       <button type="submit" class="sr-only" tabindex="-1">Search</button>

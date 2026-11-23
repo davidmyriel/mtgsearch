@@ -143,9 +143,33 @@ async function run(name, contextOptions) {
       above: name.bottom <= bar.top && name.left >= 0 && name.right <= innerWidth,
       centred: Math.abs((name.left + name.right) / 2 - innerWidth / 2) <= 2,
       tab: document.title,
+      picture: new URL(image.currentSrc).pathname,
+      hint: document.getElementById("q").placeholder,
     };
   });
   check(title.drawn && title.above && title.centred && title.name === "TutorK" && title.tab === "TutorK", `[${name}] the name stands above the bar in block letters (${title.name}), and titles the tab`);
+  check(title.picture === "/wordmark-appear.svg", `[${name}] on arrival at the home page the name builds itself (${title.picture})`);
+  // The empty box says what to do: try a card described in plain words, one of these.
+  const examples = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+  const shownExample = title.hint.replace(/^Try: /, "");
+  check(title.hint.startsWith("Try: ") && examples.includes(shownExample), `[${name}] the empty box shows something to try ("${title.hint}")`);
+  // Whichever is drawn, all of it shows in the box, and each one finds cards.
+  const tried = await page.evaluate(async (examples) => {
+    const box = document.getElementById("q");
+    const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
+    const pen = document.createElement("canvas").getContext("2d");
+    pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
+    const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const out = [];
+    for (const example of examples) {
+      const response = await fetch(`/api/search?${new URLSearchParams({ q: example, k: "1" })}`);
+      const found = await response.json();
+      out.push({ example, fits: pen.measureText(`Try: ${example}`).width <= room, mode: found.mode, cards: (found.hits || []).length });
+    }
+    return out;
+  }, examples);
+  check(tried.every((one) => one.fits), `[${name}] every example fits in the box (${tried.filter((one) => !one.fits).map((one) => one.example).join(", ") || "all four"})`);
+  check(tried.every((one) => one.mode === "semantic" && one.cards >= 1), `[${name}] and every example is read as plain English and finds cards`);
   const mark = await lookAtBar();
   check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
   check(mark.noButton, `[${name}] the bar has no button: the box fills it, and Enter searches`);
@@ -232,6 +256,8 @@ async function run(name, contextOptions) {
   await fresh.goto(cardUrl);
   await fresh.waitForFunction(() => !document.getElementById("card").hidden);
   check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] a shared card address opens that card`);
+  const stillName = await fresh.$eval(".wordmark img", (image) => new URL(image.currentSrc).pathname);
+  check(stillName === "/wordmark.svg", `[${name}] where the name stands still in the header (${stillName})`);
   check((await fresh.textContent("#card-printing")) === (await page.textContent("#card-printing")), `[${name}] and the same printing of it`);
   check((await fresh.$("#card-back")) === null && !(await fresh.isVisible("text=Back to results")), `[${name}] a card's page has no link back: the browser's Back and the search bar do that`);
   check((await fresh.textContent("#card-stats")) === "4/6" && (await fresh.$$("#printings-list a")).length === listed.length, `[${name}] and the same stats and printings`);
@@ -286,6 +312,46 @@ async function run(name, contextOptions) {
   await fresh.goto(`${base}/card/nosuchset/999/nothing`);
   await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("No card at this address"));
   check((await fresh.isVisible("#empty")) && (await fresh.textContent("#empty-title")) === "No card at this address", `[${name}] an address with no card says so and offers where to go`);
+  // The moving name, opened as a picture of its own so its clock can be set: the squares
+  // materialize from left to right, and all of them are there at the end.
+  await fresh.goto(`${base}/wordmark-appear.svg`);
+  const shownAt = (seconds) => fresh.evaluate((seconds) => {
+    const svg = document.documentElement;
+    svg.pauseAnimations();
+    svg.setCurrentTime(seconds);
+    const shown = (from, to) => [...svg.querySelectorAll("rect")]
+      .filter((square) => square.x.baseVal.value >= from && square.x.baseVal.value < to)
+      .filter((square) => Number(getComputedStyle(square).opacity) > 0.5).length;
+    return { first: shown(0, 648), last: shown(2895, 9999), all: shown(0, 9999) };
+  }, seconds);
+  const [early, midway, done] = [await shownAt(0.02), await shownAt(0.45), await shownAt(1.5)];
+  check(early.all === 0 && midway.first === 9 && midway.last === 0 && done.all === 68, `[${name}] the name's squares materialize from left to right (${early.all}, then ${midway.all} with the T whole and no K, then ${done.all})`);
+  // Someone who has asked their device for less motion gets the name standing still.
+  await fresh.emulateMedia({ reducedMotion: "reduce" });
+  await fresh.goto(base);
+  await fresh.waitForFunction(() => { const image = document.querySelector(".wordmark img"); return image.complete && image.naturalWidth > 0; });
+  const calmName = await fresh.$eval(".wordmark img", (image) => new URL(image.currentSrc).pathname);
+  check(calmName === "/wordmark.svg", `[${name}] and stands still for anyone who asked for less motion (${calmName})`);
+  // Nothing on the first screen moves when the news and the cards arrive: they are held back
+  // here, and the bar is where it will be before they come.
+  let letThrough;
+  const held = new Promise((resolve) => { letThrough = resolve; });
+  await fresh.route("**/api/home", async (route) => { await held; await route.continue(); });
+  await fresh.goto(base);
+  const barTop = () => fresh.$eval("#search", (bar) => bar.getBoundingClientRect().top);
+  const barBefore = await barTop();
+  const waiting = await fresh.evaluate(() => document.getElementById("news").hidden && document.getElementById("home-cards").hidden);
+  letThrough();
+  await fresh.waitForFunction(() => document.querySelectorAll("#home-cards img").length === 7 && !document.getElementById("news").hidden);
+  const barAfter = await barTop();
+  check(waiting && Math.abs(barAfter - barBefore) <= 2, `[${name}] the search bar does not move when the news and cards arrive (${Math.round(barBefore)}px, then ${Math.round(barAfter)}px)`);
+  await fresh.unroute("**/api/home");
+  // Enter in the empty box tries the example it shows.
+  const offered = (await fresh.getAttribute("#q", "placeholder")).replace(/^Try: /, "");
+  await fresh.focus("#q");
+  await fresh.press("#q", "Enter");
+  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Plain English"));
+  check(new URL(fresh.url()).searchParams.get("q") === offered && (await fresh.inputValue("#q")) === offered, `[${name}] Enter in the empty box tries the example it shows (${offered})`);
   await fresh.close();
 
   await page.goBack();
@@ -575,6 +641,17 @@ async function narrow() {
     if (ready) await page.waitForFunction(ready);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     check(overflow <= 0, `[320 wide] ${what} does not scroll sideways (overflow ${overflow}px)`);
+    if (path !== "/" && path !== "/syntax") continue;
+    // the longest example still shows whole in the empty box, on the home page and in a header
+    const spare = await page.evaluate(() => {
+      const box = document.getElementById("q");
+      const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
+      const pen = document.createElement("canvas").getContext("2d");
+      pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
+      const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      return Math.floor(room - pen.measureText("Try: sphinx that draws two cards").width);
+    });
+    check(spare >= 0, `[320 wide] ${what}: the longest example fits in the empty box (${spare}px to spare)`);
   }
   await browser.close();
 }

@@ -233,7 +233,7 @@ body:not(.searched) .search::after {
 }
 
 /* The name, in the blocks of TopK's logo: a picture, so its height is what is set. */
-.wordmark { display: block; line-height: 0; }
+.wordmark, .wordmark picture { display: block; line-height: 0; }
 .wordmark img { display: block; width: auto; height: clamp(36px, 5.2vw, 52px); }
 
 /* The search bar: one thick piece, darker inside than the page around it. */
@@ -273,11 +273,17 @@ body:not(.searched) .search::after {
 /* There is no button to press: Enter searches, and a phone's keyboard offers its own
    search key. The form keeps one out of sight for assistive technology. */
 
-/* A narrow phone: a smaller mark. */
+/* A phone: the example in the empty box is set smaller, so all of it shows. What is typed
+   stays at 16px or more. */
+@media (max-width: 480px) {
+  .search input::placeholder { font-size: 0.92rem; }
+}
+/* A narrow phone: a smaller mark too. */
 @media (max-width: 380px) {
   body:not(.searched) .search .mark { margin-left: 4px; }
   body:not(.searched) .search .mark img { width: 36px; height: 36px; }
-  body:not(.searched) .search input { padding: 0 10px; font-size: 1.12rem; }
+  body:not(.searched) .search input { padding: 0 8px; font-size: 1.12rem; }
+  .search input::placeholder { font-size: 0.78rem; }
 }
 
 /* The few other things there are to do, kept quiet. */
@@ -330,6 +336,12 @@ body:not(.searched) .search::after {
 }
 .news .tag.upcoming { background: #2c6a86; }
 .news .featured a { color: var(--band-ink); font-weight: 600; }
+
+/* The news and the cards keep their room on the first screen before they arrive, so the
+   name and the search bar do not move when they do. */
+.news { min-height: calc(4 * 1.5rem + 3 * 7px); }
+body:not(.searched) .news[hidden] { display: grid !important; visibility: hidden; }
+body:not(.searched) .home-cards[hidden] { display: flex !important; visibility: hidden; }
 
 /* A fan of cards along the bottom, cut off by the edge of the first screen: every other card
    stands a little lower and in front, and on a narrow screen the fan's middle shows. */

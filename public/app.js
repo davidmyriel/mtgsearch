@@ -35,6 +35,12 @@ const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
 // Results on one page, and how far into a result the endpoint will go. Keep in step with
 // MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
+// What to type, shown in the empty box: a card described in plain words, a different one of
+// these on each visit.
+const EXAMPLES = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+const example = EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
+input.placeholder = `Try: ${example}`;
+
 // The site's title, as the pages themselves show it.
 const SITE = "TutorK";
 const PAGE_SIZE = 60;
@@ -940,7 +946,8 @@ function route(state) {
 // A new query starts from the defaults: first page, default order, cards.
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  run({ query: input.value });
+  // Enter in the empty box tries the example it is showing.
+  run({ query: input.value.trim() ? input.value : example });
   input.blur(); // dismiss the phone keyboard so results are visible
 });
 
@@ -978,5 +985,10 @@ document.addEventListener("keydown", (event) => {
   // Escape leaves a card that was opened from the results, as the browser's Back does.
   if (event.key === "Escape" && !cardView.hidden && shownCount() > 0) history.back();
 });
+
+// The name builds itself only on arrival at the home page. Anywhere else this page is opened
+// (results, a card) the header shows it still.
+const wordmark = document.querySelector(".wordmark img");
+if (wordmark && (location.pathname !== "/" || location.search)) wordmark.src = "/wordmark.svg";
 
 route(history.state);

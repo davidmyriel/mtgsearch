@@ -63,13 +63,16 @@ test("the search bar shows no button, and a card's page no link back to the resu
 });
 
 test("the site shows one name on every page, in TopK's blocks, and no sentence under it", () => {
-  const mark = /<a class="wordmark" href="\/"><img src="\/wordmark\.svg" alt="([^"]+)" width="334" height="56"><\/a>/;
-  const name = (root("public/index.html").match(mark) ?? [])[1];
+  const still = /<a class="wordmark" href="\/"><img src="\/wordmark\.svg" alt="([^"]+)" width="334" height="56"><\/a>/;
+  // the home page's builds itself, and stands still for anyone who asked for less motion
+  const moving =
+    /<a class="wordmark" href="\/"><picture><source media="\(prefers-reduced-motion: reduce\)" srcset="\/wordmark\.svg"><img src="\/wordmark-appear\.svg" alt="([^"]+)" width="334" height="56"><\/picture><\/a>/;
+  const name = (root("public/index.html").match(moving) ?? [])[1];
   assert.equal(name, "TutorK");
   assert.ok(root("public/index.html").includes(`<title>${name}</title>`));
   for (const page of ["public/syntax.html", "public/404.html"]) {
     const html = root(page);
-    assert.equal((html.match(mark) ?? [])[1], name, page);
+    assert.equal((html.match(still) ?? [])[1], name, page);
     assert.match(html, new RegExp(`<title>[^<]+ · ${name}</title>`), page);
   }
   // the script titles the tab with the same name
@@ -81,6 +84,48 @@ test("the site shows one name on every page, in TopK's blocks, and no sentence u
   assert.equal(squares("#fe5000"), 10, "K is ten squares, as in TopK's icon");
   assert.equal(squares("#f4efe6"), 9 + 12 + 9 + 14 + 14, "T, U, T, O and R");
   assert.match(picture, /viewBox="0 0 3340 560"/);
+});
+
+test("the empty search box shows something to try: a card described in plain words", async () => {
+  const { parse } = await import("../parser.ts");
+  const script = root("public/app.js");
+  const examples: string[] = JSON.parse((script.match(/const EXAMPLES = (\[[^\]]+\]);/) ?? [])[1] ?? "[]");
+  assert.deepEqual(examples, ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"]);
+  assert.ok(script.includes("input.placeholder = `Try: ${example}`;"));
+  for (const example of examples) {
+    // plain words: nothing in it is Scryfall syntax, so the search reads it by meaning
+    assert.ok(!/[:=<>!"()]/.test(example), example);
+    assert.doesNotThrow(() => parse(example), example);
+  }
+  // before the script runs, and on the pages that have no script, the box shows the first of them
+  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
+    assert.ok(root(page).includes(`placeholder="Try: ${examples[0]}"`), page);
+  }
+});
+
+test("the moving name is the still one, its squares appearing from left to right", () => {
+  // the still picture's squares, by colour
+  const still = new Set<string>();
+  for (const [, colour, d] of root("public/wordmark.svg").matchAll(/<path fill="(#[0-9a-f]{6})" d="([^"]+)"/g)) {
+    for (const [, x, y] of d.matchAll(/M(\d+) (\d+)h100v100h-100z/g)) still.add(`${x},${y},${colour}`);
+  }
+  // the moving picture's, each with the moment it starts to show
+  const moving = [...root("public/wordmark-appear.svg").matchAll(
+    /<rect x="(\d+)" y="(\d+)" width="100" height="100" fill="(#[0-9a-f]{6})"><animate attributeName="opacity" values="0;0;1" keyTimes="0;([\d.]+);1" dur="([\d.]+)s" fill="freeze"\/><\/rect>/g,
+  )].map(([, x, y, colour, wait, total]) => ({ key: `${x},${y},${colour}`, x: Number(x), starts: Number(wait) * Number(total), ends: Number(total) }));
+  assert.equal(moving.length, 68);
+  assert.deepEqual(new Set(moving.map((square) => square.key)), still);
+  // six letters, left to right: each begins to appear after the one before it has begun
+  const letters = [0, 648, 1181, 1829, 2362, 2895].map((left, index, lefts) => moving.filter((square) => square.x >= left && square.x < (lefts[index + 1] ?? Infinity)));
+  const first = letters.map((letter) => Math.min(...letter.map((square) => square.starts)));
+  assert.deepEqual([...first].sort((a, b) => a - b), first);
+  assert.ok(first[0] < 0.01 && new Set(first).size === 6, `letters begin at ${first.map((t) => t.toFixed(2)).join(", ")}`);
+  // within a letter too, a square further right never starts more than a blink earlier
+  for (const a of moving) for (const b of moving) if (b.x > a.x) assert.ok(b.starts > a.starts - 0.06, `${b.key} before ${a.key}`);
+  // and it is over quickly
+  assert.ok(Math.max(...moving.map((square) => square.ends)) <= 1.5);
+  // a square shows from the start in a browser that does not animate: nothing hides it but the animation
+  assert.ok(!/opacity="0"/.test(root("public/wordmark-appear.svg")));
 });
 
 test("the home page's background has no hard edge: gradients, and a grain the page can load", () => {

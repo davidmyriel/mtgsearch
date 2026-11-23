@@ -70,6 +70,12 @@ picked up: at the boundary between plan steps unless something is broken.
 ### 3. Relevance (about a week)
 - [x] Frozen query set, evaluation harness, full-corpus baseline
 - [x] Filters read from plain English: mana value, colour, type
+- [ ] The examples the home page offers have to find what they promise (found 23 November 2026).
+      "tithe alternative" does not know Tithe is a card whose effect is wanted: look the named
+      card up and search by its text, leaving the card itself out. "blue land destruction"
+      reads "land" as the type of card wanted and returns blue lands: a type word that is the
+      object of the effect ("land destruction", "creature removal") is not a filter. Both are
+      changes to how the query is read, not to the index
 - [ ] Spell out mana symbols in the indexed text. Known failure: "taps for two colorless mana" does
       not find Sol Ring, whose text reads `{T}: Add {C}{C}`
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),
