@@ -74,10 +74,17 @@ picked up: at the boundary between plan steps unless something is broken.
       names a card and asks for others like it is answered from that card's own text, without
       the card; a type word followed by what is done to it ("land destruction") is not a
       filter. Changes to how the query is read, not to the index; the relevance set is unchanged
-- [ ] "tutor" and other players' words. "white creature tutor" ranks mentors and instructors:
-      the index does not know a tutor is a card that searches a library. The site is named for
-      the word, so it has to work. Likely a list of such words read into their rules wording
-      at query time; measure on the jargon class first
+- [x] Players' words (23 November 2026). A query that is a players' word for a kind of card
+      ("mana rocks", "board wipes", "tutors", some fifty in `app/jargon.ts`) is read as the
+      community's tag for it and answered most played first, narrowed by a colour in front or
+      a kind of card behind. The relevance set's players'-words class went from 29 of 40 to 40
+      of 40 for the full search; the other classes did not change. "tutors" finds Demonic,
+      Vampiric and Enlightened Tutor first
+- [ ] A players' word inside a longer query ("white creature tutor", "mana rocks that draw
+      cards") is still left to its meaning and ranks poorly. Use the tag as a filter and rank
+      the rest by meaning
+- [ ] A players' word that is also exactly a card's name (blink, flicker, fog, clone) opens that
+      card. Offer the kind of card from the card's page, as the other matches already are
 - [ ] "budget" and "cheaper" in a query for a card's alternatives should filter by price
 - [ ] Searches that failed when examples were being chosen (23 November 2026), each a card any
       player expects: "three damage for one mana" without Lightning Bolt, "two mana counterspell"

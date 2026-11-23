@@ -29,8 +29,16 @@
       <!-- Enter searches. The button is kept out of sight for assistive technology. -->
       <button type="submit" class="sr-only" tabindex="-1">Search</button>
     </form>
+    <!-- Home only: searches people often need, said the way players say them. -->
+    <nav class="needs" aria-label="Searches people often need">
+      <a href="/?q=mana+rocks">Mana rocks</a>
+      <a href="/?q=bounce+spells">Bounce spells</a>
+      <a href="/?q=blink+effects">Blink effects</a>
+      <a href="/?q=board+wipes">Board wipes</a>
+    </nav>
+    <!-- Not on the home page: once the header is a bar it offers a card at random. The syntax
+         guide is linked from the footer. -->
     <nav class="nav" aria-label="Site">
-      <a href="/syntax">Syntax guide</a>
       <a id="nav-random" href="/random">Random card</a>
     </nav>
     <!-- Home only: what is new. The first line is the flavour of the week, when

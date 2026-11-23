@@ -12,6 +12,9 @@ c:u t:sphinx o:"draw two cards"          Scryfall syntax: the same three cards S
 sphinx that draws two cards              plain English: Consecrated Sphinx first
 c:u t:sphinx draws when opponents draw   both at once: keywords filter, words rank by meaning
 lightning bolt                           a card name: name matches, most-played first
+board wipes                              players' words: the community's tag, most-played first
+white board wipes, bounce spells         ... narrowed by a colour in front or a kind of card behind
+llanowar alternative                     a card's alternatives: cards that do what it does
 t:dragon r:mythic usd<5                  printings: set, rarity, artist, price, frame, date
 !"lightning bolt" unique:prints          every printing of a card
 ```
@@ -204,7 +207,9 @@ which the page shows under the status line so that a wrong reading is easy to sp
 lists each term that was left out, with the reason. `exact` is the card whose whole name is
 what was typed, if there is one: the page opens that card instead of listing every card with
 those words in its name (as it does when a search finds exactly one card), unless the address
-asks for the list with `list=1`. It also
+asks for the list with `list=1`. `reads_as` is the Scryfall syntax a players' word was read as
+("board wipes" is `otag:sweeper`; the words and their readings are one list in `app/jargon.ts`),
+and `like` is the card a query named when it asked for that card's alternatives. It also
 carries `total`, `unit` (what the total counts: cards, printings or illustrations),
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 pager and its three controls (show, sort, direction). The page asks for 60 results at a time.

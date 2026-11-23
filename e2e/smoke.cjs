@@ -187,6 +187,37 @@ async function run(name, contextOptions) {
   await page.click("#search .mark");
   check((await page.evaluate(() => document.activeElement && document.activeElement.id)) === "q", `[${name}] pressing the mark puts the cursor in the box`);
   await shot("1-home");
+  // Under the bar: four searches people often need, in players' words. The syntax guide is in
+  // the footer and a random card is not offered here.
+  const under = await page.evaluate(() => {
+    const box = (element) => element.getBoundingClientRect();
+    const bar = box(document.getElementById("search"));
+    const links = [...document.querySelectorAll(".needs a")];
+    return {
+      words: links.map((link) => link.textContent),
+      below: links.every((link) => box(link).top >= bar.bottom && box(link).height > 0),
+      headerLinks: [...document.querySelectorAll("header .nav a")].filter((link) => box(link).height > 0).length,
+      guideInHeader: document.querySelectorAll('header a[href="/syntax"]').length,
+      guideInFooter: document.querySelectorAll('footer a[href="/syntax"]').length,
+    };
+  });
+  check(under.words.join(", ") === "Mana rocks, Bounce spells, Blink effects, Board wipes" && under.below, `[${name}] under the bar are searches people often need (${under.words.join(", ")})`);
+  check(under.headerLinks === 0 && under.guideInHeader === 0 && under.guideInFooter === 1, `[${name}] and neither the syntax guide nor a random card: the guide is in the footer`);
+  // Each is a players' word, and finds the cards players mean by it, most played first.
+  const staples = { "Mana rocks": "Sol Ring", "Bounce spells": "Cyclonic Rift", "Blink effects": "Ephemerate", "Board wipes": "Blasphemous Act" };
+  for (const [words, staple] of Object.entries(staples)) {
+    await page.click(`.needs a:has-text("${words}")`);
+    await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Players' words"));
+    const found = await firstCards(page, 6);
+    check(found.includes(staple) && new URL(page.url()).searchParams.get("q") === words.toLowerCase(), `[${name}] "${words}" finds ${found.slice(0, 3).join(", ")}`);
+    if (words === "Mana rocks") {
+      const said = await page.textContent("#status");
+      check(said.startsWith("Players' words · ") && said.includes(" cards, showing 1–60, the same as otag:mana-rock"), `[${name}] and says how it was read (${said})`);
+      check((await page.isVisible("#nav-random")) && (await page.$$('header a[href="/syntax"]')).length === 0, `[${name}] with a random card offered in the header, where the results are`);
+    }
+    await page.goBack();
+    await page.waitForFunction(() => !document.body.classList.contains("searched"));
+  }
   // A line of news runs its search; a card opens its page; Back returns home each time.
   await page.click("#news li:last-child a");
   await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Scryfall syntax"));
@@ -360,7 +391,8 @@ async function run(name, contextOptions) {
   const offered = (await fresh.getAttribute("#q", "placeholder")).replace(/^Try: /, "");
   await fresh.focus("#q");
   await fresh.press("#q", "Enter");
-  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Plain English"));
+  // an example is plain English or a players' word
+  await fresh.waitForFunction(() => ["Plain English", "Players' words"].some((kind) => document.getElementById("status").textContent.startsWith(kind)));
   check(new URL(fresh.url()).searchParams.get("q") === offered && (await fresh.inputValue("#q")) === offered, `[${name}] Enter in the empty box tries the example it shows (${offered})`);
   // A query that names a card and asks for others like it says so above the results.
   await fresh.fill("#q", "tithe alternative");

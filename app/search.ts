@@ -1,15 +1,18 @@
 // One search box: Scryfall-compatible first, natural language otherwise.
 //
 //   1. Scryfall syntax (any keyword, `!exact`, regex)  -> exactly what Scryfall would return.
-//   2. Plain words that match card names             -> those cards, most-played first.
-//   3. Syntax keywords plus words that match no name  -> keywords filter, words rank by meaning.
-//   4. Anything else                                  -> semantic search, with mana value,
+//   2. A players' word for a kind of card            -> the cards the community has tagged so,
+//      ("mana rocks", "white board wipes")              most-played first.
+//   3. Plain words that match card names             -> those cards, most-played first.
+//   4. Syntax keywords plus words that match no name  -> keywords filter, words rank by meaning.
+//   5. Anything else                                  -> semantic search, with mana value,
 //                                                        colour and type read from the query.
 
 import { agg, all, any, field, filter, fn, not, select } from "topk-js/query";
 import { lower, ORDER_FIELDS, PREFER, PRINTING_FIELDS, usable } from "./lower.ts";
 import type { Ignored, IR, Op, Unique } from "./lower.ts";
 import { explain } from "./explain.ts";
+import { jargon } from "./jargon.ts";
 import { extract } from "./nl.ts";
 import { plain } from "./normalize.ts";
 import { KEYWORDS, parse, QueryError, Unsupported } from "./parser.ts";
@@ -18,7 +21,7 @@ import type { Keyword, Name, Node } from "./parser.ts";
 export type Hit = Record<string, unknown> & { _id: string; name: string; score?: number };
 export type Unit = "cards" | "printings" | "illustrations";
 export type Result = {
-  mode: string; // syntax | name | mixed | semantic | unsupported
+  mode: string; // syntax | name | jargon | mixed | semantic | unsupported
   hits: Hit[];
   total: number | null; // exact for syntax and name modes; null when ranked by meaning
   note: string; // what was understood, or why the query was refused
@@ -26,6 +29,7 @@ export type Result = {
   ignored: Ignored[]; // terms that could not be used and were left out, each with the reason
   exact: Hit | null; // the card whose name is exactly what was typed, if the query is a name
   like?: string | null; // the card a query names when it asks for others that do the same
+  reads?: string | null; // the Scryfall syntax a players' word was read as ("otag:mana-rock")
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
   descending?: boolean; // the direction of that order, as it was applied
@@ -480,6 +484,13 @@ export async function search(cols: Collections, query: string, options: SearchOp
 
   if (ast !== null && parsed !== null) {
     const plainWords = isPlainWords(ast);
+    // A players' word for a kind of card, unless it is also exactly a card's name (Fog, Clone,
+    // Counterspell): then the card is what was typed, as for any name.
+    const said = plainWords ? jargon(query) : null;
+    if (said && !(await exactName(cols.cards, ast))) {
+      const found = await search(cols, said.reads, { ...options, order: options.order ?? "edhrec" });
+      if (found.total) return { ...found, mode: "jargon", note: said.term, reads: said.reads };
+    }
     // What the query says wins over the page's controls. Names default to most-played first.
     const sortField = parsed.order ?? fieldName(options.order) ?? (plainWords ? "edhrec_rank" : "name_lc");
     // With no direction from either, newest printings come first and everything else ascends.

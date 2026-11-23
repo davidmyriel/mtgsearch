@@ -40,7 +40,7 @@ test("plain English finds the card", { skip }, async () => {
 const FINDS: Record<string, string[]> = {
   "angel that gains life": ["Angel of Vitality", "Angel of Mercy", "Herald of Faith"],
   "knight with first strike": ["White Knight", "Black Knight", "Knight of Malice"],
-  "white enchantment removal": ["Leave No Trace", "Echoing Calm", "Cursebreak"],
+  "white enchantment removal": ["Generous Gift", "Disenchant", "Stroke of Midnight"],
   "creature that taxes spells": ["Esper Sentinel", "Spelltithe Enforcer", "Aven Interrupter"],
   "tithe alternative": ["Land Tax", "Gift of Estates"],
   "sphinx that draws two cards": ["Consecrated Sphinx"],
@@ -48,7 +48,7 @@ const FINDS: Record<string, string[]> = {
   "wizard that copies spells": ["Echo Mage", "Naru Meha, Master Wizard", "Dualcaster Mage"],
   "merfolk that draws cards": ["Silvergill Adept", "Seafloor Oracle", "Mindspring Merfolk"],
   "brainstorm alternative": ["Ponder", "Preordain", "Impulse"],
-  "black creature removal": ["Snuff Out", "Eradicate", "Noxious Grasp"],
+  "black creature removal": ["Infernal Grasp", "Go for the Throat", "Deadly Rollick"],
   "reanimate a creature": ["Reanimate", "Animate Dead", "Zombify"],
   "demon with a drawback": ["Desecration Demon", "Hellcarver Demon", "Grinning Demon"],
   "zombie that comes back": ["Relentless Dead", "Ashen Ghoul", "Dread Wanderer"],
@@ -66,7 +66,7 @@ const FINDS: Record<string, string[]> = {
   "equipment that gives haste": ["Swiftfoot Boots", "Boots of Speed", "Helm of the Host"],
   "vehicle with flying": ["Aethersphere Harvester", "Dragonfly Suit", "Mindlink Mech"],
   "artifact that draws cards": ["Mindstorm Crown", "Urza's Miter", "Trigon of Thought"],
-  "mana rocks": ["Mana Crypt", "Mana Vault", "Fellwar Stone"],
+  "mana rocks": ["Sol Ring", "Arcane Signet", "Fellwar Stone"],
   "izzet dragon": ["Niv-Mizzet, Parun", "Niv-Mizzet, the Firemind", "Niv-Mizzet, Dracogenius"],
   "orzhov vampire": ["Blood Baron of Vizkopa", "Vizkopa Vampire", "Cliffhaven Vampire"],
   "simic hydra": ["Bioessence Hydra", "Hydroid Krasis", "Zaxara, the Exemplary"],
@@ -78,12 +78,59 @@ test("every example the home page offers finds what it promises", { skip }, asyn
   assert.deepEqual(Object.keys(FINDS).sort(), [...EXAMPLES].sort());
   for (const example of EXAMPLES) {
     const result = await search(cols, example, { k: 10 });
-    assert.equal(result.mode, "semantic", example);
+    // by meaning, or as a players' word for a kind of card
+    assert.ok(["semantic", "jargon"].includes(result.mode), example);
     assert.equal(result.hits.length, 10, example);
     assert.ok(FINDS[example].some((name) => names(result).includes(name)), `${example}: ${names(result).join("; ")}`);
   }
   // the card itself comes first when one card is described
   assert.equal(names(await search(cols, "sphinx that draws two cards"))[0], "Consecrated Sphinx");
+});
+
+test("players' words find the cards players mean, most played first", { skip }, async () => {
+  const cols = collection();
+  const first = async (query: string) => {
+    const result = await search(cols, query, { k: 12 });
+    assert.equal(result.mode, "jargon", query);
+    return { result, cards: names(result) };
+  };
+  // the four the home page offers
+  const rocks = await first("mana rocks");
+  assert.deepEqual(rocks.cards.slice(0, 2), ["Sol Ring", "Arcane Signet"]);
+  assert.equal(rocks.result.reads, "otag:mana-rock");
+  assert.equal(rocks.result.sortedBy, "edhrec");
+  assert.ok(Number(rocks.result.total) > 200 && rocks.result.hasMore);
+  assert.ok((await first("bounce spells")).cards.includes("Cyclonic Rift"));
+  assert.ok((await first("blink effects")).cards.includes("Ephemerate"));
+  const wipes = (await first("board wipes")).cards;
+  assert.ok(wipes.includes("Blasphemous Act") && wipes.includes("Toxic Deluge"), wipes.join("; "));
+  // the word this site is named for
+  assert.deepEqual((await first("tutors")).cards.slice(0, 3), ["Demonic Tutor", "Vampiric Tutor", "Enlightened Tutor"]);
+  // a colour in front: cards of exactly that colour
+  const white = await first("white board wipes");
+  assert.ok(white.cards.includes("Wrath of God") && !white.cards.includes("Blasphemous Act"), white.cards.join("; "));
+  assert.ok(white.result.hits.every((hit) => /W/.test(String(hit.mana_cost)) && !/[UBRG]/.test(String(hit.mana_cost))), white.cards.join("; "));
+  // the page's own sort order applies, as for any list
+  const byName = await search(cols, "mana rocks", { k: 3, order: "name" });
+  assert.equal(byName.sortedBy, "name");
+  assert.notEqual(names(byName)[0], "Sol Ring");
+  // a word that is also exactly a card's name is that card, as for any name
+  const card = await search(cols, "counterspell", { k: 3 });
+  assert.equal(card.mode, "name");
+  assert.equal(card.exact?.name, "Counterspell");
+  assert.equal((await search(cols, "counterspells", { k: 3 })).mode, "jargon");
+});
+
+test("every players' word the search knows finds cards", { skip }, async () => {
+  const { JARGON_WORDS } = await import("../jargon.ts");
+  const cols = collection();
+  const empty: string[] = [];
+  for (const word of JARGON_WORDS) {
+    const result = await search(cols, `${word}s`, { k: 1 });
+    // a word that is a card's name reads as that card in the singular; the plural is the kind
+    if (result.mode !== "jargon" || Number(result.total) < 10) empty.push(`${word} (${result.mode}, ${result.total})`);
+  }
+  assert.deepEqual(empty, []);
 });
 
 test("what a kind of card does, a colour and an effect, and a named card's like", { skip }, async () => {

@@ -298,16 +298,18 @@ body:not(.searched) .search::after {
   .search input::placeholder { font-size: 0.78rem; }
 }
 
-/* The few other things there are to do, kept quiet. */
-.nav {
+/* Under the bar on the home page: searches people often need, kept quiet. The header's own
+   link (a card at random) has the same look and shows only once the header is a bar. */
+.nav, .needs {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
   margin-top: 18px;
 }
+body:not(.searched) .nav { display: none; }
 
-.nav a {
+.nav a, .needs a {
   padding: 5px 14px;
   font-size: 0.9rem;
   font-weight: 600;
@@ -316,7 +318,7 @@ body:not(.searched) .search::after {
   border: 1px solid var(--band-line);
   border-radius: var(--radius);
 }
-.nav a:hover, .nav a[aria-current] { border-color: var(--band-link); color: var(--band-link); }
+.nav a:hover, .nav a[aria-current], .needs a:hover { border-color: var(--band-link); color: var(--band-link); }
 
 /* What is new: the flavour of the week, then the newest sets. */
 .news {
@@ -426,7 +428,7 @@ body[data-flavour="anniversary"]:not(.searched) .masthead {
 }
 
 .searched .wordmark img { height: 20px; }
-.searched .powered, .searched .news, .searched .home-cards { display: none; }
+.searched .powered, .searched .needs, .searched .news, .searched .home-cards { display: none; }
 .searched .search { max-width: none; margin: 0; padding: 3px; border-radius: var(--radius); border-color: var(--band-line); box-shadow: none; }
 .searched .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28); }
 .searched .search .mark { margin-left: 4px; }

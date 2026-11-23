@@ -38,6 +38,7 @@ and the Scryfall comparison where results could move.
 | F-6 | 23 Nov 2026 | The home page's cards go with the example in the search box | S | Now, with F-5 | Done |
 | F-7 | 23 Nov 2026 | Say "powered by TopK AI search" somewhere | S | Now | Done, where the developer recommended; the owner asked where, not yet confirmed |
 | F-8 | 23 Nov 2026 | More examples for the search box: three or four for each colour, some for artifacts and more than one colour, and alternatives for well-known cards | M | Now | Done: 33 examples, each checked against the search |
+| F-9 | 23 Nov 2026 | Under the bar, typical searches in place of the two links; players' words have to find the cards players mean | M | Now | Done |
 
 ### F-1. A page for each card
 
@@ -390,6 +391,56 @@ and the Scryfall comparison where results could move.
   browser test checks that the widest example shows whole in the box at 320px.
 - **Cost:** a search for a card's alternatives takes about 320 to 490 ms here, against about
   240 ms for other plain English, because it asks twice and to a fixed depth.
+
+### F-9. Typical searches under the bar, and players' words that find the staples
+
+- **From:** the project owner, 23 November 2026, with a picture of the home page and the two
+  links under the bar circled.
+- **In their words:** "i think we can leave the syntax guide in the footer, random card can be
+  in the nav in the card results in other spots but no on the homepage. in this section we
+  should have typical searches for things people need. mana rocks, bounce spells, blink
+  effects, board wipes. is it possible that these terms can yield the cards we need them to
+  show? research mtg jargon if you dont know which cards we need".
+- **The links:** on the home page the row under the bar is now those four searches. "Syntax
+  guide" is in the footer only, on every page. "Random card" is in the header once the header
+  is a bar (results, a card, the guide), and not on the home page.
+- **Is it possible: yes.** What the four found before: "mana rocks" found cards with Mana in
+  their name (Mana Geode, The Mana Rig) and not Sol Ring; "board wipes" found Séance Board
+  and Wipe Away. Nobody prints these words on a card, so neither the text nor its meaning
+  finds them. Scryfall's community tags do: people have marked which cards are mana rocks.
+  The index already held those tags. A query that is a players' word is now read as the tag
+  and answered most played first, which puts the cards every player would name on top:
+  - mana rocks: Sol Ring, Arcane Signet, Fellwar Stone, Thought Vessel, Mind Stone.
+  - bounce spells: Cyclonic Rift, Snap, Aetherize, Into the Flood Maw, Chain of Vapor.
+  - blink effects: Ephemerate, Conjurer's Closet, Displacer Kitten, Ghostly Flicker, Cloudshift.
+  - board wipes: Blasphemous Act, Cyclonic Rift, Toxic Deluge, Vandalblast, Austere Command.
+- **How far it goes:** some fifty words, one list in `app/jargon.ts`, each looked at on the
+  live index: tutors (Demonic, Vampiric, Enlightened Tutor first), counterspells, removal,
+  ramp, mana dorks, cantrips, card draw, wheels, reanimation, fogs, lords, rituals, sac
+  outlets, fetch lands, graveyard hate, extra turns and so on. A colour in front narrows it
+  to cards of exactly that colour ("white board wipes" finds Austere Command, Farewell, Wrath
+  of God; "izzet counterspells"; "red and white board wipes"), and a kind of card behind it
+  narrows it too ("bounce spells", "blink creatures"). The line above the results says
+  "Players' words" and the Scryfall syntax it is the same as (`otag:sweeper`), so the page
+  teaches the syntax as it goes. The sort control works on these lists.
+- **Where a tag held more than players mean,** it is narrowed, and this is the developer's
+  reading: "tutors" leaves out cards that only fetch lands (players call those ramp),
+  "ramp" leaves out lands and removal that hands the opponent a land, "bounce" leaves out
+  lands that return one of your own, "removal" leaves out board wipes.
+- **Measured:** the relevance set's players'-words class went from 29 of 40 to 40 of 40 for
+  the full search; the other classes did not change. A test checks that every word in the
+  list finds cards on the live index.
+- **Three limits, said plainly:**
+  - A players' word inside a longer sentence ("mana rocks that draw cards", "white creature
+    tutor") is still read by meaning and is weaker.
+  - A word that is also exactly a card's name opens that card, by the rule of F-3: "blink"
+    is a card, and so are Flicker, Fog and Clone. "blink effects" and "fogs" find the kind.
+  - "blue land destruction" is left to its meaning on purpose, because the owner called that
+    result good and the tag ("can deal with a land") is wider than what is asked.
+- **Changed by it:** three of the box's examples are now players' words and find staples in
+  place of what the meaning found: "mana rocks", "black creature removal" (Feed the Swarm,
+  Deadly Rollick, Infernal Grasp, Go for the Throat) and "white enchantment removal"
+  (Generous Gift, Stroke of Midnight, Disenchant).
 
 ## From the interface study
 

@@ -53,7 +53,7 @@ test("returns the documented shape", async () => {
     total: null,
     unit: "cards",
     note: "sphinx",
-    understood: [], ignored: [], exact: null, like: null,
+    understood: [], ignored: [], exact: null, like: null, reads_as: null,
     hits: [
       {
         id: "abc",

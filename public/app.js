@@ -175,6 +175,9 @@ function describe(data, view) {
       return ["Scryfall syntax", total()];
     case "name":
       return ["Card name", total()];
+    case "jargon":
+      // a players' word for a kind of card ("mana rocks"), answered from the community's tags
+      return ["Players' words", `${total()}, the same as ${data.reads_as}`];
     case "mixed":
       return ["Syntax and plain English", `${data.note}, ${ranked}`];
     case "semantic":
@@ -928,6 +931,15 @@ async function loadRandom() {
   // The card's own address replaces /random, so Back does not pick again and the link can be shared.
   history.replaceState({ card: data.card, printings: data.printings }, "", cardPath(data.card) || "/random");
   showCard(data.card, data.printings);
+}
+
+// The searches offered under the bar on the home page run in the page, like a typed one.
+for (const link of document.querySelectorAll(".needs a")) {
+  link.addEventListener("click", (event) => {
+    if (modified(event)) return;
+    event.preventDefault();
+    run({ query: new URL(link.href).searchParams.get("q") || "" });
+  });
 }
 
 for (const id of ["nav-random", "empty-random"]) {
