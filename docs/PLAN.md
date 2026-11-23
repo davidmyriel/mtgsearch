@@ -15,7 +15,7 @@ picked up: at the boundary between plan steps unless something is broken.
 | What "a copy of Scryfall" means | Same capabilities, own name and visual design. Their look, name and logo are not copied. |
 | Where v0.1 stops | Tier 1: search parity plus the better search |
 | App stack | Decided: a static page plus one TypeScript function on Netlify, with `topk-js`. TypeScript is the only implementation of search; a Python job builds the collection |
-| Name and branding | Working name only; nothing using "Scryfall" or official-looking Magic branding |
+| Name and branding | Decided by the owner on 23 November 2026: the site is TutorK, in the blocks of TopK's logo, "Powered by TopK AI search". The project and repository keep the working name. Nothing uses "Scryfall" or official-looking Magic branding |
 | Policy sign-off | A person reads Wizards' Fan Content Policy and Scryfall's terms, and tells Scryfall before launch |
 | Indexing art for all 39,356 cards | Not done: roughly 3 GB of images to send and embed, cost not yet known |
 
@@ -161,6 +161,59 @@ picked up: at the boundary between plan steps unless something is broken.
 
 ### 7. v0.1 public
 - [ ] Public repository, write-up with the benchmark, launch
+
+### 8. Meaning, systematically: a major milestone, for later
+
+Set by the owner on 23 November 2026: "we shouldnt do it manyally, there needs to be a way to
+systematically deal with meaning behind the scenes". Not started. Nothing below is decided;
+it is written down so that the stage is ready to be planned when its turn comes.
+
+**What is done by hand today, and should not be.** Each of these is a list a person wrote,
+and each new case means another entry:
+
+- `app/jargon.ts`: some fifty players' words, each with the tag it reads as, and hand-made
+  narrowing where a tag is wider than the word ("tutors" without land fetchers, "removal"
+  without board wipes).
+- `app/nl.ts`: which words are colours, which are fillers, which words after a type mean the
+  type is what the effect is done to ("land destruction").
+- `app/search.ts`: the ways of asking for a card's alternatives, as patterns.
+- The home page's examples and the cards each must find, chosen by reading results.
+
+**Where it shows.** "burn spells" lists Commander's most played damage cards, with Shock
+39th, because the tag is wide and "most played" means most played in Commander; the fix on
+offer was another hand-made rule, which the owner declined. A players' word inside a
+sentence ("white creature tutor", "mana rocks that draw cards") falls back to meaning and
+ranks poorly. A word nobody wrote into the list is not understood at all.
+
+**What the stage has to deliver.** Any query, however it is put, is turned behind the scenes
+into what it asks for: which cards are eligible (colour, type, cost, tag, price, format), what
+to rank by, and what is left to meaning; with no list of words to maintain, and a reading
+that can be shown to the user as it is now.
+
+**Directions to weigh when it is planned** (not chosen):
+
+- Take the vocabulary from the data. The community's tags, with their names, aliases and
+  descriptions, are already a dictionary of players' words several thousand entries long;
+  match a query to tags by meaning instead of by a hand list.
+- Have a language model read the query into a structured search (filters, a remainder to
+  rank by meaning, an order), checked by the existing compiler so that it can only produce
+  searches that run, and cached. The page would still say how the query was read.
+- Rank with several signals at once (meaning, how central a card is to a tag, how much it
+  is played and in which format, price) instead of filtering by one and sorting by another,
+  with weights learned from the query set, not set by hand.
+- Fix the index where meaning cannot work: mana symbols and numbers spelled out, which is
+  what most of the searches that failed on 23 November trace to (stage 3).
+- Learn from use: anonymous query logs to see what people actually type and where they
+  give up (needs the storage decision in stage 4).
+
+**How it will be judged.** On a query set several times the present one, written by more
+than one person, with players' words alone and inside sentences, in more than one format's
+idea of "most played". A hand-written rule is removed only when the systematic reading does
+as well or better on that set without it. Cost and added time per query are measured, since
+a model in the path of every search changes both.
+
+**Until then.** The lists stay as they are and are not grown case by case; a word that fails
+is added to the query set, not to a list.
 
 ## Testing
 

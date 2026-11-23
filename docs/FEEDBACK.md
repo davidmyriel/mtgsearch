@@ -39,6 +39,7 @@ and the Scryfall comparison where results could move.
 | F-7 | 23 Nov 2026 | Say "powered by TopK AI search" somewhere | S | Now | Done, where the developer recommended; the owner asked where, not yet confirmed |
 | F-8 | 23 Nov 2026 | More examples for the search box: three or four for each colour, some for artifacts and more than one colour, and alternatives for well-known cards | M | Now | Done: 33 examples, each checked against the search |
 | F-9 | 23 Nov 2026 | Under the bar, typical searches in place of the two links; players' words have to find the cards players mean | M | Now | Done |
+| F-10 | 23 Nov 2026 | Meaning has to be dealt with systematically behind the scenes, not by hand-written lists | L | Later, as a stage of its own (stage 8 of the plan) | Planned, not started |
 
 ### F-1. A page for each card
 
@@ -441,6 +442,23 @@ and the Scryfall comparison where results could move.
   place of what the meaning found: "mana rocks", "black creature removal" (Feed the Swarm,
   Deadly Rollick, Infernal Grasp, Go for the Throat) and "white enchantment removal"
   (Generous Gift, Stroke of Midnight, Disenchant).
+
+### F-10. Meaning, systematically
+
+- **From:** the project owner, 23 November 2026, after asking how the players' words work
+  and whether "burn spells" would show Shock and Lightning Bolt.
+- **What they were told:** "burn spells" finds Lightning Bolt third and Shock 39th, because
+  the tag is wide and "most played" means most played in Commander; and that the developer
+  could narrow that one word by hand.
+- **In their words:** "we shouldnt do it manyally, there needs to be a way to systematically
+  deal with meaning behind the scenes, make this a major milestone down the road add to plan
+  for later".
+- **What was done:** nothing was built, as asked. `docs/PLAN.md` has a new stage 8, "Meaning,
+  systematically", which says what is done by hand today, where that shows, what the stage
+  has to deliver, the directions to weigh when it is planned, and how it will be judged.
+- **What follows from it now:** "burn spells" is left as it is. The hand-written lists
+  (players' words, colour and filler words, the ways of asking for alternatives) stay and
+  are not grown case by case; a word that fails goes into the query set instead.
 
 ## From the interface study
 
