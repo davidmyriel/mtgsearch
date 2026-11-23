@@ -84,6 +84,7 @@ async function run(name, contextOptions) {
       names: [...document.querySelectorAll("#home-cards img")].map((img) => img.alt),
       pageBelow: Boolean(document.getElementById("main").offsetHeight),
       news: [...document.querySelectorAll("#news li")].map((li) => li.textContent),
+      hint: document.getElementById("q").placeholder,
       focused: document.activeElement ? document.activeElement.id : "",
     };
   });
@@ -91,18 +92,16 @@ async function run(name, contextOptions) {
   check(home.barCentre <= 2 && home.barHeight >= 60, `[${name}] the search bar is in the middle and thick (${Math.round(home.barHeight)}px)`);
   check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.join(", ")})`);
   check(home.cards === 7, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
-  // The seven have something in common: all of them are found by the one search the fan names.
+  // The seven are found by the example the empty search box is showing: each is among the
+  // first results of that search, and its closest result is in the middle of the fan.
   const common = await page.evaluate(async ({ query, names }) => {
-    if (!query) return { query, found: 0 };
-    let found = 0;
-    for (const cardName of names) {
-      // the theme's search, narrowed to this one card by its exact name
-      const response = await fetch(`/api/search?${new URLSearchParams({ q: `${query} !"${cardName}"`, k: "1" })}`);
-      if (((await response.json()).total || 0) >= 1) found++;
-    }
-    return { query, found };
+    if (!query) return { query, found: 0, first: "" };
+    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "14" })}`);
+    const results = ((await response.json()).hits || []).map((hit) => hit.name);
+    return { query, found: names.filter((cardName) => results.includes(cardName)).length, first: results[0] };
   }, { query: home.theme, names: home.names });
-  check(common.found === 7 && home.themeLabel.startsWith("A few cards: "), `[${name}] and they have something in common (${home.themeLabel}; all found by ${common.query})`);
+  check(home.hint === `Try: ${home.theme}` && home.themeLabel === `A few cards: ${home.theme}`, `[${name}] the cards go with the example in the search box (${home.hint})`);
+  check(common.found === 7 && home.names[3] === common.first, `[${name}] and are what that search finds, the closest in the middle (${common.first})`);
   check(home.cutOff && Math.abs(home.fanBottom - home.window) <= 4, `[${name}] cut off by the bottom edge of the first screen`);
   check(!home.pageBelow, `[${name}] and nothing but the footer follows: no search instructions`);
   if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);

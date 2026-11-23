@@ -35,6 +35,7 @@ and the Scryfall comparison where results could move.
 | F-3 | 22 Nov 2026 | Typing a card's exact name opens the card's page, not a list of results | M | Next boundary | Done |
 | F-4 | 23 Nov 2026 | The home page's first impression: the search bar is the focus, relaxed, discreet, with room for a flavour of the week | M | Next boundary | Done |
 | F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done, with the search fixed so that all four examples find what they promise |
+| F-6 | 23 Nov 2026 | The home page's cards go with the example in the search box | S | Now, with F-5 | Done |
 
 ### F-1. A page for each card
 
@@ -305,6 +306,26 @@ and the Scryfall comparison where results could move.
   creature tutor" still ranks poorly, because the index does not know "tutor" as the players'
   word for searching a library. That last one matters for a site of this name and is in the
   plan.
+
+### F-6. The home page's cards go with the example in the search box
+
+- **From:** the project owner, 23 November 2026.
+- **In their words:** "wouldnt it be cool if the homepage random cards were somehow related to
+  the sample semantic query in the search bar".
+- **What was done:** the seven cards are the results of the example the empty box is showing.
+  "Try: tithe alternative" stands over Land Tax, Gift of Estates and Knight of the White
+  Orchid; "Try: dwarf that destroys lands" over Dwarven Miner and Dwarven Blastminer. So the
+  first screen shows what the search does before anything is typed, and Enter in the empty
+  box opens the list those cards come from.
+- **How they are drawn, the developer's choices:** the first three results are always among
+  the seven, and the other four are drawn from the eleven that follow, so the cards differ
+  from visit to visit and stay on the point. The closest result is in the middle of the fan,
+  which is the part a phone shows.
+- **What it replaced:** the themes of earlier the same day (Dragons, Angels, the newest set).
+  They remain as the fall-back if an example ever finds too few cards. A search named in
+  `public/flavour.json` for an occasion still takes the place of both.
+- **Cost:** one search per example per minute at most, since the answer is held by the CDN
+  for a minute for each of the four.
 
 ## From the interface study
 

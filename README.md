@@ -219,12 +219,15 @@ newest first with set, number, rarity, date and price, at most 60. An address wi
 is a 404. `GET /api/card?random=1` answers in the same shape with a card chosen at random,
 and is never cached.
 
-`GET /api/home` gives the home page seven cards that have something in common, the `theme`
-that joins them, and the newest sets (those still to be released are marked `upcoming`). The
-theme is the newest set that is out about one visit in three, and otherwise a kind of card
-from the list in `app/home.ts` (Dragons, Angels, Planeswalkers and so on). The cards are drawn
-from the sixty most played of the theme. It is held by the CDN for a minute, so a return visit
-sees other cards.
+`GET /api/home?try=<example>` gives the home page seven cards, the `theme` that joins them,
+and the newest sets (those still to be released are marked `upcoming`). The empty search box
+shows an example to try, a different one of four on each visit, and names it in `try`: the
+cards are then that search's results, the first three always and the rest drawn from the
+eleven that follow, so the page shows what the search does before anything is typed. The
+examples are one list in `app/home.ts` and the same list in `public/app.js`. Without an
+example the cards share a theme instead: the newest set that is out about one time in three,
+otherwise a kind of card (Dragons, Angels, Planeswalkers and so on), drawn from its sixty most
+played. The answer is held by the CDN for a minute, so a return visit sees other cards.
 
 The home page's flavour of the week is one file, `public/flavour.json`: a `featured` line shown
 above the newest sets, a `cards` search to draw the home page's cards from (`set:trk` for a new

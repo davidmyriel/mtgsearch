@@ -279,8 +279,18 @@ test("the home page gets a few cards and the newest sets, held only briefly", as
     sets: [{ code: "nau", name: "Nauctis: The Sunken Realm", released: "2027-02-05", cards: 24, upcoming: true }],
     theme: { label: "Sphinxes", query: "t:sphinx" },
   };
-  const response = await handleHome(async () => found);
+  const asked: (string | null)[] = [];
+  const answer = async (example: string | null) => {
+    asked.push(example);
+    return found;
+  };
+  const at = (query = "") => new URL(`https://example.test/api/home${query}`);
+  const response = await handleHome(at(), answer);
   assert.equal(response.status, 200);
+  // the example the page's empty box is showing is passed on, tidied; with none, or one too long, nothing is
+  await handleHome(at("?try=%20sphinx%20%20that%20draws%20two%20cards%20"), answer);
+  await handleHome(at(`?try=${"x".repeat(MAX_QUERY_CHARS + 1)}`), answer);
+  assert.deepEqual(asked, [null, "sphinx that draws two cards", null]);
   // a minute at the CDN: a return visit sees other cards, and TopK is spared under load
   assert.equal(response.headers.get("Netlify-CDN-Cache-Control"), "public, max-age=60");
   const body = await response.json();
@@ -299,7 +309,7 @@ test("a failure behind the home page is an error the page can ignore", async () 
   const quiet = console.error;
   console.error = () => {};
   try {
-    const down = await handleHome(async () => {
+    const down = await handleHome(new URL("https://example.test/api/home"), async () => {
       throw new Error("connection reset");
     });
     assert.equal(down.status, 502);

@@ -9,7 +9,7 @@ import type { Hit, Result, SearchOptions } from "./search.ts";
 export type SearchFn = (query: string, options: SearchOptions) => Promise<Result>;
 export type CardFn = (set: string, number: string) => Promise<CardPage | null>;
 export type RandomFn = () => Promise<CardPage | null>;
-export type HomeFn = () => Promise<Home>;
+export type HomeFn = (example: string | null) => Promise<Home>;
 
 export const MAX_QUERY_CHARS = 200;
 export const DEFAULT_RESULTS = 24;
@@ -123,11 +123,15 @@ export async function handleCard(url: URL, card: CardFn, random?: RandomFn): Pro
   return json({ card: detail, printings, took_ms: Math.round(performance.now() - started) }, 200, atRandom ? NOT_CACHED : CACHED);
 }
 
-/** GET /api/home: a few cards chosen at random and the newest sets, for the home page. */
-export async function handleHome(home: HomeFn): Promise<Response> {
+/**
+ * GET /api/home[?try=<example>]: a few cards and the newest sets, for the home page. `try` is
+ * the example the page's empty search box is showing; the cards are then found by it.
+ */
+export async function handleHome(url: URL, home: HomeFn): Promise<Response> {
+  const example = (url.searchParams.get("try") ?? "").split(/\s+/).filter(Boolean).join(" ");
   let found: Home;
   try {
-    found = await home();
+    found = await home(example && example.length <= MAX_QUERY_CHARS ? example : null);
   } catch (cause) {
     console.error("home page data failed:", cause);
     const setup = setupProblem(cause);

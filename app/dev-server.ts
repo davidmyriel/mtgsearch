@@ -36,7 +36,7 @@ export function createDevServer() {
     if (url.pathname === "/api/search" || url.pathname === "/api/card" || url.pathname === "/api/home") {
       const answer =
         url.pathname === "/api/home"
-          ? await handleHome(() => home(collectionsFromEnv()))
+          ? await handleHome(url, (example) => home(collectionsFromEnv(), Math.random, example))
           : url.pathname === "/api/card"
           ? await handleCard(url, (set, number) => card(collectionsFromEnv(), set, number), () => randomCard(collectionsFromEnv()))
           : await handleSearch(url, (query, options) => search(collectionsFromEnv(), query, options));

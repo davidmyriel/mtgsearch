@@ -91,6 +91,10 @@ test("the empty search box shows something to try: a card described in plain wor
   const script = root("public/app.js");
   const examples: string[] = JSON.parse((script.match(/const EXAMPLES = (\[[^\]]+\]);/) ?? [])[1] ?? "[]");
   assert.deepEqual(examples, ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"]);
+  // the home page's cards are asked for by the example shown, so the server holds the same list
+  const { EXAMPLES } = await import("../home.ts");
+  assert.deepEqual(examples, EXAMPLES);
+  assert.ok(script.includes("getJson(`/api/home?${new URLSearchParams({ try: example })}`)"));
   assert.ok(script.includes("input.placeholder = `Try: ${example}`;"));
   for (const example of examples) {
     // plain words: nothing in it is Scryfall syntax, so the search reads it by meaning

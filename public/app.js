@@ -311,7 +311,8 @@ function newsLine(tag, words, href, className) {
 async function loadHome() {
   if (homeAsked) return;
   homeAsked = true;
-  const [flavour, found] = await Promise.all([getJson("/flavour.json"), getJson("/api/home")]);
+  // The cards are asked for by the example the empty box is showing, so they are its results.
+  const [flavour, found] = await Promise.all([getJson("/flavour.json"), getJson(`/api/home?${new URLSearchParams({ try: example })}`)]);
   const taste = flavour || {};
   if (typeof taste.theme === "string" && /^[a-z]{1,20}$/.test(taste.theme)) document.body.dataset.flavour = taste.theme;
 
@@ -326,9 +327,9 @@ async function loadHome() {
   news.replaceChildren(...lines);
   news.hidden = lines.length === 0;
 
-  // The cards have something in common: a theme the server chose for this visit (the newest
-  // set, or a kind of card), or the flavour's own search when it names one. Either way they
-  // are drawn from the most played cards the search finds.
+  // The cards have something in common: they are found by the example in the empty box, or
+  // by the flavour's own search when it names one. (If the example somehow finds too few, the
+  // server falls back to a theme of its own: the newest set, or a kind of card.)
   let cards = (found && found.cards) || [];
   let theme = (found && found.theme) || null;
   if (typeof taste.cards === "string" && taste.cards.trim()) {

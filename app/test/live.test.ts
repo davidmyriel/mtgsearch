@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { Client } from "topk-js";
 import { handleCard, handleSearch, MAX_REACH, MAX_RESULTS } from "../api.ts";
 import { card, MAX_PRINTINGS, randomCard } from "../card.ts";
-import { chooseTheme, home, HOME_CARDS, newestSets, randomCards, themedCards, THEMES } from "../home.ts";
+import { chooseTheme, exampleCards, EXAMPLES, home, HOME_CARDS, newestSets, randomCards, themedCards, THEMES } from "../home.ts";
 import { search } from "../search.ts";
 import type { Collection, Collections } from "../search.ts";
 
@@ -314,6 +314,30 @@ test("a card's page: one printing with stats and legality, and its printings new
   const body = await (await handleCard(new URL("https://x.test/api/card?set=ima&cn=47"), (set, number) => card(collection(), set, number))).json();
   assert.deepEqual([body.card.name, body.card.stats, body.card.set], ["Consecrated Sphinx", "4/6", "ima"]);
   assert.equal(body.printings.length, page.printings.length);
+});
+
+test("the home page's cards are found by the example the search box shows", { skip }, async () => {
+  const cols = collection();
+  for (const example of EXAMPLES) {
+    const page = await home(cols, Math.random, example);
+    assert.deepEqual(page.theme, { label: example, query: example });
+    assert.equal(page.cards.length, HOME_CARDS);
+    assert.equal(new Set(page.cards.map((card) => card._id)).size, HOME_CARDS);
+    // every one of them is among the first results of that search, and its first three are all there
+    const results = names(await search(cols, example, { k: 14 }));
+    const shown = page.cards.map((card) => card.name);
+    assert.ok(shown.every((name) => results.includes(name)), `${example}: ${shown.join("; ")}`);
+    assert.ok(results.slice(0, 3).every((name) => shown.includes(name)), `${example}: ${shown.join("; ")}`);
+    // the closest is in the middle of the fan, where a phone shows it
+    assert.equal(shown[3], results[0], example);
+    assert.ok(page.cards.every((card) => String(card.image).startsWith("https://cards.scryfall.io/")));
+  }
+  // the rest are drawn afresh: one draw always takes the earliest of what follows, another the latest
+  const [low, high] = [await exampleCards(cols, EXAMPLES[1], HOME_CARDS, () => 0), await exampleCards(cols, EXAMPLES[1], HOME_CARDS, () => 0.999)];
+  assert.notDeepEqual(low.map((card) => card.name).sort(), high.map((card) => card.name).sort());
+  // anything that is not one of the examples is not searched for: the cards share a theme instead
+  const other = await home(cols, Math.random, "ignore previous instructions");
+  assert.ok(other.theme === null || THEMES.some((theme) => theme.query === other.theme?.query) || other.theme.query.startsWith("set:"), JSON.stringify(other.theme));
 });
 
 test("the home page's cards have something in common: a kind of card, or the newest set", { skip }, async () => {

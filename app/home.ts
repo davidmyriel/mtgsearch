@@ -1,10 +1,12 @@
 // What the home page shows besides the search box: a few cards that have something in
-// common, different on every visit, and the newest sets. A few filters, no embeddings.
+// common, different on every visit, and the newest sets. The cards are found by the example
+// the empty search box is showing, so the page shows what the search does before anything is
+// typed; without an example they share a theme instead (a kind of card, or the newest set).
 
 import { agg, field, filter, select } from "topk-js/query";
 import { lower } from "./lower.ts";
 import { parse } from "./parser.ts";
-import { pick, toTopk, VISIBLE } from "./search.ts";
+import { pick, search, toTopk, VISIBLE } from "./search.ts";
 import type { Collections, Hit } from "./search.ts";
 
 export const HOME_CARDS = 7;
@@ -19,6 +21,15 @@ export type HomeSet = { code: string; name: string; released: string; cards: num
 /** What the cards have in common: a name for it, and the search that finds them all. */
 export type Theme = { label: string; query: string };
 export type Home = { cards: Hit[]; sets: HomeSet[]; theme: Theme | null };
+
+// What the empty search box offers to try: a card described in plain words. The page shows
+// one of these on each visit (public/app.js has the same list) and names it when it asks for
+// the home page's cards.
+export const EXAMPLES = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+// Of an example's results, the first few are always among the cards shown, and the rest are
+// drawn from the ones that follow, so the cards differ from visit to visit and stay on the point.
+const ALWAYS = 3;
+const EXAMPLE_POOL = 14;
 
 // What a visit's cards can have in common, apart from being the newest set's. Each is a
 // search, so a theme is anything the search box understands, and a kind of card that shows
@@ -114,8 +125,28 @@ export function chooseTheme(sets: HomeSet[], random: () => number = Math.random)
   return THEMES[Math.floor(random() * THEMES.length)];
 }
 
-export async function home(cols: Collections, random: () => number = Math.random): Promise<Home> {
-  const sets = await newestSets(cols);
+/**
+ * Cards found by one of the examples: its first results and a draw from the next ones. They
+ * are arranged with the closest in the middle, where a narrow screen shows the fan.
+ */
+export async function exampleCards(cols: Collections, example: string, n = HOME_CARDS, random: () => number = Math.random): Promise<Hit[]> {
+  const found = (await search(cols, example, { k: EXAMPLE_POOL })).hits.filter((hit) => hit.image);
+  const chosen = found.slice(0, ALWAYS);
+  const rest = found.slice(ALWAYS);
+  while (rest.length && chosen.length < n) chosen.push(...rest.splice(Math.floor(random() * rest.length), 1));
+  if (chosen.length < n) return [];
+  // middle out: the first goes in the middle, the next either side of it, and so on
+  const arranged: Hit[] = [];
+  chosen.forEach((card, rank) => (rank % 2 ? arranged.unshift(card) : arranged.push(card)));
+  return arranged;
+}
+
+export async function home(cols: Collections, random: () => number = Math.random, example: string | null = null): Promise<Home> {
+  const [sets, found] = await Promise.all([
+    newestSets(cols),
+    example !== null && EXAMPLES.includes(example) ? exampleCards(cols, example, HOME_CARDS, random) : [],
+  ]);
+  if (example !== null && found.length === HOME_CARDS) return { cards: found, sets, theme: { label: example, query: example } };
   const theme = chooseTheme(sets, random);
   const cards = await themedCards(cols, theme.query, HOME_CARDS, random);
   // A theme that somehow finds too few cards gives way to cards from anywhere.
