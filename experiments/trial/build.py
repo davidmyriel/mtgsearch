@@ -2,6 +2,7 @@
 
     python experiments/trial/build.py            (needs TOPK_API_KEY and data/trial/sample.json)
     python experiments/trial/build.py --dry-run  (prints what would be sent and a few cards)
+    python experiments/trial/build.py --only=e,f (builds only those wordings)
 
 One collection for each wording, all holding the same cards and differing only in the two
 fields TopK embeds:
@@ -10,6 +11,15 @@ fields TopK embeds:
     b  cost and rules with every symbol said in words
     c  as b, and each small number in the rules followed by its word
     d  today's text, with the wording of c added underneath it
+    e  today's cost line untouched; only the symbols inside the rules said in words
+    f  as e, and each small number in the rules followed by its word
+
+    a2 a second collection with exactly the text of a: the control. TopK's search by meaning
+       is approximate, so two collections of the same text need not rank alike, and what
+       they disagree on is not a difference between wordings
+
+e and f were added after a to d had been compared: b and c made searches worse that have
+nothing to do with symbols, and the one thing they change on every card is the cost line.
 
 The cards are the ones step 1 chose (what the test searches find today and their right
 answers) and cards drawn at random on top, so that the collections are not made only of
@@ -36,7 +46,7 @@ from mtgsearch.printings import aggregates  # noqa: E402
 from mtgsearch.tags import card_tags  # noqa: E402
 
 TRIAL = "t1"
-VARIANTS = ("a", "b", "c", "d")
+VARIANTS = ("a", "b", "c", "d", "e", "f", "a2")
 SIZE = 2600
 SEED = 23
 
@@ -61,10 +71,12 @@ def worded(card: dict, numbers: bool) -> tuple[str, list[str]]:
 
 def text_for(card: dict, today: str, variant: str) -> str:
     """The card's embedded text in one of the wordings. `today` is what the live index sends."""
-    if variant == "a":
+    if variant in ("a", "a2"):
         return today
-    cost, rules = worded(card, numbers=variant != "b")
+    cost, rules = worded(card, numbers=variant not in ("b", "e"))
     lines = today.split("\n")
+    if variant in ("e", "f"):
+        cost = lines[1]  # the cost line as it is sent today
     if variant == "d":
         changed = [said for face, said in zip(_faces(card), rules, strict=True) if said and said != (face.get("oracle_text") or "")]
         return "\n".join([today, "In words: " + cost, *changed])
@@ -106,7 +118,10 @@ def main() -> None:
 
     client = None if dry_run else config.client()
     existing = set() if dry_run else {c.name for c in client.collections().list()}
+    only = next((arg.split("=", 1)[1].split(",") for arg in sys.argv if arg.startswith("--only=")), VARIANTS)
     for variant in VARIANTS:
+        if variant not in only:
+            continue
         batch = []
         for i in sorted(chosen):
             doc = dict(docs[i])

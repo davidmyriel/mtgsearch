@@ -11,12 +11,18 @@ import { search } from "../../app/search.ts";
 import type { Collection, Collections } from "../../app/search.ts";
 import { TRIALS } from "./queries.ts";
 
-const VARIANTS: [string, string][] = [
+const ALL: [string, string][] = [
   ["a", "today's text"],
+  ["a2", "today's text again, a second identical collection"],
   ["b", "symbols in words"],
   ["c", "symbols and numbers in words"],
   ["d", "today's text with the words added"],
+  ["e", "symbols in the rules only, cost line as today"],
+  ["f", "symbols and numbers in the rules only, cost line as today"],
 ];
+// TRIAL_VARIANTS=a,a2 compares only those; the first named is what the others are set against.
+const chosen = (process.env.TRIAL_VARIANTS || ALL.map(([variant]) => variant).join(",")).split(",");
+const VARIANTS = chosen.map((variant) => ALL.find(([name]) => name === variant)!);
 const key = (process.env.TOPK_API_KEY ?? "").trim();
 const client = new Client({ apiKey: key, region: process.env.TOPK_REGION || "aws-us-east-1-elastica" });
 const printings = client.collection(process.env.MTGSEARCH_PRINTINGS_COLLECTION || "mtg-printings-v1") as unknown as Collection;
@@ -40,7 +46,7 @@ for (const trial of TRIALS) {
 }
 
 const show = (rank: number) => (rank === NOT_FOUND ? " -" : String(rank).padStart(2));
-console.log("place of the first right card among the first ten, under each wording (a b c d):\n");
+console.log("place of the first right card among the first ten, under each wording (" + chosen.join(" ") + "):\n");
 for (const group of [...new Set(TRIALS.map((trial) => trial.group))]) {
   console.log("=== " + group + " ===");
   for (const trial of TRIALS.filter((item) => item.group === group)) {

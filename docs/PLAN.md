@@ -103,10 +103,33 @@ picked up: at the boundary between plan steps unless something is broken.
       first ten (`eval/after_full_depth.mtg-cards-v2.json`); numeric and players' words are
       unchanged. It also makes pages agree: before, a second page was cut from a list asked to
       another depth and could repeat or skip cards
-- [ ] Spell out mana symbols in the indexed text. "one mana artifact that taps for two colorless
-      mana" now finds Sol Ring, whose text reads `{T}: Add {C}{C}`, but second, behind Thran
-      Turbine; the failures listed above are of the same kind. Needs the cards embedded again,
-      which the owner has put on hold
+- [x] Spell out mana symbols and numbers in the indexed text: tried, and not adopted (trial of
+      23 November 2026, on the owner's go; `experiments/trial/`, results in `results.txt`).
+      Seven throwaway collections of the same 2,600 cards (what 60 test searches find today,
+      their right answers, and 408 at random), differing only in the text TopK embeds. Right
+      card first / in the first three / in the first ten, of 60, and searches better or worse
+      than with today's text:
+      - today's text: 36 / 48 / 54
+      - symbols in words, cost line and rules: 36 / 44 / 54; 10 better, 13 worse
+      - the same with numbers in words: 34 / 45 / 55; 9 better, 16 worse
+      - today's text with the words added underneath: 39 / 50 / 53; 12 better, 9 worse
+      - symbols in words in the rules only: 34 / 50 / 56; 10 better, 8 worse
+      - the same with numbers in words: 35 / 49 / 56; 10 better, 10 worse
+      - today's text again, in a second collection (the control): 36 / 48 / 54; none better,
+        none worse. So the differences above are the text and not chance.
+      Every wording does what it was meant to: Sol Ring comes first for "one mana artifact that
+      taps for two colorless mana", "artifact that taps for two mana" and "elf that taps for
+      mana" find their cards where they found none. And every wording makes eight to sixteen
+      searches worse that work today and have nothing to do with symbols ("vehicle with
+      flying" from first to fourth or lower, "fight target creature" from first to seventh,
+      "sphinx that draws two cards" from first to second): the added words change what every
+      card is about. The rule set beforehand was to go on only if no working search got worse.
+      None passed, so the cards were not embedded again and the live index is as it was
+- [ ] What the trial points to instead, none of it tried: say the notation on the side of the
+      query, not the card (a query that speaks of tapping for mana is given the notation as
+      well), which touches only the searches that are about symbols and needs nothing embedded
+      again; or keep the worded text as a field of its own beside today's two, so that it adds
+      to a card's score without replacing what works. Both belong with stage 8
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),
       plain text wins on numeric queries
 - [ ] Grow the query set to about 150 with a second reviewer; write art descriptions from memory

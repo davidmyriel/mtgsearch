@@ -1,0 +1,203 @@
+Trial t1, run on 23 November 2026: 60 searches against seven collections of the same 2,600 cards.
+Made by experiments/trial/evaluate.ts. See docs/PLAN.md, stage 3, for what was concluded.
+
+--- the six wordings ---
+place of the first right card among the first ten, under each wording (a b c d e f):
+
+=== descriptive ===
+   1  1  1  2  1  1    -    sphinx that draws two cards
+   2  1  1  1  1  1  +++++  one mana artifact that taps for two colorless mana
+   2  1  1  1  2  2  +++    exile a creature and its controller gains life equal to its power
+   1  1  1  1  1  1         enchantment where opponents pay one or I draw a card whenever they cast a spell
+   1  1  1  1  1  1         whenever an opponent draws a card they pay two or I get a treasure
+   6  6  7  2  5  5   -+++  bounce all my opponents' nonland permanents at instant speed
+   1  1  2  2  1  1   --    creature that drains each opponent whenever another creature dies
+   2  1  1  1  2  2  +++    one mana elf that taps for one green mana
+   2  4  4  1  2  2  --+    two mana sorcery that searches my library for any card and puts it into my hand
+   1  1  1  1  1  1         enchantment that doubles the tokens I create
+   1  1  1  1  2  2     --  win the game when my library has no cards
+   1  1  1  1  1  1         equipment with free equip that gives haste and shroud
+   1  1  1  1  1  1         lets me play lands from my graveyard
+   1  1  1  1  1  1         stops opponents from casting spells during my turn
+   1  1  1  1  1  1         big green creature that gives all my creatures trample and plus X plus X when it enters
+=== numeric ===
+   4  2  2  2  5  5  +++--  two mana blue instant that counters any spell
+   1  1  1  1  1  1         one mana red instant that deals three damage to any target
+   2  1  1  1  1  1  +++++  zero mana artifact that taps for mana
+   1  1  1  1  1  1         four mana white sorcery that destroys all creatures
+   2  4  4  1  2  2  --+    four mana green sorcery that searches for two basic lands and puts them onto the battlefield
+   1  3  3  1  2  2  -- --  two mana green creature that taps for one mana of any color
+   1  1  1  1  1  1         one mana white instant that gives a creature protection from a color of my choice
+   1  1  1  1  1  1         one mana black instant that puts any card from my library on top of it
+=== failed ===
+   -  -  3  -  -  -   +     three damage for one mana
+   1  1  1  1  1  2      -  two mana counterspell
+   -  -  -  -  -  -         search for any card
+   -  6  6  - 10 10  ++ ++  elf that taps for mana
+   4  9  9  8  3  3  ---++  destroy all creatures
+   -  3  2  -  3  4  ++ ++  artifact that taps for two mana
+   -  -  -  -  -  -         deals two damage to any target
+=== examples ===
+   1  1  1  3  1  1    -    angel that gains life
+   1  1  1  1  1  1         knight with first strike
+   3  2  3  3  2  2  +  ++  creature that taxes spells
+   1  1  1  1  1  1         tithe alternative
+   1  1  1  2  1  1    -    sphinx that draws two cards
+   1  1  1  1  1  1         blue land destruction
+   1  1  1  1  1  1         wizard that copies spells
+   1  1  1  1  1  1         merfolk that draws cards
+   7  -  -  5  7  7  --+    brainstorm alternative
+   1  1  1  1  1  1         reanimate a creature
+   1  2  2  1  1  1  --     demon with a drawback
+   1  1  1  1  1  1         zombie that comes back
+   1  1  1  1  1  1         ritual alternative
+   1  1  1  1  2  1     -   dwarf that destroys lands
+   1  1  1  1  1  1         goblin that makes goblins
+   3  2  3  1  2  1  + +++  dragon with haste
+   1  1  1  1  1  1         damage to each creature
+   2  4  4  -  2  3  --- -  shock alternative
+   1  1  1  1  1  2      -  hydra with x in its cost
+   3  1  1  2  1  1  +++++  druid that untaps lands
+   1  7  7  1  2  1  -- -   fight target creature
+   1  2  2  1  1  1  --     search for a basic land
+   2  4  4  3  3  3  -----  llanowar alternative
+   4  5  5  5  7  7  -----  equipment that gives haste
+   1  5  4  2  4  6  -----  vehicle with flying
+   7  -  -  1  3  3  --+++  artifact that draws cards
+   1  1  1  1  1  1         izzet dragon
+   2  2  2  2  2  3      -  orzhov vampire
+   1  1  2  3  1  1   --    simic hydra
+   1  1  1  1  1  1         dimir rogue
+
+totals over 60 searches:
+  a (today's text): first 36, in three 48, in ten 54
+  b (symbols in words): first 36, in three 44, in ten 54 | against today: 10 better, 13 worse
+  c (symbols and numbers in words): first 34, in three 45, in ten 55 | against today: 9 better, 16 worse
+  d (today's text with the words added): first 39, in three 50, in ten 53 | against today: 12 better, 9 worse
+  e (symbols in the rules only, cost line as today): first 34, in three 50, in ten 56 | against today: 10 better, 8 worse
+  f (symbols and numbers in the rules only, cost line as today): first 35, in three 49, in ten 56 | against today: 10 better, 10 worse
+
+b (symbols in words), search by search against today:
+  better   2 ->  1  one mana artifact that taps for two colorless mana   (first card: Thran Turbine -> Sol Ring)
+  better   2 ->  1  exile a creature and its controller gains life equal to its power   (first card: Captain Marvel, Shooting Star -> Swords to Plowshares)
+  better   2 ->  1  one mana elf that taps for one green mana   (first card: Llanowar Mentor -> Llanowar Elves)
+  WORSE    2 ->  4  two mana sorcery that searches my library for any card and puts it into my hand   (first card: Treasure Hunt -> Treasure Hunt)
+  better   4 ->  2  two mana blue instant that counters any spell   (first card: Thassa's Rebuff -> Quench)
+  better   2 ->  1  zero mana artifact that taps for mana   (first card: Paradise Mantle -> Lotus Petal)
+  WORSE    2 ->  4  four mana green sorcery that searches for two basic lands and puts them onto the battlefield   (first card: Map the Frontier -> Map the Frontier)
+  WORSE    1 ->  3  two mana green creature that taps for one mana of any color   (first card: Ilysian Caryatid -> Frog Butler)
+  better   - ->  6  elf that taps for mana   (first card: Jaspera Sentinel -> Joraga Treespeaker)
+  WORSE    4 ->  9  destroy all creatures   (first card: Divine Reckoning -> Doomskar)
+  better   - ->  3  artifact that taps for two mana   (first card: Implements of Sacrifice -> Implements of Sacrifice)
+  better   3 ->  2  creature that taxes spells   (first card: Tax Collector -> Tax Collector)
+  WORSE    7 ->  -  brainstorm alternative   (first card: Harmonized Trio // Brainstorm -> Harmonized Trio // Brainstorm)
+  WORSE    1 ->  2  demon with a drawback   (first card: Hellcarver Demon -> Mold Demon)
+  better   3 ->  2  dragon with haste   (first card: Cosmic Sovereign -> Cosmic Sovereign)
+  WORSE    2 ->  4  shock alternative   (first card: Sudden Shock -> Sudden Shock)
+  better   3 ->  1  druid that untaps lands   (first card: Elder Druid -> Krosan Restorer)
+  WORSE    1 ->  7  fight target creature   (first card: Prizefight -> Fight with Fire)
+  WORSE    1 ->  2  search for a basic land   (first card: Traverse the Ulvenwald -> Caravan Vigil)
+  WORSE    2 ->  4  llanowar alternative   (first card: Fyndhorn Elves -> Fyndhorn Elves)
+  WORSE    4 ->  5  equipment that gives haste   (first card: Ring of Valkas -> Ring of Valkas)
+  WORSE    1 ->  5  vehicle with flying   (first card: Aethersphere Harvester -> S.H.I.E.L.D. Flying Car)
+  WORSE    7 ->  -  artifact that draws cards   (first card: Bonder's Ornament -> Diviner's Wand)
+
+c (symbols and numbers in words), search by search against today:
+  better   2 ->  1  one mana artifact that taps for two colorless mana   (first card: Thran Turbine -> Sol Ring)
+  better   2 ->  1  exile a creature and its controller gains life equal to its power   (first card: Captain Marvel, Shooting Star -> Swords to Plowshares)
+  WORSE    6 ->  7  bounce all my opponents' nonland permanents at instant speed   (first card: Disperse -> Discovery // Dispersal)
+  WORSE    1 ->  2  creature that drains each opponent whenever another creature dies   (first card: Zulaport Cutthroat -> Vraan, Executioner Thane)
+  better   2 ->  1  one mana elf that taps for one green mana   (first card: Llanowar Mentor -> Llanowar Elves)
+  WORSE    2 ->  4  two mana sorcery that searches my library for any card and puts it into my hand   (first card: Treasure Hunt -> Treasure Hunt)
+  better   4 ->  2  two mana blue instant that counters any spell   (first card: Thassa's Rebuff -> Quench)
+  better   2 ->  1  zero mana artifact that taps for mana   (first card: Paradise Mantle -> Lotus Petal)
+  WORSE    2 ->  4  four mana green sorcery that searches for two basic lands and puts them onto the battlefield   (first card: Map the Frontier -> Map the Frontier)
+  WORSE    1 ->  3  two mana green creature that taps for one mana of any color   (first card: Ilysian Caryatid -> Frog Butler)
+  better   - ->  3  three damage for one mana   (first card: Scalding Cauldron -> Bear Trap)
+  better   - ->  6  elf that taps for mana   (first card: Jaspera Sentinel -> Greenweaver Druid)
+  WORSE    4 ->  9  destroy all creatures   (first card: Divine Reckoning -> Doomskar)
+  better   - ->  2  artifact that taps for two mana   (first card: Implements of Sacrifice -> Implements of Sacrifice)
+  WORSE    7 ->  -  brainstorm alternative   (first card: Harmonized Trio // Brainstorm -> Harmonized Trio // Brainstorm)
+  WORSE    1 ->  2  demon with a drawback   (first card: Hellcarver Demon -> Mold Demon)
+  WORSE    2 ->  4  shock alternative   (first card: Sudden Shock -> Sudden Shock)
+  better   3 ->  1  druid that untaps lands   (first card: Elder Druid -> Krosan Restorer)
+  WORSE    1 ->  7  fight target creature   (first card: Prizefight -> Clash of Titans)
+  WORSE    1 ->  2  search for a basic land   (first card: Traverse the Ulvenwald -> Caravan Vigil)
+  WORSE    2 ->  4  llanowar alternative   (first card: Fyndhorn Elves -> Fyndhorn Elves)
+  WORSE    4 ->  5  equipment that gives haste   (first card: Ring of Valkas -> Ring of Valkas)
+  WORSE    1 ->  4  vehicle with flying   (first card: Aethersphere Harvester -> S.H.I.E.L.D. Flying Car)
+  WORSE    7 ->  -  artifact that draws cards   (first card: Bonder's Ornament -> Diviner's Wand)
+  WORSE    1 ->  2  simic hydra   (first card: Bioessence Hydra -> Thunderous Snapper)
+
+d (today's text with the words added), search by search against today:
+  WORSE    1 ->  2  sphinx that draws two cards   (first card: Consecrated Sphinx -> Atemsis, All-Seeing)
+  better   2 ->  1  one mana artifact that taps for two colorless mana   (first card: Thran Turbine -> Sol Ring)
+  better   2 ->  1  exile a creature and its controller gains life equal to its power   (first card: Captain Marvel, Shooting Star -> Swords to Plowshares)
+  better   6 ->  2  bounce all my opponents' nonland permanents at instant speed   (first card: Disperse -> Discovery // Dispersal)
+  WORSE    1 ->  2  creature that drains each opponent whenever another creature dies   (first card: Zulaport Cutthroat -> Vraan, Executioner Thane)
+  better   2 ->  1  one mana elf that taps for one green mana   (first card: Llanowar Mentor -> Llanowar Elves)
+  better   2 ->  1  two mana sorcery that searches my library for any card and puts it into my hand   (first card: Treasure Hunt -> Demonic Tutor)
+  better   4 ->  2  two mana blue instant that counters any spell   (first card: Thassa's Rebuff -> Thassa's Rebuff)
+  better   2 ->  1  zero mana artifact that taps for mana   (first card: Paradise Mantle -> Everflowing Chalice)
+  better   2 ->  1  four mana green sorcery that searches for two basic lands and puts them onto the battlefield   (first card: Map the Frontier -> Explosive Vegetation)
+  WORSE    4 ->  8  destroy all creatures   (first card: Divine Reckoning -> Kirtar's Wrath)
+  WORSE    1 ->  3  angel that gains life   (first card: Angel of Vitality -> Archway Angel)
+  WORSE    1 ->  2  sphinx that draws two cards   (first card: Consecrated Sphinx -> Atemsis, All-Seeing)
+  better   7 ->  5  brainstorm alternative   (first card: Harmonized Trio // Brainstorm -> Brainsurge)
+  better   3 ->  1  dragon with haste   (first card: Cosmic Sovereign -> Thundermane Dragon)
+  WORSE    2 ->  -  shock alternative   (first card: Sudden Shock -> Gin'tak Charge)
+  better   3 ->  2  druid that untaps lands   (first card: Elder Druid -> Hope Tender)
+  WORSE    2 ->  3  llanowar alternative   (first card: Fyndhorn Elves -> Fyndhorn Elves)
+  WORSE    4 ->  5  equipment that gives haste   (first card: Ring of Valkas -> Rabbit Battery)
+  WORSE    1 ->  2  vehicle with flying   (first card: Aethersphere Harvester -> Voyager Glidecar)
+  better   7 ->  1  artifact that draws cards   (first card: Bonder's Ornament -> Mindstorm Crown)
+  WORSE    1 ->  3  simic hydra   (first card: Bioessence Hydra -> Thunderous Snapper)
+
+e (symbols in the rules only, cost line as today), search by search against today:
+  better   2 ->  1  one mana artifact that taps for two colorless mana   (first card: Thran Turbine -> Sol Ring)
+  better   6 ->  5  bounce all my opponents' nonland permanents at instant speed   (first card: Disperse -> Disperse)
+  WORSE    1 ->  2  win the game when my library has no cards   (first card: Laboratory Maniac -> Doctor Doom, Unrivaled)
+  WORSE    4 ->  5  two mana blue instant that counters any spell   (first card: Thassa's Rebuff -> Negate)
+  better   2 ->  1  zero mana artifact that taps for mana   (first card: Paradise Mantle -> Mox Tantalite)
+  WORSE    1 ->  2  two mana green creature that taps for one mana of any color   (first card: Ilysian Caryatid -> Great Forest Druid)
+  better   - -> 10  elf that taps for mana   (first card: Jaspera Sentinel -> Llanowar Mentor)
+  better   4 ->  3  destroy all creatures   (first card: Divine Reckoning -> Kirtar's Wrath)
+  better   - ->  3  artifact that taps for two mana   (first card: Implements of Sacrifice -> Runecarved Obelisk)
+  better   3 ->  2  creature that taxes spells   (first card: Tax Collector -> Tax Collector)
+  WORSE    1 ->  2  dwarf that destroys lands   (first card: Dwarven Blastminer -> Mine Layer)
+  better   3 ->  2  dragon with haste   (first card: Cosmic Sovereign -> Cosmic Sovereign)
+  better   3 ->  1  druid that untaps lands   (first card: Elder Druid -> Krosan Restorer)
+  WORSE    1 ->  2  fight target creature   (first card: Prizefight -> Fight with Fire)
+  WORSE    2 ->  3  llanowar alternative   (first card: Fyndhorn Elves -> Llanowar Mentor)
+  WORSE    4 ->  7  equipment that gives haste   (first card: Ring of Valkas -> Ring of Valkas)
+  WORSE    1 ->  4  vehicle with flying   (first card: Aethersphere Harvester -> S.H.I.E.L.D. Flying Car)
+  better   7 ->  3  artifact that draws cards   (first card: Bonder's Ornament -> Bonder's Ornament)
+
+f (symbols and numbers in the rules only, cost line as today), search by search against today:
+  better   2 ->  1  one mana artifact that taps for two colorless mana   (first card: Thran Turbine -> Sol Ring)
+  better   6 ->  5  bounce all my opponents' nonland permanents at instant speed   (first card: Disperse -> Disperse)
+  WORSE    1 ->  2  win the game when my library has no cards   (first card: Laboratory Maniac -> Doctor Doom, Unrivaled)
+  WORSE    4 ->  5  two mana blue instant that counters any spell   (first card: Thassa's Rebuff -> Negate)
+  better   2 ->  1  zero mana artifact that taps for mana   (first card: Paradise Mantle -> Mox Tantalite)
+  WORSE    1 ->  2  two mana green creature that taps for one mana of any color   (first card: Ilysian Caryatid -> Great Forest Druid)
+  WORSE    1 ->  2  two mana counterspell   (first card: Counterspell -> Change the Equation)
+  better   - -> 10  elf that taps for mana   (first card: Jaspera Sentinel -> Joraga Treespeaker)
+  better   4 ->  3  destroy all creatures   (first card: Divine Reckoning -> Kirtar's Wrath)
+  better   - ->  4  artifact that taps for two mana   (first card: Implements of Sacrifice -> Runecarved Obelisk)
+  better   3 ->  2  creature that taxes spells   (first card: Tax Collector -> Tax Collector)
+  better   3 ->  1  dragon with haste   (first card: Cosmic Sovereign -> Thundermane Dragon)
+  WORSE    2 ->  3  shock alternative   (first card: Sudden Shock -> Sudden Shock)
+  WORSE    1 ->  2  hydra with x in its cost   (first card: Hungering Hydra -> Hydra Broodmaster)
+  better   3 ->  1  druid that untaps lands   (first card: Elder Druid -> Krosan Restorer)
+  WORSE    2 ->  3  llanowar alternative   (first card: Fyndhorn Elves -> Llanowar Mentor)
+  WORSE    4 ->  7  equipment that gives haste   (first card: Ring of Valkas -> Ring of Valkas)
+  WORSE    1 ->  6  vehicle with flying   (first card: Aethersphere Harvester -> Invasion of Kaladesh // Aetherwing, Golden-Scale Flagship)
+  better   7 ->  3  artifact that draws cards   (first card: Bonder's Ornament -> Bonder's Ornament)
+  WORSE    2 ->  3  orzhov vampire   (first card: Baron Bertram Graywater -> Baron Bertram Graywater)
+
+--- the control: a second, identical collection of today's text ---
+totals over 60 searches:
+  a (today's text): first 36, in three 48, in ten 54
+  a2 (today's text again, a second identical collection): first 36, in three 48, in ten 54 | against today: 0 better, 0 worse
+
+a2 (today's text again, a second identical collection), search by search against today:
