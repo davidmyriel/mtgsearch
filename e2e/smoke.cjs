@@ -452,6 +452,14 @@ async function run(name, contextOptions) {
     read.join(" | ") === "its colours include blue | the type includes “sphinx” | the text includes “draw two cards”",
     `[${name}] the page says how the query was read (${read.join(" | ")})`
   );
+  // A block of sets, named by one of them.
+  await search(page, "b:wwk t:ally r:rare");
+  const blockRead = await page.$$eval("#understood li", (items) => items.map((li) => li.textContent));
+  check(
+    (await page.textContent("#status")).startsWith("Scryfall syntax · ") && blockRead[0] === "the set is in the Zendikar block",
+    `[${name}] a block is found by any of its sets and said by its name (${blockRead.join(" | ")})`
+  );
+  check((await firstCards(page, 20)).includes("Kazuul Warlord"), `[${name}] and lists the block's cards (${(await firstCards(page, 3)).join(", ")})`);
 
   // Paging and sorting, on a query with more results than one page.
   await search(page, "t:sphinx");

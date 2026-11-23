@@ -362,6 +362,31 @@ test("a query that is exactly a card's name names that card, beside the list", {
   assert.equal((await search(cols, "sphinx that draws two cards")).exact, null);
 });
 
+test("block: finds the sets of a block, named by any of them", { skip }, async () => {
+  const cols = collection();
+  const block = await search(cols, "block:zen", { k: 1 });
+  assert.deepEqual([block.mode, block.unit, block.understood], ["syntax", "cards", ["the set is in the Zendikar block"]]);
+  // any set of it, by code or by name, and the block's own name: the same cards
+  for (const query of ["b:wwk", "b:roe", "block:worldwake", 'b:"rise of the eldrazi"', "block:zendikar"]) {
+    assert.equal((await search(cols, query, { k: 1 })).total, block.total, query);
+  }
+  // more than its three sets hold between them: promos and tokens are in the block too
+  const three = await search(cols, "e:zen or e:wwk or e:roe", { k: 1 });
+  assert.ok((block.total ?? 0) > (three.total ?? 0) && (three.total ?? 0) > 500);
+  // a set outside every block is itself, and so is the set of its promos
+  const dominaria = await search(cols, "e:dom", { k: 1 });
+  assert.equal((await search(cols, "b:dom", { k: 1 })).total, dominaria.total);
+  assert.equal((await search(cols, "b:pdom", { k: 1 })).total, dominaria.total);
+  // a block that does not exist finds nothing and is not refused
+  const none = await search(cols, "b:nosuchblock", { k: 1 });
+  assert.deepEqual([none.mode, none.total, none.ignored], ["syntax", 0, []]);
+  // with other conditions
+  const allies = await search(cols, "b:wwk t:ally r:rare", { k: 60 });
+  assert.equal(allies.total, 9);
+  assert.ok(["Kazuul Warlord", "Turntimber Ranger", "Talus Paladin"].every((name) => names(allies).includes(name)));
+  assert.ok(allies.hits.every((hit) => /ally/i.test(String(hit.type_line))));
+});
+
 test("a card is found by the other names its printings go by, and shown as that printing", { skip }, async () => {
   const cols = collection();
   // a flavour name, by one of its words: the Godzilla cards, each as its Godzilla printing

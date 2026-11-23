@@ -39,6 +39,9 @@ def main(argv: list[str] | None = None) -> None:
         printings = scryfall.download_bulk("default_cards", config.DATA_DIR)
         write(catalog.SETS_OUTPUT, catalog.set_dates(scryfall.read_jsonl_gz(printings)))
         write(catalog.FLAGS_OUTPUT, catalog.printing_flags(scryfall.read_jsonl_gz(printings)))
+        found = catalog.blocks(scryfall.sets())
+        catalog.BLOCKS_OUTPUT.write_text(json.dumps(found, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"wrote {len(found['blocks'])} blocks of {len(found['sets'])} sets to {catalog.BLOCKS_OUTPUT}")
 
 
 if __name__ == "__main__":

@@ -26990,6 +26990,5865 @@
    }
   },
   {
+   "query": "godzilla",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "godzilla"
+    ]
+   }
+  },
+  {
+   "query": "name:godzilla",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "name"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "\"king of the monsters\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "king of the monsters"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "king of the monsters"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "king of the monsters"
+    ]
+   }
+  },
+  {
+   "query": "godzilla doom",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "doom"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "doom"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "godzilla",
+     "doom"
+    ]
+   }
+  },
+  {
+   "query": "godzilla t:dinosaur",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dinosaur"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "t"
+    ],
+    "words": [
+     "godzilla"
+    ]
+   }
+  },
+  {
+   "query": "-godzilla t:dinosaur c=rg mv=5 t:legendary",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "or",
+       [
+        [
+         "has",
+         "name_plain",
+         "godzilla"
+        ],
+        [
+         "has",
+         "alt_own_plain",
+         "godzilla"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dinosaur"
+     ],
+     [
+      "in",
+      "c_sets",
+      "RG"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      5
+     ],
+     [
+      "in",
+      "type_words",
+      "legendary"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "-godzilla !\"void beckoner\" unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "or",
+       [
+        [
+         "has",
+         "name_plain",
+         "godzilla"
+        ],
+        [
+         "has",
+         "alt_own_plain",
+         "godzilla"
+        ]
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "void beckoner"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "void beckoner"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "void beckoner"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "-!\"power sneakers\" t:equipment mv=2 o:shroud",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "or",
+       [
+        [
+         "in",
+         "names_lc",
+         "power sneakers"
+        ],
+        [
+         "eq",
+         "name_plain",
+         "power sneakers"
+        ],
+        [
+         "in",
+         "alt_own_names_plain",
+         "power sneakers"
+        ]
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "equipment"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      2
+     ],
+     [
+      "has",
+      "oracle_lc",
+      "shroud"
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "-!\"power sneakers\" !\"lightning greaves\" unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "or",
+       [
+        [
+         "in",
+         "names_lc",
+         "power sneakers"
+        ],
+        [
+         "eq",
+         "name_plain",
+         "power sneakers"
+        ],
+        [
+         "in",
+         "alt_own_names_plain",
+         "power sneakers"
+        ]
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "lightning greaves"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "lightning greaves"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "lightning greaves"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "godzilla unique:prints -t:nightmare",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ]
+      ]
+     ],
+     [
+      "not",
+      [
+       "in",
+       "type_words",
+       "nightmare"
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "power include:extras",
+   "ir": [
+    "or",
+    [
+     [
+      "has",
+      "name_plain",
+      "power"
+     ],
+     [
+      "has",
+      "alt_plain",
+      "power"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "include"
+    ],
+    "words": [
+     "power"
+    ]
+   }
+  },
+  {
+   "query": "godzilla e:iko",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "set",
+      "iko"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "e"
+    ],
+    "words": [
+     "godzilla"
+    ]
+   }
+  },
+  {
+   "query": "godzilla -e:iko",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ]
+      ]
+     ],
+     [
+      "not",
+      [
+       "eq",
+       "set",
+       "iko"
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "godzilla or mothra",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "godzilla"
+       ],
+       [
+        "has",
+        "name_plain",
+        "mothra"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mothra"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": null
+  },
+  {
+   "query": "mothra",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "mothra"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "mothra"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "mothra"
+    ]
+   }
+  },
+  {
+   "query": "power sneakers",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "power"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "power"
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "sneakers"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "sneakers"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "power",
+     "sneakers"
+    ]
+   }
+  },
+  {
+   "query": "chancla",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "chancla"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "chancla"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "chancla"
+    ]
+   }
+  },
+  {
+   "query": "!\"Power Sneakers\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "power sneakers"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "power sneakers"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "power sneakers"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Power Sneakers"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"power sneakers\" unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "power sneakers"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "power sneakers"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "power sneakers"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!power sneakers",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"Godzilla, King of the Monsters\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "godzilla, king of the monsters"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "godzilla king of the monsters"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "godzilla king of the monsters"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Godzilla, King of the Monsters"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"godzilla king of the monsters\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "godzilla king of the monsters"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "godzilla king of the monsters"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "godzilla king of the monsters"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!godzilla king of the monsters"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"Chancla Relampago\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "chancla relampago"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "chancla relampago"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "chancla relampago"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Chancla Relampago"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "name:/godzilla/",
+   "ir": [
+    "re",
+    "name_lc",
+    "godzilla"
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "name"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "dracula",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "dracula"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "dracula"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "dracula"
+    ]
+   }
+  },
+  {
+   "query": "dracula unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "dracula"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "dracula"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "unique"
+    ],
+    "words": [
+     "dracula"
+    ]
+   }
+  },
+  {
+   "query": "optimus prime",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "optimus"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "optimus"
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "prime"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "prime"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "optimus",
+     "prime"
+    ]
+   }
+  },
+  {
+   "query": "rick steadfast",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "rick"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "rick"
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "steadfast"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "steadfast"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "rick",
+     "steadfast"
+    ]
+   }
+  },
+  {
+   "query": "!\"Rick, Steadfast Leader\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "rick, steadfast leader"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "rick steadfast leader"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "rick steadfast leader"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Rick, Steadfast Leader"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "ademi",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "ademi"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "ademi"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "ademi"
+    ]
+   }
+  },
+  {
+   "query": "ademi silkchutes",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "ademi"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "ademi"
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "silkchutes"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "silkchutes"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "ademi",
+     "silkchutes"
+    ]
+   }
+  },
+  {
+   "query": "!\"Ademi of the Silkchutes\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "ademi of the silkchutes"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "ademi of the silkchutes"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "ademi of the silkchutes"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Ademi of the Silkchutes"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "principled referee",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "principled"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "principled"
+       ]
+      ]
+     ],
+     [
+      "or",
+      [
+       [
+        "has",
+        "name_plain",
+        "referee"
+       ],
+       [
+        "has",
+        "alt_plain",
+        "referee"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": true,
+   "split": {
+    "keywords": [],
+    "words": [
+     "principled",
+     "referee"
+    ]
+   }
+  },
+  {
+   "query": "!\"Principled Referee\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "principled referee"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "principled referee"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "principled referee"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Principled Referee"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"Principled Referee\" unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "principled referee"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "principled referee"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "principled referee"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Principled Referee",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"urzas saga\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "urzas saga"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "urzas saga"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "urzas saga"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!urzas saga"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"Urza's Saga\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "urza's saga"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "urzas saga"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "urzas saga"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Urza's Saga"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"zilortha strength incarnate\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "zilortha strength incarnate"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "zilortha strength incarnate"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "zilortha strength incarnate"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!zilortha strength incarnate"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"fire\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "fire"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "fire"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "fire"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!fire"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"fire ice\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "fire ice"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "fire ice"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "fire ice"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!fire ice"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"Fire // Ice\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "fire // ice"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "fire ice"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "fire ice"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!Fire // Ice"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "!\"jace the mind sculptor\"",
+   "ir": [
+    "and",
+    [
+     [
+      "or",
+      [
+       [
+        "in",
+        "names_lc",
+        "jace the mind sculptor"
+       ],
+       [
+        "eq",
+        "name_plain",
+        "jace the mind sculptor"
+       ],
+       [
+        "in",
+        "alt_names_plain",
+        "jace the mind sculptor"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "extra",
+      false
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": false,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "!jace the mind sculptor"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "block:zen",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "block"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:wwk",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:roe",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "block:zen unique:prints",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "block",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "block:zendikar",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "block"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ktk t:dragon",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "cp2",
+       "dtk",
+       "frf",
+       "ktk",
+       "pdtk",
+       "pfrf",
+       "pktk",
+       "ptkdf",
+       "tdtk",
+       "tfrf",
+       "tktk",
+       "ugin"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dragon"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:dtk",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "cp2",
+     "dtk",
+     "frf",
+     "ktk",
+     "pdtk",
+     "pfrf",
+     "pktk",
+     "ptkdf",
+     "tdtk",
+     "tfrf",
+     "tktk",
+     "ugin"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:lea r:mythic",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "10e",
+       "2ed",
+       "3ed",
+       "4ed",
+       "5ed",
+       "6ed",
+       "7ed",
+       "8ed",
+       "9ed",
+       "fbb",
+       "fdn",
+       "lea",
+       "leb",
+       "m10",
+       "m11",
+       "m12",
+       "m13",
+       "m14",
+       "m15",
+       "m19",
+       "m20",
+       "m21",
+       "ori",
+       "p8ed",
+       "p9ed",
+       "ppp1",
+       "sum"
+      ]
+     ],
+     [
+      "eq",
+      "rarity",
+      "mythic"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:m21 t:angel",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "10e",
+       "2ed",
+       "3ed",
+       "4ed",
+       "5ed",
+       "6ed",
+       "7ed",
+       "8ed",
+       "9ed",
+       "fbb",
+       "fdn",
+       "lea",
+       "leb",
+       "m10",
+       "m11",
+       "m12",
+       "m13",
+       "m14",
+       "m15",
+       "m19",
+       "m20",
+       "m21",
+       "ori",
+       "p8ed",
+       "p9ed",
+       "ppp1",
+       "sum"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "angel"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mh1 t:sliver",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "mh1",
+       "mh2",
+       "mh3"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sliver"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:otj t:mount",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "big",
+       "otj",
+       "otp"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "mount"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "-b:zen e:wwk",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "oneof",
+       "set",
+       [
+        "proe",
+        "pwwk",
+        "pzen",
+        "roe",
+        "troe",
+        "twwk",
+        "tzen",
+        "wwk",
+        "zen"
+       ]
+      ]
+     ],
+     [
+      "eq",
+      "set",
+      "wwk"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "-b:zen t:ally",
+   "ir": [
+    "and",
+    [
+     [
+      "not",
+      [
+       "oneof",
+       "set",
+       [
+        "proe",
+        "pwwk",
+        "pzen",
+        "roe",
+        "troe",
+        "twwk",
+        "tzen",
+        "wwk",
+        "zen"
+       ]
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "ally"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "b:xyz",
+   "ir": [
+    "not",
+    [
+     "all"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:cmd t:dragon mv=6",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "40k",
+       "afc",
+       "atrc",
+       "blc",
+       "brc",
+       "c13",
+       "c14",
+       "c15",
+       "c16",
+       "c17",
+       "c18",
+       "c19",
+       "c20",
+       "c21",
+       "clb",
+       "cm1",
+       "cm2",
+       "cma",
+       "cmd",
+       "cmm",
+       "cmr",
+       "dmc",
+       "drc",
+       "dsc",
+       "ecc",
+       "eoc",
+       "fic",
+       "khc",
+       "lcc",
+       "ltc",
+       "m3c",
+       "mdc",
+       "mic",
+       "mkc",
+       "moc",
+       "msc",
+       "nac",
+       "ncc",
+       "nec",
+       "oc13",
+       "oc14",
+       "oc15",
+       "oc16",
+       "oc17",
+       "oc18",
+       "oc19",
+       "ocm1",
+       "ocmd",
+       "omic",
+       "onc",
+       "otc",
+       "pcmd",
+       "pip",
+       "scd",
+       "soc",
+       "tc14",
+       "tc15",
+       "tc16",
+       "tc17",
+       "tc18",
+       "tc19",
+       "tc20",
+       "tcm2",
+       "tcma",
+       "tdc",
+       "tmc",
+       "tmic",
+       "trc",
+       "ttrc",
+       "voc",
+       "who",
+       "woc",
+       "znc"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dragon"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      6
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:dom",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dom"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:dom unique:prints",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dom"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:pdom",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dom"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:neo",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "neo"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ravnica",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dis",
+     "gpt",
+     "pdis",
+     "pgpt",
+     "prav",
+     "rav"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:rav",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dis",
+     "gpt",
+     "pdis",
+     "pgpt",
+     "prav",
+     "rav"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "block:\"guilds of ravnica\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "grn",
+     "pgrn",
+     "prna",
+     "prw2",
+     "prwk",
+     "rna",
+     "tgrn",
+     "trna",
+     "twar",
+     "war"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "block"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:grn",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "grn",
+     "pgrn",
+     "prna",
+     "prw2",
+     "prwk",
+     "rna",
+     "tgrn",
+     "trna",
+     "twar",
+     "war"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:zen include:extras",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "include"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:grn include:extras",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "grn",
+     "pgrn",
+     "prna",
+     "prw2",
+     "prwk",
+     "rna",
+     "tgrn",
+     "trna",
+     "twar",
+     "war"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "include"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:tzen",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:zen is:promo",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "proe",
+       "pwwk",
+       "pzen",
+       "roe",
+       "troe",
+       "twwk",
+       "tzen",
+       "wwk",
+       "zen"
+      ]
+     ],
+     [
+      "in",
+      "pflags",
+      "promo"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "is"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:isd t:werewolf",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "avr",
+       "dka",
+       "isd",
+       "pavr",
+       "pdka",
+       "pisd",
+       "tavr",
+       "tdka",
+       "tisd"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "werewolf"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:soi or b:isd t:angel",
+   "ir": [
+    "or",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "emn",
+       "pemn",
+       "psoi",
+       "soi",
+       "temn",
+       "tsoi"
+      ]
+     ],
+     [
+      "and",
+      [
+       [
+        "oneof",
+        "set",
+        [
+         "avr",
+         "dka",
+         "isd",
+         "pavr",
+         "pdka",
+         "pisd",
+         "tavr",
+         "tdka",
+         "tisd"
+        ]
+       ],
+       [
+        "in",
+        "type_words",
+        "angel"
+       ]
+      ]
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": null
+  },
+  {
+   "query": "b:ths t:god",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "bng",
+       "jou",
+       "pbng",
+       "pjou",
+       "pths",
+       "tbng",
+       "tbth",
+       "tdag",
+       "tfth",
+       "thp1",
+       "thp2",
+       "thp3",
+       "ths",
+       "tjou",
+       "tths"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "god"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:usg t:artifact mv=0",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "puds",
+       "pulg",
+       "pusg",
+       "uds",
+       "ulg",
+       "usg"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "artifact"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      0
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:tsp r:special",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "fut",
+       "pfut",
+       "plc",
+       "pplc",
+       "ptsp",
+       "tsb",
+       "tsp"
+      ]
+     ],
+     [
+      "eq",
+      "rarity",
+      "special"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mrd t:equipment unique:prints",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "5dn",
+       "dst",
+       "mrd",
+       "p5dn",
+       "pdst",
+       "pmrd"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "equipment"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "prints",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "unique"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:kld t:vehicle order:cmc",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "aer",
+       "kld",
+       "mps",
+       "paer",
+       "pkld",
+       "taer",
+       "tkld"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "vehicle"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": "cmc",
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "order"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:akh t:god",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "akh",
+       "hou",
+       "mp2",
+       "pakh",
+       "phou",
+       "takh",
+       "thou"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "god"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:xln t:dinosaur r:rare",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "prix",
+       "pss2",
+       "pxln",
+       "pxtc",
+       "rix",
+       "trix",
+       "txln",
+       "xln"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dinosaur"
+     ],
+     [
+      "eq",
+      "rarity",
+      "rare"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ala c=wub",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "ala",
+       "arb",
+       "con",
+       "pala",
+       "parb",
+       "pcon",
+       "tala",
+       "tarb",
+       "tcon"
+      ]
+     ],
+     [
+      "in",
+      "c_sets",
+      "WUB"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:lrw t:kithkin",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "lrw",
+       "mor",
+       "plrw",
+       "pmor",
+       "tlrw",
+       "tmor"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "kithkin"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:inv t:dragon",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "apc",
+       "inv",
+       "papc",
+       "pinv",
+       "pls",
+       "ppls"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dragon"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ice t:snow",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "all",
+       "csp",
+       "cst",
+       "ice",
+       "pcsp"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "snow"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mir t:djinn",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "mir",
+       "vis",
+       "wth"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "djinn"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:tmp t:sliver",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "exo",
+       "pexo",
+       "psth",
+       "ptmp",
+       "sth",
+       "tmp"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "sliver"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ons t:beast mv>=6",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "lgn",
+       "ons",
+       "plgn",
+       "pons",
+       "pscg",
+       "scg"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "beast"
+     ],
+     [
+      "cmp",
+      "cmc",
+      ">=",
+      6
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ody o:threshold c:g",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "jud",
+       "ody",
+       "pjud",
+       "pody",
+       "ptor",
+       "tor"
+      ]
+     ],
+     [
+      "has",
+      "oracle_lc",
+      "threshold"
+     ],
+     [
+      "or",
+      [
+       [
+        "in",
+        "c_sets",
+        "G"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "RG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "URG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "BRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WURG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "UBRG"
+       ],
+       [
+        "in",
+        "c_sets",
+        "WUBRG"
+       ]
+      ]
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "o",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mmq t:rebel",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "mmq",
+       "nem",
+       "pcy",
+       "pmmq",
+       "pnem",
+       "ppcy"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "rebel"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:chk t:spirit r:rare",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "bok",
+       "chk",
+       "pbok",
+       "pchk",
+       "psok",
+       "sok"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "spirit"
+     ],
+     [
+      "eq",
+      "rarity",
+      "rare"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "r"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:shm c=rg",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "eve",
+       "peve",
+       "pshm",
+       "shm",
+       "teve",
+       "tshm"
+      ]
+     ],
+     [
+      "in",
+      "c_sets",
+      "RG"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "c"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:som t:myr",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "mbs",
+       "nph",
+       "pmbs",
+       "pnph",
+       "psom",
+       "som",
+       "tmbs",
+       "tnph",
+       "tsom"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "myr"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:rtr t:guildgate",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "dgm",
+       "gtc",
+       "pdgm",
+       "pgtc",
+       "prtr",
+       "rtr",
+       "tdgm",
+       "tgtc",
+       "trtr"
+      ]
+     ],
+     [
+      "has",
+      "type_lc",
+      "guildgate"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:bfz t:eldrazi mv>=7",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "bfz",
+       "exp",
+       "ogw",
+       "pbfz",
+       "pogw",
+       "pss1",
+       "tbfz",
+       "togw"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "eldrazi"
+     ],
+     [
+      "cmp",
+      "cmc",
+      ">=",
+      7
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:cns o:\"will of the council\"",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "cn2",
+       "cns",
+       "pcns",
+       "tcn2",
+       "tcns"
+      ]
+     ],
+     [
+      "has",
+      "oracle_lc",
+      "will of the council"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "o"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:por t:dragon",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "p02",
+       "por",
+       "pptk",
+       "ptk"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dragon"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:fnm t:instant",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "f01",
+       "f02",
+       "f03",
+       "f04",
+       "f05",
+       "f06",
+       "f07",
+       "f08",
+       "f09",
+       "f10",
+       "f11",
+       "f12",
+       "f13",
+       "f14",
+       "f15",
+       "f16",
+       "f17",
+       "f18",
+       "fnm"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "instant"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:jgp t:land",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "g00",
+       "g01",
+       "g02",
+       "g03",
+       "g04",
+       "g05",
+       "g06",
+       "g07",
+       "g08",
+       "g09",
+       "g10",
+       "g11",
+       "g99",
+       "j12",
+       "j13",
+       "j14",
+       "j15",
+       "j16",
+       "j17",
+       "j18",
+       "j19",
+       "j20",
+       "jgp",
+       "p22",
+       "p23",
+       "pj21"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "land"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ftv t:dragon",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "drb",
+       "v09",
+       "v10",
+       "v11",
+       "v12",
+       "v13",
+       "v14",
+       "v15",
+       "v16",
+       "v17"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dragon"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:y24",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "ylci",
+     "ymkm",
+     "yotj",
+     "ywoe"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mpr",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "mpr",
+     "p03",
+     "p04",
+     "p05",
+     "p06",
+     "p07",
+     "p08",
+     "p09",
+     "p10",
+     "p11",
+     "pr2"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:worldwake",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"rise of the eldrazi\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"shards of alara\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "ala",
+     "arb",
+     "con",
+     "pala",
+     "parb",
+     "pcon",
+     "tala",
+     "tarb",
+     "tcon"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"alara reborn\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "ala",
+     "arb",
+     "con",
+     "pala",
+     "parb",
+     "pcon",
+     "tala",
+     "tarb",
+     "tcon"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"mercadian masques\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "mmq",
+     "nem",
+     "pcy",
+     "pmmq",
+     "pnem",
+     "ppcy"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"champions of kamigawa\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "bok",
+     "chk",
+     "pbok",
+     "pchk",
+     "psok",
+     "sok"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"urza's saga\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "puds",
+     "pulg",
+     "pusg",
+     "uds",
+     "ulg",
+     "usg"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"urza's legacy\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "puds",
+     "pulg",
+     "pusg",
+     "uds",
+     "ulg",
+     "usg"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"modern horizons\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "mh1",
+     "mh2",
+     "mh3"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"core set 2021\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "10e",
+     "2ed",
+     "3ed",
+     "4ed",
+     "5ed",
+     "6ed",
+     "7ed",
+     "8ed",
+     "9ed",
+     "fbb",
+     "fdn",
+     "lea",
+     "leb",
+     "m10",
+     "m11",
+     "m12",
+     "m13",
+     "m14",
+     "m15",
+     "m19",
+     "m20",
+     "m21",
+     "ori",
+     "p8ed",
+     "p9ed",
+     "ppp1",
+     "sum"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"limited edition alpha\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "10e",
+     "2ed",
+     "3ed",
+     "4ed",
+     "5ed",
+     "6ed",
+     "7ed",
+     "8ed",
+     "9ed",
+     "fbb",
+     "fdn",
+     "lea",
+     "leb",
+     "m10",
+     "m11",
+     "m12",
+     "m13",
+     "m14",
+     "m15",
+     "m19",
+     "m20",
+     "m21",
+     "ori",
+     "p8ed",
+     "p9ed",
+     "ppp1",
+     "sum"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"commander 2011\" t:dragon mv=6",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "40k",
+       "afc",
+       "atrc",
+       "blc",
+       "brc",
+       "c13",
+       "c14",
+       "c15",
+       "c16",
+       "c17",
+       "c18",
+       "c19",
+       "c20",
+       "c21",
+       "clb",
+       "cm1",
+       "cm2",
+       "cma",
+       "cmd",
+       "cmm",
+       "cmr",
+       "dmc",
+       "drc",
+       "dsc",
+       "ecc",
+       "eoc",
+       "fic",
+       "khc",
+       "lcc",
+       "ltc",
+       "m3c",
+       "mdc",
+       "mic",
+       "mkc",
+       "moc",
+       "msc",
+       "nac",
+       "ncc",
+       "nec",
+       "oc13",
+       "oc14",
+       "oc15",
+       "oc16",
+       "oc17",
+       "oc18",
+       "oc19",
+       "ocm1",
+       "ocmd",
+       "omic",
+       "onc",
+       "otc",
+       "pcmd",
+       "pip",
+       "scd",
+       "soc",
+       "tc14",
+       "tc15",
+       "tc16",
+       "tc17",
+       "tc18",
+       "tc19",
+       "tc20",
+       "tcm2",
+       "tcma",
+       "tdc",
+       "tmc",
+       "tmic",
+       "trc",
+       "ttrc",
+       "voc",
+       "who",
+       "woc",
+       "znc"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dragon"
+     ],
+     [
+      "cmp",
+      "cmc",
+      "=",
+      6
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t",
+     "mv"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"scars of mirrodin\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "mbs",
+     "nph",
+     "pmbs",
+     "pnph",
+     "psom",
+     "som",
+     "tmbs",
+     "tnph",
+     "tsom"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"return to ravnica\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dgm",
+     "gtc",
+     "pdgm",
+     "pgtc",
+     "prtr",
+     "rtr",
+     "tdgm",
+     "tgtc",
+     "trtr"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"battle for zendikar\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "bfz",
+     "exp",
+     "ogw",
+     "pbfz",
+     "pogw",
+     "pss1",
+     "tbfz",
+     "togw"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"shadows over innistrad\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "emn",
+     "pemn",
+     "psoi",
+     "soi",
+     "temn",
+     "tsoi"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"khans of tarkir\" t:dragon",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "cp2",
+       "dtk",
+       "frf",
+       "ktk",
+       "pdtk",
+       "pfrf",
+       "pktk",
+       "ptkdf",
+       "tdtk",
+       "tfrf",
+       "tktk",
+       "ugin"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "dragon"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"time spiral\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "fut",
+     "pfut",
+     "plc",
+     "pplc",
+     "ptsp",
+     "tsb",
+     "tsp"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"ice age\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "all",
+     "csp",
+     "cst",
+     "ice",
+     "pcsp"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:dominaria",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dom"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"dominaria united\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "dmu"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"throne of eldraine\"",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "eld"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mirrodin",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "5dn",
+     "dst",
+     "mrd",
+     "p5dn",
+     "pdst",
+     "pmrd"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:innistrad t:werewolf",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "avr",
+       "dka",
+       "isd",
+       "pavr",
+       "pdka",
+       "pisd",
+       "tavr",
+       "tdka",
+       "tisd"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "werewolf"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:theros t:god",
+   "ir": [
+    "and",
+    [
+     [
+      "oneof",
+      "set",
+      [
+       "bng",
+       "jou",
+       "pbng",
+       "pjou",
+       "pths",
+       "tbng",
+       "tbth",
+       "tdag",
+       "tfth",
+       "thp1",
+       "thp2",
+       "thp3",
+       "ths",
+       "tjou",
+       "tths"
+      ]
+     ],
+     [
+      "in",
+      "type_words",
+      "god"
+     ]
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b",
+     "t"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:amonkhet",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "akh",
+     "hou",
+     "mp2",
+     "pakh",
+     "phou",
+     "takh",
+     "thou"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ixalan",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "prix",
+     "pss2",
+     "pxln",
+     "pxtc",
+     "rix",
+     "trix",
+     "txln",
+     "xln"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:onslaught",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "lgn",
+     "ons",
+     "plgn",
+     "pons",
+     "pscg",
+     "scg"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:odyssey",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "jud",
+     "ody",
+     "pjud",
+     "pody",
+     "ptor",
+     "tor"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:invasion",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "apc",
+     "inv",
+     "papc",
+     "pinv",
+     "pls",
+     "ppls"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:tempest",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "exo",
+     "pexo",
+     "psth",
+     "ptmp",
+     "sth",
+     "tmp"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mirage",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "mir",
+     "vis",
+     "wth"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:lorwyn",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "lrw",
+     "mor",
+     "plrw",
+     "pmor",
+     "tlrw",
+     "tmor"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:shadowmoor",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "eve",
+     "peve",
+     "pshm",
+     "shm",
+     "teve",
+     "tshm"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:kaladesh",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "aer",
+     "kld",
+     "mps",
+     "paer",
+     "pkld",
+     "taer",
+     "tkld"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:conspiracy",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "cn2",
+     "cns",
+     "pcns",
+     "tcn2",
+     "tcns"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:portal",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "p02",
+     "por",
+     "pptk",
+     "ptk"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:kamigawa",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "bok",
+     "chk",
+     "pbok",
+     "pchk",
+     "psok",
+     "sok"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:masques",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "mmq",
+     "nem",
+     "pcy",
+     "pmmq",
+     "pnem",
+     "ppcy"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:tarkir",
+   "ir": [
+    "not",
+    [
+     "all"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:\"magic 2021\"",
+   "ir": [
+    "not",
+    [
+     "all"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:core",
+   "ir": [
+    "not",
+    [
+     "all"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:mm",
+   "ir": [
+    "not",
+    [
+     "all"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:ZEN",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b=zen",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "proe",
+     "pwwk",
+     "pzen",
+     "roe",
+     "troe",
+     "twwk",
+     "tzen",
+     "wwk",
+     "zen"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
    "query": "o:\"unterminated",
    "error": "QueryError"
   },
@@ -27072,11 +32931,6 @@
    "message": "'m' with < or <= needs a shorter mana cost"
   },
   {
-   "query": "block:ice",
-   "error": "Unsupported",
-   "message": "'block:' is not supported yet"
-  },
-  {
    "query": "lang:ja",
    "error": "Unsupported",
    "message": "'lang:' is not supported yet"
@@ -27105,6 +32959,60 @@
    "query": "paperprints>3",
    "error": "Unsupported",
    "message": "'paperprints:' is not supported yet"
+  },
+  {
+   "query": "block:ice",
+   "ir": [
+    "oneof",
+    "set",
+    [
+     "all",
+     "csp",
+     "cst",
+     "ice",
+     "pcsp"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false,
+    "printings": true,
+    "unique": "cards",
+    "prefer": null
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "block"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b:nosuchblock",
+   "ir": [
+    "not",
+    [
+     "all"
+    ]
+   ],
+   "options": {
+    "include_extras": true,
+    "order": null,
+    "descending": false
+   },
+   "plain": false,
+   "split": {
+    "keywords": [
+     "b"
+    ],
+    "words": []
+   }
+  },
+  {
+   "query": "b>zen",
+   "error": "QueryError"
   },
   {
    "query": "r:mythic",
@@ -29614,51 +35522,6 @@
    "split": {
     "keywords": [
      "name"
-    ],
-    "words": []
-   }
-  },
-  {
-   "query": "!\"Fire // Ice\"",
-   "ir": [
-    "and",
-    [
-     [
-      "or",
-      [
-       [
-        "in",
-        "names_lc",
-        "fire // ice"
-       ],
-       [
-        "eq",
-        "name_plain",
-        "fire ice"
-       ],
-       [
-        "in",
-        "alt_names_plain",
-        "fire ice"
-       ]
-      ]
-     ],
-     [
-      "eq",
-      "extra",
-      false
-     ]
-    ]
-   ],
-   "options": {
-    "include_extras": false,
-    "order": null,
-    "descending": false
-   },
-   "plain": false,
-   "split": {
-    "keywords": [
-     "!Fire // Ice"
     ],
     "words": []
    }

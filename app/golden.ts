@@ -26,6 +26,8 @@ const QUERY_FILES = [
   "conformance/shortcuts.txt",
   "conformance/heldout2.txt",
   "conformance/regex.txt",
+  "conformance/names.txt",
+  "conformance/blocks.txt",
   "fixtures/extra_queries.txt",
 ];
 

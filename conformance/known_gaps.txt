@@ -1,6 +1,14 @@
 # Queries where we knowingly differ from Scryfall. They are not counted in the conformance rate.
 # Format: query, then an indented line explaining the difference.
 
+block:alara
+    We find the Alara block: 540 cards. Scryfall finds nothing. It takes a block's code, or
+    the code or whole name of any set in the block (`block:"shards of alara"` works there and
+    here), and knows a few blocks by their own name (Kamigawa, Masques, Ravnica) but not
+    others: Alara, Urza, Core Set, Commander, Friday Night Magic, From the Vault, Judge Gift
+    Cards, Modern Horizons Block. We accept every block's name, since that is what the
+    person typing it means.
+
 godzilla unique:prints
     Scryfall lists 14 printings and we list 15. The extra one is Void Beckoner's Arena-only
     variant (Ikoria 373A, "Spacegodzilla, Void Invader"), which Scryfall leaves out of a list

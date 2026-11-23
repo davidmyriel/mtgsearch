@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { evaluate } from "../evaluate.ts";
 import type { Doc } from "../evaluate.ts";
-import { lower, usesPrintings } from "../lower.ts";
+import { blockOf, BLOCKS, lower, usesPrintings } from "../lower.ts";
 import { parse, QueryError, Unsupported } from "../parser.ts";
 import { asNamed, grouped } from "../search.ts";
 import type { Collection, Hit } from "../search.ts";
@@ -228,6 +228,43 @@ test("grouping: a card whose printings have different names is one result", asyn
   ];
   const cheapest = await grouped(answering(priced), ["all"], { unique: "cards", prefer: null, sortField: "usd_c", descending: false });
   assert.deepEqual(cheapest.map((g) => [g.key, g.rank]), [[500, 3]]);
+});
+
+test("block: is the sets of a block, named by any of them; a set outside every block is itself", () => {
+  // the core sets are one block; the fixtures hold three of them
+  const core = ["10e-268", "lea-270", "m19-314"];
+  for (const query of ["block:lea", "b:m19", "b:10E", "b=lea", 'b:"core set 2019"', 'block:"Limited Edition Alpha"', 'b:"core set"', "b:tm19"]) {
+    assert.deepEqual(ids(query), core, query);
+  }
+  assert.deepEqual(ids("b:nph"), ["nph-30"]); // New Phyrexia, by its code
+  assert.deepEqual(ids("b:som"), ["nph-30"]); // by another set of its block
+  assert.deepEqual(ids('b:"scars of mirrodin"'), ["nph-30"]); // by that set's name, which is the block's too
+  assert.deepEqual(ids("b:soi"), ["soi-5"]);
+  assert.deepEqual(ids("b:cmd"), ["c21-263"]); // Commander 2021 is in the Commander block
+  assert.deepEqual(ids("b:ftv"), []); // a block whose code is no set's: known, and none of its sets is here
+  // Iconic Masters belongs to no block: it stands for itself
+  assert.deepEqual(ids("b:ima"), ["ima-47"]);
+  assert.deepEqual(ids('b:"iconic masters"'), ["ima-47"]);
+  // a block nobody knows finds nothing, and is not an error
+  assert.deepEqual(ids("b:nosuchblock"), []);
+  assert.deepEqual(ids("-b:lea t:artifact"), ["c21-263", "sld-1011"]);
+  // it is about printings, and lists a block's tokens as naming a set does
+  assert.deepEqual(compile("b:zen")[1], { ...compile("b:zen")[1], printings: true, includeExtras: true });
+  const sets = (compile("b:wwk")[0] as [string, string, string[]])[2];
+  assert.ok(["zen", "wwk", "roe", "tzen"].every((code) => sets.includes(code)), "the Zendikar block and its tokens");
+  assert.throws(() => compile("b>zen"), QueryError);
+  assert.throws(() => compile("b:/zen/"), QueryError);
+});
+
+test("the catalogue of blocks is consistent", () => {
+  for (const [code, block] of Object.entries(BLOCKS.blocks)) {
+    assert.ok(block.name && block.sets.length, code);
+    for (const set of block.sets) assert.equal(BLOCKS.sets[set], code, `${set} stands for ${code}`);
+  }
+  for (const [name, code] of Object.entries(BLOCKS.names)) assert.ok(Object.hasOwn(BLOCKS.sets, code), name);
+  assert.equal(blockOf("Worldwake"), "zen");
+  assert.equal(blockOf("pdom"), "dom");
+  assert.equal(blockOf("Ravnica"), "rav"); // a block's name that is not a set's
 });
 
 // In the fixtures one Grizzly Bears printing has the flavour name "Ursa, the Twin Maw" and

@@ -35,6 +35,11 @@ def bulk_index() -> dict[str, dict]:
     return {b["type"]: b for b in json.loads(_get(f"{API}/bulk-data"))["data"]}
 
 
+def sets() -> list[dict]:
+    """Every set Scryfall knows, as its set objects. One request."""
+    return json.loads(_get(f"{API}/sets"))["data"]
+
+
 def download_bulk(kind: str, dest: Path) -> Path:
     """Download one bulk file as gzipped JSON Lines. Skips the download if it is already current."""
     entry = bulk_index()[kind]

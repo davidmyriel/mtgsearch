@@ -73,6 +73,11 @@ test("legality, flags and tags", () => {
 
 test("printings: set, rarity, dates, games", () => {
   assert.deepEqual(said('set:mh2 a:"chris rahn"'), ["the set is MH2", "the artist's name includes “chris rahn”"]);
+  // a block is said by its name; a set outside every block is that set
+  assert.deepEqual(said("b:wwk"), ["the set is in the Zendikar block"]);
+  assert.deepEqual(said("-block:zendikar"), ["the set is not in the Zendikar block"]);
+  assert.deepEqual(said("b:dom"), ["the set is DOM"]);
+  assert.deepEqual(said("b:nosuchblock"), ["the set is in a block called “nosuchblock” (there is none)"]);
   assert.deepEqual(said("r:mythic"), ["its rarity is mythic"]);
   assert.deepEqual(said("r>=r"), ["its rarity is rare or higher"]);
   assert.deepEqual(said("year=2015"), ["it was released in 2015"]);

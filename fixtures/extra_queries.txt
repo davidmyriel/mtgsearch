@@ -23,7 +23,6 @@ loy<pt
 include:tokens
 devotion:wu
 m<=9WWWWUUUUBBBBRRRRGGGG
-block:ice
 lang:ja
 new:art
 in:japanese
@@ -32,6 +31,9 @@ prefer:promo
 paperprints>3
 
 # printing-level
+block:ice
+b:nosuchblock
+b>zen
 r:mythic
 r>=rare
 r:legendary

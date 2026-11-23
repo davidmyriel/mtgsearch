@@ -1,0 +1,110 @@
+# `block:` and `b:`: the sets of a block. The value is the block's code, or the code or the
+# whole name of any set in it. A set that belongs to no block stands for itself. A block
+# lists its tokens too. Tuning set: the rules were worked out from Scryfall's answers to these.
+# Run with: npm run conformance -- conformance/blocks.txt
+block:zen
+b:wwk
+b:roe
+block:zen unique:prints
+block:zendikar
+b:ktk t:dragon
+b:dtk
+b:lea r:mythic
+b:m21 t:angel
+b:mh1 t:sliver
+b:otj t:mount
+-b:zen e:wwk
+-b:zen t:ally
+b:xyz
+b:cmd t:dragon mv=6
+b:dom
+b:dom unique:prints
+b:pdom
+b:neo
+b:ravnica
+b:rav
+block:"guilds of ravnica"
+b:grn
+b:zen include:extras
+b:grn include:extras
+b:tzen
+b:zen is:promo
+b:isd t:werewolf
+b:soi or b:isd t:angel
+b:ths t:god
+b:usg t:artifact mv=0
+b:tsp r:special
+b:mrd t:equipment unique:prints
+b:kld t:vehicle order:cmc
+b:akh t:god
+b:xln t:dinosaur r:rare
+b:ala c=wub
+b:lrw t:kithkin
+b:inv t:dragon
+b:ice t:snow
+b:mir t:djinn
+b:tmp t:sliver
+b:ons t:beast mv>=6
+b:ody o:threshold c:g
+b:mmq t:rebel
+b:chk t:spirit r:rare
+b:shm c=rg
+b:som t:myr
+b:rtr t:guildgate
+b:bfz t:eldrazi mv>=7
+b:cns o:"will of the council"
+b:por t:dragon
+b:fnm t:instant
+b:jgp t:land
+b:ftv t:dragon
+b:y24
+b:mpr
+# by the name of a set
+b:worldwake
+b:"rise of the eldrazi"
+b:"shards of alara"
+b:"alara reborn"
+b:"mercadian masques"
+b:"champions of kamigawa"
+b:"urza's saga"
+b:"urza's legacy"
+b:"modern horizons"
+b:"core set 2021"
+b:"limited edition alpha"
+b:"commander 2011" t:dragon mv=6
+b:"scars of mirrodin"
+b:"return to ravnica"
+b:"battle for zendikar"
+b:"shadows over innistrad"
+b:"khans of tarkir" t:dragon
+b:"time spiral"
+b:"ice age"
+b:dominaria
+b:"dominaria united"
+b:"throne of eldraine"
+b:mirrodin
+b:innistrad t:werewolf
+b:theros t:god
+b:amonkhet
+b:ixalan
+b:onslaught
+b:odyssey
+b:invasion
+b:tempest
+b:mirage
+b:lorwyn
+b:shadowmoor
+b:kaladesh
+b:conspiracy
+b:portal
+# a block's name that is no set's
+b:kamigawa
+b:masques
+# names nothing
+b:tarkir
+b:"magic 2021"
+b:core
+b:mm
+# case, and the equals sign
+b:ZEN
+b=zen

@@ -60,7 +60,7 @@ test("malformed queries are QueryErrors", () => {
 });
 
 test("unsupported keywords are reported, never silently ignored", () => {
-  for (const query of ["block:ice", "cube:vintage", "is:unicorn", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy"]) {
+  for (const query of ["cube:vintage", "is:unicorn", "lang:ja", "new:art", "order:artist", "prefer:promo", "in:japanese", "pow>loy"]) {
     assert.throws(() => compile(query), Unsupported, query);
   }
 });

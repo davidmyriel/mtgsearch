@@ -60,7 +60,18 @@ picked up: at the boundary between plan steps unless something is broken.
 - [x] `unique:cards|prints|art`, `prefer:`, and sorting by release date, price and rarity. One
       TopK `group_by` returns each matching card and the printing that shows it
 - [x] Differential testing: 79/79 tuning, 53/61 held-out first run, 59/61 after fixes
-- [ ] `new:`, `lang:` and non-English printings, `block:`, `cube:`
+- [x] `block:` and `b:` (23 November 2026). The value is a block's code, or the code or whole
+      name of any set in it (`b:wwk` and `block:worldwake` are the Zendikar block); a set
+      outside every block stands for itself; a block lists its tokens. The blocks come from
+      Scryfall's list of sets (`mtgsearch catalog` writes `app/blocks.json`: 44 blocks over
+      1,069 sets), because the bulk files do not say which block a set is in. 102 of 102 in
+      `conformance/blocks.txt`, which the nightly run repeats. One difference, on purpose:
+      we accept every block's name (`block:alara`), Scryfall only some
+- [ ] `new:`, `lang:` and non-English printings, `cube:`
+- [ ] `app/type-words.json` is behind the card data by fifteen words (seen when the
+      catalogues were regenerated for blocks). Some are ordinary (`pigeon`, `bottle`), some
+      would change how short type searches read (`a`, `in`, `city`). Not taken with the block
+      catalogue; needs each word checked against Scryfall before it goes in
 - [x] Name search over printed and flavour names (23 November 2026). 720 cards go by another
       name on some printing. A flavour name (Godzilla, King of the Monsters on a Zilortha,
       Strength Incarnate) is found by its words and whole; a name that is only printed on the

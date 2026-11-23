@@ -6,7 +6,7 @@
 // It is called only for a query the compiler accepted, describes what was typed rather than
 // how it is answered, and never throws: a keyword without wording of its own is quoted as typed.
 
-import { COLOR_NAMES, COLOR_SETS, FORMAT_ALIASES, RARITIES, RARITY_ALIASES } from "./lower.ts";
+import { blockOf, BLOCKS, COLOR_NAMES, COLOR_SETS, FORMAT_ALIASES, RARITIES, RARITY_ALIASES } from "./lower.ts";
 import { KEYWORDS } from "./parser.ts";
 import type { Keyword, Node } from "./parser.ts";
 
@@ -273,6 +273,12 @@ function keyword(kw: Keyword): Clause | null {
       return says("the set", "is", value.toUpperCase());
     case "settype":
       return says("the kind of set", "is", quote(value.toLowerCase()));
+    case "block": {
+      const code = blockOf(value);
+      if (code === null) return says("the set", "is", `in a block called ${quote(value)} (there is none)`);
+      const known = BLOCKS.blocks[code];
+      return known ? says("the set", "is", `in the ${known.name} block`) : says("the set", "is", code.toUpperCase());
+    }
     case "number":
       return kw.op === ":" || kw.op === "=" ? says("the collector number", "is", value) : compare("the collector number", kw.op, value);
     case "artist":

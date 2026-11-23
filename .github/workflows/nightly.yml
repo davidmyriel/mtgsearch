@@ -53,6 +53,7 @@ jobs:
           npm run conformance -- conformance/shortcuts.txt --out conformance-shortcuts-results.json
           npm run conformance -- conformance/regex.txt --out conformance-regex-results.json
           npm run conformance -- conformance/names.txt --out conformance-names-results.json
+          npm run conformance -- conformance/blocks.txt --out conformance-blocks-results.json
 
       # Held-out sets are never tuned, so the few differences they had when written remain.
       # Each is compared with its saved run: only a query that matched then and does not now
@@ -81,6 +82,7 @@ jobs:
             conformance-shortcuts-results.json
             conformance-regex-results.json
             conformance-names-results.json
+            conformance-blocks-results.json
             conformance-heldout-results.json
             conformance-printings_heldout-results.json
             conformance-mana_heldout-results.json

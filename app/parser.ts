@@ -39,6 +39,7 @@ const SUPPORTED: Record<string, string> = {
   // printing-level: one printing of the card has to satisfy these
   r: "rarity", rarity: "rarity",
   s: "set", e: "set", set: "set", edition: "set",
+  b: "block", block: "block",
   st: "settype",
   cn: "number", number: "number",
   a: "artist", artist: "artist",
@@ -55,7 +56,7 @@ const SUPPORTED: Record<string, string> = {
 };
 
 const NOT_YET =
-  "b block cube new lang language has art atag arttag cheapest " +
+  "cube new lang language has art atag arttag cheapest " +
   "paperprints papersets illustrations artists";
 
 /** alias -> canonical keyword. A null value means recognised but not implemented yet. */

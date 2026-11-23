@@ -19,6 +19,7 @@ import { shortcut } from "./shortcuts.ts";
 import type { Keyword, Node } from "./parser.ts";
 import printingFlags from "./printing-flags.json" with { type: "json" };
 import setDates from "./sets.json" with { type: "json" };
+import blocks from "./blocks.json" with { type: "json" };
 import typeWords from "./type-words.json" with { type: "json" };
 
 export type Op = "=" | "!=" | "<" | "<=" | ">" | ">=";
@@ -99,6 +100,15 @@ const PRINTING_FLAG_ALIASES: Record<string, IR> = {
   new: ["eq", "frame", "2015"],
 };
 const SET_DATES: Record<string, string> = setDates;
+// Blocks of sets, from Scryfall's list of sets (`mtgsearch catalog`). `sets` says which block
+// each set stands for; a set outside every block stands for itself and is not in `blocks`.
+// `names` is every set's name, folded, and its code.
+export const BLOCKS: {
+  sets: Record<string, string>;
+  blocks: Record<string, { name: string; sets: string[] }>;
+  names: Record<string, string>;
+} = blocks;
+const BLOCK_NAMES = new Map(Object.entries(BLOCKS.blocks).map(([code, block]) => [fold(block.name), code]));
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 // Card types whose mention reveals cards that are otherwise hidden as extras.
 const EXTRA_TYPES = /\b(vanguard|plane|scheme|phenomenon|token|emblem)\b/;
@@ -282,6 +292,31 @@ function whole(value: string, negated: boolean): IR {
   return ["or", [["in", "names_lc", fold(value)], ["eq", "name_plain", words], ["in", other, words]]];
 }
 
+/**
+ * The code of the block a `block:` value names. The value is a block's code, the code or
+ * the whole name of any set (`worldwake` is the Zendikar block), or a block's name.
+ */
+export function blockOf(value: string): string | null {
+  const wanted = fold(value);
+  // a block's code need not be a set's: From the Vault is `ftv`, and no set is
+  if (Object.hasOwn(BLOCKS.blocks, wanted)) return wanted;
+  if (Object.hasOwn(BLOCKS.sets, wanted)) return BLOCKS.sets[wanted];
+  if (Object.hasOwn(BLOCKS.names, wanted)) return BLOCKS.sets[BLOCKS.names[wanted]];
+  return BLOCK_NAMES.get(wanted) ?? null;
+}
+
+/**
+ * `block:` takes the code of any set in the block (`b:wwk` is the Zendikar block) or the
+ * block's name. A set that belongs to no block stands for itself. As on Scryfall, a value
+ * that names nothing finds nothing; it is not an error.
+ */
+function block(kw: Keyword): IR {
+  if (kw.regex || (kw.op !== ":" && kw.op !== "=")) throw new QueryError(`'${kw.key}' does not take '${kw.regex ? "a regular expression" : kw.op}'`);
+  const code = blockOf(kw.value);
+  if (code === null) return ["not", ["all"]];
+  return ["oneof", "set", BLOCKS.blocks[code]?.sets ?? [code]];
+}
+
 /** pow, tou and loy match when any face satisfies the comparison; pow can be compared with tou. */
 function stat(kw: Keyword, canonical: string): IR {
   const prefix = STATS[canonical];
@@ -408,6 +443,10 @@ function keyword(kw: Keyword, options: Working): IR {
     options.includeExtras = true;
   }
   if (canonical === "set") return exact("set", kw);
+  if (canonical === "block") {
+    options.includeExtras = true; // observed: a block lists its tokens too, ruled in or out
+    return block(kw);
+  }
   if (canonical === "settype") return exact("set_type", kw);
   if (canonical === "border") return exact("border", kw);
   if (canonical === "stamp") return exact("stamp", kw);
