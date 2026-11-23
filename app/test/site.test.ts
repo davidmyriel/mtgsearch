@@ -35,6 +35,21 @@ test("a card's address is served the page on Netlify, and the page uses absolute
   }
 });
 
+test("every page's search bar carries the mark, which is a disc and names the box", () => {
+  const icon = root("public/icon.svg");
+  // a disc: one circle that fills the square it is drawn in
+  assert.match(icon, /viewBox="0 0 64 64"/);
+  assert.match(icon, /<circle cx="32" cy="32" r="3\d(?:\.\d+)?"/);
+  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
+    // inside the form, before the box, as the box's label: pressing it puts the cursor there
+    assert.match(
+      root(page),
+      /<form[^>]*class="search"[^>]*>\s*(?:<!--[^]*?-->\s*)?<label class="mark" for="q"><img src="\/icon\.svg" alt="" width="44" height="44"><span class="sr-only">Search cards<\/span><\/label>\s*<input id="q"/,
+      page,
+    );
+  }
+});
+
 test("the dev server serves the page, its assets and nothing else", async () => {
   const server = createDevServer().listen(0, "127.0.0.1");
   await new Promise((resolve) => server.once("listening", resolve));

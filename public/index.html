@@ -19,7 +19,8 @@
     <a class="wordmark" href="/">mtgsearch</a>
     <p class="tagline">Find a Magic card by its Scryfall syntax, by its name, or by what you remember about it.</p>
     <form id="search" class="search" role="search" action="/" method="get">
-      <label class="sr-only" for="q">Search cards</label>
+      <!-- The mark sits inside the bar, at its left end; pressing it puts the cursor in the box. -->
+      <label class="mark" for="q"><img src="/icon.svg" alt="" width="44" height="44"><span class="sr-only">Search cards</span></label>
       <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
       <button type="submit">Search</button>

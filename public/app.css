@@ -129,20 +129,64 @@ code {
   color: var(--band-ink);
   background: var(--band);
   border-bottom: 3px solid var(--accent);
+  isolation: isolate; /* the steps below are drawn behind the bar, but not behind this band */
 }
 
 .masthead :focus-visible { outline-color: var(--band-link); }
 
-/* Home: as tall as the window. A warm glow and faint rings centre on the search bar. */
+/* Home: as tall as the window, with a warm glow behind the search bar. */
 body:not(.searched) .masthead {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
+  overflow: hidden;
   background:
     radial-gradient(56% 46% at 50% 40%, rgb(162 67 26 / 0.2), transparent 72%),
-    repeating-radial-gradient(circle at 50% 40%, transparent 0 58px, rgb(255 255 255 / 0.016) 58px 59px),
     radial-gradient(130% 120% at 50% 0%, var(--band-glow) 0%, var(--band) 66%);
+}
+
+/* Home: the background leads to the search bar. Each step is the bar's own outline, larger
+   and fainter than the one inside it, so the screen narrows to the bar like a corridor seen
+   from its far end. The steps lie on top of one another, which makes the lightest ground
+   the ground next to the bar. They are drawn from the bar, so they follow it wherever the
+   layout puts it. */
+.search { position: relative; }
+body:not(.searched) .search::before {
+  --step: rgb(255 226 200 / 0.017);
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 20px var(--step),
+    0 0 0 50px var(--step),
+    0 0 0 96px var(--step),
+    0 0 0 164px var(--step),
+    0 0 0 262px var(--step),
+    0 0 0 404px var(--step),
+    0 0 0 610px var(--step);
+}
+/* The corridor's four edges: a hairline from each corner of the bar out through the corners
+   of the steps. */
+body:not(.searched) .search::after {
+  --reach: 610px;
+  --edge: rgb(255 226 200 / 0.035);
+  /* a gradient's middle stripe runs across its direction: one going up to the right draws
+     the line that falls to the right, and the other way about */
+  --fall: linear-gradient(to top right, transparent calc(50% - 0.5px), var(--edge) calc(50% - 0.5px), var(--edge) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  --rise: linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--edge) calc(50% - 0.5px), var(--edge) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  content: "";
+  position: absolute;
+  inset: calc(var(--reach) * -1);
+  z-index: -1;
+  pointer-events: none;
+  background:
+    var(--fall) left top / var(--reach) var(--reach) no-repeat,
+    var(--rise) right top / var(--reach) var(--reach) no-repeat,
+    var(--rise) left bottom / var(--reach) var(--reach) no-repeat,
+    var(--fall) right bottom / var(--reach) var(--reach) no-repeat;
 }
 
 .masthead-inner {
@@ -187,11 +231,15 @@ body:not(.searched) .masthead {
 }
 .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28), 0 8px 34px rgb(0 0 0 / 0.38); }
 
+/* The mark: a disc at the bar's left end. */
+.search .mark { flex: none; margin-left: 6px; line-height: 0; cursor: text; }
+.search .mark img { display: block; width: 44px; height: 44px; }
+
 .search input {
   flex: 1;
   min-width: 0;
   height: 56px;
-  padding: 0 16px;
+  padding: 0 16px 0 12px;
   font: inherit;
   font-size: 1.25rem; /* 16px or more, so phones do not zoom on focus */
   color: var(--band-ink);
@@ -214,6 +262,14 @@ body:not(.searched) .masthead {
   cursor: pointer;
 }
 .search button:hover { background: #b34d20; }
+
+/* A narrow phone: a smaller mark and button, so the box still shows what to type. */
+@media (max-width: 380px) {
+  body:not(.searched) .search .mark { margin-left: 4px; }
+  body:not(.searched) .search .mark img { width: 36px; height: 36px; }
+  body:not(.searched) .search input { padding: 0 8px 0 10px; font-size: 1.12rem; }
+  body:not(.searched) .search button { padding: 0 16px; }
+}
 
 /* The few other things there are to do, kept quiet. */
 .nav {
@@ -331,7 +387,9 @@ body[data-flavour="anniversary"]:not(.searched) .masthead {
 .searched .tagline, .searched .news, .searched .home-cards { display: none; }
 .searched .search { max-width: none; margin: 0; padding: 3px; border-radius: var(--radius); border-color: var(--band-line); box-shadow: none; }
 .searched .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28); }
-.searched .search input { height: 36px; padding: 0 10px; font-size: 1.02rem; }
+.searched .search .mark { margin-left: 4px; }
+.searched .search .mark img { width: 28px; height: 28px; }
+.searched .search input { height: 36px; padding: 0 10px 0 8px; font-size: 1.02rem; }
 .searched .search button { height: 36px; padding: 0 16px; border-radius: var(--radius); }
 .searched .nav { margin: 0; flex-wrap: nowrap; gap: 4px; }
 .searched .nav a { padding: 6px 10px; font-size: 0.95rem; border-color: transparent; color: var(--band-muted); white-space: nowrap; }

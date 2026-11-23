@@ -106,6 +106,27 @@ async function run(name, contextOptions) {
   check(home.cutOff && Math.abs(home.fanBottom - home.window) <= 4, `[${name}] cut off by the bottom edge of the first screen`);
   check(!home.pageBelow, `[${name}] and nothing but the footer follows: no search instructions`);
   if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);
+  // The mark is a disc inside the bar at its left end, and the background is drawn from the
+  // bar: steps that narrow to it, each a layer of one shadow.
+  const lookAtBar = () => page.evaluate(() => {
+    const box = (element) => element.getBoundingClientRect();
+    const image = document.querySelector("#search .mark img");
+    const [disc, bar, field] = [box(image), box(document.getElementById("search")), box(document.getElementById("q"))];
+    const steps = getComputedStyle(document.getElementById("search"), "::before");
+    return {
+      drawn: image.complete && image.naturalWidth > 0,
+      size: disc.width,
+      round: Math.abs(disc.width - disc.height) < 0.5,
+      inside: disc.left >= bar.left && disc.right <= field.left + 1 && disc.top >= bar.top && disc.bottom <= bar.bottom,
+      steps: steps.content === "none" || steps.boxShadow === "none" ? 0 : steps.boxShadow.split("rgb").length - 1,
+    };
+  });
+  const mark = await lookAtBar();
+  check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
+  check(mark.steps >= 5, `[${name}] the background narrows to the bar in steps drawn from it (${mark.steps})`);
+  await page.evaluate(() => document.activeElement && document.activeElement.blur());
+  await page.click("#search .mark");
+  check((await page.evaluate(() => document.activeElement && document.activeElement.id)) === "q", `[${name}] pressing the mark puts the cursor in the box`);
   await shot("1-home");
   // A line of news runs its search; a card opens its page; Back returns home each time.
   await page.click("#news li:last-child a");
@@ -132,6 +153,8 @@ async function run(name, contextOptions) {
   check(true, `[${name}] first card image loaded`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(overflow <= 0, `[${name}] no horizontal scrolling (overflow ${overflow}px)`);
+  const barMark = await lookAtBar();
+  check(barMark.drawn && barMark.round && barMark.inside && barMark.size < mark.size && barMark.steps === 0, `[${name}] as a bar the header keeps the mark, smaller, and has no steps behind it (${Math.round(barMark.size)}px)`);
   await shot("2-results");
 
   // A card has its own page, at an address that can be shared.

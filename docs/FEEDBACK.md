@@ -140,7 +140,8 @@ and the Scryfall comparison where results could move.
     two quiet links, and what is new. The three ways to search are below it.
   - The search bar is one thick piece with the button inside it, darker inside than the page
     around it, in the middle of the screen. On a computer it has the focus on arrival.
-  - The background is a warm glow and faint rings centred on the bar.
+  - The background is a warm glow and faint rings centred on the bar. (Replaced later: see
+    "on the background and a mark" below.)
   - What is new is automatic: the four newest sets, read from the index, each a link to that
     set. A set not yet released is marked "Preview".
   - A flavour of the week is one file, `public/flavour.json`: a line of its own above the sets,
@@ -183,6 +184,28 @@ and the Scryfall comparison where results could move.
   ones people know. Which things can join them is the developer's choice and is one list in
   `app/home.ts`; `public/flavour.json` can still name a search of its own for an occasion.
   The theme is not named on the page, as on Scryfall's; a screen reader is told it.
+- **Then, on the background and a mark:** "you see how scryfalls background is a circle that
+  looks like a tunnel? the visual effect is that the user's view is centered on the search in
+  the middle. can we find a creative way to get the background to get the visitor to focus on
+  the search in the middle, background should be very subtle. also the search bar should have a
+  circular logo just like scryfall but the topK logo or something similar".
+  - **The background:** theirs is a round tunnel; ours is a corridor seen from its far end, and
+    the far end is the search bar. Seven steps surround the bar, each the bar's own outline
+    drawn larger and fainter than the one inside it, so the lightest ground on the screen is
+    the ground next to the bar, and the bar is the darkest thing in it. A hairline runs from
+    each corner of the bar out through the corners of the steps, as the edges of a corridor
+    do. The shape is the developer's choice: it is the same idea as a tunnel, made of the
+    square corners the owner asked for. Each step lightens the ground by under two parts in a
+    hundred. It is drawn from the bar itself, so it stays centred on the bar on any screen;
+    on a phone only the bands above and below the bar show. The faint rings that were there
+    before are gone; the warm glow stays.
+  - **The mark:** a disc at the left end of the search bar, where Scryfall's study records
+    theirs (inside the field at the left), on the home page and in the header of every page.
+    It is TopK's K, drawn in squares as in TopK's own icon (`docs/icons/topk-icon.svg` in
+    TopK's repository) and in TopK's orange, on a dark disc with the bar's own outline. The
+    mark is TopK's; it is used because the owner asked for it. Pressing it puts the cursor in
+    the box. It does not link anywhere. The browser tab's icon is the same disc, replacing a
+    magnifying glass on a rounded square.
 
 ## From the interface study
 
