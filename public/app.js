@@ -36,7 +36,7 @@ const CARD_HOST = "https://scryfall.com/";
 // Results on one page, and how far into a result the endpoint will go. Keep in step with
 // MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
 // The site's title, as the pages themselves show it.
-const SITE = "Scry Deeper";
+const SITE = "TutorK";
 const PAGE_SIZE = 60;
 const MAX_REACH = 10000;
 const LAST_PAGE = Math.floor(MAX_REACH / PAGE_SIZE); // the last page that fits whole

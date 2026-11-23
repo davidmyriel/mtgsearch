@@ -236,6 +236,24 @@ and the Scryfall comparison where results could move.
     Others considered: "Deepscry", "Scry Closer", "Deep Scry". The project, the repository
     and the Netlify address keep the working name `mtgsearch`. Changing the title is one
     line in each of the three pages and one in `public/app.js`; a test keeps them the same.
+- **The name, decided by the owner the same day:** asked for names like Scryfall's that
+  stand for deep search, then of one on the list: "Tutor is great, people know whenever they
+  play a tutor they are finding exacrlt what they need. give me more options", and then:
+  "TutorK. and use the same design as topK on the website logo with the blocks orange and
+  black".
+  - **The name** is TutorK on every page and in the browser tab, in place of the stand-in
+    "Scry Deeper". A tutor is what players call a card that finds exactly the card they need;
+    the K is TopK's.
+  - **The logo** is the name in the blocks of TopK's own logo (`docs/logo/topk.svg` in TopK's
+    repository): squares on a grid five rows tall, with the same spacing. T, O and K are
+    TopK's letters; U and R are drawn to match them (R is TopK's P with K's lower arm). The K
+    is TopK's orange. It is a picture, `public/wordmark.svg`.
+  - **One thing read by the developer:** "orange and black". TopK's logo on a light page is
+    dark letters with an orange K, and on a dark page light letters with an orange K. Our
+    header is dark on every page, where black blocks would not show, so TUTOR is light and K
+    is orange, which is TopK's own dark-background version; the black is the ground. The
+    disc in the search bar is the orange K on black. If the owner meant every block orange,
+    or wants a light header so the letters can be black, it is one colour in one file.
 
 ## From the interface study
 

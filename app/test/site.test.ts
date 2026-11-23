@@ -62,18 +62,25 @@ test("the search bar shows no button, and a card's page no link back to the resu
   assert.ok(!/\.search button/.test(root("public/app.css")));
 });
 
-test("the site shows one title on every page, and the home page no sentence under it", () => {
-  const name = (root("public/index.html").match(/<a class="wordmark" href="\/">([^<]+)<\/a>/) ?? [])[1];
-  assert.ok(name && name !== "mtgsearch", "the title is the site's own, not the project's working name");
+test("the site shows one name on every page, in TopK's blocks, and no sentence under it", () => {
+  const mark = /<a class="wordmark" href="\/"><img src="\/wordmark\.svg" alt="([^"]+)" width="334" height="56"><\/a>/;
+  const name = (root("public/index.html").match(mark) ?? [])[1];
+  assert.equal(name, "TutorK");
   assert.ok(root("public/index.html").includes(`<title>${name}</title>`));
   for (const page of ["public/syntax.html", "public/404.html"]) {
     const html = root(page);
-    assert.ok(html.includes(`<a class="wordmark" href="/">${name}</a>`), page);
+    assert.equal((html.match(mark) ?? [])[1], name, page);
     assert.match(html, new RegExp(`<title>[^<]+ · ${name}</title>`), page);
   }
   // the script titles the tab with the same name
   assert.ok(root("public/app.js").includes(`const SITE = "${name}";`));
   assert.ok(!root("public/index.html").includes("tagline") && !root("public/app.css").includes("tagline"));
+  // the picture: six letters of squares, the last of them in TopK's orange and the rest light
+  const picture = root("public/wordmark.svg");
+  const squares = (colour: string) => ((picture.match(new RegExp(`<path fill="${colour}" d="([^"]+)"`)) ?? [])[1] ?? "").split("z").length - 1;
+  assert.equal(squares("#fe5000"), 10, "K is ten squares, as in TopK's icon");
+  assert.equal(squares("#f4efe6"), 9 + 12 + 9 + 14 + 14, "T, U, T, O and R");
+  assert.match(picture, /viewBox="0 0 3340 560"/);
 });
 
 test("the home page's background has no hard edge: gradients, and a grain the page can load", () => {

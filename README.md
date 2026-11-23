@@ -3,7 +3,8 @@
 Card search for Magic: The Gathering that accepts Scryfall's query syntax and also plain
 English, built on [TopK](https://topk.io).
 
-The site itself is titled **Scry Deeper**; `mtgsearch` remains the name of the project, the
+The site itself is named **TutorK**: a tutor is what players call a card that finds exactly
+the card they need, and the K is TopK's. `mtgsearch` remains the name of the project, the
 package and the repository.
 
 ```text

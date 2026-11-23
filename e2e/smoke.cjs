@@ -133,6 +133,19 @@ async function run(name, contextOptions) {
       rings: offCentre("::after"),
     };
   });
+  // The name is a picture of block letters above the bar, and the tab carries the same name.
+  const title = await page.evaluate(() => {
+    const image = document.querySelector(".wordmark img");
+    const [name, bar] = [image.getBoundingClientRect(), document.getElementById("search").getBoundingClientRect()];
+    return {
+      name: image.alt,
+      drawn: image.complete && image.naturalWidth > 0,
+      above: name.bottom <= bar.top && name.left >= 0 && name.right <= innerWidth,
+      centred: Math.abs((name.left + name.right) / 2 - innerWidth / 2) <= 2,
+      tab: document.title,
+    };
+  });
+  check(title.drawn && title.above && title.centred && title.name === "TutorK" && title.tab === "TutorK", `[${name}] the name stands above the bar in block letters (${title.name}), and titles the tab`);
   const mark = await lookAtBar();
   check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
   check(mark.noButton, `[${name}] the bar has no button: the box fills it, and Enter searches`);

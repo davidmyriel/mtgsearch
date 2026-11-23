@@ -232,13 +232,9 @@ body:not(.searched) .search::after {
   text-align: center;
 }
 
-.wordmark {
-  font: 700 clamp(2.5rem, 7vw, 3.6rem)/1 var(--serif);
-  letter-spacing: -0.02em;
-  color: var(--band-ink);
-  text-decoration: none;
-  white-space: nowrap;
-}
+/* The name, in the blocks of TopK's logo: a picture, so its height is what is set. */
+.wordmark { display: block; line-height: 0; }
+.wordmark img { display: block; width: auto; height: clamp(36px, 5.2vw, 52px); }
 
 /* The search bar: one thick piece, darker inside than the page around it. */
 .search {
@@ -395,7 +391,7 @@ body[data-flavour="anniversary"]:not(.searched) .masthead {
   text-align: left;
 }
 
-.searched .wordmark { font-size: 1.45rem; }
+.searched .wordmark img { height: 20px; }
 .searched .news, .searched .home-cards { display: none; }
 .searched .search { max-width: none; margin: 0; padding: 3px; border-radius: var(--radius); border-color: var(--band-line); box-shadow: none; }
 .searched .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28); }
@@ -411,7 +407,7 @@ body[data-flavour="anniversary"]:not(.searched) .masthead {
 @media (max-width: 760px) {
   .searched .masthead-inner { grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 8px 10px; }
   .searched .search { grid-column: 1 / -1; grid-row: 2; }
-  .searched .wordmark { font-size: 1.3rem; }
+  .searched .wordmark img { height: 18px; }
   .searched .nav { flex-wrap: wrap; justify-content: flex-end; gap: 0 2px; }
   .searched .nav a { padding: 4px 6px; font-size: 0.88rem; }
 }
