@@ -50,6 +50,40 @@ test("every page's search bar carries the mark, which is a disc and names the bo
   }
 });
 
+test("the search bar shows no button, and a card's page no link back to the results", () => {
+  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
+    const html = root(page);
+    // Enter searches; the one button is out of sight and out of the tab order
+    assert.deepEqual(html.match(/<button type="submit"[^>]*>/g), ['<button type="submit" class="sr-only" tabindex="-1">'], page);
+    assert.ok(html.includes('enterkeyhint="search"'), `${page}: a phone's keyboard should offer its search key`);
+  }
+  assert.ok(!root("public/index.html").includes("Back to results") && !root("public/app.js").includes("card-back"));
+  // nothing styles a button in the bar back into view
+  assert.ok(!/\.search button/.test(root("public/app.css")));
+});
+
+test("the site shows one title on every page, and the home page no sentence under it", () => {
+  const name = (root("public/index.html").match(/<a class="wordmark" href="\/">([^<]+)<\/a>/) ?? [])[1];
+  assert.ok(name && name !== "mtgsearch", "the title is the site's own, not the project's working name");
+  assert.ok(root("public/index.html").includes(`<title>${name}</title>`));
+  for (const page of ["public/syntax.html", "public/404.html"]) {
+    const html = root(page);
+    assert.ok(html.includes(`<a class="wordmark" href="/">${name}</a>`), page);
+    assert.match(html, new RegExp(`<title>[^<]+ · ${name}</title>`), page);
+  }
+  // the script titles the tab with the same name
+  assert.ok(root("public/app.js").includes(`const SITE = "${name}";`));
+  assert.ok(!root("public/index.html").includes("tagline") && !root("public/app.css").includes("tagline"));
+});
+
+test("the home page's background has no hard edge: gradients, and a grain the page can load", () => {
+  const css = root("public/app.css");
+  const home = css.slice(css.indexOf("/* Home: a fine grain"), css.indexOf(".masthead-inner {"));
+  assert.ok(home.includes("radial-gradient(") && home.includes("repeating-radial-gradient("));
+  assert.ok(!home.includes("box-shadow") && !home.includes("linear-gradient"), "steps and hairlines are edges");
+  assert.ok(home.includes('url("/grain.svg")') && root("public/grain.svg").includes("feTurbulence"));
+});
+
 test("the dev server serves the page, its assets and nothing else", async () => {
   const server = createDevServer().listen(0, "127.0.0.1");
   await new Promise((resolve) => server.once("listening", resolve));

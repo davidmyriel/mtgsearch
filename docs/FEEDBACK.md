@@ -189,16 +189,10 @@ and the Scryfall comparison where results could move.
   the middle. can we find a creative way to get the background to get the visitor to focus on
   the search in the middle, background should be very subtle. also the search bar should have a
   circular logo just like scryfall but the topK logo or something similar".
-  - **The background:** theirs is a round tunnel; ours is a corridor seen from its far end, and
-    the far end is the search bar. Seven steps surround the bar, each the bar's own outline
-    drawn larger and fainter than the one inside it, so the lightest ground on the screen is
-    the ground next to the bar, and the bar is the darkest thing in it. A hairline runs from
-    each corner of the bar out through the corners of the steps, as the edges of a corridor
-    do. The shape is the developer's choice: it is the same idea as a tunnel, made of the
-    square corners the owner asked for. Each step lightens the ground by under two parts in a
-    hundred. It is drawn from the bar itself, so it stays centred on the bar on any screen;
-    on a phone only the bands above and below the bar show. The faint rings that were there
-    before are gone; the warm glow stays.
+  - **The background, first version:** a corridor seen from its far end, with the search bar
+    as the far end: seven steps around the bar, each the bar's outline drawn larger and
+    fainter, and a hairline from each corner of the bar out through the corners of the steps.
+    The owner's reply is below; it was replaced the same day.
   - **The mark:** a disc at the left end of the search bar, where Scryfall's study records
     theirs (inside the field at the left), on the home page and in the header of every page.
     It is TopK's K, drawn in squares as in TopK's own icon (`docs/icons/topk-icon.svg` in
@@ -206,6 +200,42 @@ and the Scryfall comparison where results could move.
     mark is TopK's; it is used because the owner asked for it. Pressing it puts the cursor in
     the box. It does not link anywhere. The browser tab's icon is the same disc, replacing a
     magnifying glass on a rounded square.
+- **The owner's reply to that, and two more things:** "theres no need to have 'back to the
+  results' link. people will either return using the browser or continue to search in the
+  search bar up top. i believe thats how scryfall works, look at their results. no need for the
+  search button either, people will just hit enter in the real life. background looks choppy
+  not smooth enough".
+  - **The link back:** removed from a card's page. The browser's Back returns to the results,
+    which are kept as they were, and the search bar is at the top of every page. The study of
+    Scryfall's card page records no such link there either. The Escape key still leaves a card
+    that was opened from results; nothing on the page says so.
+  - **The Search button:** removed from the bar on every page; the box runs to the bar's right
+    end. Enter searches, and a phone's keyboard shows its own search key. The study records
+    the same on Scryfall: "no visible button, Enter submits", with a button kept out of sight
+    for assistive technology. Ours is kept the same way, and out of the tab order.
+  - **The background:** the steps and hairlines were edges, and edges are what looked choppy.
+    Now nothing in it has an edge. Light gathers on the bar and eases away to nothing in every
+    direction, and a few soft rings spread from the bar like ripples, each a slow rise and
+    fall of that light, fading with distance. Both are drawn from the bar, so they stay
+    centred on it on any screen. A very fine grain lies over the whole background
+    (`public/grain.svg`): a screen has only so many dark tones, and a slow change between them
+    can show as faint contour lines, which the grain hides. Measured on a laptop-sized
+    picture, the largest jump between two neighbouring points fell from 8 tones (the steps)
+    to 5, and that 5 is the grain itself, not a line. The "anniversary" look lost its
+    hairline rings for the same reason.
+- **And on the words above the bar:** "we dont need the text 'find a magic card by its
+  scryfall syntax, by its name etc.....'. we do however needs a title instead of mtgsearch that
+  signals its a much deeper closer version of scryfall search".
+  - **The sentence:** removed. The first screen is the title, the bar, two links, what is new
+    and the cards.
+  - **The title:** "Scry Deeper", in place of "mtgsearch", on every page and in the browser
+    tab. The choice of words is the developer's proposal: "scry" is the game's own word for
+    looking ahead and the root of Scryfall's name, so it points at that kind of search
+    without using their name, which their terms do not allow in a way that suggests their
+    backing; "deeper" is the claim, that it also finds a card from what you remember of it.
+    Others considered: "Deepscry", "Scry Closer", "Deep Scry". The project, the repository
+    and the Netlify address keep the working name `mtgsearch`. Changing the title is one
+    line in each of the three pages and one in `public/app.js`; a test keeps them the same.
 
 ## From the interface study
 

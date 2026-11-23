@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mtgsearch</title>
+<title>Scry Deeper</title>
 <meta name="description" content="Search Magic: The Gathering cards with Scryfall syntax or plain English.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -16,14 +16,14 @@
      once there is one it becomes a bar across the top (see .searched in app.css). -->
 <header class="masthead">
   <div class="masthead-inner">
-    <a class="wordmark" href="/">mtgsearch</a>
-    <p class="tagline">Find a Magic card by its Scryfall syntax, by its name, or by what you remember about it.</p>
+    <a class="wordmark" href="/">Scry Deeper</a>
     <form id="search" class="search" role="search" action="/" method="get">
       <!-- The mark sits inside the bar, at its left end; pressing it puts the cursor in the box. -->
       <label class="mark" for="q"><img src="/icon.svg" alt="" width="44" height="44"><span class="sr-only">Search cards</span></label>
       <input id="q" name="q" type="search" maxlength="200" placeholder="Search cards"
              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
-      <button type="submit">Search</button>
+      <!-- Enter searches. The button is kept out of sight for assistive technology. -->
+      <button type="submit" class="sr-only" tabindex="-1">Search</button>
     </form>
     <nav class="nav" aria-label="Site">
       <a href="/syntax">Syntax guide</a>
@@ -131,7 +131,6 @@
 
     <!-- One card, at its own address: /card/<set>/<number>/<name>. -->
     <article id="card" class="card" aria-labelledby="card-name" hidden>
-      <button id="card-back" class="out back" type="button" hidden>Back to results</button>
       <!-- Shown when a search for an exact name came straight here and other cards matched too. -->
       <p id="card-also" class="also" hidden></p>
       <div class="card-body">

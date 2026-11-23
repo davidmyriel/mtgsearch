@@ -99,6 +99,10 @@ code {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+  /* a button brings its own padding and border, which would give it a size again */
+  margin: -1px;
+  padding: 0;
+  border: 0;
 }
 
 .skip {
@@ -146,47 +150,73 @@ body:not(.searched) .masthead {
     radial-gradient(130% 120% at 50% 0%, var(--band-glow) 0%, var(--band) 66%);
 }
 
-/* Home: the background leads to the search bar. Each step is the bar's own outline, larger
-   and fainter than the one inside it, so the screen narrows to the bar like a corridor seen
-   from its far end. The steps lie on top of one another, which makes the lightest ground
-   the ground next to the bar. They are drawn from the bar, so they follow it wherever the
-   layout puts it. */
-.search { position: relative; }
-body:not(.searched) .search::before {
-  --step: rgb(255 226 200 / 0.017);
+/* Home: a fine grain over the whole background. A screen has only so many dark tones, and a
+   slow change between them shows as faint contour lines; the grain hides them. */
+body:not(.searched) .masthead { position: relative; }
+body:not(.searched) .masthead::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  box-shadow:
-    0 0 0 20px var(--step),
-    0 0 0 50px var(--step),
-    0 0 0 96px var(--step),
-    0 0 0 164px var(--step),
-    0 0 0 262px var(--step),
-    0 0 0 404px var(--step),
-    0 0 0 610px var(--step);
+  background: url("/grain.svg") 0 0 / 240px 240px;
 }
-/* The corridor's four edges: a hairline from each corner of the bar out through the corners
-   of the steps. */
+
+/* Home: the background leads to the search bar, with no edge anywhere in it. Light gathers
+   on the bar and falls away evenly in every direction, and a few soft rings spread out from
+   it like ripples, each a slow rise and fall of the light, fading with distance. Both are
+   drawn from the bar itself, so they stay centred on it wherever the layout puts it. */
+.search { position: relative; }
+body:not(.searched) .search::before,
 body:not(.searched) .search::after {
-  --reach: 610px;
-  --edge: rgb(255 226 200 / 0.035);
-  /* a gradient's middle stripe runs across its direction: one going up to the right draws
-     the line that falls to the right, and the other way about */
-  --fall: linear-gradient(to top right, transparent calc(50% - 0.5px), var(--edge) calc(50% - 0.5px), var(--edge) calc(50% + 0.5px), transparent calc(50% + 0.5px));
-  --rise: linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--edge) calc(50% - 0.5px), var(--edge) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  --light: 255 226 200;
   content: "";
   position: absolute;
-  inset: calc(var(--reach) * -1);
+  left: 50%;
+  top: 50%;
   z-index: -1;
   pointer-events: none;
-  background:
-    var(--fall) left top / var(--reach) var(--reach) no-repeat,
-    var(--rise) right top / var(--reach) var(--reach) no-repeat,
-    var(--rise) left bottom / var(--reach) var(--reach) no-repeat,
-    var(--fall) right bottom / var(--reach) var(--reach) no-repeat;
+}
+/* the light: strongest at the bar, easing to nothing */
+body:not(.searched) .search::before {
+  width: 2100px;
+  height: 1320px;
+  margin: -660px 0 0 -1050px;
+  background: radial-gradient(
+    ellipse closest-side,
+    rgb(var(--light) / 0.1250) 0%,
+    rgb(var(--light) / 0.0971) 10%,
+    rgb(var(--light) / 0.0732) 20%,
+    rgb(var(--light) / 0.0531) 30%,
+    rgb(var(--light) / 0.0367) 40%,
+    rgb(var(--light) / 0.0237) 50%,
+    rgb(var(--light) / 0.0139) 60%,
+    rgb(var(--light) / 0.0070) 70%,
+    rgb(var(--light) / 0.0026) 80%,
+    rgb(var(--light) / 0.0005) 90%,
+    rgb(var(--light) / 0.0000) 100%
+  );
+}
+/* the rings: the light rises and falls as a wave does, so there is no line to see */
+body:not(.searched) .search::after {
+  --peak: 0.022;
+  width: 2600px;
+  height: 1800px;
+  margin: -900px 0 0 -1300px;
+  background: repeating-radial-gradient(
+    ellipse 230px 160px at center,
+    rgb(var(--light) / 0) 0%,
+    rgb(var(--light) / calc(var(--peak) * 0.146)) 12.5%,
+    rgb(var(--light) / calc(var(--peak) * 0.5)) 25%,
+    rgb(var(--light) / calc(var(--peak) * 0.854)) 37.5%,
+    rgb(var(--light) / var(--peak)) 50%,
+    rgb(var(--light) / calc(var(--peak) * 0.854)) 62.5%,
+    rgb(var(--light) / calc(var(--peak) * 0.5)) 75%,
+    rgb(var(--light) / calc(var(--peak) * 0.146)) 87.5%,
+    rgb(var(--light) / 0) 100%
+  );
+  -webkit-mask-image: radial-gradient(ellipse closest-side, #000 12%, transparent 78%);
+  mask-image: radial-gradient(ellipse closest-side, #000 12%, transparent 78%);
 }
 
 .masthead-inner {
@@ -207,13 +237,7 @@ body:not(.searched) .search::after {
   letter-spacing: -0.02em;
   color: var(--band-ink);
   text-decoration: none;
-}
-
-.tagline {
-  margin: 12px auto 0;
-  max-width: 44ch;
-  color: var(--band-muted);
-  font-size: 1.05rem;
+  white-space: nowrap;
 }
 
 /* The search bar: one thick piece, darker inside than the page around it. */
@@ -250,25 +274,14 @@ body:not(.searched) .search::after {
 }
 .search input::placeholder { color: var(--band-muted); opacity: 0.75; }
 
-.search button {
-  height: 56px;
-  padding: 0 24px;
-  font: inherit;
-  font-weight: 600;
-  color: #ffffff;
-  background: #a2431a;
-  border: 0;
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-.search button:hover { background: #b34d20; }
+/* There is no button to press: Enter searches, and a phone's keyboard offers its own
+   search key. The form keeps one out of sight for assistive technology. */
 
-/* A narrow phone: a smaller mark and button, so the box still shows what to type. */
+/* A narrow phone: a smaller mark. */
 @media (max-width: 380px) {
   body:not(.searched) .search .mark { margin-left: 4px; }
   body:not(.searched) .search .mark img { width: 36px; height: 36px; }
-  body:not(.searched) .search input { padding: 0 8px 0 10px; font-size: 1.12rem; }
-  body:not(.searched) .search button { padding: 0 16px; }
+  body:not(.searched) .search input { padding: 0 10px; font-size: 1.12rem; }
 }
 
 /* The few other things there are to do, kept quiet. */
@@ -367,7 +380,6 @@ body[data-flavour="winter"]:not(.searched) .masthead {
 body[data-flavour="anniversary"]:not(.searched) .masthead {
   background:
     radial-gradient(56% 46% at 50% 40%, rgb(214 168 60 / 0.26), transparent 72%),
-    repeating-radial-gradient(circle at 50% 40%, transparent 0 58px, rgb(255 226 150 / 0.03) 58px 59px),
     radial-gradient(130% 120% at 50% 0%, #3a2e14 0%, var(--band) 66%);
 }
 
@@ -384,13 +396,12 @@ body[data-flavour="anniversary"]:not(.searched) .masthead {
 }
 
 .searched .wordmark { font-size: 1.45rem; }
-.searched .tagline, .searched .news, .searched .home-cards { display: none; }
+.searched .news, .searched .home-cards { display: none; }
 .searched .search { max-width: none; margin: 0; padding: 3px; border-radius: var(--radius); border-color: var(--band-line); box-shadow: none; }
 .searched .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28); }
 .searched .search .mark { margin-left: 4px; }
 .searched .search .mark img { width: 28px; height: 28px; }
 .searched .search input { height: 36px; padding: 0 10px 0 8px; font-size: 1.02rem; }
-.searched .search button { height: 36px; padding: 0 16px; border-radius: var(--radius); }
 .searched .nav { margin: 0; flex-wrap: nowrap; gap: 4px; }
 .searched .nav a { padding: 6px 10px; font-size: 0.95rem; border-color: transparent; color: var(--band-muted); white-space: nowrap; }
 .searched .nav a:hover, .searched .nav a[aria-current] { color: var(--band-ink); text-decoration: underline; }
@@ -831,8 +842,6 @@ td.t-set strong { font-weight: 600; }
    The results stay in the document, hidden, so Back is instant. */
 
 .card { margin-top: 4px; }
-
-.back { display: inline-block; margin-bottom: 14px; }
 
 /* A search for a card's exact name comes straight to its page; this offers the other matches. */
 .also {

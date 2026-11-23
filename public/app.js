@@ -25,7 +25,6 @@ const homeCards = document.getElementById("home-cards");
 const ignored = document.getElementById("ignored");
 const emptyState = document.getElementById("empty");
 const cardView = document.getElementById("card");
-const backButton = document.getElementById("card-back");
 const printsButton = document.getElementById("card-prints");
 const copyButton = document.getElementById("card-copy");
 const legalitySection = document.getElementById("card-legality");
@@ -36,6 +35,8 @@ const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
 // Results on one page, and how far into a result the endpoint will go. Keep in step with
 // MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
+// The site's title, as the pages themselves show it.
+const SITE = "Scry Deeper";
 const PAGE_SIZE = 60;
 const MAX_REACH = 10000;
 const LAST_PAGE = Math.floor(MAX_REACH / PAGE_SIZE); // the last page that fits whole
@@ -506,7 +507,7 @@ async function run(search, { push = true } = {}) {
     button.setAttribute("aria-pressed", String(button.dataset.as === view.as));
   }
   if (push) history.pushState(null, "", searchPath(view));
-  document.title = view.query ? `${view.query} · mtgsearch` : "mtgsearch";
+  document.title = view.query ? `${view.query} · ${SITE}` : SITE;
   document.body.classList.toggle("searched", Boolean(view.query));
   if (inFlight) inFlight.abort();
   if (!view.query) {
@@ -768,11 +769,9 @@ function showCard(hit, printings = null, { keepScroll = false } = {}) {
   link.hidden = !hasLink;
   if (hasLink) link.href = hit.scryfall_uri;
   copyButton.textContent = "Copy link";
-  // "Back to results" only when there are results to go back to.
-  backButton.hidden = shownCount() === 0;
   preview.hidden = true;
   showAlso(history.state && history.state.also);
-  document.title = `${hit.name} · mtgsearch`;
+  document.title = `${hit.name} · ${SITE}`;
   document.body.classList.add("viewing-card", "searched");
   cardView.hidden = false;
   if (!keepScroll) window.scrollTo(0, 0);
@@ -908,8 +907,6 @@ for (const id of ["nav-random", "empty-random"]) {
   });
 }
 
-backButton.addEventListener("click", () => history.back());
-
 printsButton.addEventListener("click", () => run({ query: printsButton.dataset.q }));
 
 copyButton.addEventListener("click", async () => {
@@ -933,7 +930,7 @@ function route(state) {
   // Coming back from a card to the search that is still on screen: no need to ask again.
   if (view.query && sameSearch(view, current) && shownCount()) {
     showResults();
-    document.title = `${view.query} · mtgsearch`;
+    document.title = `${view.query} · ${SITE}`;
     window.scrollTo(0, resultsScroll);
     return;
   }
@@ -978,8 +975,8 @@ document.addEventListener("keydown", (event) => {
     input.focus();
     input.select();
   }
-  // Escape leaves a card that was opened from the results.
-  if (event.key === "Escape" && !cardView.hidden && !backButton.hidden) history.back();
+  // Escape leaves a card that was opened from the results, as the browser's Back does.
+  if (event.key === "Escape" && !cardView.hidden && shownCount() > 0) history.back();
 });
 
 route(history.state);

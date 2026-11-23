@@ -106,24 +106,37 @@ async function run(name, contextOptions) {
   check(home.cutOff && Math.abs(home.fanBottom - home.window) <= 4, `[${name}] cut off by the bottom edge of the first screen`);
   check(!home.pageBelow, `[${name}] and nothing but the footer follows: no search instructions`);
   if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);
-  // The mark is a disc inside the bar at its left end, and the background is drawn from the
-  // bar: steps that narrow to it, each a layer of one shadow.
+  // The mark is a disc inside the bar at its left end, and there is no button: Enter searches.
+  // The background is drawn from the bar: light that gathers on it, and soft rings around it.
   const lookAtBar = () => page.evaluate(() => {
     const box = (element) => element.getBoundingClientRect();
-    const image = document.querySelector("#search .mark img");
-    const [disc, bar, field] = [box(image), box(document.getElementById("search")), box(document.getElementById("q"))];
-    const steps = getComputedStyle(document.getElementById("search"), "::before");
+    const form = document.getElementById("search");
+    const image = form.querySelector(".mark img");
+    const [disc, bar, field, button] = [box(image), box(form), box(document.getElementById("q")), box(form.querySelector("button"))];
+    // how far the middle of a layer drawn behind the bar is from the middle of the bar
+    const offCentre = (pseudo) => {
+      const style = getComputedStyle(form, pseudo);
+      if (style.content === "none" || !style.backgroundImage.includes("radial-gradient")) return null;
+      const px = (value) => parseFloat(value) || 0;
+      const across = px(style.left) + px(style.marginLeft) + px(style.width) / 2 - form.clientWidth / 2;
+      const down = px(style.top) + px(style.marginTop) + px(style.height) / 2 - form.clientHeight / 2;
+      return Math.max(Math.abs(across), Math.abs(down));
+    };
     return {
       drawn: image.complete && image.naturalWidth > 0,
       size: disc.width,
       round: Math.abs(disc.width - disc.height) < 0.5,
       inside: disc.left >= bar.left && disc.right <= field.left + 1 && disc.top >= bar.top && disc.bottom <= bar.bottom,
-      steps: steps.content === "none" || steps.boxShadow === "none" ? 0 : steps.boxShadow.split("rgb").length - 1,
+      // the box runs from the mark to the bar's right end: nothing to press takes its place
+      noButton: button.width <= 1 && button.height <= 1 && bar.right - field.right < 12,
+      light: offCentre("::before"),
+      rings: offCentre("::after"),
     };
   });
   const mark = await lookAtBar();
   check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
-  check(mark.steps >= 5, `[${name}] the background narrows to the bar in steps drawn from it (${mark.steps})`);
+  check(mark.noButton, `[${name}] the bar has no button: the box fills it, and Enter searches`);
+  check(mark.light !== null && mark.light <= 1 && mark.rings !== null && mark.rings <= 1, `[${name}] the background's light and rings are centred on the bar (off by ${mark.light}px and ${mark.rings}px)`);
   await page.evaluate(() => document.activeElement && document.activeElement.blur());
   await page.click("#search .mark");
   check((await page.evaluate(() => document.activeElement && document.activeElement.id)) === "q", `[${name}] pressing the mark puts the cursor in the box`);
@@ -154,7 +167,7 @@ async function run(name, contextOptions) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(overflow <= 0, `[${name}] no horizontal scrolling (overflow ${overflow}px)`);
   const barMark = await lookAtBar();
-  check(barMark.drawn && barMark.round && barMark.inside && barMark.size < mark.size && barMark.steps === 0, `[${name}] as a bar the header keeps the mark, smaller, and has no steps behind it (${Math.round(barMark.size)}px)`);
+  check(barMark.drawn && barMark.round && barMark.inside && barMark.size < mark.size && barMark.noButton && barMark.light === null && barMark.rings === null, `[${name}] as a bar the header keeps the mark, smaller, with no button and nothing drawn behind it (${Math.round(barMark.size)}px)`);
   await shot("2-results");
 
   // A card has its own page, at an address that can be shared.
@@ -207,7 +220,7 @@ async function run(name, contextOptions) {
   await fresh.waitForFunction(() => !document.getElementById("card").hidden);
   check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] a shared card address opens that card`);
   check((await fresh.textContent("#card-printing")) === (await page.textContent("#card-printing")), `[${name}] and the same printing of it`);
-  check(!(await fresh.isVisible("#card-back")), `[${name}] with no "Back to results", as there are none`);
+  check((await fresh.$("#card-back")) === null && !(await fresh.isVisible("text=Back to results")), `[${name}] a card's page has no link back: the browser's Back and the search bar do that`);
   check((await fresh.textContent("#card-stats")) === "4/6" && (await fresh.$$("#printings-list a")).length === listed.length, `[${name}] and the same stats and printings`);
   // Another printing is one tap away, at its own address; Back returns to the first.
   const marked = (href) => document.querySelector("#printings-list a[aria-current]")?.getAttribute("href") === href;
@@ -233,7 +246,7 @@ async function run(name, contextOptions) {
   await fresh.press("#q", "Enter");
   await fresh.waitForFunction(() => !document.getElementById("card").hidden && location.pathname.startsWith("/card/"));
   check((await fresh.textContent("#card-name")) === "Consecrated Sphinx", `[${name}] typing a card's exact name opens its page (${new URL(fresh.url()).pathname})`);
-  check(!(await fresh.isVisible("#card-also")) && !(await fresh.isVisible("#card-back")), `[${name}] with nothing else to offer when no other card matches`);
+  check(!(await fresh.isVisible("#card-also")), `[${name}] with nothing else to offer when no other card matches`);
   check((await fresh.inputValue("#q")) === "Consecrated Sphinx", `[${name}] and what was typed stays in the box`);
   await fresh.goBack();
   await fresh.waitForFunction(() => document.getElementById("card").hidden);
@@ -262,9 +275,9 @@ async function run(name, contextOptions) {
   check((await fresh.isVisible("#empty")) && (await fresh.textContent("#empty-title")) === "No card at this address", `[${name}] an address with no card says so and offers where to go`);
   await fresh.close();
 
-  await page.click("#card-back");
+  await page.goBack();
   await page.waitForFunction(() => document.getElementById("card").hidden);
-  check(page.url() === resultsUrl, `[${name}] "Back to results" returns to the results`);
+  check(page.url() === resultsUrl, `[${name}] the browser's Back returns to the results`);
 
   await search(page, 'c:u t:sphinx o:"draw two cards"');
   check((await page.textContent("#status")).startsWith("Scryfall syntax · 3 cards"), `[${name}] syntax query reports 3 cards`);
@@ -355,7 +368,7 @@ async function run(name, contextOptions) {
   const tableUrl = page.url();
   await page.click("#rows tr:nth-child(3) td.t-type");
   await page.waitForFunction(() => !document.getElementById("card").hidden);
-  check((await page.textContent("#card-name")) === rowName && (await page.isVisible("#card-back")), `[${name}] a row opens its card (${rowName}), with a way back`);
+  check((await page.textContent("#card-name")) === rowName, `[${name}] a row opens its card (${rowName})`);
   check(!(await page.isVisible("#table")) && !(await page.isVisible("#preview")), `[${name}] and the table is out of the way`);
   await page.goBack();
   await page.waitForFunction(() => document.getElementById("card").hidden);
