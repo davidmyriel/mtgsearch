@@ -277,6 +277,7 @@ test("the home page gets a few cards and the newest sets, held only briefly", as
   const found = {
     cards: [{ ...HIT, usd: 1.5 }, { ...HIT, _id: "def", name: "Sol Ring", set: "trc", cn: "499" }],
     sets: [{ code: "nau", name: "Nauctis: The Sunken Realm", released: "2027-02-05", cards: 24, upcoming: true }],
+    theme: { label: "Sphinxes", query: "t:sphinx" },
   };
   const response = await handleHome(async () => found);
   assert.equal(response.status, 200);
@@ -290,6 +291,8 @@ test("the home page gets a few cards and the newest sets, held only briefly", as
   });
   assert.deepEqual([body.cards[1].name, body.cards[1].set, body.cards[1].collector_number], ["Sol Ring", "trc", "499"]);
   assert.deepEqual(body.sets, found.sets);
+  // what the cards have in common, and the search that finds them all
+  assert.deepEqual(body.theme, { label: "Sphinxes", query: "t:sphinx" });
 });
 
 test("a failure behind the home page is an error the page can ignore", async () => {

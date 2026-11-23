@@ -313,15 +313,25 @@ async function loadHome() {
   news.replaceChildren(...lines);
   news.hidden = lines.length === 0;
 
-  // The cards: drawn from the flavour's own search when it names one, else from anywhere.
+  // The cards have something in common: a theme the server chose for this visit (the newest
+  // set, or a kind of card), or the flavour's own search when it names one. Either way they
+  // are drawn from the most played cards the search finds.
   let cards = (found && found.cards) || [];
+  let theme = (found && found.theme) || null;
   if (typeof taste.cards === "string" && taste.cards.trim()) {
-    const themed = await getJson(`/api/search?${new URLSearchParams({ q: taste.cards.trim(), k: String(PAGE_SIZE) })}`);
+    const query = taste.cards.trim();
+    const themed = await getJson(`/api/search?${new URLSearchParams({ q: query, k: String(PAGE_SIZE), order: "edhrec" })}`);
     const pool = ((themed && themed.hits) || []).filter((hit) => hit.image && cardPath(hit));
     const drawn = [];
     while (pool.length && drawn.length < HOME_CARDS) drawn.push(...pool.splice(Math.floor(Math.random() * pool.length), 1));
-    if (drawn.length) cards = drawn;
+    if (drawn.length === HOME_CARDS) {
+      cards = drawn;
+      theme = { label: query, query };
+    }
   }
+  // What they have in common is said to a screen reader and kept on the list for anyone looking.
+  homeCards.setAttribute("aria-label", theme ? `A few cards: ${theme.label}` : "A few cards");
+  homeCards.dataset.query = theme ? theme.query : "";
   const strip = cards
     .filter((hit) => hit.image && hit.image.startsWith(IMAGE_HOST) && cardPath(hit))
     .slice(0, HOME_CARDS)

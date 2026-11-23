@@ -1,7 +1,9 @@
-// What the home page shows besides the search box: a few cards chosen at random, different
-// on every visit, and the newest sets. Two filters, no embeddings.
+// What the home page shows besides the search box: a few cards that have something in
+// common, different on every visit, and the newest sets. A few filters, no embeddings.
 
 import { agg, field, filter, select } from "topk-js/query";
+import { lower } from "./lower.ts";
+import { parse } from "./parser.ts";
 import { pick, toTopk, VISIBLE } from "./search.ts";
 import type { Collections, Hit } from "./search.ts";
 
@@ -14,7 +16,34 @@ const RECENT_DAYS = 300;
 const CARD_FIELDS = ["name", "image", "set", "cn", "type_line", "artist"];
 
 export type HomeSet = { code: string; name: string; released: string; cards: number; upcoming: boolean };
-export type Home = { cards: Hit[]; sets: HomeSet[] };
+/** What the cards have in common: a name for it, and the search that finds them all. */
+export type Theme = { label: string; query: string };
+export type Home = { cards: Hit[]; sets: HomeSet[]; theme: Theme | null };
+
+// What a visit's cards can have in common, apart from being the newest set's. Each is a
+// search, so a theme is anything the search box understands, and a kind of card that shows
+// at a glance: the reader should see the link between them without being told.
+export const THEMES: Theme[] = [
+  { label: "Dragons", query: "t:dragon" },
+  { label: "Angels", query: "t:angel" },
+  { label: "Demons", query: "t:demon" },
+  { label: "Elves", query: "t:elf" },
+  { label: "Goblins", query: "t:goblin" },
+  { label: "Zombies", query: "t:zombie" },
+  { label: "Wizards", query: "t:wizard" },
+  { label: "Merfolk", query: "t:merfolk" },
+  { label: "Vampires", query: "t:vampire" },
+  { label: "Dinosaurs", query: "t:dinosaur" },
+  { label: "Sphinxes", query: "t:sphinx" },
+  { label: "Planeswalkers", query: "t:planeswalker" },
+  { label: "Sagas", query: "t:saga" },
+  { label: "Vehicles", query: "t:vehicle" },
+];
+// The cards are drawn from the most played of a theme, so that they are ones people know.
+const POOL = 60;
+// How often the theme is the newest released set, when there is one.
+const NEW_SET_SHARE = 1 / 3;
+const FAR = 1_000_000_000;
 
 const asNumber = (day: Date) => Number(day.toISOString().slice(0, 10).replaceAll("-", ""));
 const asDate = (n: number) => `${String(n).slice(0, 4)}-${String(n).slice(4, 6)}-${String(n).slice(6, 8)}`;
@@ -54,7 +83,42 @@ export async function newestSets(cols: Collections, n = HOME_SETS, today: Date =
     .map(({ date, ...set }) => ({ ...set, released: asDate(date), upcoming: date > now }));
 }
 
-export async function home(cols: Collections): Promise<Home> {
-  const [cards, sets] = await Promise.all([randomCards(cols), newestSets(cols)]);
-  return { cards, sets };
+/**
+ * A few of the most played cards a search finds, drawn at random among them. A search about
+ * printings (`set:trk`) is answered from the printings, one card for each, shown by that printing.
+ */
+export async function themedCards(cols: Collections, query: string, n = HOME_CARDS, random: () => number = Math.random): Promise<Hit[]> {
+  const [predicate, options] = lower(parse(query));
+  const where = toTopk(predicate);
+  const byPlay = [{ expr: field("edhrec_rank").coalesce(FAR), order: "asc" as const }];
+  let rows: Hit[];
+  if (options.printings) {
+    const found = await cols.printings.query(
+      (where === null ? select(pick([...CARD_FIELDS, "oracle_id"])) : select(pick([...CARD_FIELDS, "oracle_id"])).filter(where)).sort(byPlay).limit(POOL * 4),
+    );
+    const seen = new Set<unknown>();
+    rows = found.filter((row) => !seen.has(row.oracle_id) && seen.add(row.oracle_id)).slice(0, POOL);
+  } else {
+    rows = await cols.cards.query((where === null ? select(pick(CARD_FIELDS)) : select(pick(CARD_FIELDS)).filter(where)).sort(byPlay).limit(POOL));
+  }
+  const usable = rows.filter((row) => row.image && row.set && row.cn);
+  const drawn: Hit[] = [];
+  while (usable.length && drawn.length < n) drawn.push(...usable.splice(Math.floor(random() * usable.length), 1));
+  return drawn;
+}
+
+/** The theme of a visit: sometimes the newest set that is out, otherwise one of THEMES. */
+export function chooseTheme(sets: HomeSet[], random: () => number = Math.random): Theme {
+  const out = sets.find((set) => !set.upcoming && set.cards >= 100);
+  if (out && random() < NEW_SET_SHARE) return { label: out.name, query: `set:${out.code}` };
+  return THEMES[Math.floor(random() * THEMES.length)];
+}
+
+export async function home(cols: Collections, random: () => number = Math.random): Promise<Home> {
+  const sets = await newestSets(cols);
+  const theme = chooseTheme(sets, random);
+  const cards = await themedCards(cols, theme.query, HOME_CARDS, random);
+  // A theme that somehow finds too few cards gives way to cards from anywhere.
+  if (cards.length < HOME_CARDS) return { cards: await randomCards(cols, HOME_CARDS, random), sets, theme: null };
+  return { cards, sets, theme };
 }

@@ -138,7 +138,7 @@ export async function handleHome(home: HomeFn): Promise<Response> {
     const full = hit(row);
     return Object.fromEntries(["id", "name", "image", "set", "collector_number", "type_line", "artist"].map((name) => [name, full[name]]));
   });
-  return json({ cards, sets: found.sets }, 200, BRIEFLY);
+  return json({ cards, sets: found.sets, theme: found.theme }, 200, BRIEFLY);
 }
 
 export async function handleSearch(url: URL, search: SearchFn): Promise<Response> {

@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { Client } from "topk-js";
 import { handleCard, handleSearch, MAX_REACH, MAX_RESULTS } from "../api.ts";
 import { card, MAX_PRINTINGS, randomCard } from "../card.ts";
-import { HOME_CARDS, newestSets, randomCards } from "../home.ts";
+import { chooseTheme, home, HOME_CARDS, newestSets, randomCards, themedCards, THEMES } from "../home.ts";
 import { search } from "../search.ts";
 import type { Collection, Collections } from "../search.ts";
 
@@ -279,6 +279,50 @@ test("a card's page: one printing with stats and legality, and its printings new
   const body = await (await handleCard(new URL("https://x.test/api/card?set=ima&cn=47"), (set, number) => card(collection(), set, number))).json();
   assert.deepEqual([body.card.name, body.card.stats, body.card.set], ["Consecrated Sphinx", "4/6", "ima"]);
   assert.equal(body.printings.length, page.printings.length);
+});
+
+test("the home page's cards have something in common: a kind of card, or the newest set", { skip }, async () => {
+  const cols = collection();
+  const dice = (seed: number) => {
+    let n = seed;
+    return () => (n = (n * 9301 + 49297) % 233280) / 233280;
+  };
+  // a kind of card: every card drawn is one, they are distinct, and other dice draw others
+  const dragons = await themedCards(cols, "t:dragon", HOME_CARDS, dice(3));
+  assert.equal(dragons.length, HOME_CARDS);
+  assert.ok(dragons.every((card) => /Dragon/.test(String(card.type_line)) && card.image && card.set && card.cn));
+  assert.equal(new Set(dragons.map((card) => card.name)).size, HOME_CARDS);
+  assert.deepEqual(names({ hits: dragons }), names({ hits: await themedCards(cols, "t:dragon", HOME_CARDS, dice(3)) }));
+  assert.notDeepEqual(names({ hits: dragons }), names({ hits: await themedCards(cols, "t:dragon", HOME_CARDS, dice(4)) }));
+  // they are drawn from the sixty most played of the kind, so they are cards people know
+  const mostPlayed = new Set(names(await search(cols, "t:goblin", { k: 60, order: "edhrec" })));
+  for (const seed of [1, 2, 3]) {
+    const goblins = await themedCards(cols, "t:goblin", HOME_CARDS, dice(seed));
+    assert.ok(goblins.every((card) => mostPlayed.has(card.name)), names({ hits: goblins }).join(", "));
+  }
+  // a set: every card is shown by its printing in that set, one printing for each card
+  const set = await themedCards(cols, "set:ima", HOME_CARDS, dice(5));
+  assert.equal(set.length, HOME_CARDS);
+  assert.ok(set.every((card) => card.set === "ima"));
+  assert.equal(new Set(set.map((card) => card.name)).size, HOME_CARDS);
+
+  // which theme a visit gets: the newest set that is out about a third of the time, else a kind
+  const sets = [
+    { code: "nau", name: "Nauctis", released: "2027-02-05", cards: 24, upcoming: true },
+    { code: "trk", name: "Star Trek", released: "2026-11-13", cards: 587, upcoming: false },
+  ];
+  assert.deepEqual(chooseTheme(sets, () => 0.1), { label: "Star Trek", query: "set:trk" });
+  const kind = chooseTheme(sets, () => 0.5);
+  assert.ok(THEMES.includes(kind));
+  assert.ok(THEMES.includes(chooseTheme([], () => 0.1)), "with no set out, always a kind of card");
+  // every kind on the list is a search that finds enough cards to fill the home page
+  for (const theme of THEMES) {
+    assert.equal((await themedCards(cols, theme.query, HOME_CARDS, dice(1))).length, HOME_CARDS, theme.label);
+  }
+  // the whole thing, as the endpoint serves it
+  const page = await home(cols, dice(9));
+  assert.equal(page.cards.length, HOME_CARDS);
+  assert.ok(page.theme && page.theme.label && page.theme.query);
 });
 
 test("the home page's cards differ from draw to draw, and its sets are the newest", { skip }, async () => {

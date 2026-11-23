@@ -172,6 +172,17 @@ and the Scryfall comparison where results could move.
     cover, crop, or clip off the copyright or artist name on card images"; the owner was told
     this and decided otherwise. The risk is the owner's: Scryfall could object to the home
     page. Going back is a small change to the stylesheet.
+- **Later the same day:** "footer different colour, darker". The footer has a colour of its own,
+  darker than the screen above it.
+- **And:** "the homepage cards should have something in common, how are you picking them right
+  now". They were drawn from the whole card pool with nothing to join them. Now each visit has
+  a theme and its seven cards all belong to it: about one visit in three it is the newest set
+  that is out, and otherwise a kind of card that shows at a glance (Dragons, Angels, Demons,
+  Elves, Goblins, Zombies, Wizards, Merfolk, Vampires, Dinosaurs, Sphinxes, Planeswalkers,
+  Sagas, Vehicles). The cards are drawn from the sixty most played of the theme, so they are
+  ones people know. Which things can join them is the developer's choice and is one list in
+  `app/home.ts`; `public/flavour.json` can still name a search of its own for an occasion.
+  The theme is not named on the page, as on Scryfall's; a screen reader is told it.
 
 ## From the interface study
 
