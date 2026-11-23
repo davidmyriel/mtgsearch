@@ -225,7 +225,11 @@ is a 404. `GET /api/card?random=1` answers in the same shape with a card chosen 
 and is never cached.
 
 `GET /api/home?try=<example>` gives the home page seven cards, the `theme` that joins them,
-and the newest sets (those still to be released are marked `upcoming`). The empty search box
+and what is new: the five newest of the sets people open packs of, the Commander decks that
+come out with them and their bonus sheets (`kind` says which). One still to be released is
+marked `upcoming` and says how many different cards have been `revealed`; the page words
+that as "first look" or "previews" with the date it is out, and a set that is out as "out
+now" or "released in" its month. The empty search box
 shows an example to try, a different one of some thirty on each visit, and names it in `try`: the
 cards are then that search's results, the first three always and the rest drawn from the
 eleven that follow, so the page shows what the search does before anything is typed. The

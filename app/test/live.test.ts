@@ -473,8 +473,10 @@ test("the home page's cards have something in common: a kind of card, or the new
 
   // which theme a visit gets: the newest set that is out about a third of the time, else a kind
   const sets = [
-    { code: "nau", name: "Nauctis", released: "2027-02-05", cards: 24, upcoming: true },
-    { code: "trk", name: "Star Trek", released: "2026-11-13", cards: 587, upcoming: false },
+    { code: "nau", name: "Nauctis", kind: "set" as const, released: "2027-02-05", cards: 24, upcoming: true, revealed: 22 },
+    // the decks that come out with a set are news, but are not what a visit's cards are drawn from
+    { code: "trc", name: "Star Trek Commander", kind: "commander" as const, released: "2026-11-13", cards: 556, upcoming: false, revealed: null },
+    { code: "trk", name: "Star Trek", kind: "set" as const, released: "2026-11-13", cards: 587, upcoming: false, revealed: null },
   ];
   assert.deepEqual(chooseTheme(sets, () => 0.1), { label: "Star Trek", query: "set:trk" });
   const kind = chooseTheme(sets, () => 0.5);
@@ -512,6 +514,19 @@ test("the home page's cards differ from draw to draw, and its sets are the newes
   assert.deepEqual(sets.map((set) => set.released), [...sets.map((set) => set.released)].sort().reverse());
   assert.ok(sets.every((set) => set.code && set.name && set.cards > 0));
   assert.deepEqual(sets.map((set) => set.upcoming), sets.map((set) => set.released > "2026-11-23"));
+  // what came out beside a set is news too: on that day Star Trek, then its decks, then its sheet
+  const wave = (await newestSets(cols, 12, new Date("2026-11-23T00:00:00Z"))).filter((set) => set.released === "2026-11-13");
+  assert.deepEqual(wave.map((set) => [set.code, set.kind]), [["trk", "set"], ["trc", "commander"], ["sds", "bonus"]]);
+  // decks and sheets are named once there is something of them to look at; a set from its first card
+  const all = await newestSets(cols, 40, new Date("2026-11-23T00:00:00Z"));
+  assert.ok(all.every((set) => set.kind === "set" || set.cards >= 10), all.filter((set) => set.kind !== "set").map((set) => `${set.code} ${set.cards}`).join(", "));
+  assert.ok(all.every((set) => ["set", "commander", "bonus"].includes(set.kind)));
+  // a set still to come says how many different cards have been shown, never more than its printings
+  assert.ok(all.some((set) => set.upcoming));
+  for (const set of all) {
+    if (set.upcoming) assert.ok(set.revealed !== null && set.revealed >= 1 && set.revealed <= set.cards, `${set.code}: ${set.revealed} of ${set.cards}`);
+    else assert.equal(set.revealed, null, set.code);
+  }
   // a year and a half earlier, sets since released did not exist yet from that day's point of view
   const earlier = await newestSets(cols, 4, new Date("2025-06-01T00:00:00Z"));
   assert.ok(earlier.every((set) => set.released >= "2024-08-05"));

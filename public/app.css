@@ -320,6 +320,12 @@ body:not(.searched) .nav { display: none; }
 }
 .nav a:hover, .nav a[aria-current], .needs a:hover { border-color: var(--band-link); color: var(--band-link); }
 
+/* The searches under the bar are one row of a fixed height: as many as fit are shown, and
+   the rest fall to a second row that is cut off. So a different draw of them on each visit
+   never changes the room the row takes, and nothing around it moves. */
+.needs { height: 2.1rem; overflow: hidden; width: 100%; }
+.needs a { display: inline-flex; align-items: center; height: 2.1rem; padding-block: 0; white-space: nowrap; }
+
 /* What is new: the flavour of the week, then the newest sets. */
 .news {
   display: grid;
@@ -347,6 +353,16 @@ body:not(.searched) .nav { display: none; }
   white-space: nowrap;
 }
 .news .words { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* What state the set is in stands out a little from its name; the details after it are
+   quieter, and are left out where the line would not hold them. */
+.news a { gap: 7px; }
+.news .tag { margin-right: 2px; }
+.news .state { flex: none; color: var(--band-ink); }
+.news .when { flex: none; font-size: 0.82rem; opacity: 0.72; }
+.news .when::before { content: "· "; }
+@media (max-width: 640px) {
+  .news .when { display: none; }
+}
 .news a:hover { color: var(--band-ink); }
 .news .tag {
   padding: 2px 7px;
@@ -363,7 +379,12 @@ body:not(.searched) .nav { display: none; }
 
 /* The news and the cards keep their room on the first screen before they arrive, so the
    name and the search bar do not move when they do. */
-.news { min-height: calc(4 * 1.5rem + 3 * 7px); }
+.news { min-height: calc(5 * 1.5rem + 4 * 7px); }
+/* A short screen has room for four lines. */
+@media (max-height: 640px) {
+  .news { min-height: calc(4 * 1.5rem + 3 * 7px); }
+  .news li:nth-child(n + 5) { display: none; }
+}
 body:not(.searched) .news[hidden] { display: grid !important; visibility: hidden; }
 body:not(.searched) .home-cards[hidden] { display: flex !important; visibility: hidden; }
 

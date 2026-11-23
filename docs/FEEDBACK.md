@@ -40,6 +40,7 @@ and the Scryfall comparison where results could move.
 | F-8 | 23 Nov 2026 | More examples for the search box: three or four for each colour, some for artifacts and more than one colour, and alternatives for well-known cards | M | Now | Done: 33 examples, each checked against the search |
 | F-9 | 23 Nov 2026 | Under the bar, typical searches in place of the two links; players' words have to find the cards players mean | M | Now | Done |
 | F-10 | 23 Nov 2026 | Meaning has to be dealt with systematically behind the scenes, not by hand-written lists | L | Later, as a stage of its own (stage 8 of the plan) | Planned, not started |
+| F-11 | 23 Nov 2026 | Nine typical searches under the bar, a different four on each visit; the news lines say where each set stands | S | Now | Done |
 
 ### F-1. A page for each card
 
@@ -459,6 +460,40 @@ and the Scryfall comparison where results could move.
 - **What follows from it now:** "burn spells" is left as it is. The hand-written lists
   (players' words, colour and filler words, the ways of asking for alternatives) stay and
   are not grown case by case; a word that fails goes into the query set instead.
+
+### F-11. Nine searches that change, and news that explains itself
+
+- **From:** the project owner, 23 November 2026, after a list of general searches and which
+  of them work.
+- **In their words:** "ramp, card draw, removal, counterspells, tutors thats 9 total, make
+  sure each time homepage loads they are changing. and the language on the homepage should
+  be more elaborate for spoilers: NEW Nauctis: The Sunken Realm first look, NEW Star Trek
+  full preview, NEW Star Trek Commander full preview, NEW Stardates Bonus Sheet full
+  preview. that kind of thing, not exactly but more xplanatory".
+- **The searches:** the row under the bar draws four of the nine afresh each time the page
+  loads (mana rocks, bounce spells, blink effects, board wipes, ramp, card draw, removal,
+  counterspells, tutors). The row is one line of a fixed height: on a laptop all four show,
+  on a phone the three that fit, each whole. So a different draw never moves the bar. All
+  nine were already players' words the search knows; none was added to the list.
+- **The news:** each line now says what the thing is and where it stands, and on a wide
+  screen the details after it:
+  - "Marvel: Darkhold Destiny **first look** · 12 cards so far, out 9 April"
+  - "Nauctis: The Sunken Realm **first look** · 7 cards so far, out 5 February"
+  - "Star Trek **out now** · since 13 November"
+  - "Star Trek Commander decks **out now** · since 13 November"
+  - "Stardates bonus sheet **out now** · since 13 November"
+- **What changed to make that possible:** the Commander decks that come out with a set and
+  its bonus sheet are news lines of their own, as in the owner's example; before, only the
+  sets people open packs of were listed. They are named once they have ten cards. There are
+  five lines in place of four (four on a short screen).
+- **The wording is the developer's, and each word is backed by the data:** "first look" while
+  fewer than sixty different cards have been shown and "previews" after that; "out now" for
+  forty-five days after release and "released in October" after that. "Full preview", the
+  owner's example, is not used: the index does not know how many cards a set will have, so it
+  cannot say that all of them are shown.
+- **One thing found on the way:** the count has to be of different cards, not printings.
+  Nauctis has 24 printings in the index and 7 different cards; the first version would have
+  said "24 cards so far".
 
 ## From the interface study
 

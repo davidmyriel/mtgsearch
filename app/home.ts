@@ -10,14 +10,37 @@ import { pick, search, toTopk, VISIBLE } from "./search.ts";
 import type { Collections, Hit } from "./search.ts";
 
 export const HOME_CARDS = 7;
-export const HOME_SETS = 4;
-// Sets people open packs of. Promos, tokens, commander decks and the like are not news.
-const SET_TYPES = ["expansion", "core", "masters", "draft_innovation"];
+export const HOME_SETS = 5;
+// What counts as news, and what each is: the sets people open packs of, and what comes out
+// beside them, the Commander decks and the bonus sheet. Promos, tokens and the like are not news.
+const KINDS: Record<string, SetKind> = {
+  expansion: "set",
+  core: "set",
+  masters: "set",
+  draft_innovation: "set",
+  commander: "commander",
+  masterpiece: "bonus",
+};
+// The decks and the sheet are named once there is something of them to look at. A set itself
+// is news from its first card.
+const WORTH_NAMING = 10;
 // How far back a set still counts as new enough to look at.
 const RECENT_DAYS = 300;
 const CARD_FIELDS = ["name", "image", "set", "cn", "type_line", "artist"];
 
-export type HomeSet = { code: string; name: string; released: string; cards: number; upcoming: boolean };
+/** A set people open packs of, the Commander decks that come out with one, or its bonus sheet. */
+export type SetKind = "set" | "commander" | "bonus";
+export type HomeSet = {
+  code: string;
+  name: string;
+  kind: SetKind;
+  released: string;
+  /** How many printings the index holds: a card in three frames counts three times. */
+  cards: number;
+  upcoming: boolean;
+  /** For a set still to come, how many different cards have been shown so far; otherwise null. */
+  revealed: number | null;
+};
 /** What the cards have in common: a name for it, and the search that finds them all. */
 export type Theme = { label: string; query: string };
 export type Home = { cards: Hit[]; sets: HomeSet[]; theme: Theme | null };
@@ -104,16 +127,35 @@ export async function randomCards(cols: Collections, n = HOME_CARDS, random: () 
 /** The newest sets, newest first. A set whose release date is still ahead is marked upcoming. */
 export async function newestSets(cols: Collections, n = HOME_SETS, today: Date = new Date()): Promise<HomeSet[]> {
   const since = asNumber(new Date(today.getTime() - RECENT_DAYS * 86_400_000));
-  const recent = toTopk(["and", [["cmp", "date", ">=", since], ["oneof", "set_type", SET_TYPES], VISIBLE]]);
+  const recent = toTopk(["and", [["cmp", "date", ">=", since], ["oneof", "set_type", Object.keys(KINDS)], VISIBLE]]);
   const rows = await cols.printings.query(
-    filter(recent!).groupBy({ set: field("set"), set_name: field("set_name") }, { date: agg.max("date"), cards: agg.count() }),
+    filter(recent!).groupBy(
+      { set: field("set"), set_name: field("set_name"), set_type: field("set_type") },
+      { date: agg.max("date"), cards: agg.count() },
+    ),
   );
   const now = asNumber(today);
-  return rows
-    .map((row) => ({ code: String(row.set), name: String(row.set_name), date: Number(row.date), cards: Number(row.cards) }))
-    .sort((a, b) => b.date - a.date || a.name.localeCompare(b.name))
-    .slice(0, n)
-    .map(({ date, ...set }) => ({ ...set, released: asDate(date), upcoming: date > now }));
+  const order: SetKind[] = ["set", "commander", "bonus"];
+  const newest = rows
+    .map((row) => ({
+      code: String(row.set), name: String(row.set_name), kind: KINDS[String(row.set_type)], date: Number(row.date), cards: Number(row.cards),
+    }))
+    .filter((set) => set.kind === "set" || set.cards >= WORTH_NAMING)
+    // newest first; of things out on the same day, the set, then its decks, then its sheet
+    .sort((a, b) => b.date - a.date || order.indexOf(a.kind) - order.indexOf(b.kind) || a.name.localeCompare(b.name))
+    .slice(0, n);
+  // For the ones still to come, how many different cards have been shown: one row for each
+  // card of each such set, however many printings it has.
+  const coming = newest.filter((set) => set.date > now).map((set) => set.code);
+  const revealed = new Map<string, number>();
+  if (coming.length) {
+    const shown = toTopk(["and", [["oneof", "set", coming], VISIBLE]]);
+    const cards = await cols.printings.query(filter(shown!).groupBy({ set: field("set"), card: field("oracle_id") }, { printings: agg.count() }));
+    for (const card of cards) revealed.set(String(card.set), (revealed.get(String(card.set)) ?? 0) + 1);
+  }
+  return newest.map(({ date, ...set }) => ({
+    ...set, released: asDate(date), upcoming: date > now, revealed: date > now ? (revealed.get(set.code) ?? set.cards) : null,
+  }));
 }
 
 /**
@@ -142,7 +184,7 @@ export async function themedCards(cols: Collections, query: string, n = HOME_CAR
 
 /** The theme of a visit: sometimes the newest set that is out, otherwise one of THEMES. */
 export function chooseTheme(sets: HomeSet[], random: () => number = Math.random): Theme {
-  const out = sets.find((set) => !set.upcoming && set.cards >= 100);
+  const out = sets.find((set) => set.kind === "set" && !set.upcoming && set.cards >= 100);
   if (out && random() < NEW_SET_SHARE) return { label: out.name, query: `set:${out.code}` };
   return THEMES[Math.floor(random() * THEMES.length)];
 }

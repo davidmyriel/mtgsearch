@@ -126,6 +126,16 @@ test("under the home page's bar are searches people need; the guide and a random
     assert.equal(link.query, link.words.toLowerCase());
     assert.ok(jargon(link.query), link.query);
   }
+  // the script draws four afresh on each visit from nine; the four the page arrives with are among them
+  const script = root("public/app.js");
+  const list = script.slice(script.indexOf("const NEEDS = ["), script.indexOf("];", script.indexOf("const NEEDS = [")));
+  const nine = [...list.matchAll(/"([^"]+)"/g)].map(([, words]) => words);
+  assert.deepEqual(nine, ["Mana rocks", "Bounce spells", "Blink effects", "Board wipes", "Ramp", "Card draw", "Removal", "Counterspells", "Tutors"]);
+  assert.ok(script.includes("const NEEDS_SHOWN = 4;") && script.includes("needs.replaceChildren(...drawn);"));
+  for (const words of nine) assert.ok(jargon(words.toLowerCase()), words);
+  assert.ok(links.every((link) => nine.includes(link.words)));
+  // one row of a fixed height, so a different draw never moves what is around it
+  assert.match(root("public/app.css"), /\.needs \{ height: 2\.1rem; overflow: hidden;/);
   // it is gone once the header is a bar, and the header's own link is not on the home page
   const css = root("public/app.css");
   assert.ok(css.includes(".searched .needs,") && css.includes("body:not(.searched) .nav { display: none; }"));

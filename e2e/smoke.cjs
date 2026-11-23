@@ -99,7 +99,12 @@ async function run(name, contextOptions) {
   });
   check(home.hero >= home.window - 1, `[${name}] the first screen is the search and nothing below it (${Math.round(home.hero)} of ${home.window}px)`);
   check(home.barCentre <= 2 && home.barHeight >= 60, `[${name}] the search bar is in the middle and thick (${Math.round(home.barHeight)}px)`);
-  check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.join(", ")})`);
+  check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.length} lines)`);
+  // Each line says what state the set is in, and one still to come how many cards are shown and when it is out.
+  check(
+    home.news.every((line) => (line.startsWith("Preview") ? /(first look|previews) \d+ cards? so far, out \d+ \w+$/ : /(out now since \d+ \w+|released in \w+)$/).test(line.replace(/\s+/g, " "))),
+    `[${name}] and each says where the set stands (${home.news.map((line) => line.replace(/\s+/g, " ").replace(/^(New|Preview)/, "")).join("; ")})`,
+  );
   check(home.cards === 7, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
   // The seven are found by the example the empty search box is showing: each is among the
   // first results of that search, and its closest result is in the middle of the fan.
@@ -192,27 +197,46 @@ async function run(name, contextOptions) {
   const under = await page.evaluate(() => {
     const box = (element) => element.getBoundingClientRect();
     const bar = box(document.getElementById("search"));
+    const row = box(document.querySelector(".needs"));
     const links = [...document.querySelectorAll(".needs a")];
     return {
       words: links.map((link) => link.textContent),
+      // the row is one line: the ones that fit are shown whole, and the rest are out of sight
+      shown: links.filter((link) => box(link).top < row.bottom - 1).map((link) => link.textContent),
+      whole: links.filter((link) => box(link).top < row.bottom - 1).every((link) => box(link).left >= 0 && box(link).right <= innerWidth && box(link).bottom <= row.bottom + 1),
       below: links.every((link) => box(link).top >= bar.bottom && box(link).height > 0),
       headerLinks: [...document.querySelectorAll("header .nav a")].filter((link) => box(link).height > 0).length,
       guideInHeader: document.querySelectorAll('header a[href="/syntax"]').length,
       guideInFooter: document.querySelectorAll('footer a[href="/syntax"]').length,
     };
   });
-  check(under.words.join(", ") === "Mana rocks, Bounce spells, Blink effects, Board wipes" && under.below, `[${name}] under the bar are searches people often need (${under.words.join(", ")})`);
+  // Four of nine, a different draw on each visit. Each is a players' word, with a card it has to find.
+  const staples = {
+    "Mana rocks": "Sol Ring", "Bounce spells": "Cyclonic Rift", "Blink effects": "Ephemerate", "Board wipes": "Blasphemous Act",
+    Ramp: "Arcane Signet", "Card draw": "Rhystic Study", Removal: "Swords to Plowshares", Counterspells: "Counterspell", Tutors: "Demonic Tutor",
+  };
+  check(under.words.length === 4 && new Set(under.words).size === 4 && under.words.every((words) => words in staples) && under.below, `[${name}] under the bar are four searches people often need (${under.words.join(", ")})`);
+  check(under.shown.length >= 2 && under.whole, `[${name}] in one row, as many as fit and each one whole (${under.shown.length} of 4)`);
   check(under.headerLinks === 0 && under.guideInHeader === 0 && under.guideInFooter === 1, `[${name}] and neither the syntax guide nor a random card: the guide is in the footer`);
-  // Each is a players' word, and finds the cards players mean by it, most played first.
-  const staples = { "Mana rocks": "Sol Ring", "Bounce spells": "Cyclonic Rift", "Blink effects": "Ephemerate", "Board wipes": "Blasphemous Act" };
-  for (const [words, staple] of Object.entries(staples)) {
+  // Another visit draws again: of five more, at least one differs from this one.
+  const again = await context.newPage();
+  const draws = new Set([under.words.join(", ")]);
+  for (let visit = 0; visit < 5; visit++) {
+    await again.goto(base);
+    draws.add((await again.$$eval(".needs a", (links) => links.map((link) => link.textContent))).join(", "));
+  }
+  await again.close();
+  check(draws.size >= 2, `[${name}] and a different four on another visit (${draws.size} different draws in 6 visits)`);
+  // Each finds the cards players mean by it, most played first.
+  for (const words of under.shown) {
+    const staple = staples[words];
     await page.click(`.needs a:has-text("${words}")`);
     await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Players' words"));
     const found = await firstCards(page, 6);
     check(found.includes(staple) && new URL(page.url()).searchParams.get("q") === words.toLowerCase(), `[${name}] "${words}" finds ${found.slice(0, 3).join(", ")}`);
-    if (words === "Mana rocks") {
+    if (words === under.shown[0]) {
       const said = await page.textContent("#status");
-      check(said.startsWith("Players' words · ") && said.includes(" cards, showing 1–60, the same as otag:mana-rock"), `[${name}] and says how it was read (${said})`);
+      check(said.startsWith("Players' words · ") && said.includes(" cards, showing 1–60, the same as otag:"), `[${name}] and says how it was read (${said})`);
       check((await page.isVisible("#nav-random")) && (await page.$$('header a[href="/syntax"]')).length === 0, `[${name}] with a random card offered in the header, where the results are`);
     }
     await page.goBack();
