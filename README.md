@@ -214,7 +214,7 @@ carries `total`, `unit` (what the total counts: cards, printings or illustration
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 pager and its three controls (show, sort, direction). The page asks for 60 results at a time.
 Each hit names the printing shown: set, collector number, rarity, artist, release date and
-three prices (`usd`, `eur`, `tix`). `sorted_desc` says which way the order runs. Results ranked by meaning stop at 120. TopK returns nothing beyond the first 10,000 of
+three prices (`usd`, `eur`, `tix`). `sorted_desc` says which way the order runs. Results ranked by meaning stop at 120, and TopK is always asked for all 120 however few are shown: its search by meaning is approximate, and asking for more finds better cards and keeps pages consistent with each other. TopK returns nothing beyond the first 10,000 of
 a result, so `k` plus `offset` is held to that and `has_more` is false there.
 
 `GET /api/card?set=<code>&cn=<collector number>` is what a card's own page shows: `card`, that

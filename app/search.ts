@@ -48,7 +48,15 @@ export type SearchOptions = {
 export const ORDERS: Record<string, string> = Object.fromEntries(
   ["name", "cmc", "power", "toughness", "edhrec", "released", "usd", "eur", "tix", "rarity"].map((name) => [name, ORDER_FIELDS[name]]),
 );
-// Results ranked by meaning are paged by fetching a longer list, so they stop here.
+// Results ranked by meaning stop here, and TopK is always asked for this many, however few
+// are shown. Two reasons, both measured (experiments/depth.ts, 23 November 2026):
+//  - asking for more finds better cards. TopK's search by meaning is approximate, and the
+//    first ten of 60 or more are not the ten it returns when asked for ten: about two in ten
+//    differ, and cards that were missing appear (Sol Ring for "one mana artifact that taps
+//    for two colorless mana", Counterspell for "two mana counterspell"). No query in the
+//    frozen set got worse, and up to this depth it takes no longer.
+//  - pages agree with each other. A second page asked to a different depth than the first
+//    would be cut from a differently ordered list, and repeat or skip cards.
 export const MAX_RANKED = 120;
 
 /** The part of a TopK collection client that search needs; lets tests pass a fake. */
@@ -521,12 +529,12 @@ export async function search(cols: Collections, query: string, options: SearchOp
         split.keywords.length === 1 ? split.keywords[0] : { kind: "and", children: split.keywords };
       const [keywordPredicate, keywordOptions] = lower(keywordAst);
       const words = split.words.map((w) => w.text).join(" ");
-      const wanted = Math.min(offset + k, MAX_RANKED);
+      // always to the full depth, whichever page is asked for (see MAX_RANKED)
       const ranked = keywordOptions.printings
-        ? await semanticOverPrintings(cols, words, keywordPredicate, keywordOptions.prefer, wanted, fields)
-        : await semantic(cols.cards, words, keywordPredicate, wanted, fields);
+        ? await semanticOverPrintings(cols, words, keywordPredicate, keywordOptions.prefer, MAX_RANKED, fields)
+        : await semantic(cols.cards, words, keywordPredicate, MAX_RANKED, fields);
       const hits = ranked.slice(offset, offset + k);
-      const hasMore = ranked.length === offset + k && offset + k < MAX_RANKED;
+      const hasMore = offset + k < ranked.length;
       return { ...none, mode: "mixed", hits, hasMore, note: `filtered by keywords, ranked by '${words}'`, understood: explain(keywordAst) };
     }
   }
@@ -536,7 +544,6 @@ export async function search(cols: Collections, query: string, options: SearchOp
     ast !== null && none.ignored.length
       ? [...nodes(ast)].flatMap((n) => (n.kind === "name" ? [n.text] : [])).join(" ")
       : query;
-  const wanted = Math.min(offset + k, MAX_RANKED);
   // A query that names a card and asks for others like it is answered from that card's text.
   const asked = likeness(text);
   const others = asked ? await alike(cols.cards, asked.named, asked.partly, fields) : null;
@@ -546,14 +553,15 @@ export async function search(cols: Collections, query: string, options: SearchOp
     return { ...none, mode: "semantic", hits, hasMore, note: "", like: others.name };
   }
   const extracted = extract(text);
-  let ranked = await semantic(cols.cards, text, and(extracted.predicate, VISIBLE), wanted, fields);
-  if (extracted.any && ranked.length < wanted) {
-    // the filter was too strict: top up without it
+  // Always to the full depth, whichever page is asked for (see MAX_RANKED).
+  let ranked = await semantic(cols.cards, text, and(extracted.predicate, VISIBLE), MAX_RANKED, fields);
+  if (extracted.any && ranked.length < Math.min(offset + k, MAX_RANKED)) {
+    // the filter was too strict for this page: top up without it
     const seen = new Set(ranked.map((h) => h._id));
-    const more = await semantic(cols.cards, text, VISIBLE, wanted, fields);
-    ranked = ranked.concat(more.filter((h) => !seen.has(h._id))).slice(0, wanted);
+    const more = await semantic(cols.cards, text, VISIBLE, MAX_RANKED, fields);
+    ranked = ranked.concat(more.filter((h) => !seen.has(h._id))).slice(0, MAX_RANKED);
   }
   const hits = ranked.slice(offset, offset + k);
-  const hasMore = ranked.length === offset + k && offset + k < MAX_RANKED;
+  const hasMore = offset + k < ranked.length;
   return { ...none, mode: "semantic", hits, hasMore, note: extracted.notes.join(", ") };
 }

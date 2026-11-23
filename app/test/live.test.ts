@@ -218,6 +218,29 @@ test("paging returns consecutive, non-overlapping pages", { skip }, async () => 
   assert.equal(last.hasMore, false);
 });
 
+test("results ranked by meaning are the same list however many are asked for", { skip }, async () => {
+  const col = collection();
+  // TopK's search by meaning is approximate: asked for ten it returns other cards than the
+  // first ten of sixty. The search always asks to the full depth, so pages agree.
+  for (const query of ["sphinx that draws two cards", "one mana artifact that taps for two colorless mana", "c:u t:sphinx draws when opponents draw"]) {
+    const whole = names(await search(col, query, { k: 60 }));
+    const [first, second, third] = [
+      await search(col, query, { k: 10 }),
+      await search(col, query, { k: 10, offset: 10 }),
+      await search(col, query, { k: 5, offset: 20 }),
+    ];
+    assert.deepEqual([...names(first), ...names(second), ...names(third)], whole.slice(0, 25), query);
+    assert.equal(new Set(whole).size, whole.length, query);
+  }
+  // what asking deeper finds: the card everyone means by this description, which ten did not hold
+  assert.ok(names(await search(col, "one mana artifact that taps for two colorless mana", { k: 3 })).includes("Sol Ring"));
+  // the last page stops at the limit and says there is no more
+  const end = await search(col, "sphinx that draws two cards", { k: 60, offset: 60 });
+  assert.equal(end.hits.length, 60);
+  assert.equal(end.hasMore, false);
+  assert.equal((await search(col, "sphinx that draws two cards", { k: 60 })).hasMore, true);
+});
+
 test("the page's sort order applies unless the query has its own", { skip }, async () => {
   const col = collection();
   const cost = (hit: Record<string, unknown>) => String(hit.mana_cost);

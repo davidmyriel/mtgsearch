@@ -87,15 +87,26 @@ picked up: at the boundary between plan steps unless something is broken.
       card. Offer the kind of card from the card's page, as the other matches already are
 - [ ] "budget" and "cheaper" in a query for a card's alternatives should filter by price
 - [ ] Searches that failed when examples were being chosen (23 November 2026), each a card any
-      player expects: "three damage for one mana" without Lightning Bolt, "two mana counterspell"
-      without Counterspell, "search for any card" without Demonic Tutor, "elf that taps for mana"
-      without Llanowar Elves, "white board wipe" finding cards named Wipe. Add them to the query
-      set. Most trace to mana symbols and numbers in the indexed text (the item below)
-- [ ] Asking TopK for more results than are shown seems to find better ones: Fyndhorn Elves came
-      first for Llanowar Elves' text when 120 were asked for and was absent when 10 were. Measure
-      on the query set whether ordinary plain-English searches should ask deeper and cut
-- [ ] Spell out mana symbols in the indexed text. Known failure: "taps for two colorless mana" does
-      not find Sol Ring, whose text reads `{T}: Add {C}{C}`
+      player expects. Still failing: "three damage for one mana" without Lightning Bolt, "search
+      for any card" without Demonic Tutor, "elf that taps for mana" without Llanowar Elves,
+      "destroy all creatures" without Wrath of God. Fixed since, without touching them one by
+      one: "two mana counterspell" finds Counterspell first (asking deeper, below) and "white
+      board wipe" is a players' word. Add the rest to the query set. Most trace to mana symbols
+      and numbers in the indexed text (two items below)
+- [x] Ask TopK for more results than are shown (23 November 2026). Its search by meaning is
+      approximate: the first ten of 60 or more are not the ten it returns when asked for ten.
+      Measured with `experiments/depth.ts` at 10, 30, 60, 120 and 250 on the frozen descriptive
+      and numeric classes and on the searches above: from 60 up, about two of the first ten
+      differ, no query got worse, and it takes no longer up to 120 (248 against 253 ms). Every
+      search ranked by meaning now asks for 120 and cuts. On the frozen set the full search
+      went from 13 to 14 of 15 with the right card in the first three and from 14 to 15 in the
+      first ten (`eval/after_full_depth.mtg-cards-v2.json`); numeric and players' words are
+      unchanged. It also makes pages agree: before, a second page was cut from a list asked to
+      another depth and could repeat or skip cards
+- [ ] Spell out mana symbols in the indexed text. "one mana artifact that taps for two colorless
+      mana" now finds Sol Ring, whose text reads `{T}: Add {C}{C}`, but second, behind Thran
+      Turbine; the failures listed above are of the same kind. Needs the cards embedded again,
+      which the owner has put on hold
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),
       plain text wins on numeric queries
 - [ ] Grow the query set to about 150 with a second reviewer; write art descriptions from memory
@@ -107,7 +118,9 @@ picked up: at the boundary between plan steps unless something is broken.
       the shortest query. A fixed cut-off would call short, good queries weak. It needs a score
       adjusted for length and the larger query set before it is switched on
 - Exit, proposed and to be confirmed on the larger set: right card in the top 3 for 80% of descriptive,
-  85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon
+  85% of numeric and 85% of art queries; 80% correct in the top 5 for jargon. On the present
+  small set, as of 23 November 2026: descriptive 14 of 15 (93%), numeric 7 of 8 (88%), players'
+  words 40 of 40. Art is not indexed for the full set, so that class is not measured
 
 ### 4. Product: thin version deployed on Netlify
 - [x] Search endpoint: key server-side, rate limiting, query length cap, caching
