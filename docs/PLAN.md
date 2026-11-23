@@ -215,6 +215,23 @@ a model in the path of every search changes both.
 **Until then.** The lists stay as they are and are not grown case by case; a word that fails
 is added to the query set, not to a list.
 
+**Words that fail today, for that query set** (run on 23 November 2026 from a list of players'
+slang the owner sent). Each is something a player would type and the search does not
+understand; what it finds instead is in brackets.
+
+- pingers (cards with "sting" in the name); the tag for creatures that deal one damage exists
+- vanilla creatures, french vanilla (unrelated cards); Scryfall has `is:vanilla` and
+  `is:frenchvanilla`, and this search has the first
+- bears (cards named Bears); Scryfall's `is:bear` is the two-mana 2/2
+- stax pieces, group slug, voltron, aristocrats (cards with similar names: Strax, Ultron,
+  Falkenrath Aristocrat). These are kinds of deck, not of card: what is wanted is the cards
+  such a deck plays
+- treasure makers, token makers, etb effects, haste enablers (loosely related cards)
+
+Words from the same list that are about play and not about cards (goldfishing, topdecking,
+win-more, chump block, durdling, scoop, curve, whiff, Timmy/Johnny/Spike) are not searches
+for cards, and a glossary would serve them better than a search.
+
 ## Testing
 
 | Layer | What it covers | Where |
