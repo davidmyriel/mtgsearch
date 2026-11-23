@@ -1,15 +1,18 @@
 // One search box: Scryfall-compatible first, natural language otherwise.
 //
 //   1. Scryfall syntax (any keyword, `!exact`, regex)  -> exactly what Scryfall would return.
-//   2. Plain words that match card names             -> those cards, most-played first.
-//   3. Syntax keywords plus words that match no name  -> keywords filter, words rank by meaning.
-//   4. Anything else                                  -> semantic search, with mana value,
+//   2. A players' word for a kind of card            -> the cards the community has tagged so,
+//      ("mana rocks", "white board wipes")              most-played first.
+//   3. Plain words that match card names             -> those cards, most-played first.
+//   4. Syntax keywords plus words that match no name  -> keywords filter, words rank by meaning.
+//   5. Anything else                                  -> semantic search, with mana value,
 //                                                        colour and type read from the query.
 
 import { agg, all, any, field, filter, fn, not, select } from "topk-js/query";
 import { lower, ORDER_FIELDS, PREFER, PRINTING_FIELDS, usable } from "./lower.ts";
 import type { Ignored, IR, Op, Unique } from "./lower.ts";
 import { explain } from "./explain.ts";
+import { jargon } from "./jargon.ts";
 import { extract } from "./nl.ts";
 import { plain } from "./normalize.ts";
 import { KEYWORDS, parse, QueryError, Unsupported } from "./parser.ts";
@@ -18,7 +21,7 @@ import type { Keyword, Name, Node } from "./parser.ts";
 export type Hit = Record<string, unknown> & { _id: string; name: string; score?: number };
 export type Unit = "cards" | "printings" | "illustrations";
 export type Result = {
-  mode: string; // syntax | name | mixed | semantic | unsupported
+  mode: string; // syntax | name | jargon | mixed | semantic | unsupported
   hits: Hit[];
   total: number | null; // exact for syntax and name modes; null when ranked by meaning
   note: string; // what was understood, or why the query was refused
@@ -26,6 +29,7 @@ export type Result = {
   ignored: Ignored[]; // terms that could not be used and were left out, each with the reason
   exact: Hit | null; // the card whose name is exactly what was typed, if the query is a name
   like?: string | null; // the card a query names when it asks for others that do the same
+  reads?: string | null; // the Scryfall syntax a players' word was read as ("otag:mana-rock")
   hasMore: boolean;
   sortedBy: string | null; // an ORDERS key, or null when ranked by meaning
   descending?: boolean; // the direction of that order, as it was applied
@@ -357,35 +361,96 @@ async function exactName(col: Collection, ast: Node): Promise<Hit | null> {
 
 // "tithe alternative", "cards like sol ring", "replacement for mana crypt": the query names a
 // card and asks for others that do what it does.
-const ALIKE = [
-  /^(?:(?:a|an|any|some|good|better|budget|cheap|cheaper) )*(?:alternatives?|replacements?|substitutes?) (?:to|for|of) (.+)$/,
-  /^(?:(?:cards?|spells?|something|anything|more|other|others) )*(?:like|similar to|such as) (.+)$/,
-  /^(.+?) (?:alternatives?|replacements?|substitutes?|lookalikes?)$/,
+// Small, so that the first few of either ranking stay near the top. Tried on Shock, Dark
+// Ritual, Llanowar Elves, Brainstorm, Tithe, Sol Ring and Counterspell at 2, 5, 10, 20 and 60:
+// the larger values let cards that both rankings hold far down crowd out the closest ones.
+const MERGE_FLAT = 2;
+
+// The second of each pair says whether part of a name will do. Someone asking for a card's
+// alternatives means a card, and says it the short way ("llanowar alternative", "a ritual
+// replacement"); "like ..." is followed by all sorts of things, so there the whole name is needed.
+const ALIKE: [RegExp, boolean][] = [
+  [/^(?:(?:a|an|any|some|good|better|budget|cheap|cheaper) )*(?:alternatives?|replacements?|substitutes?) (?:to|for|of) (.+)$/, true],
+  [/^(?:(?:cards?|spells?|something|anything|more|other|others) )*(?:like|similar to|such as) (.+)$/, false],
+  [/^(.+?) (?:alternatives?|replacements?|substitutes?|lookalikes?)$/, true],
 ];
 
-/** The card name inside a query that asks for cards like it, as typed, or null if it asks no such thing. */
-export function namedForLikeness(query: string): string | null {
+function likeness(query: string): { named: string; partly: boolean } | null {
   const said = query.toLowerCase().trim().replace(/\s+/g, " ");
-  for (const pattern of ALIKE) {
+  for (const [pattern, partly] of ALIKE) {
     const found = pattern.exec(said);
-    if (found) return found[1];
+    if (found) return { named: found[1], partly };
   }
   return null;
 }
 
+/** The card name inside a query that asks for cards like it, as typed, or null if it asks no such thing. */
+export const namedForLikeness = (query: string): string | null => likeness(query)?.named ?? null;
+
 /**
- * Cards that do what the named card does: ranked by meaning against that card's own text
- * (its cost, colour, type and rules), with the card itself left out. Null if no card has
- * that name, when the query is read as ordinary plain English instead.
+ * The card a query names: the one whose whole name it is, or, when part of a name will do,
+ * the most played card with those words in its name ("llanowar" is Llanowar Elves, "ritual"
+ * is Dark Ritual).
  */
-async function alike(col: Collection, named: string, k: number, fields: string[]): Promise<{ name: string; ranked: Hit[] } | null> {
+async function namedCard(col: Collection, named: string, partly: boolean): Promise<Hit | null> {
   const wanted = plain(named);
   if (!wanted) return null;
-  const itself: IR = ["eq", "name_plain", wanted];
-  const rows = await col.query(select(pick(["name", "rules"])).filter(toTopk(and(itself, VISIBLE))!).limit(1));
-  const card = rows[0];
+  const wholeName = toTopk(and(["eq", "name_plain", wanted], VISIBLE))!;
+  const exact = await col.query(select(pick(["name", "name_plain", "rules", "rules_tagged"])).filter(wholeName).limit(1));
+  if (exact[0] || !partly) return exact[0] ?? null;
+  let words: IR;
+  try {
+    const ast = parse(named);
+    if (!isPlainWords(ast)) return null;
+    [words] = lower(ast);
+  } catch (error) {
+    if (!(error instanceof QueryError)) throw error;
+    return null;
+  }
+  const inName = toTopk(and(words, VISIBLE));
+  if (inName === null) return null;
+  const rows = await col.query(select(pick(["name", "name_plain", "rules", "rules_tagged"])).filter(inName).sort(ordering("edhrec_rank", false)).limit(1));
+  return rows[0] ?? null;
+}
+
+/**
+ * Cards that do what the named card does, with the card itself left out. Null if the query
+ * names no card, when it is read as ordinary plain English instead.
+ *
+ * The card's own text is the query, without its name: with the name, the cards found are the
+ * ones called something similar. It is asked twice, once as the rules alone and once with the
+ * community's tags for the card ("ritual", "mana rock"), and the two rankings are merged: the
+ * rules find the cards worded the same (Elvish Mystic for Llanowar Elves), the tags the ones
+ * players put in the same group (Ponder and Preordain for Brainstorm).
+ */
+async function alike(col: Collection, named: string, partly: boolean, fields: string[]): Promise<{ name: string; ranked: Hit[] } | null> {
+  const card = await namedCard(col, named, partly);
   if (!card || !card.rules) return null;
-  return { name: card.name, ranked: await semantic(col, String(card.rules), and(["not", itself], VISIBLE), k, fields) };
+  const others = and(["not", ["eq", "name_plain", String(card.name_plain)]], VISIBLE);
+  const does = (text: unknown) => String(text).split("\n").slice(1).join("\n") || String(text);
+  const [rules, tagged] = [does(card.rules), does(card.rules_tagged ?? card.rules)];
+  // Always to the same depth, whichever page is asked for: a merged ranking made from shorter
+  // lists would put cards in another order, and pages would repeat or skip cards.
+  const rankings = await Promise.all([rules, ...(tagged === rules ? [] : [tagged])].map((text) => semantic(col, text, others, MAX_RANKED, fields)));
+  return { name: card.name, ranked: merged(rankings).slice(0, MAX_RANKED) };
+}
+
+/**
+ * Several rankings as one: a card scores by its place in each (reciprocal rank fusion). `flat`
+ * says how little the top places count for over the ones below: with a large value a card
+ * that both rankings hold somewhere beats one that either ranks first.
+ */
+export function merged(rankings: Hit[][], flat = MERGE_FLAT): Hit[] {
+  if (rankings.length === 1) return rankings[0];
+  const scored = new Map<string, { hit: Hit; score: number }>();
+  for (const ranking of rankings) {
+    ranking.forEach((hit, place) => {
+      const entry = scored.get(hit._id) ?? { hit, score: 0 };
+      entry.score += 1 / (flat + place);
+      scored.set(hit._id, entry);
+    });
+  }
+  return [...scored.values()].sort((a, b) => b.score - a.score).map(({ hit, score }) => ({ ...hit, score }));
 }
 
 const fieldName = (order: string | null | undefined) => (order && Object.hasOwn(ORDERS, order) ? ORDERS[order] : null);
@@ -419,6 +484,13 @@ export async function search(cols: Collections, query: string, options: SearchOp
 
   if (ast !== null && parsed !== null) {
     const plainWords = isPlainWords(ast);
+    // A players' word for a kind of card, unless it is also exactly a card's name (Fog, Clone,
+    // Counterspell): then the card is what was typed, as for any name.
+    const said = plainWords ? jargon(query) : null;
+    if (said && !(await exactName(cols.cards, ast))) {
+      const found = await search(cols, said.reads, { ...options, order: options.order ?? "edhrec" });
+      if (found.total) return { ...found, mode: "jargon", note: said.term, reads: said.reads };
+    }
     // What the query says wins over the page's controls. Names default to most-played first.
     const sortField = parsed.order ?? fieldName(options.order) ?? (plainWords ? "edhrec_rank" : "name_lc");
     // With no direction from either, newest printings come first and everything else ascends.
@@ -466,11 +538,11 @@ export async function search(cols: Collections, query: string, options: SearchOp
       : query;
   const wanted = Math.min(offset + k, MAX_RANKED);
   // A query that names a card and asks for others like it is answered from that card's text.
-  const named = namedForLikeness(text);
-  const others = named ? await alike(cols.cards, named, wanted, fields) : null;
+  const asked = likeness(text);
+  const others = asked ? await alike(cols.cards, asked.named, asked.partly, fields) : null;
   if (others) {
     const hits = others.ranked.slice(offset, offset + k);
-    const hasMore = others.ranked.length === offset + k && offset + k < MAX_RANKED;
+    const hasMore = offset + k < others.ranked.length;
     return { ...none, mode: "semantic", hits, hasMore, note: "", like: others.name };
   }
   const extracted = extract(text);

@@ -86,24 +86,67 @@ test("the site shows one name on every page, in TopK's blocks, and no sentence u
   assert.match(picture, /viewBox="0 0 3340 560"/);
 });
 
-test("the empty search box shows something to try: a card described in plain words", async () => {
+test("the empty search box shows something to try: what players look for, in plain words", async () => {
   const { parse } = await import("../parser.ts");
-  const script = root("public/app.js");
-  const examples: string[] = JSON.parse((script.match(/const EXAMPLES = (\[[^\]]+\]);/) ?? [])[1] ?? "[]");
-  assert.deepEqual(examples, ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"]);
-  // the home page's cards are asked for by the example shown, so the server holds the same list
   const { EXAMPLES } = await import("../home.ts");
+  const script = root("public/app.js");
+  const list = (script.match(/const EXAMPLES = \[([^\]]+)\];/) ?? [])[1] ?? "";
+  const examples = [...list.matchAll(/"([^"]+)"/g)].map(([, example]) => example);
+  // the home page's cards are asked for by the example shown, so the server holds the same list
   assert.deepEqual(examples, EXAMPLES);
   assert.ok(script.includes("getJson(`/api/home?${new URLSearchParams({ try: example })}`)"));
   assert.ok(script.includes("input.placeholder = `Try: ${example}`;"));
+  // three or four for each colour, and some for artifacts and for more than one colour
+  assert.ok(examples.length >= 20 && new Set(examples).size === examples.length, `${examples.length} examples`);
+  for (const word of ["white", "blue", "black", "red", "green", "artifacts", "more than one colour"]) {
+    assert.ok(list.includes(`// ${word}\n`), `no examples under "${word}"`);
+  }
   for (const example of examples) {
     // plain words: nothing in it is Scryfall syntax, so the search reads it by meaning
     assert.ok(!/[:=<>!"()]/.test(example), example);
     assert.doesNotThrow(() => parse(example), example);
+    // short enough to show whole in the box on a narrow phone (the browser test measures it)
+    assert.ok(example.length <= 27, `${example} is ${example.length} characters`);
   }
-  // before the script runs, and on the pages that have no script, the box shows the first of them
+  // before the script runs, and on the pages that have no script, the box shows one of them
   for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
-    assert.ok(root(page).includes(`placeholder="Try: ${examples[0]}"`), page);
+    const shown = (root(page).match(/placeholder="Try: ([^"]+)"/) ?? [])[1];
+    assert.ok(examples.includes(shown), `${page}: ${shown}`);
+  }
+});
+
+test("under the home page's bar are searches people need; the guide and a random card are elsewhere", async () => {
+  const { jargon } = await import("../jargon.ts");
+  const home = root("public/index.html");
+  const needs = home.slice(home.indexOf('<nav class="needs"'), home.indexOf("</nav>", home.indexOf('<nav class="needs"')));
+  const links = [...needs.matchAll(/<a href="\/\?q=([^"]+)">([^<]+)<\/a>/g)].map(([, query, words]) => ({ query: query.replaceAll("+", " "), words }));
+  assert.deepEqual(links.map((link) => link.words), ["Mana rocks", "Bounce spells", "Blink effects", "Board wipes"]);
+  for (const link of links) {
+    // the link searches for the words it shows, and they are a players' word the search knows
+    assert.equal(link.query, link.words.toLowerCase());
+    assert.ok(jargon(link.query), link.query);
+  }
+  // the script draws four afresh on each visit from nine; the four the page arrives with are among them
+  const script = root("public/app.js");
+  const list = script.slice(script.indexOf("const NEEDS = ["), script.indexOf("];", script.indexOf("const NEEDS = [")));
+  const nine = [...list.matchAll(/"([^"]+)"/g)].map(([, words]) => words);
+  assert.deepEqual(nine, ["Mana rocks", "Bounce spells", "Blink effects", "Board wipes", "Ramp", "Card draw", "Removal", "Counterspells", "Tutors"]);
+  assert.ok(script.includes("const NEEDS_SHOWN = 4;") && script.includes("needs.replaceChildren(...drawn);"));
+  for (const words of nine) assert.ok(jargon(words.toLowerCase()), words);
+  assert.ok(links.every((link) => nine.includes(link.words)));
+  // one row of a fixed height, so a different draw never moves what is around it
+  assert.match(root("public/app.css"), /\.needs \{ height: 2\.1rem; overflow: hidden;/);
+  // it is gone once the header is a bar, and the header's own link is not on the home page
+  const css = root("public/app.css");
+  assert.ok(css.includes(".searched .needs,") && css.includes("body:not(.searched) .nav { display: none; }"));
+  for (const page of ["public/index.html", "public/syntax.html", "public/404.html"]) {
+    const html = root(page);
+    const header = html.slice(html.indexOf("<header"), html.indexOf("</header>"));
+    const footer = html.slice(html.indexOf('<footer class="foot">'));
+    const nav = header.slice(header.indexOf('<nav class="nav"'));
+    // the header's own link is a random card; the syntax guide is in the footer only
+    assert.deepEqual([...nav.matchAll(/href="([^"]+)"/g)].map(([, href]) => href), ["/random"], page);
+    assert.ok(!header.includes('href="/syntax"') && footer.includes('<a href="/syntax">Syntax guide</a>'), page);
   }
 });
 

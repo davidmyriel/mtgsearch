@@ -36,6 +36,12 @@ and the Scryfall comparison where results could move.
 | F-4 | 23 Nov 2026 | The home page's first impression: the search bar is the focus, relaxed, discreet, with room for a flavour of the week | M | Next boundary | Done |
 | F-5 | 23 Nov 2026 | The logo's blocks materialize from left to right; the empty search box shows an example to try, a different one each visit | S | Now, with F-4 | Done, with the search fixed so that all four examples find what they promise |
 | F-6 | 23 Nov 2026 | The home page's cards go with the example in the search box | S | Now, with F-5 | Done |
+| F-7 | 23 Nov 2026 | Say "powered by TopK AI search" somewhere | S | Now | Done, where the developer recommended; the owner asked where, not yet confirmed |
+| F-8 | 23 Nov 2026 | More examples for the search box: three or four for each colour, some for artifacts and more than one colour, and alternatives for well-known cards | M | Now | Done: 33 examples, each checked against the search |
+| F-9 | 23 Nov 2026 | Under the bar, typical searches in place of the two links; players' words have to find the cards players mean | M | Now | Done |
+| F-10 | 23 Nov 2026 | Meaning has to be dealt with systematically behind the scenes, not by hand-written lists | L | Later, as a stage of its own (stage 8 of the plan) | Planned, not started |
+| F-11 | 23 Nov 2026 | Nine typical searches under the bar, a different four on each visit; the news lines say where each set stands | S | Now | Done |
+| F-12 | 23 Nov 2026 | Cards on the home page that do not do what the example says; show five | S | Now | Done; two examples still show a card or two that do not fit (see the item) |
 
 ### F-1. A page for each card
 
@@ -319,13 +325,200 @@ and the Scryfall comparison where results could move.
   box opens the list those cards come from.
 - **How they are drawn, the developer's choices:** the first three results are always among
   the seven, and the other four are drawn from the eleven that follow, so the cards differ
-  from visit to visit and stay on the point. The closest result is in the middle of the fan,
+  from visit to visit and stay on the point. (Changed by F-12: five cards, the first five
+  results, no draw.) The closest result is in the middle of the fan,
   which is the part a phone shows.
 - **What it replaced:** the themes of earlier the same day (Dragons, Angels, the newest set).
   They remain as the fall-back if an example ever finds too few cards. A search named in
   `public/flavour.json` for an occasion still takes the place of both.
 - **Cost:** one search per example per minute at most, since the answer is held by the CDN
   for a minute for each of the four.
+
+### F-7. Whose search it is
+
+- **From:** the project owner, 23 November 2026.
+- **In their words:** "where should we put 'powered by topk AI search'".
+- **The developer's answer, built so it can be seen:** on the home page, one small line
+  directly under the name and above the search bar, with "TopK" in TopK's orange and linking
+  to topk.io. It explains the orange K at a glance, shows on every size of screen and leaves
+  the bar itself alone. And one sentence in the footer of every page, which had not named
+  TopK at all. Not inside the bar: on a phone it would crowd out the example.
+- **Open:** the owner asked where and has not yet said yes to this place. Moving it is a
+  small change.
+
+### F-8. More examples, by colour, each one checked
+
+- **From:** the project owner, 23 November 2026, in three messages.
+- **In their words:** "tithe alternative is no good, can you make up some more legit examples
+  of things magic players would search for. blue land destruction is good, sphinx draw two
+  cards is good, pick 3-4 per each colour maybe some for artifact and multicolour". Then:
+  "keep tithe alternative". Then: "also lets do alternatives for shock, brainstorm, ritual,
+  llanowar alternative (for llanowar elves), mana rocks (i dont know if mana rocks will find
+  various mana rock artifacts)".
+- **How they were chosen:** about sixty candidates were run through the search and the first
+  ten results of each read; an example was kept only if a player would call those results
+  right. About half were. Among the ones dropped: "white board wipe" (found cards with
+  "wipe" in the name), "three damage for one mana" (did not find Lightning Bolt), "two mana
+  counterspell" (did not find Counterspell), "search for any card" (did not find Demonic
+  Tutor), "elf that taps for mana" (did not find Llanowar Elves). Those are faults of the
+  search worth fixing, and are in the plan.
+- **The list, 33 in all:**
+  - White: angel that gains life; knight with first strike; white enchantment removal;
+    creature that taxes spells; tithe alternative.
+  - Blue: sphinx that draws two cards; blue land destruction; wizard that copies spells;
+    merfolk that draws cards; brainstorm alternative.
+  - Black: black creature removal; reanimate a creature; demon with a drawback; zombie that
+    comes back; ritual alternative.
+  - Red: dwarf that destroys lands; goblin that makes goblins; dragon with haste; damage to
+    each creature; shock alternative.
+  - Green: hydra with x in its cost; druid that untaps lands; fight target creature; search
+    for a basic land; llanowar alternative.
+  - Artifacts: equipment that gives haste; vehicle with flying; artifact that draws cards;
+    mana rocks.
+  - More than one colour: izzet dragon; orzhov vampire; simic hydra; dimir rogue.
+- **What the search had to learn for them:**
+  - The names players give to two and three colours together (izzet, orzhov, esper and the
+    rest) are read as colours in plain English, as they already were in Scryfall syntax.
+  - Asking for a card's alternatives, part of its name will do: "llanowar" is Llanowar
+    Elves and "ritual" is Dark Ritual, the most played card with those words in its name.
+    The line above the results names the card that was understood.
+  - A named card's alternatives are found from what the card does, without its name (with
+    the name, "llanowar alternative" found cards called Llanowar something), asked once as
+    the rules alone and once with the community's tags, and the two rankings merged.
+    "llanowar alternative" finds Fyndhorn Elves and Elvish Mystic first; "brainstorm
+    alternative" includes Ponder and Preordain; "ritual alternative" finds Culling the Weak
+    and Cabal Ritual; "shock alternative" finds Burst Lightning and Play with Fire.
+  - "mana rocks" needed nothing: it finds Mana Crypt, Fellwar Stone, Mana Vault, Mana Prism
+    and the Mana Batteries. Sol Ring and the Signets are not among the first ten.
+- **Kept honest:** `app/test/live.test.ts` holds, for every example, a card or two it must
+  find among its first ten results, and fails if an example is added without one. The
+  browser test checks that the widest example shows whole in the box at 320px.
+- **Cost:** a search for a card's alternatives takes about 320 to 490 ms here, against about
+  240 ms for other plain English, because it asks twice and to a fixed depth.
+
+### F-9. Typical searches under the bar, and players' words that find the staples
+
+- **From:** the project owner, 23 November 2026, with a picture of the home page and the two
+  links under the bar circled.
+- **In their words:** "i think we can leave the syntax guide in the footer, random card can be
+  in the nav in the card results in other spots but no on the homepage. in this section we
+  should have typical searches for things people need. mana rocks, bounce spells, blink
+  effects, board wipes. is it possible that these terms can yield the cards we need them to
+  show? research mtg jargon if you dont know which cards we need".
+- **The links:** on the home page the row under the bar is now those four searches. "Syntax
+  guide" is in the footer only, on every page. "Random card" is in the header once the header
+  is a bar (results, a card, the guide), and not on the home page.
+- **Is it possible: yes.** What the four found before: "mana rocks" found cards with Mana in
+  their name (Mana Geode, The Mana Rig) and not Sol Ring; "board wipes" found Séance Board
+  and Wipe Away. Nobody prints these words on a card, so neither the text nor its meaning
+  finds them. Scryfall's community tags do: people have marked which cards are mana rocks.
+  The index already held those tags. A query that is a players' word is now read as the tag
+  and answered most played first, which puts the cards every player would name on top:
+  - mana rocks: Sol Ring, Arcane Signet, Fellwar Stone, Thought Vessel, Mind Stone.
+  - bounce spells: Cyclonic Rift, Snap, Aetherize, Into the Flood Maw, Chain of Vapor.
+  - blink effects: Ephemerate, Conjurer's Closet, Displacer Kitten, Ghostly Flicker, Cloudshift.
+  - board wipes: Blasphemous Act, Cyclonic Rift, Toxic Deluge, Vandalblast, Austere Command.
+- **How far it goes:** some fifty words, one list in `app/jargon.ts`, each looked at on the
+  live index: tutors (Demonic, Vampiric, Enlightened Tutor first), counterspells, removal,
+  ramp, mana dorks, cantrips, card draw, wheels, reanimation, fogs, lords, rituals, sac
+  outlets, fetch lands, graveyard hate, extra turns and so on. A colour in front narrows it
+  to cards of exactly that colour ("white board wipes" finds Austere Command, Farewell, Wrath
+  of God; "izzet counterspells"; "red and white board wipes"), and a kind of card behind it
+  narrows it too ("bounce spells", "blink creatures"). The line above the results says
+  "Players' words" and the Scryfall syntax it is the same as (`otag:sweeper`), so the page
+  teaches the syntax as it goes. The sort control works on these lists.
+- **Where a tag held more than players mean,** it is narrowed, and this is the developer's
+  reading: "tutors" leaves out cards that only fetch lands (players call those ramp),
+  "ramp" leaves out lands and removal that hands the opponent a land, "bounce" leaves out
+  lands that return one of your own, "removal" leaves out board wipes.
+- **Measured:** the relevance set's players'-words class went from 29 of 40 to 40 of 40 for
+  the full search; the other classes did not change. A test checks that every word in the
+  list finds cards on the live index.
+- **Three limits, said plainly:**
+  - A players' word inside a longer sentence ("mana rocks that draw cards", "white creature
+    tutor") is still read by meaning and is weaker.
+  - A word that is also exactly a card's name opens that card, by the rule of F-3: "blink"
+    is a card, and so are Flicker, Fog and Clone. "blink effects" and "fogs" find the kind.
+  - "blue land destruction" is left to its meaning on purpose, because the owner called that
+    result good and the tag ("can deal with a land") is wider than what is asked.
+- **Changed by it:** three of the box's examples are now players' words and find staples in
+  place of what the meaning found: "mana rocks", "black creature removal" (Feed the Swarm,
+  Deadly Rollick, Infernal Grasp, Go for the Throat) and "white enchantment removal"
+  (Generous Gift, Stroke of Midnight, Disenchant).
+
+### F-10. Meaning, systematically
+
+- **From:** the project owner, 23 November 2026, after asking how the players' words work
+  and whether "burn spells" would show Shock and Lightning Bolt.
+- **What they were told:** "burn spells" finds Lightning Bolt third and Shock 39th, because
+  the tag is wide and "most played" means most played in Commander; and that the developer
+  could narrow that one word by hand.
+- **In their words:** "we shouldnt do it manyally, there needs to be a way to systematically
+  deal with meaning behind the scenes, make this a major milestone down the road add to plan
+  for later".
+- **What was done:** nothing was built, as asked. `docs/PLAN.md` has a new stage 8, "Meaning,
+  systematically", which says what is done by hand today, where that shows, what the stage
+  has to deliver, the directions to weigh when it is planned, and how it will be judged.
+- **What follows from it now:** "burn spells" is left as it is. The hand-written lists
+  (players' words, colour and filler words, the ways of asking for alternatives) stay and
+  are not grown case by case; a word that fails goes into the query set instead.
+
+### F-11. Nine searches that change, and news that explains itself
+
+- **From:** the project owner, 23 November 2026, after a list of general searches and which
+  of them work.
+- **In their words:** "ramp, card draw, removal, counterspells, tutors thats 9 total, make
+  sure each time homepage loads they are changing. and the language on the homepage should
+  be more elaborate for spoilers: NEW Nauctis: The Sunken Realm first look, NEW Star Trek
+  full preview, NEW Star Trek Commander full preview, NEW Stardates Bonus Sheet full
+  preview. that kind of thing, not exactly but more xplanatory".
+- **The searches:** the row under the bar draws four of the nine afresh each time the page
+  loads (mana rocks, bounce spells, blink effects, board wipes, ramp, card draw, removal,
+  counterspells, tutors). The row is one line of a fixed height: on a laptop all four show,
+  on a phone the three that fit, each whole. So a different draw never moves the bar. All
+  nine were already players' words the search knows; none was added to the list.
+- **The news:** each line now says what the thing is and where it stands, and on a wide
+  screen the details after it:
+  - "Marvel: Darkhold Destiny **first look** · 12 cards so far, out 9 April"
+  - "Nauctis: The Sunken Realm **first look** · 7 cards so far, out 5 February"
+  - "Star Trek **out now** · since 13 November"
+  - "Star Trek Commander decks **out now** · since 13 November"
+  - "Stardates bonus sheet **out now** · since 13 November"
+- **What changed to make that possible:** the Commander decks that come out with a set and
+  its bonus sheet are news lines of their own, as in the owner's example; before, only the
+  sets people open packs of were listed. They are named once they have ten cards. There are
+  five lines in place of four (four on a short screen).
+- **The wording is the developer's, and each word is backed by the data:** "first look" while
+  fewer than sixty different cards have been shown and "previews" after that; "out now" for
+  forty-five days after release and "released in October" after that. "Full preview", the
+  owner's example, is not used: the index does not know how many cards a set will have, so it
+  cannot say that all of them are shown.
+- **One thing found on the way:** the count has to be of different cards, not printings.
+  Nauctis has 24 printings in the index and 7 different cards; the first version would have
+  said "24 cards so far".
+
+### F-12. Five cards on the home page, and only the ones that fit
+
+- **From:** the project owner, 23 November 2026, with pictures of Stoic Farmer and Druid of
+  the Emerald Grove, which the home page had shown under "Try: dwarf that destroys lands".
+- **In their words:** "these dwarves do not destroy lands, i think we should reduce the
+  number of results to 5 on the homepage".
+- **Why those two were there:** the home page took the example's first three results and drew
+  four more from the eleven after them (F-6, the developer's choice, so that the cards would
+  differ from visit to visit). Both dwarves fetch lands and sit further down that list.
+- **What was done:** the home page shows five cards, and they are the example's first five
+  results with nothing from further down. There is no draw any more: an example always shows
+  the same five, and a return visit differs because it is shown another of the 33 examples.
+  The cards are a little larger, since there are fewer.
+- **What five from the top looks like for every example:** all 33 were listed and read. For
+  31 the five fit what is asked. Two still show something that does not:
+  - "dwarf that destroys lands": Dwarven Blastminer, Mine Layer, Dwarven Driller and Dwarven
+    Miner do; the fifth, Duergar Hedge-Mage, destroys an artifact or an enchantment.
+  - "blue land destruction": Erosion, Volcanic Eruption and Mana Vortex do; Mystic Might and
+    Blue Elemental Blast do not.
+  Both are what the search ranks fourth or fifth, not a fault of the home page. By the rule
+  of F-10 they are not patched by hand: they go to the query set for stage 8.
+- **Open, for the owner:** whether those two examples stay among the 33 until then.
 
 ## From the interface study
 

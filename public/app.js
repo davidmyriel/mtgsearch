@@ -35,11 +35,40 @@ const IMAGE_HOST = "https://cards.scryfall.io/";
 const CARD_HOST = "https://scryfall.com/";
 // Results on one page, and how far into a result the endpoint will go. Keep in step with
 // MAX_RESULTS and MAX_REACH in app/api.ts; a test compares them.
-// What to type, shown in the empty box: a card described in plain words, a different one of
-// these on each visit.
-const EXAMPLES = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+// What to type, shown in the empty box: something players look for, said in plain words, a
+// different one of these on each visit. The same list as EXAMPLES in app/home.ts.
+const EXAMPLES = [
+  // white
+  "angel that gains life", "knight with first strike", "white enchantment removal", "creature that taxes spells",
+  "tithe alternative",
+  // blue
+  "sphinx that draws two cards", "blue land destruction", "wizard that copies spells", "merfolk that draws cards",
+  "brainstorm alternative",
+  // black
+  "black creature removal", "reanimate a creature", "demon with a drawback", "zombie that comes back",
+  "ritual alternative",
+  // red
+  "dwarf that destroys lands", "goblin that makes goblins", "dragon with haste", "damage to each creature",
+  "shock alternative",
+  // green
+  "hydra with x in its cost", "druid that untaps lands", "fight target creature", "search for a basic land",
+  "llanowar alternative",
+  // artifacts
+  "equipment that gives haste", "vehicle with flying", "artifact that draws cards", "mana rocks",
+  // more than one colour
+  "izzet dragon", "orzhov vampire", "simic hydra", "dimir rogue",
+];
 const example = EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
 input.placeholder = `Try: ${example}`;
+
+// Searches people often need, in players' words. Four are shown under the bar on the home
+// page, a different four on each visit.
+const NEEDS = ["Mana rocks", "Bounce spells", "Blink effects", "Board wipes", "Ramp", "Card draw", "Removal", "Counterspells", "Tutors"];
+const NEEDS_SHOWN = 4;
+// A set still to come is a "first look" until this many of its cards have been shown; a set
+// that is out is "out now" for this many days.
+const FIRST_LOOK = 60;
+const OUT_NOW_DAYS = 45;
 
 // The site's title, as the pages themselves show it.
 const SITE = "TutorK";
@@ -155,6 +184,9 @@ function describe(data, view) {
       return ["Scryfall syntax", total()];
     case "name":
       return ["Card name", total()];
+    case "jargon":
+      // a players' word for a kind of card ("mana rocks"), answered from the community's tags
+      return ["Players' words", `${total()}, the same as ${data.reads_as}`];
     case "mixed":
       return ["Syntax and plain English", `${data.note}, ${ranked}`];
     case "semantic":
@@ -263,7 +295,7 @@ function showUnderstood(conditions) {
 // A device with a pointer rather than a finger: the search box can take the focus on arrival
 // without a keyboard sliding up, and rows of a table can show a picture on hover.
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-const HOME_CARDS = 7;
+const HOME_CARDS = 5;
 let homeAsked = false;
 
 /** GET a JSON file or endpoint of this site; null if it cannot be had. */
@@ -276,8 +308,28 @@ async function getJson(path) {
   }
 }
 
+/**
+ * What a line of news says about a set: what it is (a set, the Commander decks that come out
+ * with one, its bonus sheet), how far along it is, and when. A set still to come is a "first
+ * look" while only a few of its cards have been shown, and "previews" after that.
+ */
+function setNews(set, today = new Date()) {
+  const what = set.kind === "commander" ? " decks" : set.kind === "bonus" ? " bonus sheet" : "";
+  const day = new Date(`${set.released}T00:00:00Z`);
+  const date = day.toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+  if (set.upcoming) {
+    // how many different cards have been shown, not how many printings
+    const shown = set.revealed ?? set.cards;
+    const cards = `${shown.toLocaleString("en")} ${shown === 1 ? "card" : "cards"}`;
+    return { words: `${set.name}${what}`, state: shown < FIRST_LOOK ? "first look" : "previews", more: `${cards} so far, out ${date}` };
+  }
+  const days = Math.floor((today - day) / 86_400_000);
+  const month = day.toLocaleDateString("en-GB", { month: "long", timeZone: "UTC" });
+  return { words: `${set.name}${what}`, state: days <= OUT_NOW_DAYS ? "out now" : `released in ${month}`, more: days <= OUT_NOW_DAYS ? `since ${date}` : "" };
+}
+
 /** One line of what is new: a small tag and a few words, linking to a search on this site. */
-function newsLine(tag, words, href, className) {
+function newsLine(tag, words, href, className, state = "", more = "") {
   const item = document.createElement("li");
   if (className) item.className = className;
   const link = document.createElement("a");
@@ -290,6 +342,14 @@ function newsLine(tag, words, href, className) {
   text.className = "words";
   text.textContent = words;
   link.append(label, text);
+  // what state the thing is in ("first look", "out now"), and on a wide screen the details
+  for (const [kind, said] of [["state", state], ["when", more]]) {
+    if (!said) continue;
+    const part = document.createElement("span");
+    part.className = kind;
+    part.textContent = said;
+    link.append(" ", part);
+  }
   // A link to a search is answered in the page; anything else is followed as a link.
   const url = new URL(link.href);
   if (url.origin === location.origin && url.pathname === "/" && url.searchParams.get("q")) {
@@ -322,7 +382,8 @@ async function loadHome() {
     lines.push(newsLine(String(featured.label || "New"), featured.text, featured.href, "featured"));
   }
   for (const set of (found && found.sets) || []) {
-    lines.push(newsLine(set.upcoming ? "Preview" : "New", set.name, searchPath({ ...EMPTY, query: `set:${set.code}` })));
+    const said = setNews(set);
+    lines.push(newsLine(set.upcoming ? "Preview" : "New", said.words, searchPath({ ...EMPTY, query: `set:${set.code}` }), "", said.state, said.more));
   }
   news.replaceChildren(...lines);
   news.hidden = lines.length === 0;
@@ -908,6 +969,31 @@ async function loadRandom() {
   // The card's own address replaces /random, so Back does not pick again and the link can be shared.
   history.replaceState({ card: data.card, printings: data.printings }, "", cardPath(data.card) || "/random");
   showCard(data.card, data.printings);
+}
+
+// Under the bar on the home page: a fresh draw of the searches people often need. (The page
+// arrives with four of them already there, for anyone without the script.)
+const needs = document.querySelector(".needs");
+if (needs) {
+  const pool = [...NEEDS];
+  const drawn = [];
+  while (pool.length && drawn.length < NEEDS_SHOWN) {
+    const [words] = pool.splice(Math.floor(Math.random() * pool.length), 1);
+    const link = document.createElement("a");
+    link.href = `/?${new URLSearchParams({ q: words.toLowerCase() })}`;
+    link.textContent = words;
+    drawn.push(link);
+  }
+  needs.replaceChildren(...drawn);
+}
+
+// The searches offered under the bar on the home page run in the page, like a typed one.
+for (const link of document.querySelectorAll(".needs a")) {
+  link.addEventListener("click", (event) => {
+    if (modified(event)) return;
+    event.preventDefault();
+    run({ query: new URL(link.href).searchParams.get("q") || "" });
+  });
 }
 
 for (const id of ["nav-random", "empty-random"]) {

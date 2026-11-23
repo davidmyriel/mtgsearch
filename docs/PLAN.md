@@ -15,7 +15,7 @@ picked up: at the boundary between plan steps unless something is broken.
 | What "a copy of Scryfall" means | Same capabilities, own name and visual design. Their look, name and logo are not copied. |
 | Where v0.1 stops | Tier 1: search parity plus the better search |
 | App stack | Decided: a static page plus one TypeScript function on Netlify, with `topk-js`. TypeScript is the only implementation of search; a Python job builds the collection |
-| Name and branding | Working name only; nothing using "Scryfall" or official-looking Magic branding |
+| Name and branding | Decided by the owner on 23 November 2026: the site is TutorK, in the blocks of TopK's logo, "Powered by TopK AI search". The project and repository keep the working name. Nothing uses "Scryfall" or official-looking Magic branding |
 | Policy sign-off | A person reads Wizards' Fan Content Policy and Scryfall's terms, and tells Scryfall before launch |
 | Indexing art for all 39,356 cards | Not done: roughly 3 GB of images to send and embed, cost not yet known |
 
@@ -74,11 +74,26 @@ picked up: at the boundary between plan steps unless something is broken.
       names a card and asks for others like it is answered from that card's own text, without
       the card; a type word followed by what is done to it ("land destruction") is not a
       filter. Changes to how the query is read, not to the index; the relevance set is unchanged
-- [ ] "tutor" and other players' words. "white creature tutor" ranks mentors and instructors:
-      the index does not know a tutor is a card that searches a library. The site is named for
-      the word, so it has to work. Likely a list of such words read into their rules wording
-      at query time; measure on the jargon class first
+- [x] Players' words (23 November 2026). A query that is a players' word for a kind of card
+      ("mana rocks", "board wipes", "tutors", some fifty in `app/jargon.ts`) is read as the
+      community's tag for it and answered most played first, narrowed by a colour in front or
+      a kind of card behind. The relevance set's players'-words class went from 29 of 40 to 40
+      of 40 for the full search; the other classes did not change. "tutors" finds Demonic,
+      Vampiric and Enlightened Tutor first
+- [ ] A players' word inside a longer query ("white creature tutor", "mana rocks that draw
+      cards") is still left to its meaning and ranks poorly. Use the tag as a filter and rank
+      the rest by meaning
+- [ ] A players' word that is also exactly a card's name (blink, flicker, fog, clone) opens that
+      card. Offer the kind of card from the card's page, as the other matches already are
 - [ ] "budget" and "cheaper" in a query for a card's alternatives should filter by price
+- [ ] Searches that failed when examples were being chosen (23 November 2026), each a card any
+      player expects: "three damage for one mana" without Lightning Bolt, "two mana counterspell"
+      without Counterspell, "search for any card" without Demonic Tutor, "elf that taps for mana"
+      without Llanowar Elves, "white board wipe" finding cards named Wipe. Add them to the query
+      set. Most trace to mana symbols and numbers in the indexed text (the item below)
+- [ ] Asking TopK for more results than are shown seems to find better ones: Fyndhorn Elves came
+      first for Llanowar Elves' text when 120 were asked for and was absent when 10 were. Measure
+      on the query set whether ordinary plain-English searches should ask deeper and cut
 - [ ] Spell out mana symbols in the indexed text. Known failure: "taps for two colorless mana" does
       not find Sol Ring, whose text reads `{T}: Add {C}{C}`
 - [ ] Decide how to weight the plain and tagged text fields. Tags win on jargon (35 of 40 against 20),
@@ -146,6 +161,79 @@ picked up: at the boundary between plan steps unless something is broken.
 
 ### 7. v0.1 public
 - [ ] Public repository, write-up with the benchmark, launch
+
+### 8. Meaning, systematically: a major milestone, for later
+
+Set by the owner on 23 November 2026: "we shouldnt do it manyally, there needs to be a way to
+systematically deal with meaning behind the scenes". Not started. Nothing below is decided;
+it is written down so that the stage is ready to be planned when its turn comes.
+
+**What is done by hand today, and should not be.** Each of these is a list a person wrote,
+and each new case means another entry:
+
+- `app/jargon.ts`: some fifty players' words, each with the tag it reads as, and hand-made
+  narrowing where a tag is wider than the word ("tutors" without land fetchers, "removal"
+  without board wipes).
+- `app/nl.ts`: which words are colours, which are fillers, which words after a type mean the
+  type is what the effect is done to ("land destruction").
+- `app/search.ts`: the ways of asking for a card's alternatives, as patterns.
+- The home page's examples and the cards each must find, chosen by reading results.
+
+**Where it shows.** "burn spells" lists Commander's most played damage cards, with Shock
+39th, because the tag is wide and "most played" means most played in Commander; the fix on
+offer was another hand-made rule, which the owner declined. A players' word inside a
+sentence ("white creature tutor", "mana rocks that draw cards") falls back to meaning and
+ranks poorly. A word nobody wrote into the list is not understood at all.
+
+**What the stage has to deliver.** Any query, however it is put, is turned behind the scenes
+into what it asks for: which cards are eligible (colour, type, cost, tag, price, format), what
+to rank by, and what is left to meaning; with no list of words to maintain, and a reading
+that can be shown to the user as it is now.
+
+**Directions to weigh when it is planned** (not chosen):
+
+- Take the vocabulary from the data. The community's tags, with their names, aliases and
+  descriptions, are already a dictionary of players' words several thousand entries long;
+  match a query to tags by meaning instead of by a hand list.
+- Have a language model read the query into a structured search (filters, a remainder to
+  rank by meaning, an order), checked by the existing compiler so that it can only produce
+  searches that run, and cached. The page would still say how the query was read.
+- Rank with several signals at once (meaning, how central a card is to a tag, how much it
+  is played and in which format, price) instead of filtering by one and sorting by another,
+  with weights learned from the query set, not set by hand.
+- Fix the index where meaning cannot work: mana symbols and numbers spelled out, which is
+  what most of the searches that failed on 23 November trace to (stage 3).
+- Learn from use: anonymous query logs to see what people actually type and where they
+  give up (needs the storage decision in stage 4).
+
+**How it will be judged.** On a query set several times the present one, written by more
+than one person, with players' words alone and inside sentences, in more than one format's
+idea of "most played". A hand-written rule is removed only when the systematic reading does
+as well or better on that set without it. Cost and added time per query are measured, since
+a model in the path of every search changes both.
+
+**Until then.** The lists stay as they are and are not grown case by case; a word that fails
+is added to the query set, not to a list.
+
+**Words that fail today, for that query set** (run on 23 November 2026 from a list of players'
+slang the owner sent). Each is something a player would type and the search does not
+understand; what it finds instead is in brackets.
+
+- pingers (cards with "sting" in the name); the tag for creatures that deal one damage exists
+- vanilla creatures, french vanilla (unrelated cards); Scryfall has `is:vanilla` and
+  `is:frenchvanilla`, and this search has the first
+- bears (cards named Bears); Scryfall's `is:bear` is the two-mana 2/2
+- stax pieces, group slug, voltron, aristocrats (cards with similar names: Strax, Ultron,
+  Falkenrath Aristocrat). These are kinds of deck, not of card: what is wanted is the cards
+  such a deck plays
+- treasure makers, token makers, etb effects, haste enablers (loosely related cards)
+- "dwarf that destroys lands" ranks Duergar Hedge-Mage fifth, which destroys an artifact or
+  an enchantment; "blue land destruction" ranks Mystic Might and Blue Elemental Blast fourth
+  and fifth. Both are among the examples the home page shows
+
+Words from the same list that are about play and not about cards (goldfishing, topdecking,
+win-more, chump block, durdling, scoop, curve, whiff, Timmy/Johnny/Spike) are not searches
+for cards, and a glossary would serve them better than a search.
 
 ## Testing
 

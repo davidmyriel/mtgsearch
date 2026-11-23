@@ -12,6 +12,9 @@ c:u t:sphinx o:"draw two cards"          Scryfall syntax: the same three cards S
 sphinx that draws two cards              plain English: Consecrated Sphinx first
 c:u t:sphinx draws when opponents draw   both at once: keywords filter, words rank by meaning
 lightning bolt                           a card name: name matches, most-played first
+board wipes                              players' words: the community's tag, most-played first
+white board wipes, bounce spells         ... narrowed by a colour in front or a kind of card behind
+llanowar alternative                     a card's alternatives: cards that do what it does
 t:dragon r:mythic usd<5                  printings: set, rarity, artist, price, frame, date
 !"lightning bolt" unique:prints          every printing of a card
 ```
@@ -204,7 +207,9 @@ which the page shows under the status line so that a wrong reading is easy to sp
 lists each term that was left out, with the reason. `exact` is the card whose whole name is
 what was typed, if there is one: the page opens that card instead of listing every card with
 those words in its name (as it does when a search finds exactly one card), unless the address
-asks for the list with `list=1`. It also
+asks for the list with `list=1`. `reads_as` is the Scryfall syntax a players' word was read as
+("board wipes" is `otag:sweeper`; the words and their readings are one list in `app/jargon.ts`),
+and `like` is the card a query named when it asked for that card's alternatives. It also
 carries `total`, `unit` (what the total counts: cards, printings or illustrations),
 `has_more` and `sorted_by` (null when ranked by meaning), which drive the page's status line,
 pager and its three controls (show, sort, direction). The page asks for 60 results at a time.
@@ -219,15 +224,22 @@ newest first with set, number, rarity, date and price, at most 60. An address wi
 is a 404. `GET /api/card?random=1` answers in the same shape with a card chosen at random,
 and is never cached.
 
-`GET /api/home?try=<example>` gives the home page seven cards, the `theme` that joins them,
-and the newest sets (those still to be released are marked `upcoming`). The empty search box
-shows an example to try, a different one of four on each visit, and names it in `try`: the
-cards are then that search's results, the first three always and the rest drawn from the
-eleven that follow, so the page shows what the search does before anything is typed. The
-examples are one list in `app/home.ts` and the same list in `public/app.js`. Without an
+`GET /api/home?try=<example>` gives the home page five cards, the `theme` that joins them,
+and what is new: the five newest of the sets people open packs of, the Commander decks that
+come out with them and their bonus sheets (`kind` says which). One still to be released is
+marked `upcoming` and says how many different cards have been `revealed`; the page words
+that as "first look" or "previews" with the date it is out, and a set that is out as "out
+now" or "released in" its month. The empty search box
+shows an example to try, a different one of some thirty on each visit, and names it in `try`: the
+cards are then that search's first five results and nothing from further down, so the page
+shows what the search does before anything is typed and shows it at its best. The
+examples are one list in `app/home.ts` and the same list in `public/app.js`: a few for each
+colour, for artifacts and for cards of more than one colour, each held to a card or two it
+must find by `app/test/live.test.ts`. Without an
 example the cards share a theme instead: the newest set that is out about one time in three,
 otherwise a kind of card (Dragons, Angels, Planeswalkers and so on), drawn from its sixty most
-played. The answer is held by the CDN for a minute, so a return visit sees other cards.
+played. The answer is held by the CDN for a minute; a return visit sees other cards because
+it is shown another example.
 
 The home page's flavour of the week is one file, `public/flavour.json`: a `featured` line shown
 above the newest sets, a `cards` search to draw the home page's cards from (`set:trk` for a new

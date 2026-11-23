@@ -30,6 +30,15 @@ async function choose(page, selector, value) {
   await page.waitForFunction(() => !document.getElementById("status").textContent.includes("Searching"));
 }
 
+/** The examples the empty search box draws from, read out of the script the page itself runs. */
+async function examplesOffered(page) {
+  return page.evaluate(async () => {
+    const script = await (await fetch("/app.js")).text();
+    const list = (script.match(/const EXAMPLES = \[([^\]]+)\];/) || [])[1] || "";
+    return [...list.matchAll(/"([^"]+)"/g)].map((found) => found[1]);
+  });
+}
+
 async function firstCards(page, n = 3) {
   return page.$$eval("#results img", (imgs, n) => imgs.slice(0, n).map((i) => i.alt), n);
 }
@@ -90,18 +99,23 @@ async function run(name, contextOptions) {
   });
   check(home.hero >= home.window - 1, `[${name}] the first screen is the search and nothing below it (${Math.round(home.hero)} of ${home.window}px)`);
   check(home.barCentre <= 2 && home.barHeight >= 60, `[${name}] the search bar is in the middle and thick (${Math.round(home.barHeight)}px)`);
-  check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.join(", ")})`);
-  check(home.cards === 7, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
-  // The seven are found by the example the empty search box is showing: each is among the
-  // first results of that search, and its closest result is in the middle of the fan.
+  check(home.news.length >= 2 && home.news.every((line) => /^(New|Preview)\S/.test(line)), `[${name}] what is new is listed under it (${home.news.length} lines)`);
+  // Each line says what state the set is in, and one still to come how many cards are shown and when it is out.
+  check(
+    home.news.every((line) => (line.startsWith("Preview") ? /(first look|previews) \d+ cards? so far, out \d+ \w+$/ : /(out now since \d+ \w+|released in \w+)$/).test(line.replace(/\s+/g, " "))),
+    `[${name}] and each says where the set stands (${home.news.map((line) => line.replace(/\s+/g, " ").replace(/^(New|Preview)/, "")).join("; ")})`,
+  );
+  check(home.cards === 5, `[${name}] a fan of cards sits along the bottom (${home.cards})`);
+  // The five are what the example in the empty search box finds first, and nothing from
+  // further down its results; the closest is in the middle of the fan.
   const common = await page.evaluate(async ({ query, names }) => {
     if (!query) return { query, found: 0, first: "" };
-    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "14" })}`);
+    const response = await fetch(`/api/search?${new URLSearchParams({ q: query, k: "5" })}`);
     const results = ((await response.json()).hits || []).map((hit) => hit.name);
     return { query, found: names.filter((cardName) => results.includes(cardName)).length, first: results[0] };
   }, { query: home.theme, names: home.names });
   check(home.hint === `Try: ${home.theme}` && home.themeLabel === `A few cards: ${home.theme}`, `[${name}] the cards go with the example in the search box (${home.hint})`);
-  check(common.found === 7 && home.names[3] === common.first, `[${name}] and are what that search finds, the closest in the middle (${common.first})`);
+  check(common.found === 5 && home.names[2] === common.first, `[${name}] and are that search's first five results, the closest in the middle (${common.first})`);
   check(home.cutOff && Math.abs(home.fanBottom - home.window) <= 4, `[${name}] cut off by the bottom edge of the first screen`);
   check(!home.pageBelow, `[${name}] and nothing but the footer follows: no search instructions`);
   if (!contextOptions.isMobile) check(home.focused === "q", `[${name}] the search box has the focus on arrival`);
@@ -144,45 +158,32 @@ async function run(name, contextOptions) {
       tab: document.title,
       picture: new URL(image.currentSrc).pathname,
       hint: document.getElementById("q").placeholder,
+      // whose search it is: one line between the name and the bar, linking to TopK
+      powered: (() => {
+        const line = document.querySelector(".powered");
+        const box = line.getBoundingClientRect();
+        return { says: line.textContent, link: line.querySelector("a").href, between: box.top >= name.bottom && box.bottom <= bar.top && box.height > 0 };
+      })(),
     };
   });
+  check(title.powered.says === "Powered by TopK AI search" && title.powered.link === "https://topk.io/" && title.powered.between, `[${name}] under the name it says whose search this is (${title.powered.says})`);
   check(title.drawn && title.above && title.centred && title.name === "TutorK" && title.tab === "TutorK", `[${name}] the name stands above the bar in block letters (${title.name}), and titles the tab`);
   check(title.picture === "/wordmark-appear.svg", `[${name}] on arrival at the home page the name builds itself (${title.picture})`);
-  // The empty box says what to do: try a card described in plain words, one of these.
-  const examples = ["sphinx that draws two cards", "dwarf that destroys lands", "tithe alternative", "blue land destruction"];
+  // The empty box says what to do: try something players look for, said in plain words. The
+  // list is the one in the page's own script.
+  const examples = await examplesOffered(page);
   const shownExample = title.hint.replace(/^Try: /, "");
-  check(title.hint.startsWith("Try: ") && examples.includes(shownExample), `[${name}] the empty box shows something to try ("${title.hint}")`);
-  // Whichever is drawn, all of it shows in the box, and each one finds cards.
-  const tried = await page.evaluate(async (examples) => {
+  check(examples.length >= 20 && title.hint.startsWith("Try: ") && examples.includes(shownExample), `[${name}] the empty box shows something to try, one of ${examples.length} ("${title.hint}")`);
+  // Whichever is drawn, all of it shows in the box.
+  const tooLong = await page.evaluate((examples) => {
     const box = document.getElementById("q");
     const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
     const pen = document.createElement("canvas").getContext("2d");
     pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
     const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-    const out = [];
-    for (const example of examples) {
-      const response = await fetch(`/api/search?${new URLSearchParams({ q: example, k: "8" })}`);
-      const found = await response.json();
-      out.push({
-        example,
-        fits: pen.measureText(`Try: ${example}`).width <= room,
-        mode: found.mode,
-        like: found.like,
-        note: found.note,
-        names: (found.hits || []).map((hit) => hit.name),
-        lands: (found.hits || []).filter((hit) => hit.type_line.includes("Land")).length,
-      });
-    }
-    return out;
+    return examples.filter((example) => pen.measureText(`Try: ${example}`).width > room);
   }, examples);
-  check(tried.every((one) => one.fits), `[${name}] every example fits in the box (${tried.filter((one) => !one.fits).map((one) => one.example).join(", ") || "all four"})`);
-  check(tried.every((one) => one.mode === "semantic" && one.names.length === 8), `[${name}] and every example is read as plain English and finds cards`);
-  // Each finds what it promises.
-  const [sphinx, dwarf, tithe, blueLand] = tried;
-  check(sphinx.names[0] === "Consecrated Sphinx", `[${name}] "${sphinx.example}" finds ${sphinx.names[0]} first`);
-  check(dwarf.names.some((card) => ["Dwarven Miner", "Dwarven Blastminer", "Dwarven Driller"].includes(card)), `[${name}] "${dwarf.example}" finds ${dwarf.names.slice(0, 3).join(", ")}`);
-  check(tithe.like === "Tithe" && !tithe.names.includes("Tithe") && tithe.names.includes("Land Tax"), `[${name}] "${tithe.example}" finds cards that do what Tithe does (${tithe.names.slice(0, 3).join(", ")})`);
-  check(blueLand.note === "blue" && blueLand.lands <= 1 && blueLand.names.some((card) => ["Erosion", "Mana Vortex", "Volcanic Eruption", "Mana Breach"].includes(card)), `[${name}] "${blueLand.example}" finds blue cards that destroy lands, not blue lands (${blueLand.names.slice(0, 3).join(", ")})`);
+  check(tooLong.length === 0, `[${name}] every example fits in the box (${tooLong.join(", ") || `all ${examples.length}`})`);
   const mark = await lookAtBar();
   check(mark.drawn && mark.round && mark.inside, `[${name}] the mark is a disc inside the search bar, at its left end (${Math.round(mark.size)}px)`);
   check(mark.noButton, `[${name}] the bar has no button: the box fills it, and Enter searches`);
@@ -191,19 +192,69 @@ async function run(name, contextOptions) {
   await page.click("#search .mark");
   check((await page.evaluate(() => document.activeElement && document.activeElement.id)) === "q", `[${name}] pressing the mark puts the cursor in the box`);
   await shot("1-home");
+  // Under the bar: four searches people often need, in players' words. The syntax guide is in
+  // the footer and a random card is not offered here.
+  const under = await page.evaluate(() => {
+    const box = (element) => element.getBoundingClientRect();
+    const bar = box(document.getElementById("search"));
+    const row = box(document.querySelector(".needs"));
+    const links = [...document.querySelectorAll(".needs a")];
+    return {
+      words: links.map((link) => link.textContent),
+      // the row is one line: the ones that fit are shown whole, and the rest are out of sight
+      shown: links.filter((link) => box(link).top < row.bottom - 1).map((link) => link.textContent),
+      whole: links.filter((link) => box(link).top < row.bottom - 1).every((link) => box(link).left >= 0 && box(link).right <= innerWidth && box(link).bottom <= row.bottom + 1),
+      below: links.every((link) => box(link).top >= bar.bottom && box(link).height > 0),
+      headerLinks: [...document.querySelectorAll("header .nav a")].filter((link) => box(link).height > 0).length,
+      guideInHeader: document.querySelectorAll('header a[href="/syntax"]').length,
+      guideInFooter: document.querySelectorAll('footer a[href="/syntax"]').length,
+    };
+  });
+  // Four of nine, a different draw on each visit. Each is a players' word, with a card it has to find.
+  const staples = {
+    "Mana rocks": "Sol Ring", "Bounce spells": "Cyclonic Rift", "Blink effects": "Ephemerate", "Board wipes": "Blasphemous Act",
+    Ramp: "Arcane Signet", "Card draw": "Rhystic Study", Removal: "Swords to Plowshares", Counterspells: "Counterspell", Tutors: "Demonic Tutor",
+  };
+  check(under.words.length === 4 && new Set(under.words).size === 4 && under.words.every((words) => words in staples) && under.below, `[${name}] under the bar are four searches people often need (${under.words.join(", ")})`);
+  check(under.shown.length >= 2 && under.whole, `[${name}] in one row, as many as fit and each one whole (${under.shown.length} of 4)`);
+  check(under.headerLinks === 0 && under.guideInHeader === 0 && under.guideInFooter === 1, `[${name}] and neither the syntax guide nor a random card: the guide is in the footer`);
+  // Another visit draws again: of five more, at least one differs from this one.
+  const again = await context.newPage();
+  const draws = new Set([under.words.join(", ")]);
+  for (let visit = 0; visit < 5; visit++) {
+    await again.goto(base);
+    draws.add((await again.$$eval(".needs a", (links) => links.map((link) => link.textContent))).join(", "));
+  }
+  await again.close();
+  check(draws.size >= 2, `[${name}] and a different four on another visit (${draws.size} different draws in 6 visits)`);
+  // Each finds the cards players mean by it, most played first.
+  for (const words of under.shown) {
+    const staple = staples[words];
+    await page.click(`.needs a:has-text("${words}")`);
+    await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Players' words"));
+    const found = await firstCards(page, 6);
+    check(found.includes(staple) && new URL(page.url()).searchParams.get("q") === words.toLowerCase(), `[${name}] "${words}" finds ${found.slice(0, 3).join(", ")}`);
+    if (words === under.shown[0]) {
+      const said = await page.textContent("#status");
+      check(said.startsWith("Players' words · ") && said.includes(" cards, showing 1–60, the same as otag:"), `[${name}] and says how it was read (${said})`);
+      check((await page.isVisible("#nav-random")) && (await page.$$('header a[href="/syntax"]')).length === 0, `[${name}] with a random card offered in the header, where the results are`);
+    }
+    await page.goBack();
+    await page.waitForFunction(() => !document.body.classList.contains("searched"));
+  }
   // A line of news runs its search; a card opens its page; Back returns home each time.
   await page.click("#news li:last-child a");
   await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Scryfall syntax"));
   check(new URL(page.url()).searchParams.get("q").startsWith("set:"), `[${name}] a line of news searches for that set (${new URL(page.url()).searchParams.get("q")})`);
   await page.goBack();
   await page.waitForFunction(() => !document.body.classList.contains("searched"));
-  const stripHref = await page.getAttribute("#home-cards li:nth-child(4) a", "href");
-  await page.click("#home-cards li:nth-child(4) a");
+  const stripHref = await page.getAttribute("#home-cards li:nth-child(3) a", "href");
+  await page.click("#home-cards li:nth-child(3) a");
   await page.waitForFunction(() => !document.getElementById("card").hidden);
   check(new URL(page.url()).pathname === stripHref && (await page.textContent("#card-name")).length > 0, `[${name}] a card on the home page opens its page (${stripHref})`);
   await page.goBack();
   await page.waitForFunction(() => document.getElementById("card").hidden && !document.body.classList.contains("searched"));
-  check((await page.getAttribute("#home-cards li:nth-child(4) a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
+  check((await page.getAttribute("#home-cards li:nth-child(3) a", "href")) === stripHref, `[${name}] and Back returns to the same home page`);
 
   await search(page, "sphinx that draws two cards");
   check((await firstCards(page, 1))[0] === "Consecrated Sphinx", `[${name}] plain English finds Consecrated Sphinx first`);
@@ -217,6 +268,7 @@ async function run(name, contextOptions) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   check(overflow <= 0, `[${name}] no horizontal scrolling (overflow ${overflow}px)`);
   const barMark = await lookAtBar();
+  check(!(await page.isVisible(".powered")) && (await page.textContent("footer")).replace(/\s+/g, " ").includes("powered by TopK AI search"), `[${name}] as a bar the header drops that line, and the footer still says it`);
   check(barMark.drawn && barMark.round && barMark.inside && barMark.size < mark.size && barMark.noButton && barMark.light === null && barMark.rings === null, `[${name}] as a bar the header keeps the mark, smaller, with no button and nothing drawn behind it (${Math.round(barMark.size)}px)`);
   await shot("2-results");
 
@@ -355,7 +407,7 @@ async function run(name, contextOptions) {
   const barBefore = await barTop();
   const waiting = await fresh.evaluate(() => document.getElementById("news").hidden && document.getElementById("home-cards").hidden);
   letThrough();
-  await fresh.waitForFunction(() => document.querySelectorAll("#home-cards img").length === 7 && !document.getElementById("news").hidden);
+  await fresh.waitForFunction(() => document.querySelectorAll("#home-cards img").length === 5 && !document.getElementById("news").hidden);
   const barAfter = await barTop();
   check(waiting && Math.abs(barAfter - barBefore) <= 2, `[${name}] the search bar does not move when the news and cards arrive (${Math.round(barBefore)}px, then ${Math.round(barAfter)}px)`);
   await fresh.unroute("**/api/home");
@@ -363,7 +415,8 @@ async function run(name, contextOptions) {
   const offered = (await fresh.getAttribute("#q", "placeholder")).replace(/^Try: /, "");
   await fresh.focus("#q");
   await fresh.press("#q", "Enter");
-  await fresh.waitForFunction(() => document.getElementById("status").textContent.startsWith("Plain English"));
+  // an example is plain English or a players' word
+  await fresh.waitForFunction(() => ["Plain English", "Players' words"].some((kind) => document.getElementById("status").textContent.startsWith(kind)));
   check(new URL(fresh.url()).searchParams.get("q") === offered && (await fresh.inputValue("#q")) === offered, `[${name}] Enter in the empty box tries the example it shows (${offered})`);
   // A query that names a card and asks for others like it says so above the results.
   await fresh.fill("#q", "tithe alternative");
@@ -661,16 +714,16 @@ async function narrow() {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     check(overflow <= 0, `[320 wide] ${what} does not scroll sideways (overflow ${overflow}px)`);
     if (path !== "/" && path !== "/syntax") continue;
-    // the longest example still shows whole in the empty box, on the home page and in a header
-    const spare = await page.evaluate(() => {
+    // the widest example still shows whole in the empty box, on the home page and in a header
+    const spare = await page.evaluate((examples) => {
       const box = document.getElementById("q");
       const [style, hint] = [getComputedStyle(box), getComputedStyle(box, "::placeholder")];
       const pen = document.createElement("canvas").getContext("2d");
       pen.font = `${hint.fontWeight} ${hint.fontSize} ${hint.fontFamily}`;
       const room = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-      return Math.floor(room - pen.measureText("Try: sphinx that draws two cards").width);
-    });
-    check(spare >= 0, `[320 wide] ${what}: the longest example fits in the empty box (${spare}px to spare)`);
+      return Math.floor(room - Math.max(...examples.map((example) => pen.measureText(`Try: ${example}`).width)));
+    }, await examplesOffered(page));
+    check(spare >= 0, `[320 wide] ${what}: the widest example fits in the empty box (${spare}px to spare)`);
   }
   await browser.close();
 }

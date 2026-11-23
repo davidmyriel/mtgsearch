@@ -4,7 +4,7 @@
 // ("one mana blue artifact ...") is read for mana value, colours and card types, which become
 // filters. Only that opening phrase is read: "protection from red" never becomes a filter.
 
-import { COLOR_NAMES, colors } from "./lower.ts";
+import { COLOR_NAMES, COLOR_SETS, colors } from "./lower.ts";
 import type { IR } from "./lower.ts";
 import typeWords from "./type-words.json" with { type: "json" };
 
@@ -17,7 +17,14 @@ const NUMBER_WORDS = new Map(NUMBER_NAMES.map((word, n) => [word, n]));
 const NUM = `(?:\\d{1,2}|${NUMBER_NAMES.join("|")})`;
 const ARTICLES = new Set(["a", "an", "the", "any", "some"]);
 const FILLERS = new Set(["big", "small", "cheap", "huge", "giant", "little", "good", "best", "powerful", "strong", "mono"]);
-const COLOR_WORDS = new Set([...Object.keys(COLOR_NAMES), "colorless", "colourless"]);
+// The five colours, and the names players give to two and three of them together ("boros
+// angel", "esper control"). The four-colour names are left out: they are ordinary words.
+const COLOR_WORDS = new Set([
+  ...Object.keys(COLOR_NAMES),
+  ...Object.keys(COLOR_SETS).filter((name) => COLOR_SETS[name].length <= 3),
+  "colorless",
+  "colourless",
+]);
 // Words that are types in the catalogue but usually mean something else at the start of a sentence.
 const NOT_TYPES = new Set(["card", "cards", "spell", "spells", "permanent", "permanents", "token", "tokens"]);
 // "... for four mana" at the end of a query is a cost, unless it follows a verb about producing mana.

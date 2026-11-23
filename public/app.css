@@ -236,6 +236,18 @@ body:not(.searched) .search::after {
 .wordmark, .wordmark picture { display: block; line-height: 0; }
 .wordmark img { display: block; width: auto; height: clamp(36px, 5.2vw, 52px); }
 
+/* Whose search this is: one small line under the name, on the home page only. */
+.powered {
+  margin: 12px 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--band-muted);
+}
+.powered a { color: #fe5000; text-decoration: none; }
+.powered a:hover { text-decoration: underline; }
+
 /* The search bar: one thick piece, darker inside than the page around it. */
 .search {
   display: flex;
@@ -286,16 +298,18 @@ body:not(.searched) .search::after {
   .search input::placeholder { font-size: 0.78rem; }
 }
 
-/* The few other things there are to do, kept quiet. */
-.nav {
+/* Under the bar on the home page: searches people often need, kept quiet. The header's own
+   link (a card at random) has the same look and shows only once the header is a bar. */
+.nav, .needs {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
   margin-top: 18px;
 }
+body:not(.searched) .nav { display: none; }
 
-.nav a {
+.nav a, .needs a {
   padding: 5px 14px;
   font-size: 0.9rem;
   font-weight: 600;
@@ -304,7 +318,13 @@ body:not(.searched) .search::after {
   border: 1px solid var(--band-line);
   border-radius: var(--radius);
 }
-.nav a:hover, .nav a[aria-current] { border-color: var(--band-link); color: var(--band-link); }
+.nav a:hover, .nav a[aria-current], .needs a:hover { border-color: var(--band-link); color: var(--band-link); }
+
+/* The searches under the bar are one row of a fixed height: as many as fit are shown, and
+   the rest fall to a second row that is cut off. So a different draw of them on each visit
+   never changes the room the row takes, and nothing around it moves. */
+.needs { height: 2.1rem; overflow: hidden; width: 100%; }
+.needs a { display: inline-flex; align-items: center; height: 2.1rem; padding-block: 0; white-space: nowrap; }
 
 /* What is new: the flavour of the week, then the newest sets. */
 .news {
@@ -333,6 +353,16 @@ body:not(.searched) .search::after {
   white-space: nowrap;
 }
 .news .words { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* What state the set is in stands out a little from its name; the details after it are
+   quieter, and are left out where the line would not hold them. */
+.news a { gap: 7px; }
+.news .tag { margin-right: 2px; }
+.news .state { flex: none; color: var(--band-ink); }
+.news .when { flex: none; font-size: 0.82rem; opacity: 0.72; }
+.news .when::before { content: "· "; }
+@media (max-width: 640px) {
+  .news .when { display: none; }
+}
 .news a:hover { color: var(--band-ink); }
 .news .tag {
   padding: 2px 7px;
@@ -349,14 +379,19 @@ body:not(.searched) .search::after {
 
 /* The news and the cards keep their room on the first screen before they arrive, so the
    name and the search bar do not move when they do. */
-.news { min-height: calc(4 * 1.5rem + 3 * 7px); }
+.news { min-height: calc(5 * 1.5rem + 4 * 7px); }
+/* A short screen has room for four lines. */
+@media (max-height: 640px) {
+  .news { min-height: calc(4 * 1.5rem + 3 * 7px); }
+  .news li:nth-child(n + 5) { display: none; }
+}
 body:not(.searched) .news[hidden] { display: grid !important; visibility: hidden; }
 body:not(.searched) .home-cards[hidden] { display: flex !important; visibility: hidden; }
 
 /* A fan of cards along the bottom, cut off by the edge of the first screen: every other card
    stands a little lower and in front, and on a narrow screen the fan's middle shows. */
 .home-cards {
-  --fan-w: clamp(118px, 13vw, 168px);
+  --fan-w: clamp(124px, 14vw, 184px);
   display: flex;
   flex: none;
   justify-content: center;
@@ -414,7 +449,7 @@ body[data-flavour="anniversary"]:not(.searched) .masthead {
 }
 
 .searched .wordmark img { height: 20px; }
-.searched .news, .searched .home-cards { display: none; }
+.searched .powered, .searched .needs, .searched .news, .searched .home-cards { display: none; }
 .searched .search { max-width: none; margin: 0; padding: 3px; border-radius: var(--radius); border-color: var(--band-line); box-shadow: none; }
 .searched .search:focus-within { border-color: var(--band-link); box-shadow: 0 0 0 3px rgb(242 171 128 / 0.28); }
 .searched .search .mark { margin-left: 4px; }

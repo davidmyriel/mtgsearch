@@ -53,7 +53,7 @@ test("returns the documented shape", async () => {
     total: null,
     unit: "cards",
     note: "sphinx",
-    understood: [], ignored: [], exact: null, like: null,
+    understood: [], ignored: [], exact: null, like: null, reads_as: null,
     hits: [
       {
         id: "abc",
@@ -276,7 +276,7 @@ test("a printing search says what its total counts and returns the printing's de
 test("the home page gets a few cards and the newest sets, held only briefly", async () => {
   const found = {
     cards: [{ ...HIT, usd: 1.5 }, { ...HIT, _id: "def", name: "Sol Ring", set: "trc", cn: "499" }],
-    sets: [{ code: "nau", name: "Nauctis: The Sunken Realm", released: "2027-02-05", cards: 24, upcoming: true }],
+    sets: [{ code: "nau", name: "Nauctis: The Sunken Realm", kind: "set" as const, released: "2027-02-05", cards: 24, upcoming: true, revealed: 22 }],
     theme: { label: "Sphinxes", query: "t:sphinx" },
   };
   const asked: (string | null)[] = [];

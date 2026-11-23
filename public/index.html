@@ -19,6 +19,8 @@
     <!-- The name builds itself square by square, from the left, on arrival at the home page;
          it stands still for anyone who has asked their device for less motion. -->
     <a class="wordmark" href="/"><picture><source media="(prefers-reduced-motion: reduce)" srcset="/wordmark.svg"><img src="/wordmark-appear.svg" alt="TutorK" width="334" height="56"></picture></a>
+    <!-- Home only: whose search this is, under the name. -->
+    <p class="powered">Powered by <a href="https://topk.io" rel="noopener">TopK</a> AI search</p>
     <form id="search" class="search" role="search" action="/" method="get">
       <!-- The mark sits inside the bar, at its left end; pressing it puts the cursor in the box. -->
       <label class="mark" for="q"><img src="/icon.svg" alt="" width="44" height="44"><span class="sr-only">Search cards</span></label>
@@ -27,8 +29,16 @@
       <!-- Enter searches. The button is kept out of sight for assistive technology. -->
       <button type="submit" class="sr-only" tabindex="-1">Search</button>
     </form>
+    <!-- Home only: searches people often need, said the way players say them. -->
+    <nav class="needs" aria-label="Searches people often need">
+      <a href="/?q=mana+rocks">Mana rocks</a>
+      <a href="/?q=bounce+spells">Bounce spells</a>
+      <a href="/?q=blink+effects">Blink effects</a>
+      <a href="/?q=board+wipes">Board wipes</a>
+    </nav>
+    <!-- Not on the home page: once the header is a bar it offers a card at random. The syntax
+         guide is linked from the footer. -->
     <nav class="nav" aria-label="Site">
-      <a href="/syntax">Syntax guide</a>
       <a id="nav-random" href="/random">Random card</a>
     </nav>
     <!-- Home only: what is new. The first line is the flavour of the week, when
@@ -184,7 +194,8 @@
       </div>
       <div>
         <h2>About</h2>
-        <p>One search box that reads Scryfall syntax and plain English. Every card and every English printing,
+        <p>One search box that reads Scryfall syntax and plain English, powered by
+          <a href="https://topk.io" rel="noopener">TopK</a> AI search. Every card and every English printing,
           refreshed each day.</p>
       </div>
       <div>
